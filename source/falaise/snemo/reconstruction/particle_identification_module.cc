@@ -11,8 +11,8 @@
 #include <falaise/snemo/datamodels/data_model.h>
 #include <falaise/snemo/datamodels/particle_track_data.h>
 
-// Gamma Tracking
-//#include <snemo/reconstruction/particle_identification_driver.h>
+// PID driver
+#include <snemo/reconstruction/particle_identification_driver.h>
 
 namespace snemo {
 
@@ -25,7 +25,7 @@ namespace snemo {
     void particle_identification_module::_set_defaults()
     {
       _PTD_label_ = snemo::datamodel::data_info::default_tracker_clustering_data_label();
-      //      _driver_.reset();
+      _driver_.reset();
       return;
     }
 
@@ -45,7 +45,7 @@ namespace snemo {
       }
 
       // Initialize the clustering driver :
-      //_driver_.get()->initialize(setup_);
+      _driver_.get()->initialize(setup_);
 
       _set_initialized(true);
       return;
@@ -82,20 +82,16 @@ namespace snemo {
       DT_THROW_IF (! is_initialized(), std::logic_error,
                    "Module '" << get_name() << "' is not initialized !");
 
-      // Check particle track data *
+      // Check particle track data
       const bool abort_at_missing_input = true;
       if (! data_record_.has(_PTD_label_)) {
         DT_THROW_IF(abort_at_missing_input, std::logic_error, "Missing particle track data to be processed !");
         // leave the data unchanged.
         return dpp::base_module::PROCESS_ERROR;
       }
-      // grab the 'particle_track_data' entry from the data model :
+      // Grab the 'particle_track_data' entry from the data model :
       snemo::datamodel::particle_track_data & the_particle_track_data
         = data_record_.grab<snemo::datamodel::particle_track_data>(_PTD_label_);
-
-      /********************
-       * Process the data *
-       ********************/
 
       // Main processing method :
       _process(the_particle_track_data);
@@ -107,8 +103,8 @@ namespace snemo {
     {
       DT_LOG_TRACE(get_logging_priority(), "Entering...");
 
-      // process the fitter driver :
-      // _driver_.get()->process(ptd_);
+      // Process the fitter driver :
+      _driver_.get()->process(ptd_);
 
       DT_LOG_TRACE(get_logging_priority(), "Exiting.");
       return;

@@ -47,7 +47,7 @@ namespace snemo {
 
   namespace reconstruction {
 
-    // class particle_identification_driver;
+    class particle_identification_driver;
 
     /// \brief The data processing module for the gamma tracking
     class particle_identification_module : public dpp::base_module
@@ -83,7 +83,7 @@ namespace snemo {
     private:
 
       std::string _PTD_label_; //!< The label of the input/output  data bank
-      // boost::scoped_ptr< ::snemo::reconstruction::particle_identification_driver> _driver_; //!< Handle to the embedded fitter algorithm with dynamic memory auto-deletion
+      boost::scoped_ptr< ::snemo::reconstruction::particle_identification_driver> _driver_; //!< Handle to the embedded fitter algorithm with dynamic memory auto-deletion
 
       // Macro to automate the registration of the module :
       DPP_MODULE_REGISTRATION_INTERFACE(particle_identification_module);

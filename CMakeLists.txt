@@ -18,11 +18,11 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/source)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/source/falaise)
 
 # - Headers:
-# list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/reconstruction/particle_identification_driver.h)
+list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/reconstruction/particle_identification_driver.h)
 list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/reconstruction/particle_identification_module.h)
 
 # - Sources:
-# list(APPEND FalaiseParticleIdentificationPlugin_SOURCES source/falaise/snemo/reconstruction/particle_identification_driver.cc)
+list(APPEND FalaiseParticleIdentificationPlugin_SOURCES source/falaise/snemo/reconstruction/particle_identification_driver.cc)
 list(APPEND FalaiseParticleIdentificationPlugin_SOURCES source/falaise/snemo/reconstruction/particle_identification_module.cc)
 
 ############################################################################################
