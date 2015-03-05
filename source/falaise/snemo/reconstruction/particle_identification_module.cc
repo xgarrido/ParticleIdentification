@@ -24,8 +24,8 @@ namespace snemo {
 
     void particle_identification_module::_set_defaults()
     {
-      _PTD_label_ = snemo::datamodel::data_info::default_tracker_clustering_data_label();
-      _driver_.reset();
+      _PTD_label_ = snemo::datamodel::data_info::default_particle_track_data_label();
+      _driver_.reset(0);
       return;
     }
 
@@ -44,7 +44,15 @@ namespace snemo {
         _PTD_label_ = setup_.fetch_string("PTD_label");
       }
 
-      // Initialize the clustering driver :
+      // PID algorithm :
+      std::string algorithm_id = particle_identification_driver::particle_identification_id();
+      // Initialize the PID algo:
+      _driver_.reset(new particle_identification_driver);
+      DT_THROW_IF (! _driver_, std::logic_error,
+                   "Module '" << get_name() << "' could not instantiate the '"
+                   << algorithm_id << "' PID algorithm !");
+
+      // Initialize the PID driver :
       _driver_.get()->initialize(setup_);
 
       _set_initialized(true);
