@@ -3,6 +3,10 @@
 // Ourselves:
 #include <snemo/reconstruction/particle_identification_driver.h>
 
+// Third party:
+// - Bayeux/cuts:
+#include <bayeux/cuts/cut_manager.h>
+
 // This project:
 #include <falaise/snemo/datamodels/particle_track_data.h>
 #include <falaise/snemo/datamodels/particle_track.h>
@@ -37,6 +41,26 @@ namespace snemo {
     datatools::logger::priority particle_identification_driver::get_logging_priority() const
     {
       return _logging_priority_;
+    }
+
+    bool particle_identification_driver::has_cut_manager() const
+    {
+      return _cut_manager_ != 0;
+    }
+
+    void particle_identification_driver::set_cut_manager(const cuts::cut_manager & cmgr_)
+    {
+      DT_THROW_IF(is_initialized(), std::logic_error,
+                  "Driver is already initialized !");
+      _cut_manager_ = &cmgr_;
+      return;
+    }
+
+    const cuts::cut_manager & particle_identification_driver::get_cut_manager() const
+    {
+      DT_THROW_IF(! has_cut_manager(), std::logic_error,
+                  "No cuts manager is setup !");
+      return *_cut_manager_;
     }
 
     // Constructor
@@ -111,6 +135,7 @@ namespace snemo {
     void particle_identification_driver::_set_defaults()
     {
       _logging_priority_ = datatools::logger::PRIO_WARNING;
+      _cut_manager_ = 0;
       return;
     }
 
@@ -119,10 +144,29 @@ namespace snemo {
       return 0;
     }
 
-    // Main tracking method
-    int particle_identification_driver::_process_algo(snemo::datamodel::particle_track_data & /*ptd_*/)
+    int particle_identification_driver::_process_algo(snemo::datamodel::particle_track_data & ptd_)
     {
       DT_LOG_TRACE(get_logging_priority(), "Entering...");
+
+      snemo::datamodel::particle_track_data::particle_collection_type & particles
+        = ptd_.grab_particles();
+      for (snemo::datamodel::particle_track_data::particle_collection_type::iterator
+             i = particles.begin(); i != particles.end(); ++i) {
+        snemo::datamodel::particle_track & a_particle = i->grab();
+
+        // cuts::cut_handle_dict_type & the_cuts = _cut_manager_->get_cuts();
+        // cuts::cut_handle_dict_type::iterator found = the_cuts.find(event_selection::EH_CUT_LABEL);
+        // if (found == the_cuts.end()) {
+        //   DT_LOG_ERROR(options_manager::get_instance().get_logging_priority(),
+        //                "Cut '" << EH_CUT_LABEL << "' has not been registered !");
+        //   return false;
+        // }
+        // the_cut.set_user_data(&a_record);
+        // cut_status = the_cut.process();
+        // the_cut.reset_user_data();
+
+        a_particle.tree_dump();
+      }
 
       DT_LOG_TRACE(get_logging_priority(), "Exiting.");
       return 0;

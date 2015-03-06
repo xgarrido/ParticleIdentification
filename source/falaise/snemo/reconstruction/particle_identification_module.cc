@@ -7,9 +7,17 @@
 #include <stdexcept>
 #include <sstream>
 
+// Third party:
+// - Bayeux/datatools:
+#include <datatools/service_manager.h>
+// - Bayeux/cuts:
+#include <cuts/cut_service.h>
+#include <cuts/cut_manager.h>
+
 // This project:
 #include <falaise/snemo/datamodels/data_model.h>
 #include <falaise/snemo/datamodels/particle_track_data.h>
+#include <falaise/snemo/processing/services.h>
 
 // PID driver
 #include <snemo/reconstruction/particle_identification_driver.h>
@@ -31,7 +39,7 @@ namespace snemo {
 
     // Initialization :
     void particle_identification_module::initialize(const datatools::properties  & setup_,
-                                                    datatools::service_manager   & /*service_manager_*/,
+                                                    datatools::service_manager   & service_manager_,
                                                     dpp::module_handle_dict_type & /* module_dict_ */)
     {
       DT_THROW_IF (is_initialized(),
@@ -44,6 +52,20 @@ namespace snemo {
         _PTD_label_ = setup_.fetch_string("PTD_label");
       }
 
+      // Cut manager :
+      std::string cut_label = snemo::processing::service_info::default_cut_service_label();
+      if (setup_.has_key("Cut_label")) {
+        cut_label = setup_.fetch_string("Cut_label");
+      }
+      DT_THROW_IF(cut_label.empty(), std::logic_error,
+                  "Module '" << get_name() << "' has no valid '" << "Cut_label" << "' property !");
+      DT_THROW_IF(! service_manager_.has(cut_label) ||
+                  ! service_manager_.is_a<cuts::cut_service>(cut_label),
+                  std::logic_error,
+                  "Module '" << get_name() << "' has no '" << cut_label << "' service !");
+      cuts::cut_service & Cut
+        = service_manager_.get<cuts::cut_service>(cut_label);
+
       // PID algorithm :
       std::string algorithm_id = particle_identification_driver::particle_identification_id();
       // Initialize the PID algo:
@@ -51,6 +73,9 @@ namespace snemo {
       DT_THROW_IF (! _driver_, std::logic_error,
                    "Module '" << get_name() << "' could not instantiate the '"
                    << algorithm_id << "' PID algorithm !");
+
+      // Plug the cut manager :
+      _driver_.get()->set_cut_manager(Cut.get_cut_manager());
 
       // Initialize the PID driver :
       _driver_.get()->initialize(setup_);
@@ -154,6 +179,25 @@ DOCD_CLASS_IMPLEMENT_LOAD_BEGIN(snemo::reconstruction::particle_identification_m
       ;
   }
 
+  {
+    // Description of the 'Geo_label' configuration property :
+    datatools::configuration_property_description & cpd
+      = ocd_.add_property_info();
+    cpd.set_name_pattern("Cut_label")
+      .set_terse_description("The label/name of the cut service")
+      .set_traits(datatools::TYPE_STRING)
+      .set_mandatory(false)
+      .set_long_description("This is the name of the service to be used as the \n"
+                            "cut service.                                      \n"
+                            )
+      .set_default_value_string(snemo::processing::service_info::default_cut_service_label())
+      .add_example("Use an alternative name for the cut service:: \n"
+                   "                                              \n"
+                   "  Cuts_label : string = \"cuts2\"             \n"
+                   "                                              \n"
+                   )
+      ;
+  }
   // Additionnal configuration hints :
   ocd_.set_configuration_hints("Here is a full configuration example in the      \n"
                                "``datatools::properties`` ASCII format::         \n"

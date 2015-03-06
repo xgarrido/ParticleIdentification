@@ -35,7 +35,10 @@
 
 // - Bayeux/datatools:
 #include <datatools/logger.h>
-#include <datatools/properties.h>
+
+namespace cuts {
+  class cut_manager;
+}
 
 namespace snemo {
 
@@ -63,6 +66,15 @@ namespace snemo {
 
       /// Getting logging priority
       datatools::logger::priority get_logging_priority() const;
+
+      /// Check the cut manager
+      bool has_cut_manager() const;
+
+      /// Address the cut manager
+      void set_cut_manager(const cuts::cut_manager & cmgr_);
+
+      /// Return a non-mutable reference to the cut manager
+      const cuts::cut_manager & get_cut_manager() const;
 
       /// Constructor
       particle_identification_driver();
@@ -95,8 +107,9 @@ namespace snemo {
 
     private:
 
-      bool _initialized_;                                       //!< Initialize flag
-      datatools::logger::priority _logging_priority_;           //!< Logging priority
+      bool _initialized_;                             //!< Initialize flag
+      datatools::logger::priority _logging_priority_; //!< Logging priority
+      const cuts::cut_manager * _cut_manager_;        //!< The SuperNEMO cut manager
     };
 
   }  // end of namespace reconstruction
