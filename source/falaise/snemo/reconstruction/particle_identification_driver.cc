@@ -48,7 +48,7 @@ namespace snemo {
       return _cut_manager_ != 0;
     }
 
-    void particle_identification_driver::set_cut_manager(const cuts::cut_manager & cmgr_)
+    void particle_identification_driver::set_cut_manager(cuts::cut_manager & cmgr_)
     {
       DT_THROW_IF(is_initialized(), std::logic_error,
                   "Driver is already initialized !");
@@ -57,6 +57,13 @@ namespace snemo {
     }
 
     const cuts::cut_manager & particle_identification_driver::get_cut_manager() const
+    {
+      DT_THROW_IF(! has_cut_manager(), std::logic_error,
+                  "No cuts manager is setup !");
+      return *_cut_manager_;
+    }
+
+    cuts::cut_manager & particle_identification_driver::grab_cut_manager()
     {
       DT_THROW_IF(! has_cut_manager(), std::logic_error,
                   "No cuts manager is setup !");
@@ -84,6 +91,10 @@ namespace snemo {
     void particle_identification_driver::initialize(const datatools::properties & setup_)
     {
       DT_THROW_IF(is_initialized(), std::logic_error, "Driver '" << particle_identification_id() << "' is already initialized !");
+
+      DT_THROW_IF(! has_cut_manager(), std::logic_error, "Missing cut manager !");
+      DT_THROW_IF(! get_cut_manager().is_initialized(), std::logic_error,
+                  "Cut manager is not initialized !");
 
       // Logging priority
       datatools::logger::priority lp = datatools::logger::extract_logging_configuration(setup_);
@@ -154,18 +165,17 @@ namespace snemo {
              i = particles.begin(); i != particles.end(); ++i) {
         snemo::datamodel::particle_track & a_particle = i->grab();
 
-        // cuts::cut_handle_dict_type & the_cuts = _cut_manager_->get_cuts();
-        // cuts::cut_handle_dict_type::iterator found = the_cuts.find(event_selection::EH_CUT_LABEL);
-        // if (found == the_cuts.end()) {
-        //   DT_LOG_ERROR(options_manager::get_instance().get_logging_priority(),
-        //                "Cut '" << EH_CUT_LABEL << "' has not been registered !");
-        //   return false;
-        // }
-        // the_cut.set_user_data(&a_record);
-        // cut_status = the_cut.process();
-        // the_cut.reset_user_data();
+        cuts::cut_manager & cut_mgr = grab_cut_manager();
+        const std::string cut_name = "electron_definition";
+        DT_THROW_IF(!cut_mgr.has(cut_name), std::logic_error, "Cut '" << cut_name << "' is missing !");
+        cuts::i_cut & a_cut = cut_mgr.grab(cut_name);
+        a_cut.set_user_data(a_particle);
+        const int cut_status = a_cut.process();
+        a_cut.reset_user_data();
 
-        a_particle.tree_dump();
+        if (cut_status == cuts::SELECTION_ACCEPTED) {
+          a_particle.tree_dump();
+        }
       }
 
       DT_LOG_TRACE(get_logging_priority(), "Exiting.");

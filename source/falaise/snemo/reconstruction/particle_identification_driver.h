@@ -71,10 +71,13 @@ namespace snemo {
       bool has_cut_manager() const;
 
       /// Address the cut manager
-      void set_cut_manager(const cuts::cut_manager & cmgr_);
+      void set_cut_manager(cuts::cut_manager & cmgr_);
 
       /// Return a non-mutable reference to the cut manager
       const cuts::cut_manager & get_cut_manager() const;
+
+      /// Return a mutable reference to the cut manager
+      cuts::cut_manager & grab_cut_manager();
 
       /// Constructor
       particle_identification_driver();
@@ -109,7 +112,7 @@ namespace snemo {
 
       bool _initialized_;                             //!< Initialize flag
       datatools::logger::priority _logging_priority_; //!< Logging priority
-      const cuts::cut_manager * _cut_manager_;        //!< The SuperNEMO cut manager
+      cuts::cut_manager * _cut_manager_;        //!< The SuperNEMO cut manager
     };
 
   }  // end of namespace reconstruction

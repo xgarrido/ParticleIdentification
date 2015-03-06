@@ -64,7 +64,7 @@ namespace snemo {
                   std::logic_error,
                   "Module '" << get_name() << "' has no '" << cut_label << "' service !");
       cuts::cut_service & Cut
-        = service_manager_.get<cuts::cut_service>(cut_label);
+        = service_manager_.grab<cuts::cut_service>(cut_label);
 
       // PID algorithm :
       std::string algorithm_id = particle_identification_driver::particle_identification_id();
@@ -75,7 +75,7 @@ namespace snemo {
                    << algorithm_id << "' PID algorithm !");
 
       // Plug the cut manager :
-      _driver_.get()->set_cut_manager(Cut.get_cut_manager());
+      _driver_.get()->set_cut_manager(Cut.grab_cut_manager());
 
       // Initialize the PID driver :
       _driver_.get()->initialize(setup_);
