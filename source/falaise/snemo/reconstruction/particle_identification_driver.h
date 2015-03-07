@@ -113,6 +113,8 @@ namespace snemo {
       bool _initialized_;                             //!< Initialize flag
       datatools::logger::priority _logging_priority_; //!< Logging priority
       cuts::cut_manager * _cut_manager_;        //!< The SuperNEMO cut manager
+
+      std::vector<std::string> _pid_definitions_; //!< The list of particle definition
     };
 
   }  // end of namespace reconstruction

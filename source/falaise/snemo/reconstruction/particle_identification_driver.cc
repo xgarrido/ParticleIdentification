@@ -102,6 +102,11 @@ namespace snemo {
                   "Invalid logging priority level for geometry manager !");
       set_logging_priority(lp);
 
+      // Fetch PID definition
+      DT_THROW_IF(!setup_.has_key("pid.definitions"), std::logic_error,
+                  "Missing definitions of particles !");
+      setup_.fetch("pid.definitions", _pid_definitions_);
+
       set_initialized(true);
       return;
     }
@@ -162,18 +167,27 @@ namespace snemo {
       snemo::datamodel::particle_track_data::particle_collection_type & particles
         = ptd_.grab_particles();
       for (snemo::datamodel::particle_track_data::particle_collection_type::iterator
-             i = particles.begin(); i != particles.end(); ++i) {
-        snemo::datamodel::particle_track & a_particle = i->grab();
+             it = particles.begin(); it != particles.end(); ++it) {
+        snemo::datamodel::particle_track & a_particle = it->grab();
 
-        cuts::cut_manager & cut_mgr = grab_cut_manager();
-        const std::string cut_name = "electron_definition";
-        DT_THROW_IF(!cut_mgr.has(cut_name), std::logic_error, "Cut '" << cut_name << "' is missing !");
-        cuts::i_cut & a_cut = cut_mgr.grab(cut_name);
-        a_cut.set_user_data(a_particle);
-        const int cut_status = a_cut.process();
-        a_cut.reset_user_data();
+        for (size_t i = 0; i < _pid_definitions_.size(); ++i) {
+          const std::string & cut_name = _pid_definitions_.at(i);
+          DT_LOG_DEBUG(get_logging_priority(), "Applying '" << cut_name << "' selection...");
 
-        if (cut_status == cuts::SELECTION_ACCEPTED) {
+          cuts::cut_manager & cut_mgr = grab_cut_manager();
+          DT_THROW_IF(!cut_mgr.has(cut_name), std::logic_error, "Cut '" << cut_name << "' is missing !");
+          cuts::i_cut & a_cut = cut_mgr.grab(cut_name);
+          a_cut.set_user_data(a_particle);
+          const int cut_status = a_cut.process();
+          a_cut.reset_user_data();
+
+          if (cut_status != cuts::SELECTION_ACCEPTED) {
+            DT_LOG_DEBUG(get_logging_priority(),
+                         "Current particle does not fulfill '" << cut_name << "' criteria !");
+            continue;
+          }
+
+          // Store particle label within 'particle_track' auxiliairies
           a_particle.tree_dump();
         }
       }
