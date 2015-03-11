@@ -10,6 +10,7 @@
 // This project:
 #include <falaise/snemo/datamodels/particle_track_data.h>
 #include <falaise/snemo/datamodels/particle_track.h>
+#include <falaise/snemo/datamodels/pid_utils.h>
 
 namespace snemo {
 
@@ -106,6 +107,14 @@ namespace snemo {
       DT_THROW_IF(!setup_.has_key("pid.definitions"), std::logic_error,
                   "Missing definitions of particles !");
       setup_.fetch("pid.definitions", _pid_definitions_);
+      for (size_t i = 0; i < _pid_definitions_.size(); ++i) {
+        const std::string & a_def = _pid_definitions_.at(i);
+        std::string key;
+        if (setup_.has_key(key = "pid." + a_def + ".label")) {
+          const std::string value = setup_.fetch_string(key);
+          _pid_properties_[a_def] = value;
+        }
+      }
 
       set_initialized(true);
       return;
@@ -124,24 +133,10 @@ namespace snemo {
       int status = 0;
       DT_THROW_IF(! is_initialized(), std::logic_error, "Driver '" << particle_identification_id() << "' is already initialized !");
 
-      status = _prepare_process(ptd_);
-      if (status != 0) {
-        DT_LOG_ERROR(get_logging_priority(),
-                     "Pre-processing of particle tracks by '" << particle_identification_id() << "' algorithm has failed !");
-        return status;
-      }
-
       status = _process_algo(ptd_);
       if (status != 0) {
         DT_LOG_ERROR(get_logging_priority(),
                      "Processing of particle tracks by '" << particle_identification_id() << "' algorithm has failed !");
-        return status;
-      }
-
-      status = _post_process(ptd_);
-      if (status != 0) {
-        DT_LOG_ERROR(get_logging_priority(),
-                     "Post-processing of particle tracks by '" << particle_identification_id() << "' algorithm has failed !");
         return status;
       }
 
@@ -153,11 +148,6 @@ namespace snemo {
       _logging_priority_ = datatools::logger::PRIO_WARNING;
       _cut_manager_ = 0;
       return;
-    }
-
-    int particle_identification_driver::_prepare_process(snemo::datamodel::particle_track_data & /*ptd_*/)
-    {
-      return 0;
     }
 
     int particle_identification_driver::_process_algo(snemo::datamodel::particle_track_data & ptd_)
@@ -188,16 +178,21 @@ namespace snemo {
           }
 
           // Store particle label within 'particle_track' auxiliairies
-          a_particle.tree_dump();
+          std::string value = _pid_properties_[cut_name];
+          datatools::properties & aux = a_particle.grab_auxiliaries();
+          if (aux.has_key(snemo::datamodel::pid_utils::pid_label_key())) {
+            value = aux.fetch_string(snemo::datamodel::pid_utils::pid_label_key()) + "|" + value;
+          }
+          aux.update(snemo::datamodel::pid_utils::pid_label_key(), value);
+
+          if (get_logging_priority() >= datatools::logger::PRIO_DEBUG) {
+            DT_LOG_DEBUG(get_logging_priority(), "Particle dump:");
+            a_particle.tree_dump();
+          }
         }
       }
 
       DT_LOG_TRACE(get_logging_priority(), "Exiting.");
-      return 0;
-    }
-
-    int particle_identification_driver::_post_process(snemo::datamodel::particle_track_data & /*ptd_*/)
-    {
       return 0;
     }
 

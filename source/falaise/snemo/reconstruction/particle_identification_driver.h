@@ -99,14 +99,8 @@ namespace snemo {
       /// Set default values to class members
       void _set_defaults();
 
-      /// Prepare data for processing
-      virtual int _prepare_process(snemo::datamodel::particle_track_data & ptd_);
-
       /// Main identification method
       virtual int _process_algo(snemo::datamodel::particle_track_data & ptd_);
-
-      /// Post-processing operation
-      virtual int _post_process(snemo::datamodel::particle_track_data & ptd_);
 
     private:
 
@@ -115,6 +109,7 @@ namespace snemo {
       cuts::cut_manager * _cut_manager_;        //!< The SuperNEMO cut manager
 
       std::vector<std::string> _pid_definitions_; //!< The list of particle definition
+      std::map<std::string, std::string> _pid_properties_;
     };
 
   }  // end of namespace reconstruction
