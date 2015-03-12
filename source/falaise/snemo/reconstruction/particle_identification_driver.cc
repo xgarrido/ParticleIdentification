@@ -106,13 +106,14 @@ namespace snemo {
       // Fetch PID definition
       DT_THROW_IF(!setup_.has_key("pid.definitions"), std::logic_error,
                   "Missing definitions of particles !");
-      setup_.fetch("pid.definitions", _pid_definitions_);
-      for (size_t i = 0; i < _pid_definitions_.size(); ++i) {
-        const std::string & a_def = _pid_definitions_.at(i);
-        std::string key;
-        if (setup_.has_key(key = "pid." + a_def + ".label")) {
-          const std::string value = setup_.fetch_string(key);
-          _pid_properties_[a_def] = value;
+      std::vector<std::string> pid_definitions;
+      setup_.fetch("pid.definitions", pid_definitions);
+      for (size_t i = 0; i < pid_definitions.size(); ++i) {
+        const std::string & key = pid_definitions.at(i);
+        std::string str;
+        if (setup_.has_key(str = "pid." + key + ".label")) {
+          const std::string value = setup_.fetch_string(str);
+          _pid_properties_.insert(std::make_pair(key, value));
         }
       }
 
@@ -160,8 +161,9 @@ namespace snemo {
              it = particles.begin(); it != particles.end(); ++it) {
         snemo::datamodel::particle_track & a_particle = it->grab();
 
-        for (size_t i = 0; i < _pid_definitions_.size(); ++i) {
-          const std::string & cut_name = _pid_definitions_.at(i);
+        for (property_dict_type::const_iterator ip = _pid_properties_.begin();
+             ip != _pid_properties_.end(); ++ip) {
+          const std::string & cut_name = ip->first;
           DT_LOG_DEBUG(get_logging_priority(), "Applying '" << cut_name << "' selection...");
 
           cuts::cut_manager & cut_mgr = grab_cut_manager();
@@ -178,7 +180,7 @@ namespace snemo {
           }
 
           // Store particle label within 'particle_track' auxiliairies
-          std::string value = _pid_properties_[cut_name];
+          std::string value = ip->second;
           datatools::properties & aux = a_particle.grab_auxiliaries();
           if (aux.has_key(snemo::datamodel::pid_utils::pid_label_key())) {
             value = aux.fetch_string(snemo::datamodel::pid_utils::pid_label_key()) + "|" + value;

@@ -53,6 +53,9 @@ namespace snemo {
     {
     public:
 
+      typedef std::map<std::string, std::string> property_dict_type;
+
+      /// Algorithm id
       static const std::string & particle_identification_id();
 
       /// Initialization flag
@@ -106,10 +109,9 @@ namespace snemo {
 
       bool _initialized_;                             //!< Initialize flag
       datatools::logger::priority _logging_priority_; //!< Logging priority
-      cuts::cut_manager * _cut_manager_;        //!< The SuperNEMO cut manager
+      cuts::cut_manager * _cut_manager_;              //!< The SuperNEMO cut manager
 
-      std::vector<std::string> _pid_definitions_; //!< The list of particle definition
-      std::map<std::string, std::string> _pid_properties_;
+      property_dict_type _pid_properties_; //!< PID properties dictionnary
     };
 
   }  // end of namespace reconstruction
