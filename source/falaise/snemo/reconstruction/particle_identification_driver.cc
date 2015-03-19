@@ -71,6 +71,21 @@ namespace snemo {
       return *_cut_manager_;
     }
 
+    uint32_t particle_identification_driver::get_mode() const
+    {
+      return _mode_;
+    }
+
+    bool particle_identification_driver::is_mode_pid_label() const
+    {
+      return _mode_ & MODE_PID_LABEL;
+    }
+
+    bool particle_identification_driver::is_mode_pid_user() const
+    {
+      return _mode_ & MODE_PID_USER;
+    }
+
     // Constructor
     particle_identification_driver::particle_identification_driver()
     {
@@ -103,17 +118,38 @@ namespace snemo {
                   "Invalid logging priority level for geometry manager !");
       set_logging_priority(lp);
 
+      // Fetch PID mode
+      DT_THROW_IF(! setup_.has_key("pid.mode"), std::logic_error, "Missing PID mode !");
+      const std::string mode = setup_.fetch_string("pid.mode");
+      if (mode == "label") {
+        _mode_ |= MODE_PID_LABEL;
+      } else if (mode == "user") {
+        _mode_ |= MODE_PID_USER;
+      } else {
+        DT_THROW_IF(true, std::logic_error, "Unkown PID mode '" << mode << "' !");
+      }
+
       // Fetch PID definition
-      DT_THROW_IF(!setup_.has_key("pid.definitions"), std::logic_error,
+      DT_THROW_IF(! setup_.has_key("pid.definitions"), std::logic_error,
                   "Missing definitions of particles !");
       std::vector<std::string> pid_definitions;
       setup_.fetch("pid.definitions", pid_definitions);
       for (size_t i = 0; i < pid_definitions.size(); ++i) {
         const std::string & key = pid_definitions.at(i);
-        std::string str;
-        if (setup_.has_key(str = "pid." + key + ".label")) {
-          const std::string value = setup_.fetch_string(str);
-          _pid_properties_.insert(std::make_pair(key, value));
+        if (is_mode_pid_label()) {
+          const std::string str = "pid." + key + "." + mode;
+          if (setup_.has_key(str)) {
+            const std::string value = setup_.fetch_string(str);
+            _pid_properties_.insert(std::make_pair(key, value));
+          }
+        } else if (is_mode_pid_user()) {
+          const std::string str1 ="pid." + key + "." + mode + ".key";
+          const std::string str2 ="pid." + key + "." + mode + ".value";
+          DT_THROW_IF(! setup_.has_key(str1) && ! setup_.has_key(str2), std::logic_error,
+                      "Missing pair of key/value for '" << key << "' field !");
+          const std::string key = setup_.fetch_string(str1);
+          const std::string value = setup_.fetch_string(str2);
+            _pid_properties_.insert(std::make_pair(key, value));
         }
       }
 
@@ -147,6 +183,7 @@ namespace snemo {
     void particle_identification_driver::_set_defaults()
     {
       _logging_priority_ = datatools::logger::PRIO_WARNING;
+      _mode_ = MODE_UNDEFINED;
       _cut_manager_ = 0;
       return;
     }
@@ -179,13 +216,19 @@ namespace snemo {
             continue;
           }
 
-          // Store particle label within 'particle_track' auxiliairies
-          std::string value = ip->second;
           datatools::properties & aux = a_particle.grab_auxiliaries();
-          if (aux.has_key(snemo::datamodel::pid_utils::pid_label_key())) {
-            value = aux.fetch_string(snemo::datamodel::pid_utils::pid_label_key()) + "|" + value;
+          if (is_mode_pid_label()) {
+            // Store particle label within 'particle_track' auxiliairies
+            std::string value = ip->second;
+            if (aux.has_key(snemo::datamodel::pid_utils::pid_label_key())) {
+              value = aux.fetch_string(snemo::datamodel::pid_utils::pid_label_key()) + "|" + value;
+            }
+            aux.update(snemo::datamodel::pid_utils::pid_label_key(), value);
           }
-          aux.update(snemo::datamodel::pid_utils::pid_label_key(), value);
+
+          if (is_mode_pid_user()) {
+
+          }
 
           if (get_logging_priority() >= datatools::logger::PRIO_DEBUG) {
             DT_LOG_DEBUG(get_logging_priority(), "Particle dump:");

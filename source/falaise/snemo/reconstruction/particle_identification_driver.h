@@ -35,6 +35,7 @@
 
 // - Bayeux/datatools:
 #include <datatools/logger.h>
+#include <datatools/bit_mask.h>
 
 namespace cuts {
   class cut_manager;
@@ -52,6 +53,14 @@ namespace snemo {
     class particle_identification_driver
     {
     public:
+
+      /// Mode of the PID driver
+      enum mode_type {
+        MODE_UNDEFINED = 0,
+        MODE_PID_LABEL = datatools::bit_mask::bit01,
+        MODE_PID_USER  = datatools::bit_mask::bit02
+      };
+
 
       typedef std::map<std::string, std::string> property_dict_type;
 
@@ -82,6 +91,15 @@ namespace snemo {
       /// Return a mutable reference to the cut manager
       cuts::cut_manager & grab_cut_manager();
 
+      /// Return the PID mode
+      uint32_t get_mode() const;
+
+      /// Check mode PID_LABEL
+      bool is_mode_pid_label() const;
+
+      /// Check mode PID_USER
+      bool is_mode_pid_user() const;
+
       /// Constructor
       particle_identification_driver();
 
@@ -109,9 +127,9 @@ namespace snemo {
 
       bool _initialized_;                             //!< Initialize flag
       datatools::logger::priority _logging_priority_; //!< Logging priority
+      uint32_t _mode_;                                //!< Working mode
       cuts::cut_manager * _cut_manager_;              //!< The SuperNEMO cut manager
-
-      property_dict_type _pid_properties_; //!< PID properties dictionnary
+      property_dict_type _pid_properties_;            //!< PID properties dictionnary
     };
 
   }  // end of namespace reconstruction
