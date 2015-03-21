@@ -137,7 +137,7 @@ namespace snemo {
         if (is_mode_pid_label()) {
           const std::string str = key + ".label";
           if (setup_.has_key(str)) {
-            const std::string a_key = key;
+            const std::string a_key = snemo::datamodel::pid_utils::pid_label_key();
             const std::string a_value = setup_.fetch_string(str);
             pair_property_type ppt = std::make_pair(a_key, a_value);
             _pid_properties_.insert(std::make_pair(key, ppt));
@@ -206,7 +206,7 @@ namespace snemo {
           DT_LOG_DEBUG(get_logging_priority(), "Applying '" << cut_name << "' selection...");
 
           cuts::cut_manager & cut_mgr = grab_cut_manager();
-          DT_THROW_IF(!cut_mgr.has(cut_name), std::logic_error, "Cut '" << cut_name << "' is missing !");
+          DT_THROW_IF(! cut_mgr.has(cut_name), std::logic_error, "Cut '" << cut_name << "' is missing !");
           cuts::i_cut & a_cut = cut_mgr.grab(cut_name);
           a_cut.set_user_data(a_particle);
           const int cut_status = a_cut.process();
@@ -220,18 +220,15 @@ namespace snemo {
 
           datatools::properties & aux = a_particle.grab_auxiliaries();
           const pair_property_type & ppt = ip->second;
+          const std::string & key = ppt.first;
+          std::string value = ppt.second;
           if (is_mode_pid_label()) {
             // Store particle label within 'particle_track' auxiliairies
-            std::string value = ppt.second;
-            if (aux.has_key(snemo::datamodel::pid_utils::pid_label_key())) {
-              value = aux.fetch_string(snemo::datamodel::pid_utils::pid_label_key()) + "|" + value;
+            if (aux.has_key(key)) {
+              value = aux.fetch_string(key + "|" + value);
             }
-            aux.update(snemo::datamodel::pid_utils::pid_label_key(), value);
           }
-
-          if (is_mode_pid_user()) {
-            aux.update(ppt.first, ppt.second);
-          }
+          aux.update(key, value);
 
           if (get_logging_priority() >= datatools::logger::PRIO_DEBUG) {
             DT_LOG_DEBUG(get_logging_priority(), "Particle dump:");
