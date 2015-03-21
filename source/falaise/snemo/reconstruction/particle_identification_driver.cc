@@ -119,37 +119,39 @@ namespace snemo {
       set_logging_priority(lp);
 
       // Fetch PID mode
-      DT_THROW_IF(! setup_.has_key("pid.mode"), std::logic_error, "Missing PID mode !");
-      const std::string mode = setup_.fetch_string("pid.mode");
-      if (mode == "label") {
+      if (setup_.has_flag("mode.label")) {
         _mode_ |= MODE_PID_LABEL;
-      } else if (mode == "user") {
-        _mode_ |= MODE_PID_USER;
-      } else {
-        DT_THROW_IF(true, std::logic_error, "Unkown PID mode '" << mode << "' !");
       }
+      if (setup_.has_flag("mode.user")) {
+        _mode_ |= MODE_PID_USER;
+      }
+      DT_THROW_IF(_mode_ == MODE_UNDEFINED, std::logic_error, "Missing at least a 'mode.XXX' property !");
 
       // Fetch PID definition
-      DT_THROW_IF(! setup_.has_key("pid.definitions"), std::logic_error,
+      DT_THROW_IF(! setup_.has_key("definitions"), std::logic_error,
                   "Missing definitions of particles !");
       std::vector<std::string> pid_definitions;
-      setup_.fetch("pid.definitions", pid_definitions);
+      setup_.fetch("definitions", pid_definitions);
       for (size_t i = 0; i < pid_definitions.size(); ++i) {
         const std::string & key = pid_definitions.at(i);
         if (is_mode_pid_label()) {
-          const std::string str = "pid." + key + "." + mode;
+          const std::string str = key + ".label";
           if (setup_.has_key(str)) {
-            const std::string value = setup_.fetch_string(str);
-            _pid_properties_.insert(std::make_pair(key, value));
+            const std::string a_key = key;
+            const std::string a_value = setup_.fetch_string(str);
+            pair_property_type ppt = std::make_pair(a_key, a_value);
+            _pid_properties_.insert(std::make_pair(key, ppt));
           }
-        } else if (is_mode_pid_user()) {
-          const std::string str1 ="pid." + key + "." + mode + ".key";
-          const std::string str2 ="pid." + key + "." + mode + ".value";
+        }
+        if (is_mode_pid_user()) {
+          const std::string str1 = key + ".user.key";
+          const std::string str2 = key + ".user.value";
           DT_THROW_IF(! setup_.has_key(str1) && ! setup_.has_key(str2), std::logic_error,
                       "Missing pair of key/value for '" << key << "' field !");
-          const std::string key = setup_.fetch_string(str1);
-          const std::string value = setup_.fetch_string(str2);
-            _pid_properties_.insert(std::make_pair(key, value));
+          const std::string a_key = setup_.fetch_string(str1);
+          const std::string a_value = setup_.fetch_string(str2);
+          pair_property_type ppt = std::make_pair(a_key, a_value);
+          _pid_properties_.insert(std::make_pair(key, ppt));
         }
       }
 
@@ -217,9 +219,10 @@ namespace snemo {
           }
 
           datatools::properties & aux = a_particle.grab_auxiliaries();
+          const pair_property_type & ppt = ip->second;
           if (is_mode_pid_label()) {
             // Store particle label within 'particle_track' auxiliairies
-            std::string value = ip->second;
+            std::string value = ppt.second;
             if (aux.has_key(snemo::datamodel::pid_utils::pid_label_key())) {
               value = aux.fetch_string(snemo::datamodel::pid_utils::pid_label_key()) + "|" + value;
             }
@@ -227,7 +230,7 @@ namespace snemo {
           }
 
           if (is_mode_pid_user()) {
-
+            aux.update(ppt.first, ppt.second);
           }
 
           if (get_logging_priority() >= datatools::logger::PRIO_DEBUG) {

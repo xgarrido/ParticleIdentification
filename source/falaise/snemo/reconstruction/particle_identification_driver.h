@@ -61,8 +61,11 @@ namespace snemo {
         MODE_PID_USER  = datatools::bit_mask::bit02
       };
 
+      /// Typedef pair key/value
+      typedef std::pair<std::string, std::string> pair_property_type;
 
-      typedef std::map<std::string, std::string> property_dict_type;
+      /// Typedef dictionnary of pair property
+      typedef std::map<std::string, pair_property_type> property_dict_type;
 
       /// Algorithm id
       static const std::string & particle_identification_id();

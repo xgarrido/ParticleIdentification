@@ -67,18 +67,22 @@ namespace snemo {
         = service_manager_.grab<cuts::cut_service>(cut_label);
 
       // PID algorithm :
-      std::string algorithm_id = particle_identification_driver::particle_identification_id();
-      // Initialize the PID algo:
-      _driver_.reset(new particle_identification_driver);
-      DT_THROW_IF (! _driver_, std::logic_error,
-                   "Module '" << get_name() << "' could not instantiate the '"
-                   << algorithm_id << "' PID algorithm !");
+      DT_THROW_IF(!setup_.has_key("driver"), std::logic_error, "Missing 'driver' algorithm");
+      const std::string algorithm_id = setup_.fetch_string("driver");
+      if (algorithm_id == particle_identification_driver::particle_identification_id()) {
+        _driver_.reset(new snemo::reconstruction::particle_identification_driver);
+      } else {
+        DT_THROW_IF(true, std::logic_error,
+                    "Unsupported '" << algorithm_id << "'particle identification algorithm ");
+      }
 
       // Plug the cut manager :
       _driver_.get()->set_cut_manager(Cut.grab_cut_manager());
 
       // Initialize the PID driver :
-      _driver_.get()->initialize(setup_);
+      datatools::properties PID_config;
+      setup_.export_and_rename_starting_with(PID_config, algorithm_id + ".", "");
+      _driver_.get()->initialize(PID_config);
 
       _set_initialized(true);
       return;
