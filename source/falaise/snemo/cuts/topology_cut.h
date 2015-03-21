@@ -44,12 +44,28 @@
 
 namespace snemo {
 
+  namespace datamodel {
+    class particle_track;
+  }
+
   namespace cut {
 
     /// \brief A topology event cut
     class topology_cut : public cuts::i_cut
     {
     public:
+
+      /// Structure holding particle range
+      struct particle_range {
+        int min;
+        int max;
+
+        /// Constructor
+        particle_range();
+
+        /// Check particle
+        bool check(const snemo::datamodel::particle_track & particle_);
+      };
 
       /// Mode of the cut
       enum mode_type {
@@ -85,6 +101,11 @@ namespace snemo {
 
       std::string _PTD_label_; //!< Name of the "Particle track data" bank
       uint32_t    _mode_;      //!< Mode of the cut
+
+      particle_range _electron_range_;
+      particle_range _positron_range_;
+      particle_range _gamma_range_;
+      particle_range _alpha_range_;
 
       // Macro to automate the registration of the cut :
       CUT_REGISTRATION_INTERFACE(topology_cut);
