@@ -30,8 +30,26 @@ namespace snemo {
       return;
     }
 
-    bool topology_cut::particle_range::check(const snemo::datamodel::particle_track & particle_)
+    void topology_cut::particle_range::parse(const datatools::properties & setup_,
+                                             const std::string & prefix_)
     {
+      if (setup_.has_key(prefix_ + "_range.min")) {
+        min = setup_.fetch_integer(prefix_ + "_range.min");
+      }
+      if (setup_.has_key(prefix_ + "_range_max")) {
+        max = setup_.fetch_integer(prefix_ + "_range.max");
+      }
+      return;
+    }
+
+    bool topology_cut::particle_range::check(const size_t n_)
+    {
+      if (min >= 0 && n_ < (size_t)min) {
+        return false;
+      }
+      if (max >= 0 && n_ > (size_t)max) {
+        return false;
+      }
       return true;
     }
 
@@ -81,30 +99,10 @@ namespace snemo {
         _PTD_label_ = configuration_.fetch_string("PTD_label");
       }
 
-      if (configuration_.has_key("electron_range.min")) {
-        _electron_range_.min = configuration_.fetch_integer("electron_range.min");
-      }
-      if (configuration_.has_key("electron_range_max")) {
-        _electron_range_.max = configuration_.fetch_integer("electron_range.max");
-      }
-      if (configuration_.has_key("positron_range.min")) {
-        _positron_range_.min = configuration_.fetch_integer("positron_range.min");
-      }
-      if (configuration_.has_key("positron_range.max")) {
-        _positron_range_.max = configuration_.fetch_integer("positron_range.max");
-      }
-      if (configuration_.has_key("gamma_range.min")) {
-        _gamma_range_.min = configuration_.fetch_integer("gamma_range.min");
-      }
-      if (configuration_.has_key("gamma_range.max")) {
-        _gamma_range_.max = configuration_.fetch_integer("gamma_range.max");
-      }
-      if (configuration_.has_key("alpha_range.min")) {
-        _alpha_range_.min = configuration_.fetch_integer("alpha_range.min");
-      }
-      if (configuration_.has_key("alpha_range.max")) {
-        _alpha_range_.max = configuration_.fetch_integer("alpha_range.max");
-      }
+      _electron_range_.parse(configuration_, "electron");
+      _positron_range_.parse(configuration_, "positron");
+      _gamma_range_.parse(configuration_, "gamma");
+      _alpha_range_.parse(configuration_, "alpha");
 
       this->i_cut::_set_initialized(true);
       return;
@@ -137,7 +135,6 @@ namespace snemo {
       size_t nalphas    = 0;
       size_t ngammas    = 0;
       size_t nundefined = 0;
-      bool check_topolgy = true;
       for (snemo::datamodel::particle_track_data::particle_collection_type::const_iterator
              it = particles.begin(); it != particles.end(); ++it) {
         const snemo::datamodel::particle_track & a_particle = it->get();
@@ -157,17 +154,20 @@ namespace snemo {
         } else {
           nundefined++;
         }
-
-        bool check = true;
-        if (! _electron_range_.check(a_particle)) check = false;
-
-        if (! check) {
-          DT_LOG_DEBUG(get_logging_priority(), "Event rejected by topology cut!");
-          check_topolgy = false;
-        }
       }
 
-      cut_returned = cuts::SELECTION_REJECTED;
+      bool check = true;
+      if (! _electron_range_.check(nelectrons)) check = false;
+      if (! _positron_range_.check(npositrons)) check = false;
+      if (! _gamma_range_.check(ngammas)) check = false;
+      if (! _alpha_range_.check(nalphas)) check = false;
+
+      cut_returned = cuts::SELECTION_ACCEPTED;
+      if (! check) {
+        DT_LOG_DEBUG(get_logging_priority(), "Event rejected by topology cut!");
+        cut_returned = cuts::SELECTION_REJECTED;
+      }
+
       return cut_returned;
     }
 

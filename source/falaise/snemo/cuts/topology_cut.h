@@ -44,10 +44,6 @@
 
 namespace snemo {
 
-  namespace datamodel {
-    class particle_track;
-  }
-
   namespace cut {
 
     /// \brief A topology event cut
@@ -63,8 +59,11 @@ namespace snemo {
         /// Constructor
         particle_range();
 
-        /// Check particle
-        bool check(const snemo::datamodel::particle_track & particle_);
+        /// Parse min/max value from configuration
+        void parse(const datatools::properties & setup_, const std::string & prefix_);
+
+        /// Check number of particle
+        bool check(const size_t n_);
       };
 
       /// Mode of the cut
