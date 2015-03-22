@@ -53,8 +53,8 @@ namespace snemo {
 
       /// Structure holding particle range
       struct particle_range {
-        int min;
-        int max;
+        size_t min;
+        size_t max;
 
         /// Constructor
         particle_range();
@@ -105,6 +105,7 @@ namespace snemo {
       particle_range _positron_range_;
       particle_range _gamma_range_;
       particle_range _alpha_range_;
+      particle_range _undefined_range_;
 
       // Macro to automate the registration of the cut :
       CUT_REGISTRATION_INTERFACE(topology_cut);

@@ -25,8 +25,8 @@ namespace snemo {
 
     topology_cut::particle_range::particle_range()
     {
-      min = -1;
-      max = -1;
+      min = 0;
+      max = 0;
       return;
     }
 
@@ -36,7 +36,7 @@ namespace snemo {
       if (setup_.has_key(prefix_ + "_range.min")) {
         min = setup_.fetch_integer(prefix_ + "_range.min");
       }
-      if (setup_.has_key(prefix_ + "_range_max")) {
+      if (setup_.has_key(prefix_ + "_range.max")) {
         max = setup_.fetch_integer(prefix_ + "_range.max");
       }
       return;
@@ -44,10 +44,10 @@ namespace snemo {
 
     bool topology_cut::particle_range::check(const size_t n_)
     {
-      if (min >= 0 && n_ < (size_t)min) {
+      if (n_ < min) {
         return false;
       }
-      if (max >= 0 && n_ > (size_t)max) {
+      if (n_ > max) {
         return false;
       }
       return true;
@@ -103,6 +103,7 @@ namespace snemo {
       _positron_range_.parse(configuration_, "positron");
       _gamma_range_.parse(configuration_, "gamma");
       _alpha_range_.parse(configuration_, "alpha");
+      _undefined_range_.parse(configuration_, "undefined");
 
       this->i_cut::_set_initialized(true);
       return;
@@ -138,10 +139,6 @@ namespace snemo {
       for (snemo::datamodel::particle_track_data::particle_collection_type::const_iterator
              it = particles.begin(); it != particles.end(); ++it) {
         const snemo::datamodel::particle_track & a_particle = it->get();
-        // const datatools::properties & aux = a_particle.get_auxiliaries();
-        // if (! aux.has_key(snemo::datamodel::pid_utils::pid_label_key())) {
-        //   continue;
-        // }
 
         if (snemo::datamodel::particle_track::particle_is_electron(a_particle)) {
           nelectrons++;
@@ -156,11 +153,18 @@ namespace snemo {
         }
       }
 
+      DT_LOG_TRACE(get_logging_priority(), "nelectron  = " << nelectrons);
+      DT_LOG_TRACE(get_logging_priority(), "npositron  = " << npositrons);
+      DT_LOG_TRACE(get_logging_priority(), "nalphas    = " << nalphas);
+      DT_LOG_TRACE(get_logging_priority(), "ngammas    = " << ngammas);
+      DT_LOG_TRACE(get_logging_priority(), "nundefined = " << nundefined);
+
       bool check = true;
       if (! _electron_range_.check(nelectrons)) check = false;
       if (! _positron_range_.check(npositrons)) check = false;
       if (! _gamma_range_.check(ngammas)) check = false;
       if (! _alpha_range_.check(nalphas)) check = false;
+      if (! _undefined_range_.check(nundefined)) check = false;
 
       cut_returned = cuts::SELECTION_ACCEPTED;
       if (! check) {
