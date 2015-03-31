@@ -105,6 +105,8 @@ namespace snemo {
       _alpha_range_.parse(configuration_, "alpha");
       _undefined_range_.parse(configuration_, "undefined");
 
+      _unassociated_calorimeter_hits_range_.parse(configuration_, "unassociated_calos");
+
       this->i_cut::_set_initialized(true);
       return;
     }
@@ -131,27 +133,32 @@ namespace snemo {
       const snemo::datamodel::particle_track_data::particle_collection_type & particles
         = PTD.get_particles();
 
+      size_t n_unasso_calos = PTD.get_non_associated_calorimeters().size();
+
+      // std::cout << " unasso calos " << n_unasso_calos << std::endl;
+
       size_t nelectrons = 0;
       size_t npositrons = 0;
       size_t nalphas    = 0;
       size_t ngammas    = 0;
       size_t nundefined = 0;
-      for (snemo::datamodel::particle_track_data::particle_collection_type::const_iterator
-             it = particles.begin(); it != particles.end(); ++it) {
-        const snemo::datamodel::particle_track & a_particle = it->get();
 
-        if (snemo::datamodel::particle_track::particle_is_electron(a_particle)) {
-          nelectrons++;
-        } else if (snemo::datamodel::particle_track::particle_is_positron(a_particle)) {
-          npositrons++;
-        } else if (snemo::datamodel::particle_track::particle_is_gamma(a_particle)) {
-          ngammas++;
-        } else if (snemo::datamodel::particle_track::particle_is_alpha(a_particle)) {
-          nalphas++;
-        } else {
-          nundefined++;
-        }
-      }
+      // for (snemo::datamodel::particle_track_data::particle_collection_type::const_iterator
+      //        it = particles.begin(); it != particles.end(); ++it) {
+      //   const snemo::datamodel::particle_track & a_particle = it->get();
+
+      //   if (snemo::datamodel::particle_track::particle_is_electron(a_particle)) {
+      //     nelectrons++;
+      //   } else if (snemo::datamodel::particle_track::particle_is_positron(a_particle)) {
+      //     npositrons++;
+      //   } else if (snemo::datamodel::particle_track::particle_is_gamma(a_particle)) {
+      //     ngammas++;
+      //   } else if (snemo::datamodel::particle_track::particle_is_alpha(a_particle)) {
+      //     nalphas++;
+      //   } else {
+      //     nundefined++;
+      //   }
+      // }
 
       DT_LOG_TRACE(get_logging_priority(), "nelectron  = " << nelectrons);
       DT_LOG_TRACE(get_logging_priority(), "npositron  = " << npositrons);
@@ -159,19 +166,27 @@ namespace snemo {
       DT_LOG_TRACE(get_logging_priority(), "ngammas    = " << ngammas);
       DT_LOG_TRACE(get_logging_priority(), "nundefined = " << nundefined);
 
+      DT_LOG_TRACE(get_logging_priority(), "n_unasso_calos = " << n_unasso_calos);
+
       bool check = true;
       if (! _electron_range_.check(nelectrons)) check = false;
       if (! _positron_range_.check(npositrons)) check = false;
       if (! _gamma_range_.check(ngammas)) check = false;
       if (! _alpha_range_.check(nalphas)) check = false;
       if (! _undefined_range_.check(nundefined)) check = false;
+      if (! _unassociated_calorimeter_hits_range_.check(n_unasso_calos))
+        {
+          check = false;
+          // std::cout << "not in range " << std::endl;
+        }
 
       cut_returned = cuts::SELECTION_ACCEPTED;
       if (! check) {
         DT_LOG_DEBUG(get_logging_priority(), "Event rejected by topology cut!");
         cut_returned = cuts::SELECTION_REJECTED;
       }
-
+      // if(check)
+      //   std::cout << "pass cut " << std::endl;
       return cut_returned;
     }
 

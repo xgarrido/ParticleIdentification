@@ -47,9 +47,9 @@ endif()
 # Install it:
 install(TARGETS Falaise_ParticleIdentification DESTINATION ${CMAKE_INSTALL_LIBDIR}/Falaise/modules)
 
-# Test support:
-option(FalaiseParticleIdentificationPlugin_ENABLE_TESTING "Build unit testing system for FalaiseParticleIdentification" ON)
-if(FalaiseParticleIdentificationPlugin_ENABLE_TESTING)
-  enable_testing()
-  add_subdirectory(testing)
-endif()
+# # Test support:
+# option(FalaiseParticleIdentificationPlugin_ENABLE_TESTING "Build unit testing system for FalaiseParticleIdentification" ON)
+# if(FalaiseParticleIdentificationPlugin_ENABLE_TESTING)
+#   enable_testing()
+#   add_subdirectory(testing)
+# endif()

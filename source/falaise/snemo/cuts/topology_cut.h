@@ -107,6 +107,8 @@ namespace snemo {
       particle_range _alpha_range_;
       particle_range _undefined_range_;
 
+      particle_range _unassociated_calorimeter_hits_range_;
+
       // Macro to automate the registration of the cut :
       CUT_REGISTRATION_INTERFACE(topology_cut);
     };
