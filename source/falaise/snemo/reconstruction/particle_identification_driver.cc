@@ -194,6 +194,8 @@ namespace snemo {
     {
       DT_LOG_TRACE(get_logging_priority(), "Entering...");
 
+      std::map <std::string,int> event_particles_topology;
+
       snemo::datamodel::particle_track_data::particle_collection_type & particles
         = ptd_.grab_particles();
       for (snemo::datamodel::particle_track_data::particle_collection_type::iterator
@@ -228,13 +230,37 @@ namespace snemo {
               value = aux.fetch_string(key + "|" + value);
             }
           }
+
           aux.update(key, value);
+
+          if(event_particles_topology.find(value) == event_particles_topology.end())
+            event_particles_topology.insert ( std::pair<std::string,int>(value,1) );
+          else
+            event_particles_topology[value] += 1;
 
           if (get_logging_priority() >= datatools::logger::PRIO_DEBUG) {
             DT_LOG_DEBUG(get_logging_priority(), "Particle dump:");
             a_particle.tree_dump();
           }
         }
+      }
+
+      for (std::map<std::string,int>::const_iterator i_nature = event_particles_topology.begin();
+           i_nature != event_particles_topology.end(); ++i_nature) {
+        // std::cout << " Topology : " << std::endl
+        //           << i_nature->first << " : " << i_nature->second << std::endl;
+        std::string particle_type;
+
+        if(i_nature->first == snemo::datamodel::pid_utils::electron_label())
+          particle_type = "Electrons";
+        else if(i_nature->first == snemo::datamodel::pid_utils::gamma_label())
+          particle_type = "Gammas";
+        else if(i_nature->first == snemo::datamodel::pid_utils::alpha_label())
+          particle_type = "Alphas";
+        else
+          particle_type = "Others";
+
+        ptd_.grab_auxiliaries().update(particle_type, i_nature->second);
       }
 
       DT_LOG_TRACE(get_logging_priority(), "Exiting.");

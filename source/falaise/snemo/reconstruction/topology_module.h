@@ -1,5 +1,5 @@
 // -*- mode: c++ ; -*-
-/** \file falaise/snemo/reconstruction/particle_identification_module.h
+/** \file falaise/snemo/reconstruction/topology_module.h
  * Author(s) :    Xavier Garrido <garrido@lal.in2p3.fr>
  * Creation date: 2015-02-03
  * Last modified: 2015-02-03
@@ -30,36 +30,43 @@
  *
  */
 
-#ifndef FALAISE_PARTICLE_IDENTIFICATION_PLUGIN_SNEMO_RECONSTRUCTION_PARTICLE_IDENTIFICATION_MODULE_H
-#define FALAISE_PARTICLE_IDENTIFICATION_PLUGIN_SNEMO_RECONSTRUCTION_PARTICLE_IDENTIFICATION_MODULE_H 1
+#ifndef FALAISE_TOPOLOGY_PLUGIN_SNEMO_RECONSTRUCTION_TOPOLOGY_MODULE_H
+#define FALAISE_TOPOLOGY_PLUGIN_SNEMO_RECONSTRUCTION_TOPOLOGY_MODULE_H 1
 
 // Third party:
 // - Boost:
 #include <boost/scoped_ptr.hpp>
-// - Bayeux/dpp :
+// - Bayuex/dpp :
 #include <dpp/base_module.h>
+
+namespace geomtools {
+  class manager;
+}
 
 namespace snemo {
 
   namespace datamodel {
     class particle_track_data;
+    class topology_data;
   }
 
   namespace reconstruction {
 
-    class particle_identification_driver;
+    class topology_driver;
+    class tof_driver;
+    class delta_vertices_driver;
 
     /// \brief The data processing module for the gamma tracking
-    class particle_identification_module : public dpp::base_module
+    class topology_module : public dpp::base_module
     {
 
     public:
 
       /// Constructor
-      particle_identification_module(datatools::logger::priority = datatools::logger::PRIO_FATAL);
+      topology_module(datatools::logger::priority = datatools::logger::PRIO_FATAL);
 
       /// Destructor
-      virtual ~particle_identification_module();
+      virtual ~topology_module();
 
       /// Initialization
       virtual void initialize(const datatools::properties  & setup_,
@@ -78,15 +85,23 @@ namespace snemo {
       void _set_defaults();
 
       /// Special method to process and generate particle track data
-      void _process(snemo::datamodel::particle_track_data & ptd_);
+      void _process(snemo::datamodel::particle_track_data & ptd_,
+                    snemo::datamodel::topology_data & td_);
 
     private:
 
-      std::string _PTD_label_; //!< The label of the input/output  data bank
-      boost::scoped_ptr< ::snemo::reconstruction::particle_identification_driver> _driver_; //!< Handle to the embedded fitter algorithm with dynamic memory auto-deletion
+      const geomtools::manager * _geometry_manager_; //!< The geometry manager
+      std::string _PTD_label_; //!< The label of the input  data bank
+      std::string _TD_label_; //!< The label of the output  data bank
+
+      boost::scoped_ptr< ::snemo::reconstruction::topology_driver> _driver_; //!< Handle to the embedded fitter algorithm with dynamic memory auto-deletion
+
+      boost::scoped_ptr< ::snemo::reconstruction::tof_driver> _TOFD_; //!< Handle to the embedded TOF computation algorithm with dynamic memory auto-deletion
+
+      boost::scoped_ptr< ::snemo::reconstruction::delta_vertices_driver> _DVD_; //!< Handle to the embedded delta vertices algorithm with dynamic memory auto-deletion
 
       // Macro to automate the registration of the module :
-      DPP_MODULE_REGISTRATION_INTERFACE(particle_identification_module);
+      DPP_MODULE_REGISTRATION_INTERFACE(topology_module);
     };
 
   } // end of namespace reconstruction
@@ -96,6 +111,6 @@ namespace snemo {
 #include <datatools/ocd_macros.h>
 
 // Declare the OCD interface of the module
-DOCD_CLASS_DECLARATION(snemo::reconstruction::particle_identification_module)
+DOCD_CLASS_DECLARATION(snemo::reconstruction::topology_module)
 
-#endif // FALAISE_PARTICLE_IDENTIFICATION_PLUGIN_SNEMO_RECONSTRUCTION_PARTICLE_IDENTIFICATION_MODULE_H
+#endif // FALAISE_TOPOLOGY_PLUGIN_SNEMO_RECONSTRUCTION_TOPOLOGY_MODULE_H

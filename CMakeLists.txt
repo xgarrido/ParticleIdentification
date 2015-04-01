@@ -20,12 +20,26 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/source/falaise)
 # - Headers:
 list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/reconstruction/particle_identification_driver.h)
 list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/reconstruction/particle_identification_module.h)
+list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/reconstruction/topology_module.h)
+list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/reconstruction/topology_driver.h)
+list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/reconstruction/tof_driver.h)
+list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/reconstruction/delta_vertices_driver.h)
 list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/cuts/topology_cut.h)
+list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/datamodels/topology_data.h)
+list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/datamodels/topology_data.ipp)
+list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/datamodels/the_serializable_bis.h)
+list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/datamodels/the_serializable_bis.ipp)
 
 # - Sources:
 list(APPEND FalaiseParticleIdentificationPlugin_SOURCES source/falaise/snemo/reconstruction/particle_identification_driver.cc)
 list(APPEND FalaiseParticleIdentificationPlugin_SOURCES source/falaise/snemo/reconstruction/particle_identification_module.cc)
+list(APPEND FalaiseParticleIdentificationPlugin_SOURCES source/falaise/snemo/reconstruction/topology_module.cc)
+list(APPEND FalaiseParticleIdentificationPlugin_SOURCES source/falaise/snemo/reconstruction/topology_driver.cc)
+list(APPEND FalaiseParticleIdentificationPlugin_SOURCES source/falaise/snemo/reconstruction/tof_driver.cc)
+list(APPEND FalaiseParticleIdentificationPlugin_SOURCES source/falaise/snemo/reconstruction/delta_vertices_driver.cc)
 list(APPEND FalaiseParticleIdentificationPlugin_SOURCES source/falaise/snemo/cuts/topology_cut.cc)
+list(APPEND FalaiseParticleIdentificationPlugin_SOURCES source/falaise/snemo/datamodels/topology_data.cc)
+list(APPEND FalaiseParticleIdentificationPlugin_SOURCES source/falaise/snemo/datamodels/the_serializable_bis.cc)
 
 ############################################################################################
 
