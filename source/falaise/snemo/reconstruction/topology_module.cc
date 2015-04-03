@@ -34,7 +34,7 @@ namespace snemo {
     {
       _geometry_manager_ = 0;
       _PTD_label_ = snemo::datamodel::data_info::default_particle_track_data_label();
-      _TD_label_ = snemo::datamodel::data_info::default_topology_data_label();
+      _TD_label_ = "TD";//snemo::datamodel::data_info::default_topology_data_label();
       _driver_.reset(0);
       return;
     }
@@ -222,11 +222,11 @@ DOCD_CLASS_IMPLEMENT_LOAD_BEGIN(snemo::reconstruction::topology_module, ocd_)
       .set_long_description("This is the name of the bank to be used     \n"
                             "to select events based on their topology. \n"
                             )
-      .set_default_value_string(snemo::datamodel::data_info::default_topology_data_label())
+      .set_default_value_string("TD")//snemo::datamodel::data_info::default_topology_data_label())
       .add_example("Use an alternative name for the 'particle track data' bank:: \n"
-                   "                                  \n"
-                   "  TD_label : string = \"TD2\"   \n"
-                   "                                  \n"
+                   "                                                             \n"
+                   "  TD_label : string = \"TD2\"                                \n"
+                   "                                                             \n"
                    )
       ;
   }

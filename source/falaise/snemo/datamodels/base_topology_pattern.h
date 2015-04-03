@@ -15,8 +15,10 @@
 // Third party:
 // - Bayeux/datatools:
 #include <datatools/i_serializable.h>
-// - Bayeux/geomtools:
-#include <geomtools/i_shape_1d.h>
+
+// Falaise:
+#include <falaise/snemo/datamodels/particle_track.h>
+#include <falaise/snemo/datamodels/topology_data.h>
 
 namespace snemo {
 
@@ -26,6 +28,21 @@ namespace snemo {
     class base_topology_pattern : DATATOOLS_SERIALIZABLE_CLASS
     {
     public:
+
+      class TOF_info
+      {
+        double Pint;
+        double Pext;
+        // std::pair <snemo::datamodel::particle_track::handle_type & ,
+        //            snemo::datamodel::particle_track::handle_type & > pair_particle_track_handle;
+      };
+
+      /// Typedef for pairing particles
+      typedef std::pair<snemo::datamodel::particle_track::handle_type,
+                        snemo::datamodel::particle_track::handle_type> particle_pair_type;
+
+      /// Typedef for TOF dictionnary
+      typedef std::map<particle_pair_type, TOF_info> TOF_dict_type;
 
       /// Check if a valid pattern ID exists
       bool has_pattern_id() const;

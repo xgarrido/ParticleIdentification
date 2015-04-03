@@ -12,26 +12,16 @@ namespace snemo {
     DATATOOLS_SERIALIZATION_SERIAL_TAG_IMPLEMENTATION(topology_2e_pattern,
                                                       "snemo::datamodel::topology_2e_pattern")
 
-
-    bool topology_2e_pattern::has_pattern_id() const
+    // static
+    const std::string & topology_2e_pattern::pattern_id()
     {
-      return ! _pattern_id_.empty();
+      static const std::string _id("2e");
+      return _id;
     }
 
-    const std::string & topology_2e_pattern::get_pattern_id() const
+    topology_2e_pattern::topology_2e_pattern()
+      : base_topology_pattern(topology_2e_pattern::pattern_id())
     {
-      return _pattern_id_;
-    }
-
-    void topology_2e_pattern::_set_pattern_id(const std::string & pattern_id_)
-    {
-      _pattern_id_ = pattern_id_;
-      return;
-    }
-
-    topology_2e_pattern::topology_2e_pattern(const std::string & pattern_id_)
-    {
-      _set_pattern_id(pattern_id_);
       return;
     }
 

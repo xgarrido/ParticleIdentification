@@ -22,33 +22,22 @@ namespace snemo {
   namespace datamodel {
 
     /// \brief The 2e class of reconstructed topology
-    class topology_2e_pattern : DATATOOLS_SERIALIZABLE_CLASS
+    class topology_2e_pattern : public base_topology_pattern
     {
     public:
 
-      /// Check if a valid pattern ID exists
-      bool has_pattern_id() const;
-
-      /// Return the pattern ID
-      const std::string & get_pattern_id() const;
+      /// Return pattern identifier of the pattern
+      static const std::string & pattern_id();
 
       /// Constructor
-      topology_2e_pattern(const std::string & pattern_id_ = "");
+      topology_2e_pattern();
 
       /// Destructor
       virtual ~topology_2e_pattern();
 
-    protected:
-
-      /// Set the pattern ID
-      void _set_pattern_id(const std::string & pattern_id_);
-
     private:
 
-      std::string _pattern_id_; //!< The pattern identifier
-      std::map < std::pair < snemo::datamodel::particle_track::handle_type &,
-                             snemo::datamodel::particle_track::handle_type & > ,
-                 struct snemo::datamodel::topology_data::TOF_info_type & > _ptp2info_; // particle_track pair to info
+      TOF_dict_type _TOF_infos_;
 
       DATATOOLS_SERIALIZATION_DECLARATION();
 
