@@ -29,6 +29,10 @@ list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/dat
 list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/datamodels/topology_data.ipp)
 list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/datamodels/the_serializable_bis.h)
 list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/datamodels/the_serializable_bis.ipp)
+list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/datamodels/base_topology_pattern.h)
+list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/datamodels/base_topology_pattern.ipp)
+list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/datamodels/topology_2e_pattern.h)
+list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/datamodels/topology_2e_pattern.ipp)
 
 # - Sources:
 list(APPEND FalaiseParticleIdentificationPlugin_SOURCES source/falaise/snemo/reconstruction/particle_identification_driver.cc)
@@ -40,6 +44,8 @@ list(APPEND FalaiseParticleIdentificationPlugin_SOURCES source/falaise/snemo/rec
 list(APPEND FalaiseParticleIdentificationPlugin_SOURCES source/falaise/snemo/cuts/topology_cut.cc)
 list(APPEND FalaiseParticleIdentificationPlugin_SOURCES source/falaise/snemo/datamodels/topology_data.cc)
 list(APPEND FalaiseParticleIdentificationPlugin_SOURCES source/falaise/snemo/datamodels/the_serializable_bis.cc)
+list(APPEND FalaiseParticleIdentificationPlugin_SOURCES source/falaise/snemo/datamodels/base_topology_pattern.cc)
+list(APPEND FalaiseParticleIdentificationPlugin_SOURCES source/falaise/snemo/datamodels/topology_2e_pattern.cc)
 
 ############################################################################################
 
