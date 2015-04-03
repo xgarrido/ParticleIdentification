@@ -136,16 +136,65 @@ namespace snemo {
     {
       DT_LOG_TRACE(get_logging_priority(), "Entering...");
 
+      datatools::properties & aux_1 = particle_1_.grab_auxiliaries();
+      datatools::properties & aux_2 = particle_2_.grab_auxiliaries();
+
+      if(!aux_1.has_key(snemo::datamodel::pid_utils::pid_label_key()) ||
+         !aux_2.has_key(snemo::datamodel::pid_utils::pid_label_key()))
+        DT_THROW_IF(true, std::logic_error,
+                    "Missing information on the particle type !");
+
+      const std::string label_1 = aux_1.fetch_string(snemo::datamodel::pid_utils::pid_label_key());
+      const std::string label_2 = aux_2.fetch_string(snemo::datamodel::pid_utils::pid_label_key());
+
+      // C'est pas du C, c'est juste plus propre
+      double E1, E2;
+      double track_length_1, track_length_2;
+      double t1, t2, sigma_t1, sigma_t2;
+
       double m1 = _get_mass(particle_1_) * CLHEP::MeV;
       double m2 = _get_mass(particle_2_) * CLHEP::MeV;
+
+      //either specialize the methods or consider the case here
+
+      if(label_1 == snemo::datamodel::pid_utils::electron_label() &&
+         label_2 == snemo::datamodel::pid_utils::electron_label())
+        {
+          E1 = _get_energy(particle_1_);
+          E2 = _get_energy(particle_2_);
+
+          _get_times(particle_1_, t1, sigma_t1);
+          _get_times(particle_2_, t2, sigma_t2);
+
+          _get_track_length(track_length_1, track_length_2, particle_1_, particle_2_);
+        }
+
+      //should take care in the topology driver not to feed two gamma
+      if(label_1 == snemo::datamodel::pid_utils::gamma_label() ||
+         label_2 == snemo::datamodel::pid_utils::gamma_label())
+        {
+          /* /!\ For now, suppose the gamma */
+
+          E1 = 1.; // not relevant for gamma since beta=1
+          E2 = 1.; // but still, not 0 because involved in fraction
+
+          double t1, t2, sigma_t1, sigma_t2;
+          _get_times(particle_1_, t1, sigma_t1);
+          _get_times(particle_2_, t2, sigma_t2);
+
+          _get_track_length(track_length_1, track_length_2, particle_1_, particle_2_);
+
+        }
 
       double t1_first, t1_last, t2_first, t2_last;
       double sigma_t1_first, sigma_t1_last, sigma_t2_first, sigma_t2_last;
 
       _get_times(particle_1_, t1_first, sigma_t1_first, t1_last, sigma_t1_last);
-      _get_times(particle_2_,t2_first, sigma_t2_first, t2_last, sigma_t2_last);
+      _get_times(particle_2_, t2_first, sigma_t2_first, t2_last, sigma_t2_last);
 
-      double track_length_1, track_length_2;
+      std::cout << "E1 : " <<  E1 << std::endl
+                << "E2 : " <<  E2 << std::endl;
+
 
       _get_track_length(track_length_1, track_length_2, particle_1_, particle_2_);
 
@@ -156,10 +205,21 @@ namespace snemo {
                 << "t2_first " << t2_first << " +/- " << sigma_t2_first << std::endl
                 << "t2_last " << t2_last << " +/- " << sigma_t2_last << std::endl;
 
+
+
+      const double t1_th = _get_theoretical_time(E1,m1,track_length_1);
+      const double t2_th = _get_theoretical_time(E2,m2,track_length_2);
+
+      std::cout << "t1 th : " <<  t1_th << std::endl
+                << "t2_th : " <<  t2_th << std::endl;
+
       const double t1_first_th = track_length_1 / CLHEP::c_light;
       const double t1_last_th = track_length_1 / CLHEP::c_light;
       const double t2_first_th = track_length_2 / CLHEP::c_light;
       const double t2_last_th = track_length_2 / CLHEP::c_light;
+
+      std::cout << "t1 first_th : " <<  t1_first_th << std::endl
+                << "t2_first_th : " <<  t2_first_th << std::endl;
 
       const double sigma_l = 0.6 * CLHEP::ns;
 
@@ -170,12 +230,68 @@ namespace snemo {
 
       const double chi2_int = pow(t1_first - t2_first - (t1_first_th - t2_first_th) ,2)/sigma_exp_int;
       const double chi2_ext = pow(std::abs(t1_first - t2_first) - (t1_first_th + t2_first_th) ,2)/sigma_exp_ext;
+      //in this case, the external particle is the one with the "smaller" time
 
       std::cout << "P_int " << gsl_cdf_chisq_Q(chi2_int, 1)<< std::endl;
       std::cout << "P_ext " << gsl_cdf_chisq_Q(chi2_ext, 1)<< std::endl;
       //      proba_ = gsl_cdf_chisq_Q(chi2_int, 1);
 
       DT_LOG_TRACE(get_logging_priority(), "Exiting...");
+
+      return 0;
+    }
+
+    double tof_driver::_get_energy(snemo::datamodel::particle_track & particle_)
+    {
+      if (! particle_.has_associated_calorimeter_hits())
+        {
+          DT_THROW_IF(true, std::logic_error,
+                      "Particle track is not associated to any calorimeter block !");
+        }
+
+      const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
+        the_calorimeters = particle_.get_associated_calorimeter_hits ();
+
+      if (the_calorimeters.size() >= 2)
+        {
+          DT_THROW_IF(true, std::logic_error,
+                      "Particle track is associated to more than 1 calorimeter block !");
+        }
+
+      return the_calorimeters.at(0).get().get_energy() * CLHEP::MeV;;
+    }
+
+    double tof_driver::_get_theoretical_time(double energy_, double mass_, double track_length_)
+    {
+      return track_length_ / (tof_driver::_beta(energy_, mass_) * CLHEP::c_light);
+    }
+
+    double tof_driver::_beta(double energy_, double mass_)
+    {
+      return std::sqrt(energy_ * (energy_ + 2.*mass_)) / (energy_ + mass_);
+    }
+
+    int tof_driver::_get_times(snemo::datamodel::particle_track & particle_,
+                               double & t_, double & sigma_t_)
+    {
+
+      if (!particle_.has_associated_calorimeter_hits())
+        {
+          DT_THROW_IF(true, std::logic_error,
+                      "Particle track is not associated to any calorimeter block !");
+        }
+
+      const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
+        the_calorimeters = particle_.get_associated_calorimeter_hits ();
+
+      if (the_calorimeters.size() >= 2)
+        {
+          DT_THROW_IF(true, std::logic_error,
+                      "Particle track is associated to more than 1 calorimeter block !");
+        }
+
+      t_ = the_calorimeters.at(0).get().get_time() * CLHEP::ns;
+      sigma_t_ = the_calorimeters.at(0).get().get_sigma_time() * CLHEP::ns;
 
       return 0;
     }
@@ -302,6 +418,11 @@ namespace snemo {
           const geomtools::helix_3d & a_helix = ptr_helix->get_helix();
           return a_helix.get_length();
         }
+
+      DT_THROW_IF(true, std::logic_error,
+                  "Track is neither a line nor an helix !");
+
+      return 1;
     }
 
     double tof_driver::_get_gamma_track_length(snemo::datamodel::particle_track & ptg_,
@@ -331,7 +452,6 @@ namespace snemo {
 
           const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
         the_calorimeters = ptg_.get_associated_calorimeter_hits ();
-
 
           // different track length for internal and external hypothesis
 

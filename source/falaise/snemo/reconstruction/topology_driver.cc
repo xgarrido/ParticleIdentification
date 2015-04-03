@@ -173,8 +173,6 @@ namespace snemo {
 
       datatools::properties & aux_ptd = ptd_.grab_auxiliaries();
 
-
-
       snemo::datamodel::particle_track_data::particle_collection_type & particles
         = ptd_.grab_particles();
 
@@ -185,9 +183,8 @@ namespace snemo {
       ++it;
       snemo::datamodel::particle_track & electron_2 = it->grab();
 
-      /*add process function in driver*/
-      double proba_int = -1;
       double proba_ext = -1;
+      double proba_int = -1;
 
       _TOFD_.get()->process(proba_int,proba_ext,electron_1, electron_2);
 
@@ -197,10 +194,10 @@ namespace snemo {
       _DVD_.get()->process(delta_vertices_y,delta_vertices_z,electron_1, electron_2);
 
       //Fill in td_
-      //...
+
       datatools::properties & aux_td = td_.grab_auxiliaries();
       aux_td.update("DeltaY",delta_vertices_y);
-      aux_td.update("DeltaZ",delta_vertices_y);
+      aux_td.update("DeltaZ",delta_vertices_z);
 
       aux_td.dump();
       DT_LOG_TRACE(get_logging_priority(), "Exiting.");
