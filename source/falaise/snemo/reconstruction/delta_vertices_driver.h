@@ -46,8 +46,7 @@
 #include <datatools/properties.h>
 
 // This project:
-#include <falaise/snemo/datamodels/calibrated_calorimeter_hit.h>
-#include <falaise/snemo/datamodels/calibrated_data.h>
+#include <falaise/snemo/datamodels/particle_track.h>
 
 namespace geomtools {
   class manager;
@@ -84,11 +83,23 @@ namespace snemo {
       /// Return a non-mutable reference to the geometry manager
       const geomtools::manager & get_geometry_manager() const;
 
+      /// Setting logging priority
+      void set_logging_priority(const datatools::logger::priority priority_);
+
+      /// Getting logging priority
+      datatools::logger::priority get_logging_priority() const;
+
       /// Constructor
       delta_vertices_driver();
 
       /// Destructor
       ~delta_vertices_driver();
+
+      //Main process
+      int process(double & delta_vertices_y,
+                  double & _delta_vertices_z,
+                  snemo::datamodel::particle_track & pt1_,
+                  snemo::datamodel::particle_track & pt2_);
 
       /// Check if theclusterizer is initialized
       bool is_initialized() const;
@@ -105,13 +116,17 @@ namespace snemo {
       void _set_initialized(bool);
 
       /// Special method to process and generate particle track data
-      int _process_algo(snemo::datamodel::particle_track_data & ptd_);
+      int _process_algo(double & delta_vertices_y,
+                        double & delta_vertices_z,
+                        snemo::datamodel::particle_track & pt1_,
+                        snemo::datamodel::particle_track & pt2_);
 
       /// Give default values to specific class members.
       void _set_defaults ();
 
     private:
       bool                                 _initialized_;            //!< Initialization status
+      datatools::logger::priority _logging_priority_; //!< Logging priority
       double _sigma_t_gamma_interaction_uncertainty_;     //!< The uncertainty on the track length
       datatools::properties _delta_vertices_setup_;                         //!< The Gamma Clustering parameters
       const geomtools::manager *           _geometry_manager_;       //!< The SuperNEMO geometry manager

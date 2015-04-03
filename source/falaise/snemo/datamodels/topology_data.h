@@ -24,6 +24,7 @@
 #include <datatools/i_tree_dump.h>
 #include <datatools/i_clear.h>
 #include <datatools/properties.h>
+#include <falaise/snemo/datamodels/particle_track.h>
 
 // This project:
 
@@ -38,6 +39,16 @@ namespace snemo {
                                 public datatools::i_clear
     {
     public:
+
+      struct TOF_info
+      {
+        double Pint;
+        double Pext;
+        std::pair <snemo::datamodel::particle_track::handle_type & ,
+                   snemo::datamodel::particle_track::handle_type & > pair_particle_track_handle;
+      };
+
+      typedef TOF_info TOF_info_type;
 
       /// Default constructor
       topology_data();
@@ -69,7 +80,7 @@ namespace snemo {
     private :
 
       datatools::properties _auxiliaries_;                                        //!< Auxiliary properties
-
+      TOF_info_type _tof_info_type_;
       DATATOOLS_SERIALIZATION_DECLARATION();
 
     };

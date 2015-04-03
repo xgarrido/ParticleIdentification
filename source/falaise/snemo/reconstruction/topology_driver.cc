@@ -95,6 +95,35 @@ namespace snemo {
                   "Invalid logging priority level for geometry manager !");
       set_logging_priority(lp);
 
+      // Drivers :
+      DT_THROW_IF(! setup_.has_key("drivers"), std::logic_error, "Missing 'drivers' key !");
+      std::vector<std::string> driver_names;
+      setup_.fetch("drivers", driver_names);
+      for (std::vector<std::string>::const_iterator
+             idriver = driver_names.begin();
+           idriver != driver_names.end(); ++idriver) {
+        const std::string & a_driver_name = *idriver;
+
+        if (a_driver_name == "TD") {
+          continue;
+        } else if (a_driver_name == "TOFD") {
+          // Initialize TOF Driver
+          _TOFD_.reset(new snemo::reconstruction::tof_driver);
+          datatools::properties TOFD_config;
+          setup_.export_and_rename_starting_with(TOFD_config, std::string(a_driver_name + "."), "");
+          _TOFD_->initialize(TOFD_config);
+        } else if (a_driver_name == "DVD") {
+          // Initialize Delta Vertices Driver
+          _DVD_.reset(new snemo::reconstruction::delta_vertices_driver);
+          // _DVD_->set_geometry_manager(get_geometry_manager());
+          datatools::properties DVD_config;
+          setup_.export_and_rename_starting_with(DVD_config, std::string(a_driver_name + "."), "");
+          _DVD_->initialize(DVD_config);
+        } else {
+          DT_THROW_IF(true, std::logic_error, "Driver '" << a_driver_name << "' does not exist !");
+        }
+      }
+
       set_initialized(true);
       return;
     }
@@ -126,6 +155,9 @@ namespace snemo {
     void topology_driver::_set_defaults()
     {
       _logging_priority_ = datatools::logger::PRIO_WARNING;
+      _TOFD_.reset(0);
+      _DVD_.reset(0);
+
       return;
     }
 
@@ -134,22 +166,14 @@ namespace snemo {
     {
       DT_LOG_TRACE(get_logging_priority(), "Entering...");
 
-      /***********
-      // int test;
-      ptd_.grab_auxiliaries().update("test1",1);
-      ptd_.grab_auxiliaries().update("test2",2);
-      ptd_.grab_auxiliaries().update("test3",3);
+      size_t Nelectrons = 0;
+      size_t Npositrons = 0;
+      size_t Ngammas = 0;
+      size_t Nalphas = 0;
 
-      int n=1;
-      std::cout <<" test "<< std::endl;
-      // ptd_.grab_auxiliaries().dump();
-      datatools::properties & aux = ptd_.grab_auxiliaries();
+      datatools::properties & aux_ptd = ptd_.grab_auxiliaries();
 
-      std::cout <<" test "<< aux.get_value(n) << std::endl;
-      ************/
-      // std::cout << " size of auxiliaries " << td_.grab_auxiliaries().size() << std::endl;
-      // if(ptd_.)
-      // Delta vertices if Ne+Ng>=2
+
 
       snemo::datamodel::particle_track_data::particle_collection_type & particles
         = ptd_.grab_particles();
@@ -162,9 +186,23 @@ namespace snemo {
       snemo::datamodel::particle_track & electron_2 = it->grab();
 
       /*add process function in driver*/
-      double proba = -1;
-      // tof_driver::_process_algo(proba,electron_1, electron_2);
+      double proba_int = -1;
+      double proba_ext = -1;
 
+      _TOFD_.get()->process(proba_int,proba_ext,electron_1, electron_2);
+
+      double delta_vertices_y = 0;
+      double delta_vertices_z = 0;
+
+      _DVD_.get()->process(delta_vertices_y,delta_vertices_z,electron_1, electron_2);
+
+      //Fill in td_
+      //...
+      datatools::properties & aux_td = td_.grab_auxiliaries();
+      aux_td.update("DeltaY",delta_vertices_y);
+      aux_td.update("DeltaZ",delta_vertices_y);
+
+      aux_td.dump();
       DT_LOG_TRACE(get_logging_priority(), "Exiting.");
       return 0;
     }

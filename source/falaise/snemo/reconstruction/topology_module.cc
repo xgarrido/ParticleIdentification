@@ -21,9 +21,6 @@
 #include <falaise/snemo/processing/services.h>
 
 #include <snemo/reconstruction/topology_driver.h>
-// Plugins
-#include <snemo/reconstruction/tof_driver.h>
-#include <snemo/reconstruction/delta_vertices_driver.h>
 
 namespace snemo {
 
@@ -66,7 +63,6 @@ namespace snemo {
 
       // _driver_.reset(new snemo::reconstruction::topology_driver);
 
-
       // Drivers :
       DT_THROW_IF(! setup_.has_key("drivers"), std::logic_error, "Missing 'drivers' key !");
       std::vector<std::string> driver_names;
@@ -80,23 +76,16 @@ namespace snemo {
           // Initialize Topology Driver
           _driver_.reset(new snemo::reconstruction::topology_driver);
           // _driver_->set_geometry_manager(dpp::base_module::get_geometry_manager());
-          datatools::properties TD_config;
-          setup_.export_and_rename_starting_with(TD_config, std::string(a_driver_name + "."), "");
-          _driver_->initialize(TD_config);
-        } else if (a_driver_name == "TOFD") {
-          // Initialize TOF Driver
-          _TOFD_.reset(new snemo::reconstruction::tof_driver);
-          datatools::properties TOFD_config;
-          setup_.export_and_rename_starting_with(TOFD_config, std::string(a_driver_name + "."), "");
-          _TOFD_->initialize(TOFD_config);
-        } else if (a_driver_name == "DVD") {
-          // Initialize Delta Vertices Driver
-          _DVD_.reset(new snemo::reconstruction::delta_vertices_driver);
-          // _DVD_->set_geometry_manager(get_geometry_manager());
-          datatools::properties DVD_config;
-          setup_.export_and_rename_starting_with(DVD_config, std::string(a_driver_name + "."), "");
-          _DVD_->initialize(DVD_config);
-        } else {
+
+          // datatools::properties TD_config;
+          // setup_.export_and_rename_starting_with(TD_config, std::string(a_driver_name + "."), "");
+          // _driver_->initialize(TD_config);
+
+          _driver_->initialize(setup_);
+        }
+        else if (a_driver_name == "TOFD" || a_driver_name == "DVD")
+          continue;
+        else {
           DT_THROW_IF(true, std::logic_error, "Driver '" << a_driver_name << "' does not exist !");
         }
       }

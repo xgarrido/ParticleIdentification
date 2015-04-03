@@ -36,7 +36,7 @@
 // Third party:
 // - Boost:
 #include <boost/scoped_ptr.hpp>
-// - Bayuex/dpp :
+// - Bayeux/dpp :
 #include <dpp/base_module.h>
 
 namespace geomtools {
@@ -53,8 +53,8 @@ namespace snemo {
   namespace reconstruction {
 
     class topology_driver;
-    class tof_driver;
-    class delta_vertices_driver;
+    // class tof_driver;
+    // class delta_vertices_driver;
 
     /// \brief The data processing module for the gamma tracking
     class topology_module : public dpp::base_module
@@ -95,10 +95,6 @@ namespace snemo {
       std::string _TD_label_; //!< The label of the output  data bank
 
       boost::scoped_ptr< ::snemo::reconstruction::topology_driver> _driver_; //!< Handle to the embedded fitter algorithm with dynamic memory auto-deletion
-
-      boost::scoped_ptr< ::snemo::reconstruction::tof_driver> _TOFD_; //!< Handle to the embedded TOF computation algorithm with dynamic memory auto-deletion
-
-      boost::scoped_ptr< ::snemo::reconstruction::delta_vertices_driver> _DVD_; //!< Handle to the embedded delta vertices algorithm with dynamic memory auto-deletion
 
       // Macro to automate the registration of the module :
       DPP_MODULE_REGISTRATION_INTERFACE(topology_module);

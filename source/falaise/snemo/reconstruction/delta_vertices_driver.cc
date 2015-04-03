@@ -19,6 +19,7 @@
 
 // This project:
 #include <falaise/snemo/datamodels/data_model.h>
+#include <falaise/snemo/datamodels/pid_utils.h>
 #include <falaise/snemo/datamodels/particle_track_data.h>
 #include <falaise/snemo/processing/services.h>
 #include <falaise/snemo/geometry/locator_plugin.h>
@@ -65,6 +66,17 @@ namespace snemo {
       return *_geometry_manager_;
     }
 
+    void delta_vertices_driver::set_logging_priority(const datatools::logger::priority priority_)
+    {
+      _logging_priority_ = priority_;
+      return;
+    }
+
+    datatools::logger::priority delta_vertices_driver::get_logging_priority() const
+    {
+      return _logging_priority_;
+    }
+
     // Constructor
     delta_vertices_driver::delta_vertices_driver()
     {
@@ -81,10 +93,30 @@ namespace snemo {
       return;
     }
 
+    int delta_vertices_driver::process(double & delta_vertices_y,
+                                       double & delta_vertices_z,
+                                       snemo::datamodel::particle_track & pt1_,
+                                       snemo::datamodel::particle_track & pt2_)
+    {
+      int status = 0;
+      DT_THROW_IF(! is_initialized(), std::logic_error, "Driver '" << delta_vertices_id() << "' is already initialized !");
+
+      status = _process_algo(delta_vertices_y,delta_vertices_z,pt1_, pt2_);
+
+      if (status != 0) {
+        DT_LOG_ERROR(get_logging_priority(),
+                     "Computing topology quantities with '" << delta_vertices_id() << "' algorithm has failed !");
+        return status;
+      }
+
+      return status;
+    }
+
     void delta_vertices_driver::_set_defaults()
     {
 
       _initialized_ = 0;
+      _logging_priority_ = datatools::logger::PRIO_WARNING;
       _geometry_manager_ = 0;
       _sigma_t_gamma_interaction_uncertainty_ = 0.6 * CLHEP::ns;
       return;
@@ -117,11 +149,84 @@ namespace snemo {
       return;
     }
 
-    int delta_vertices_driver::_process_algo(snemo::datamodel::particle_track_data & ptd_)
+    int delta_vertices_driver::_process_algo(double & delta_vertices_y,
+                                             double & delta_vertices_z,
+                                             snemo::datamodel::particle_track & pt1_,
+                                             snemo::datamodel::particle_track & pt2_)
     {
-      // DT_LOG_TRACE(get_logging_priority(), "Entering...");
+      DT_LOG_TRACE(get_logging_priority(), "Entering...");
 
-      // DT_LOG_TRACE(get_logging_priority(), "Exiting...");
+      datatools::properties & aux_1 = pt1_.grab_auxiliaries();
+      datatools::properties & aux_2 = pt2_.grab_auxiliaries();
+
+      /*probably a cleaner way to do it*/
+      if(! aux_1.has_key(snemo::datamodel::pid_utils::pid_label_key()) ||
+         ! aux_2.has_key(snemo::datamodel::pid_utils::pid_label_key()))
+        DT_THROW_IF(true, std::logic_error,
+                    "Missing pid_label information on a particle type !");
+
+      const std::string label_1 = aux_1.fetch_string(snemo::datamodel::pid_utils::pid_label_key());
+      const std::string label_2 = aux_2.fetch_string(snemo::datamodel::pid_utils::pid_label_key());
+
+      if(label_1 == snemo::datamodel::pid_utils::gamma_label() ||
+         label_2 == snemo::datamodel::pid_utils::gamma_label())
+        DT_THROW_IF(true, std::logic_error,
+                    "Cannot compute Delta vertices when one particle is a gamma !");
+
+      geomtools::vector_3d v1;
+      geomtools::invalidate(v1);
+
+      geomtools::vector_3d v2;
+      geomtools::invalidate(v2);
+
+      const snemo::datamodel::particle_track::vertex_collection_type & the_vertices_1
+        = pt1_.get_vertices();
+      const snemo::datamodel::particle_track::vertex_collection_type & the_vertices_2
+        = pt2_.get_vertices();
+
+      for (snemo::datamodel::particle_track::vertex_collection_type::const_iterator
+             ivertex = the_vertices_1.begin();
+           ivertex != the_vertices_1.end(); ++ivertex)
+        {
+          const geomtools::blur_spot & a_vertex = ivertex->get();
+          const datatools::properties & aux = a_vertex.get_auxiliaries();
+
+          if(!snemo::datamodel::particle_track::vertex_is_on_source_foil(a_vertex))
+            {
+              DT_LOG_DEBUG(get_logging_priority(),
+                           "Vertex " << a_vertex.get_position()
+                           << " is not on the source foil !");
+              continue;
+            }
+          v1 = a_vertex.get_position();
+          break;
+        }
+
+      for (snemo::datamodel::particle_track::vertex_collection_type::const_iterator
+             ivertex = the_vertices_2.begin();
+           ivertex != the_vertices_2.end(); ++ivertex)
+        {
+          const geomtools::blur_spot & a_vertex = ivertex->get();
+          const datatools::properties & aux = a_vertex.get_auxiliaries();
+
+          if(!snemo::datamodel::particle_track::vertex_is_on_source_foil(a_vertex))
+            {
+              DT_LOG_DEBUG(get_logging_priority(),
+                           "Vertex " << a_vertex.get_position()
+                           << " is not on the source foil !");
+              continue;
+            }
+          v2 = a_vertex.get_position();
+          break;
+        }
+
+      // std::cout << "delta y : " << v1.y()-v2.y() << std::endl;
+      // std::cout << "delta z : " << v1.z()-v2.z() << std::endl;
+
+      delta_vertices_y = v1.y()-v2.y();
+      delta_vertices_z = v1.z()-v2.z();
+
+      DT_LOG_TRACE(get_logging_priority(), "Exiting...");
 
       return 0;
     }

@@ -71,6 +71,7 @@ namespace snemo {
     /// Driver for the gamma clustering algorithms
     class tof_driver
     {
+
     public:
 
       static const std::string & tof_id();
@@ -80,6 +81,17 @@ namespace snemo {
 
       /// Destructor
       ~tof_driver();
+
+      /// Setting logging priority
+      void set_logging_priority(const datatools::logger::priority priority_);
+
+      /// Getting logging priority
+      datatools::logger::priority get_logging_priority() const;
+
+      //Main process
+      int process(double & proba_int, double & proba_ext,
+                  snemo::datamodel::particle_track & pt1_,
+                  snemo::datamodel::particle_track & pt2_);
 
       /// Check if theclusterizer is initialized
       bool is_initialized() const;
@@ -96,21 +108,36 @@ namespace snemo {
       void _set_initialized(bool);
 
       /// Special method to process and generate particle track data
-      int _process_algo(double & proba_,
+      int _process_algo(double & proba_int_, double & proba_ext_,
                         snemo::datamodel::particle_track & particle_1_,
                         snemo::datamodel::particle_track & particle_2_);
+
+      /// Gives the times of the relevant vertices
+      int _get_times(snemo::datamodel::particle_track & particle_,
+                     double & t_first_, double & sigma_t_first,
+                     double & t_last_, double & sigma_t_last);
 
       /// Gives the mass of the particle_
       double _get_mass(snemo::datamodel::particle_track & particle_);
 
-      /// Gives the track length of the particle_
-      double _get_track_length(snemo::datamodel::particle_track & particle_);
+      /// Gives the track length of the particles
+      int _get_track_length(double & track_length_1_, double & track_lengh_2_,
+                               snemo::datamodel::particle_track & particle1_,
+                               snemo::datamodel::particle_track & particle2_);
+
+      /// Gives the track length of an electron
+      double _get_electron_track_length(snemo::datamodel::particle_track & pt_);
+
+      /// Gives the track length of a gamma from the electron vertex
+      double _get_gamma_track_length(snemo::datamodel::particle_track & pt_gamma_,
+                                     snemo::datamodel::particle_track & pt_electron_);
 
       /// Give default values to specific class members.
       void _set_defaults ();
 
     private:
       bool _initialized_;            //!< Initialization status
+      datatools::logger::priority _logging_priority_; //!< Logging priority
       double _sigma_t_gamma_interaction_uncertainty_;     //!< The uncertainty on the track length
       datatools::properties _tof_setup_;                         //!< The Gamma Clustering parameters
       // for members

@@ -33,6 +33,9 @@
 
 // Standard library:
 
+// - Boost:
+#include <boost/scoped_ptr.hpp>
+
 // - Bayeux/datatools:
 #include <datatools/logger.h>
 
@@ -50,6 +53,9 @@ namespace snemo {
   }
 
   namespace reconstruction {
+
+    class tof_driver;
+    class delta_vertices_driver;
 
     /// Driver for the topology algorithm
     class topology_driver
@@ -106,10 +112,16 @@ namespace snemo {
                                 snemo::datamodel::topology_data & td_);
 
       const geomtools::manager *           _geometry_manager_;       //!< The SuperNEMO geometry manager
+
     private:
 
       bool _initialized_;                             //!< Initialize flag
       datatools::logger::priority _logging_priority_; //!< Logging priority
+
+      boost::scoped_ptr< ::snemo::reconstruction::tof_driver> _TOFD_; //!< Handle to the embedded TOF computation algorithm with dynamic memory auto-deletion
+
+      boost::scoped_ptr< ::snemo::reconstruction::delta_vertices_driver> _DVD_; //!< Handle to the embedded delta vertices algorithm with dynamic memory auto-deletion
+
     };
 
   }  // end of namespace reconstruction

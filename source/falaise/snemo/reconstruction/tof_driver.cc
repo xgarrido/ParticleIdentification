@@ -41,7 +41,6 @@ namespace snemo {
       return _id;
     }
 
-
     bool tof_driver::is_initialized() const
     {
       return _initialized_;
@@ -51,6 +50,17 @@ namespace snemo {
     {
       _initialized_ = i_;
       return;
+    }
+
+    void tof_driver::set_logging_priority(const datatools::logger::priority priority_)
+    {
+      _logging_priority_ = priority_;
+      return;
+    }
+
+    datatools::logger::priority tof_driver::get_logging_priority() const
+    {
+      return _logging_priority_;
     }
 
     // Constructor
@@ -69,9 +79,27 @@ namespace snemo {
       return;
     }
 
+    int tof_driver::process(double & proba_int_, double & proba_ext_,
+                            snemo::datamodel::particle_track & pt1_,
+                            snemo::datamodel::particle_track & pt2_)
+    {
+      int status = 0;
+      DT_THROW_IF(! is_initialized(), std::logic_error, "Driver '" << tof_id() << "' is already initialized !");
+
+      status = _process_algo(proba_int_, proba_ext_, pt1_, pt2_);
+
+      if (status != 0) {
+        DT_LOG_ERROR(get_logging_priority(),
+                     "Computing topology quantities with '" << tof_id() << "' algorithm has failed !");
+        return status;
+      }
+
+      return status;
+    }
+
     void tof_driver::_set_defaults()
     {
-
+      _logging_priority_ = datatools::logger::PRIO_WARNING;
       _sigma_t_gamma_interaction_uncertainty_ = 0.6 * CLHEP::ns;
       return;
     }
@@ -79,8 +107,6 @@ namespace snemo {
     // Initialization :
     void tof_driver::initialize(const datatools::properties  & setup_)
     {
-
-
       std::string key;
 
       if (setup_.has_key(key = "TOFD.sigma_t_gamma_interaction_uncertainty")) {
@@ -104,61 +130,88 @@ namespace snemo {
       return;
     }
 
-    int tof_driver::_process_algo(double & proba_,
+  int tof_driver::_process_algo(double & proba_int_, double & proba_ext_,
                                   snemo::datamodel::particle_track & particle_1_,
                                   snemo::datamodel::particle_track & particle_2_)
     {
-      // DT_LOG_TRACE(get_logging_priority(), "Entering...");
-
-      if (! particle_1_.has_associated_calorimeter_hits() || ! particle_2_.has_associated_calorimeter_hits())
-        {
-          DT_THROW_IF(true, std::logic_error,
-                      "Particle track is not associated to any calorimeter block !");
-          return 0;
-        }
-
-      const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
-        the_calorimeters_1 = particle_1_.get_associated_calorimeter_hits ();
-
-      const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
-        the_calorimeters_2 = particle_2_.get_associated_calorimeter_hits ();
-
-      if (the_calorimeters_1.size() >= 2 || the_calorimeters_2.size() >= 2)
-        {
-          DT_THROW_IF(true, std::logic_error,
-                      "Particle track is associated to more than 1 calorimeter block !");
-          return 0;
-        }
+      DT_LOG_TRACE(get_logging_priority(), "Entering...");
 
       double m1 = _get_mass(particle_1_) * CLHEP::MeV;
       double m2 = _get_mass(particle_2_) * CLHEP::MeV;
 
-      const double t1 = the_calorimeters_1.at(0).get().get_time() * CLHEP::ns;
-      const double t2 = the_calorimeters_2.at(0).get().get_time() * CLHEP::ns;
+      double t1_first, t1_last, t2_first, t2_last;
+      double sigma_t1_first, sigma_t1_last, sigma_t2_first, sigma_t2_last;
 
-      double track_length_1 =_get_track_length(particle_1_);
-      double track_length_2 =_get_track_length(particle_2_);
+      _get_times(particle_1_, t1_first, sigma_t1_first, t1_last, sigma_t1_last);
+      _get_times(particle_2_,t2_first, sigma_t2_first, t2_last, sigma_t2_last);
 
+      double track_length_1, track_length_2;
 
+      _get_track_length(track_length_1, track_length_2, particle_1_, particle_2_);
 
+      std::cout << "track length 1 : " <<  track_length_1 << std::endl
+                << "track length 2 : " <<  track_length_2 << std::endl
+                << "t1_first " << t1_first << " +/- " << sigma_t1_first << std::endl
+                << "t1_last " << t1_last << " +/- " << sigma_t1_last << std::endl
+                << "t2_first " << t2_first << " +/- " << sigma_t2_first << std::endl
+                << "t2_last " << t2_last << " +/- " << sigma_t2_last << std::endl;
 
-//       const double t_th = track_length / CLHEP::c_light;
-// #warning sigma_l unit must be fixed !
-//       const double sigma_l = 0.6 * CLHEP::ns;
-//       const double sigma_exp = pow(head_end_calo_hit_.get_sigma_time(),2)
-//         + pow(tail_begin_calo_hit_.get_sigma_time(),2) + pow(sigma_l,2);
-//       const double chi2 = pow(std::abs(t1 - t2) - t_th,2)/sigma_exp;
-//       proba_ = gsl_cdf_chisq_Q(chi2, 1);
+      const double t1_first_th = track_length_1 / CLHEP::c_light;
+      const double t1_last_th = track_length_1 / CLHEP::c_light;
+      const double t2_first_th = track_length_2 / CLHEP::c_light;
+      const double t2_last_th = track_length_2 / CLHEP::c_light;
 
+      const double sigma_l = 0.6 * CLHEP::ns;
 
-      // DT_LOG_TRACE(get_logging_priority(), "Exiting...");
+      const double sigma_exp_int = pow(sigma_t1_first,2)
+        + pow(sigma_t2_first,2) + pow(sigma_l,2);
+      const double sigma_exp_ext = pow(sigma_t1_first,2)
+        + pow(sigma_t2_first,2) + pow(sigma_l,2);
+
+      const double chi2_int = pow(t1_first - t2_first - (t1_first_th - t2_first_th) ,2)/sigma_exp_int;
+      const double chi2_ext = pow(std::abs(t1_first - t2_first) - (t1_first_th + t2_first_th) ,2)/sigma_exp_ext;
+
+      std::cout << "P_int " << gsl_cdf_chisq_Q(chi2_int, 1)<< std::endl;
+      std::cout << "P_ext " << gsl_cdf_chisq_Q(chi2_ext, 1)<< std::endl;
+      //      proba_ = gsl_cdf_chisq_Q(chi2_int, 1);
+
+      DT_LOG_TRACE(get_logging_priority(), "Exiting...");
+
+      return 0;
+    }
+
+    int tof_driver::_get_times(snemo::datamodel::particle_track & particle_,
+                               double & t_first_, double & sigma_t_first_,
+                               double & t_last_, double & sigma_t_last_)
+    {
+
+      if (! particle_.has_associated_calorimeter_hits())
+        {
+          DT_THROW_IF(true, std::logic_error,
+                      "Particle track is not associated to any calorimeter block !");
+        }
+
+      const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
+        the_calorimeters = particle_.get_associated_calorimeter_hits ();
+
+      // if (the_calorimeters.size() >= 2)
+      //   {
+      //     DT_THROW_IF(true, std::logic_error,
+      //                 "Particle track is associated to more than 1 calorimeter block !");
+      //     return 0;
+      //   }
+
+      t_first_ = the_calorimeters.at(0).get().get_time() * CLHEP::ns;
+      sigma_t_first_ = the_calorimeters.at(0).get().get_sigma_time() * CLHEP::ns;
+      t_last_ = the_calorimeters.at(the_calorimeters.size()-1).get().get_time() * CLHEP::ns;
+      sigma_t_last_ = the_calorimeters.at(the_calorimeters.size()-1).get().get_sigma_time() * CLHEP::ns;
 
       return 0;
     }
 
     double tof_driver::_get_mass(snemo::datamodel::particle_track & particle_)
     {
-      // DT_LOG_TRACE(get_logging_priority(), "Entering...");
+      DT_LOG_TRACE(get_logging_priority(), "Entering...");
 
       datatools::properties & aux = particle_.grab_auxiliaries();
 
@@ -177,54 +230,90 @@ namespace snemo {
         DT_THROW_IF(true, std::logic_error,
                     "Particle type inappropriate for TOF calculations !");
 
-      // DT_LOG_TRACE(get_logging_priority(), "Exiting...");
+      DT_LOG_TRACE(get_logging_priority(), "Exiting...");
 
       return 0;
     }
 
-    double tof_driver::_get_track_length(snemo::datamodel::particle_track & particle_)
+    int tof_driver::_get_track_length(double & tl1_, double & tl2_,
+                                         snemo::datamodel::particle_track & pt1_,
+                                         snemo::datamodel::particle_track & pt2_)
     {
-      // DT_LOG_TRACE(get_logging_priority(), "Entering...");
+      DT_LOG_TRACE(get_logging_priority(), "Entering...");
 
-      datatools::properties & aux = particle_.grab_auxiliaries();
+      datatools::properties & aux_1 = pt1_.grab_auxiliaries();
+      datatools::properties & aux_2 = pt2_.grab_auxiliaries();
 
-      /* probably a cleaner way to do it*/
-      if(! aux.has_key(snemo::datamodel::pid_utils::pid_label_key()))
+      /*probably a cleaner way to do it*/
+      if(! aux_1.has_key(snemo::datamodel::pid_utils::pid_label_key()) ||
+         ! aux_2.has_key(snemo::datamodel::pid_utils::pid_label_key()))
         DT_THROW_IF(true, std::logic_error,
-                    "Missing information on the particle type !");
+                    "Missing pid_label information on a particle type !");
 
-      const std::string label = aux.fetch_string(snemo::datamodel::pid_utils::pid_label_key());
+      const std::string label_1 = aux_1.fetch_string(snemo::datamodel::pid_utils::pid_label_key());
+      const std::string label_2 = aux_2.fetch_string(snemo::datamodel::pid_utils::pid_label_key());
 
-      if(label == snemo::datamodel::pid_utils::electron_label())
+      if(label_1 == snemo::datamodel::pid_utils::electron_label())
         {
-          const snemo::datamodel::tracker_trajectory & a_trajectory = particle_.get_trajectory();
-          const snemo::datamodel::base_trajectory_pattern & a_track_pattern = a_trajectory.get_pattern();
-          const std::string & a_pattern_id = a_track_pattern.get_pattern_id();
-
-          if (a_pattern_id == snemo::datamodel::line_trajectory_pattern::pattern_id())
-            {
-              const snemo::datamodel::line_trajectory_pattern * ptr_line
-                = dynamic_cast<const snemo::datamodel::line_trajectory_pattern *>(&a_track_pattern);
-              const geomtools::line_3d & a_line = ptr_line->get_segment();
-              return a_line.get_length();
-            }
-          else if (a_pattern_id == snemo::datamodel::helix_trajectory_pattern::pattern_id())
-            {
-              const snemo::datamodel::helix_trajectory_pattern * ptr_helix
-                = dynamic_cast<const snemo::datamodel::helix_trajectory_pattern *>(&a_track_pattern);
-              const geomtools::helix_3d & a_helix = ptr_helix->get_helix();
-              return a_helix.get_length();
-            }
+          tl1_ = _get_electron_track_length(pt1_);// * CLHEP::mm;
         }
-      else if(label == snemo::datamodel::pid_utils::gamma_label())
+      else if(label_1 == snemo::datamodel::pid_utils::gamma_label())
         {
+          tl1_ = _get_gamma_track_length(pt1_,pt2_);  // supposing there is not more than one gamma
+        }
+      else
+        DT_THROW_IF(true, std::logic_error,
+                    "Particle type inappropriate for TOF calculations !");
+
+      if(label_2 == snemo::datamodel::pid_utils::electron_label())
+        {
+          tl2_ = _get_electron_track_length(pt2_);
+        }
+      else if(label_2 == snemo::datamodel::pid_utils::gamma_label())
+        {
+          tl2_ = _get_gamma_track_length(pt2_,pt1_); // supposing there is not more than one gamma
+        }
+      else
+        DT_THROW_IF(true, std::logic_error,
+                    "Particle type inappropriate for TOF calculations !");
+
+      DT_LOG_TRACE(get_logging_priority(), "Exiting...");
+
+      return 0;
+    }
+
+    double tof_driver::_get_electron_track_length(snemo::datamodel::particle_track & particle_)
+    {
+      const snemo::datamodel::tracker_trajectory & a_trajectory = particle_.get_trajectory();
+      const snemo::datamodel::base_trajectory_pattern & a_track_pattern = a_trajectory.get_pattern();
+      const std::string & a_pattern_id = a_track_pattern.get_pattern_id();
+
+      if (a_pattern_id == snemo::datamodel::line_trajectory_pattern::pattern_id())
+        {
+          const snemo::datamodel::line_trajectory_pattern * ptr_line
+            = dynamic_cast<const snemo::datamodel::line_trajectory_pattern *>(&a_track_pattern);
+          const geomtools::line_3d & a_line = ptr_line->get_segment();
+          return a_line.get_length();
+        }
+      else if (a_pattern_id == snemo::datamodel::helix_trajectory_pattern::pattern_id())
+        {
+          const snemo::datamodel::helix_trajectory_pattern * ptr_helix
+            = dynamic_cast<const snemo::datamodel::helix_trajectory_pattern *>(&a_track_pattern);
+          const geomtools::helix_3d & a_helix = ptr_helix->get_helix();
+          return a_helix.get_length();
+        }
+    }
+
+    double tof_driver::_get_gamma_track_length(snemo::datamodel::particle_track & ptg_,
+                                               snemo::datamodel::particle_track & pte_)
+    {
           /*the first vertex on calorimeter is the first in time but is it always true ???*/
-          if(!particle_.has_vertices())
+          if(!pte_.has_vertices())
             DT_THROW_IF(true, std::logic_error,
-                        "Gamma particle has no vertices associated !");
+                        "Electron has no vertices associated !");
 
-          const snemo::datamodel::particle_track::vertex_collection_type & the_vertices = particle_.get_vertices();
-
+          const snemo::datamodel::particle_track::vertex_collection_type & the_vertices = pte_.get_vertices();
+          geomtools::vector_3d electron_foil_vertex;
           bool found_calorimeter_vertex = false;
           for(snemo::datamodel::particle_track::vertex_collection_type::const_iterator i_vtx = the_vertices.begin(); i_vtx<the_vertices.end(); ++i_vtx)
             {
@@ -233,20 +322,22 @@ namespace snemo {
                 continue;
 
               found_calorimeter_vertex = true;
+              electron_foil_vertex = i_vtx->get().get_position();
               break;
             }
           if(!found_calorimeter_vertex)
             DT_THROW_IF(true, std::logic_error,
                         "Gamma particle has no vertices on the calorimeter !");
 
-        }
-      else
-        DT_THROW_IF(true, std::logic_error,
-                    "Particle type inappropriate for TOF calculations !");
+          const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
+        the_calorimeters = ptg_.get_associated_calorimeter_hits ();
 
-      // DT_LOG_TRACE(get_logging_priority(), "Exiting...");
 
-      return 0;
+          // different track length for internal and external hypothesis
+
+          return 0; // for now
+
+
     }
 
 //     double tof_driver::_get_tof_probability(const snemo::datamodel::calibrated_calorimeter_hit & head_end_calo_hit_,
