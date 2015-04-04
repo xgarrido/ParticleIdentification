@@ -112,6 +112,19 @@ namespace snemo {
                         snemo::datamodel::particle_track & particle_1_,
                         snemo::datamodel::particle_track & particle_2_);
 
+      /// Gives the energy of particle_
+      double _get_energy(snemo::datamodel::particle_track & particle_);
+
+      /// Gives the theoretical time of the track
+      double _get_theoretical_time(double energy_, double mass_, double track_length_);
+
+      /// Returns the beta
+      double _beta(double energy_, double mass_);
+
+      /// Gives the times for two charged particles (single deposit)
+      int _get_times(snemo::datamodel::particle_track & particle_,
+                     double & t_, double & sigma_t);
+
       /// Gives the times of the relevant vertices
       int _get_times(snemo::datamodel::particle_track & particle_,
                      double & t_first_, double & sigma_t_first,
