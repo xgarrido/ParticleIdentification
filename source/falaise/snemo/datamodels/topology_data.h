@@ -24,9 +24,9 @@
 #include <datatools/i_tree_dump.h>
 #include <datatools/i_clear.h>
 #include <datatools/properties.h>
-#include <falaise/snemo/datamodels/particle_track.h>
 
 // This project:
+#include <falaise/snemo/datamodels/base_topology_pattern.h>
 
 namespace snemo {
 
@@ -40,23 +40,47 @@ namespace snemo {
     {
     public:
 
+      /// Handle on trajectory pattern
+      typedef datatools::handle<base_topology_pattern> handle_pattern;
+
       /// Default constructor
       topology_data();
 
       /// Destructor:
       virtual ~topology_data();
 
-      /// Reset the internals
-      void reset();
-
       // /// Check if the object has a valid internal structure
       // bool is_valid() const;
+
+      /// Check if the pattern is present
+      bool has_pattern() const;
+
+      /// Detach the pattern
+      void detach_pattern();
+
+      /// Attach a pattern by handle
+      void set_pattern_handle(const handle_pattern & pattern_handle_);
+
+      /// Return a mutable reference on the pattern handle
+      handle_pattern & grab_pattern_handle();
+
+      /// Return a non mutable reference on the pattern handle
+      const handle_pattern & get_pattern_handle() const;
+
+      /// Return a mutable reference on the pattern
+      base_topology_pattern & grab_pattern();
+
+      /// Return a non mutable reference on the pattern
+      const base_topology_pattern & get_pattern() const;
 
       /// Return a mutable reference on the container of auxiliary properties
       const datatools::properties & get_auxiliaries() const;
 
       /// Return a non mutable reference on the container of auxiliary properties
       datatools::properties & grab_auxiliaries();
+
+      /// Reset the internals
+      void reset();
 
       /// Clear the object
       virtual void clear();
@@ -69,6 +93,7 @@ namespace snemo {
 
     private :
 
+      handle_pattern          _pattern_; /// Handle to a topology pattern
       datatools::properties _auxiliaries_; //!< Auxiliary properties
       DATATOOLS_SERIALIZATION_DECLARATION();
 

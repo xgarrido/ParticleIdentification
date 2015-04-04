@@ -18,7 +18,6 @@
 
 // Falaise:
 #include <falaise/snemo/datamodels/particle_track.h>
-#include <falaise/snemo/datamodels/topology_data.h>
 
 namespace snemo {
 

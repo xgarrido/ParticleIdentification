@@ -18,6 +18,43 @@ namespace snemo {
       return _auxiliaries_;
     }
 
+    bool topology_data::has_pattern() const
+    {
+      return _pattern_.has_data();
+    }
+
+    void topology_data::set_pattern_handle(const handle_pattern & pattern_handle_)
+    {
+      _pattern_ = pattern_handle_;
+      return;
+    }
+
+    void topology_data::detach_pattern()
+    {
+      _pattern_.reset();
+      return;
+    }
+
+    topology_data::handle_pattern & topology_data::grab_pattern_handle()
+    {
+      return _pattern_;
+    }
+
+    const topology_data::handle_pattern & topology_data::get_pattern_handle() const
+    {
+      return _pattern_;
+    }
+
+    base_topology_pattern & topology_data::grab_pattern()
+    {
+      return _pattern_.grab();
+    }
+
+    const base_topology_pattern & topology_data::get_pattern() const
+    {
+      return _pattern_.get();
+    }
+
     void topology_data::reset()
     {
       this->clear();
@@ -26,6 +63,7 @@ namespace snemo {
 
     void topology_data::clear()
     {
+      detach_pattern();
       _auxiliaries_.clear();
       return;
     }
@@ -42,9 +80,9 @@ namespace snemo {
     }
 
     void topology_data::tree_dump(std::ostream      & out_,
-                                        const std::string & title_,
-                                        const std::string & indent_,
-                                        bool inherit_) const
+                                  const std::string & title_,
+                                  const std::string & indent_,
+                                  bool inherit_) const
     {
       std::string indent;
       if (! indent_.empty()) {
