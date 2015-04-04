@@ -111,13 +111,12 @@ namespace snemo {
       virtual int _process_algo(const snemo::datamodel::particle_track_data & ptd_,
                                 snemo::datamodel::topology_data & td_);
 
-      const geomtools::manager * _geometry_manager_;       //!< The SuperNEMO geometry manager
-
     private:
 
       bool _initialized_;                             //!< Initialize flag
       datatools::logger::priority _logging_priority_; //!< Logging priority
 
+      const geomtools::manager * _geometry_manager_;       //!< The SuperNEMO geometry manager
       boost::scoped_ptr< ::snemo::reconstruction::tof_driver> _TOFD_; //!< Handle to the embedded TOF computation algorithm with dynamic memory auto-deletion
       boost::scoped_ptr< ::snemo::reconstruction::delta_vertices_driver> _DVD_; //!< Handle to the embedded delta vertices algorithm with dynamic memory auto-deletion
     };
