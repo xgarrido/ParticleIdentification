@@ -204,6 +204,7 @@ namespace snemo {
              it = particles.begin(); it != particles.end(); ++it) {
         snemo::datamodel::particle_track & a_particle = it->grab();
 
+        bool particle_is_undefined = true;
         for (property_dict_type::const_iterator ip = _pid_properties_.begin();
              ip != _pid_properties_.end(); ++ip) {
           const std::string & cut_name = ip->first;
@@ -233,12 +234,16 @@ namespace snemo {
             }
           }
           aux.update(key, value);
-          particle_counter[ppt.second]++;
 
-          if (get_logging_priority() >= datatools::logger::PRIO_DEBUG) {
-            DT_LOG_DEBUG(get_logging_priority(), "Particle dump:");
-            a_particle.tree_dump();
-          }
+          particle_is_undefined = false;
+          particle_counter[ppt.second]++;
+        }
+
+        if (is_mode_pid_label() && particle_is_undefined) {
+          datatools::properties & aux = a_particle.grab_auxiliaries();
+          aux.update(snemo::datamodel::pid_utils::pid_label_key(),
+                     snemo::datamodel::pid_utils::undefined_label());
+          particle_counter[snemo::datamodel::pid_utils::undefined_label()]++;
         }
       }
 

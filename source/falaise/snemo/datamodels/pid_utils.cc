@@ -8,6 +8,19 @@ namespace snemo {
 
   namespace datamodel {
 
+    const std::string & pid_utils::pid_prefix_key()
+    {
+      static const std::string s("pid_utils");
+      return s;
+    }
+
+    const std::string & pid_utils::pid_label_key()
+    {
+      static const std::string s(snemo::datamodel::pid_utils::pid_prefix_key() +
+                                 ".label");
+      return s;
+    }
+
     const std::string & pid_utils::electron_label()
     {
       static const std::string s("electron");
@@ -32,9 +45,9 @@ namespace snemo {
       return s;
     }
 
-    const std::string & pid_utils::pid_label_key()
+    const std::string & pid_utils::undefined_label()
     {
-      static const std::string s("pid_utils.label");
+      static const std::string s("undefined");
       return s;
     }
 

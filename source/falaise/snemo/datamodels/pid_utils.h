@@ -17,6 +17,12 @@ namespace snemo {
 
     struct pid_utils {
 
+      /// The default prefix value for all pid_utils property keys
+      static const std::string & pid_prefix_key();
+
+      /// The name of a string property representing the Particle Identification label
+      static const std::string & pid_label_key();
+
       /// The label of electron particle
       static const std::string & electron_label();
 
@@ -29,8 +35,8 @@ namespace snemo {
       /// The label of alpha particle
       static const std::string & alpha_label();
 
-      /// The name of a string property representing the Particle Identification label
-      static const std::string & pid_label_key();
+      /// The label of undefined particle
+      static const std::string & undefined_label();
 
     };
 
