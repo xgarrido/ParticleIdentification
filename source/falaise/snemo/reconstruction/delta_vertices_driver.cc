@@ -93,25 +93,6 @@ namespace snemo {
       return;
     }
 
-    int delta_vertices_driver::process(double & delta_vertices_y,
-                                       double & delta_vertices_z,
-                                       snemo::datamodel::particle_track & pt1_,
-                                       snemo::datamodel::particle_track & pt2_)
-    {
-      int status = 0;
-      DT_THROW_IF(! is_initialized(), std::logic_error, "Driver '" << delta_vertices_id() << "' is already initialized !");
-
-      status = _process_algo(delta_vertices_y,delta_vertices_z,pt1_, pt2_);
-
-      if (status != 0) {
-        DT_LOG_ERROR(get_logging_priority(),
-                     "Computing topology quantities with '" << delta_vertices_id() << "' algorithm has failed !");
-        return status;
-      }
-
-      return status;
-    }
-
     void delta_vertices_driver::_set_defaults()
     {
 
@@ -149,15 +130,33 @@ namespace snemo {
       return;
     }
 
-    int delta_vertices_driver::_process_algo(double & delta_vertices_y,
-                                             double & delta_vertices_z,
-                                             snemo::datamodel::particle_track & pt1_,
-                                             snemo::datamodel::particle_track & pt2_)
+    int delta_vertices_driver::process(const snemo::datamodel::particle_track & pt1_,
+                                       const snemo::datamodel::particle_track & pt2_,
+                                       double & delta_vertices_y, double & delta_vertices_z)
+    {
+      int status = 0;
+      DT_THROW_IF(! is_initialized(), std::logic_error, "Driver '" << delta_vertices_id() << "' is already initialized !");
+
+      status = _process_algo(pt1_, pt2_, delta_vertices_y, delta_vertices_z);
+
+      if (status != 0) {
+        DT_LOG_ERROR(get_logging_priority(),
+                     "Computing topology quantities with '" << delta_vertices_id() << "' algorithm has failed !");
+        return status;
+      }
+
+      return status;
+    }
+
+    int delta_vertices_driver::_process_algo(const snemo::datamodel::particle_track & pt1_,
+                                             const snemo::datamodel::particle_track & pt2_,
+                                             double & delta_vertices_y,
+                                             double & delta_vertices_z)
     {
       DT_LOG_TRACE(get_logging_priority(), "Entering...");
 
-      datatools::properties & aux_1 = pt1_.grab_auxiliaries();
-      datatools::properties & aux_2 = pt2_.grab_auxiliaries();
+      const datatools::properties & aux_1 = pt1_.get_auxiliaries();
+      const datatools::properties & aux_2 = pt2_.get_auxiliaries();
 
       /*probably a cleaner way to do it*/
       if(! aux_1.has_key(snemo::datamodel::pid_utils::pid_label_key()) ||

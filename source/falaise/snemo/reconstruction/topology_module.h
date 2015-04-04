@@ -85,7 +85,7 @@ namespace snemo {
       void _set_defaults();
 
       /// Special method to process and generate particle track data
-      void _process(snemo::datamodel::particle_track_data & ptd_,
+      void _process(const snemo::datamodel::particle_track_data & ptd_,
                     snemo::datamodel::topology_data & td_);
 
     private:

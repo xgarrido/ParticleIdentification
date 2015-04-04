@@ -96,10 +96,9 @@ namespace snemo {
       ~delta_vertices_driver();
 
       //Main process
-      int process(double & delta_vertices_y,
-                  double & _delta_vertices_z,
-                  snemo::datamodel::particle_track & pt1_,
-                  snemo::datamodel::particle_track & pt2_);
+      int process(const snemo::datamodel::particle_track & pt1_,
+                  const snemo::datamodel::particle_track & pt2_,
+                  double & delta_vertices_y, double & _delta_vertices_z);
 
       /// Check if theclusterizer is initialized
       bool is_initialized() const;
@@ -116,10 +115,9 @@ namespace snemo {
       void _set_initialized(bool);
 
       /// Special method to process and generate particle track data
-      int _process_algo(double & delta_vertices_y,
-                        double & delta_vertices_z,
-                        snemo::datamodel::particle_track & pt1_,
-                        snemo::datamodel::particle_track & pt2_);
+      int _process_algo(const snemo::datamodel::particle_track & pt1_,
+                        const snemo::datamodel::particle_track & pt2_,
+                        double & delta_vertices_y, double & _delta_vertices_z);
 
       /// Give default values to specific class members.
       void _set_defaults ();

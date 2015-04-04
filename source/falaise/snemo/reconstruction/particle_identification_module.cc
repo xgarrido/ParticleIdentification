@@ -67,22 +67,28 @@ namespace snemo {
         = service_manager_.grab<cuts::cut_service>(cut_label);
 
       // PID algorithm :
-      DT_THROW_IF(!setup_.has_key("driver"), std::logic_error, "Missing 'driver' algorithm");
-      const std::string algorithm_id = setup_.fetch_string("driver");
-      if (algorithm_id == particle_identification_driver::particle_identification_id()) {
-        _driver_.reset(new snemo::reconstruction::particle_identification_driver);
-      } else {
-        DT_THROW_IF(true, std::logic_error,
-                    "Unsupported '" << algorithm_id << "'particle identification algorithm ");
+      DT_THROW_IF(!setup_.has_key("drivers"), std::logic_error, "Missing 'drivers' algorithm");
+      std::vector<std::string> driver_names;
+      setup_.fetch("drivers", driver_names);
+      for (std::vector<std::string>::const_iterator
+             idriver = driver_names.begin();
+           idriver != driver_names.end(); ++idriver) {
+        const std::string & a_driver_name = *idriver;
+        if (a_driver_name == particle_identification_driver::particle_identification_id()) {
+          _driver_.reset(new snemo::reconstruction::particle_identification_driver);
+        } else {
+          DT_THROW_IF(true, std::logic_error,
+                      "Unsupported '" << a_driver_name << "'particle identification algorithm ");
+        }
+
+        // Plug the cut manager :
+        _driver_.get()->set_cut_manager(Cut.grab_cut_manager());
+
+        // Initialize the PID driver :
+        datatools::properties PID_config;
+        setup_.export_and_rename_starting_with(PID_config, a_driver_name + ".", "");
+        _driver_.get()->initialize(PID_config);
       }
-
-      // Plug the cut manager :
-      _driver_.get()->set_cut_manager(Cut.grab_cut_manager());
-
-      // Initialize the PID driver :
-      datatools::properties PID_config;
-      setup_.export_and_rename_starting_with(PID_config, algorithm_id + ".", "");
-      _driver_.get()->initialize(PID_config);
 
       _set_initialized(true);
       return;

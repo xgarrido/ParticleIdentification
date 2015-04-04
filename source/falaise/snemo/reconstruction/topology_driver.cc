@@ -136,7 +136,7 @@ namespace snemo {
       return;
     }
 
-    int topology_driver::process(snemo::datamodel::particle_track_data & ptd_,
+    int topology_driver::process(const snemo::datamodel::particle_track_data & ptd_,
                                  snemo::datamodel::topology_data & td_)
     {
       int status = 0;
@@ -161,7 +161,7 @@ namespace snemo {
       return;
     }
 
-    int topology_driver::_process_algo(snemo::datamodel::particle_track_data & ptd_,
+    int topology_driver::_process_algo(const snemo::datamodel::particle_track_data & ptd_,
                                        snemo::datamodel::topology_data & td_)
     {
       DT_LOG_TRACE(get_logging_priority(), "Entering...");
@@ -171,27 +171,25 @@ namespace snemo {
       size_t Ngammas = 0;
       size_t Nalphas = 0;
 
-      datatools::properties & aux_ptd = ptd_.grab_auxiliaries();
-
-      snemo::datamodel::particle_track_data::particle_collection_type & particles
-        = ptd_.grab_particles();
+      const snemo::datamodel::particle_track_data::particle_collection_type & particles
+        = ptd_.get_particles();
 
       /* check there is only two electrons first*/
-      snemo::datamodel::particle_track_data::particle_collection_type::iterator
+      snemo::datamodel::particle_track_data::particle_collection_type::const_iterator
         it = particles.begin();
-      snemo::datamodel::particle_track & electron_1 = it->grab();
+      const snemo::datamodel::particle_track & electron_1 = it->get();
       ++it;
-      snemo::datamodel::particle_track & electron_2 = it->grab();
+      const snemo::datamodel::particle_track & electron_2 = it->get();
 
       double proba_ext = -1;
       double proba_int = -1;
 
-      _TOFD_.get()->process(proba_int,proba_ext,electron_1, electron_2);
+      _TOFD_.get()->process(electron_1, electron_2, proba_int, proba_ext);
 
       double delta_vertices_y = 0;
       double delta_vertices_z = 0;
 
-      _DVD_.get()->process(delta_vertices_y,delta_vertices_z,electron_1, electron_2);
+      _DVD_.get()->process(electron_1, electron_2, delta_vertices_y, delta_vertices_z);
 
       //Fill in td_
 

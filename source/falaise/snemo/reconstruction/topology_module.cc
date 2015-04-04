@@ -58,11 +58,6 @@ namespace snemo {
         _TD_label_ = setup_.fetch_string("TD_label");
       }
 
-      // // Topology algorithm :
-      // DT_THROW_IF(!setup_.has_key("driver"), std::logic_error, "Missing 'driver' algorithm");
-
-      // _driver_.reset(new snemo::reconstruction::topology_driver);
-
       // Drivers :
       DT_THROW_IF(! setup_.has_key("drivers"), std::logic_error, "Missing 'drivers' key !");
       std::vector<std::string> driver_names;
@@ -133,8 +128,8 @@ namespace snemo {
         return dpp::base_module::PROCESS_ERROR;
       }
       // Grab the 'particle_track_data' entry from the data model :
-      snemo::datamodel::particle_track_data & the_particle_track_data
-        = data_record_.grab<snemo::datamodel::particle_track_data>(_PTD_label_);
+      const snemo::datamodel::particle_track_data & the_particle_track_data
+        = data_record_.get<snemo::datamodel::particle_track_data>(_PTD_label_);
 
       /*********************************
        * Check particle track data     *
@@ -162,8 +157,8 @@ namespace snemo {
       return dpp::base_module::PROCESS_SUCCESS;
     }
 
-    void topology_module::_process(snemo::datamodel::particle_track_data & ptd_,
-                                   snemo::datamodel::topology_data       & td_ )
+    void topology_module::_process(const snemo::datamodel::particle_track_data & ptd_,
+                                   snemo::datamodel::topology_data & td_ )
     {
       DT_LOG_TRACE(get_logging_priority(), "Entering...");
 

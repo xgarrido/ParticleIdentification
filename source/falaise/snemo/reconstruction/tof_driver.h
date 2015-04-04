@@ -89,9 +89,9 @@ namespace snemo {
       datatools::logger::priority get_logging_priority() const;
 
       //Main process
-      int process(double & proba_int, double & proba_ext,
-                  snemo::datamodel::particle_track & pt1_,
-                  snemo::datamodel::particle_track & pt2_);
+      int process(const snemo::datamodel::particle_track & pt1_,
+                  const snemo::datamodel::particle_track & pt2_,
+                  double & proba_int, double & proba_ext);
 
       /// Check if theclusterizer is initialized
       bool is_initialized() const;
@@ -108,12 +108,12 @@ namespace snemo {
       void _set_initialized(bool);
 
       /// Special method to process and generate particle track data
-      int _process_algo(double & proba_int_, double & proba_ext_,
-                        snemo::datamodel::particle_track & particle_1_,
-                        snemo::datamodel::particle_track & particle_2_);
+      int _process_algo(const snemo::datamodel::particle_track & particle_1_,
+                        const snemo::datamodel::particle_track & particle_2_,
+                        double & proba_int_, double & proba_ext_);
 
       /// Gives the energy of particle_
-      double _get_energy(snemo::datamodel::particle_track & particle_);
+      double _get_energy(const snemo::datamodel::particle_track & particle_);
 
       /// Gives the theoretical time of the track
       double _get_theoretical_time(double energy_, double mass_, double track_length_);
@@ -122,28 +122,28 @@ namespace snemo {
       double _beta(double energy_, double mass_);
 
       /// Gives the times for two charged particles (single deposit)
-      int _get_times(snemo::datamodel::particle_track & particle_,
+      int _get_times(const snemo::datamodel::particle_track & particle_,
                      double & t_, double & sigma_t);
 
       /// Gives the times of the relevant vertices
-      int _get_times(snemo::datamodel::particle_track & particle_,
+      int _get_times(const snemo::datamodel::particle_track & particle_,
                      double & t_first_, double & sigma_t_first,
                      double & t_last_, double & sigma_t_last);
 
       /// Gives the mass of the particle_
-      double _get_mass(snemo::datamodel::particle_track & particle_);
+      double _get_mass(const snemo::datamodel::particle_track & particle_);
 
       /// Gives the track length of the particles
-      int _get_track_length(double & track_length_1_, double & track_lengh_2_,
-                               snemo::datamodel::particle_track & particle1_,
-                               snemo::datamodel::particle_track & particle2_);
+      int _get_track_length(const snemo::datamodel::particle_track & particle1_,
+                            const snemo::datamodel::particle_track & particle2_,
+                            double & track_length_1_, double & track_lengh_2_);
 
       /// Gives the track length of an electron
-      double _get_electron_track_length(snemo::datamodel::particle_track & pt_);
+      double _get_electron_track_length(const snemo::datamodel::particle_track & pt_);
 
       /// Gives the track length of a gamma from the electron vertex
-      double _get_gamma_track_length(snemo::datamodel::particle_track & pt_gamma_,
-                                     snemo::datamodel::particle_track & pt_electron_);
+      double _get_gamma_track_length(const snemo::datamodel::particle_track & pt_gamma_,
+                                     const snemo::datamodel::particle_track & pt_electron_);
 
       /// Give default values to specific class members.
       void _set_defaults ();
@@ -152,8 +152,6 @@ namespace snemo {
       bool _initialized_;            //!< Initialization status
       datatools::logger::priority _logging_priority_; //!< Logging priority
       double _sigma_t_gamma_interaction_uncertainty_;     //!< The uncertainty on the track length
-      datatools::properties _tof_setup_;                         //!< The Gamma Clustering parameters
-      // for members
     };
 
   }  // end of namespace reconstruction
