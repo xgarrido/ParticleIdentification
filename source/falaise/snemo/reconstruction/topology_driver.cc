@@ -10,8 +10,9 @@
 // This project:
 #include <falaise/snemo/datamodels/particle_track_data.h>
 #include <falaise/snemo/datamodels/topology_data.h>
-#include <falaise/snemo/datamodels/particle_track.h>
 #include <falaise/snemo/datamodels/pid_utils.h>
+
+#include <falaise/snemo/datamodels/topology_2e_pattern.h>
 
 #include <snemo/reconstruction/tof_driver.h>
 #include <snemo/reconstruction/delta_vertices_driver.h>
@@ -166,40 +167,76 @@ namespace snemo {
     {
       DT_LOG_TRACE(get_logging_priority(), "Entering...");
 
-      size_t Nelectrons = 0;
-      size_t Npositrons = 0;
-      size_t Ngammas = 0;
-      size_t Nalphas = 0;
+      const std::string a_classification = topology_driver::_build_classification_(ptd_);
+      DT_LOG_TRACE(get_logging_priority(), "Event classification : " << a_classification);
 
-      const snemo::datamodel::particle_track_data::particle_collection_type & particles
-        = ptd_.get_particles();
+      if (a_classification == "2e") {
+        this->_fill_2e_topology_(ptd_, td_);
+      } else {
+        DT_LOG_WARNING(get_logging_priority(),
+                       "Event classification '" << a_classification << "' unsupported !");
+      }
 
-      /* check there is only two electrons first*/
-      snemo::datamodel::particle_track_data::particle_collection_type::const_iterator
-        it = particles.begin();
-      const snemo::datamodel::particle_track & electron_1 = it->get();
-      ++it;
-      const snemo::datamodel::particle_track & electron_2 = it->get();
+      // const snemo::datamodel::particle_track_data::particle_collection_type & particles
+      //   = ptd_.get_particles();
 
-      double proba_ext = -1;
-      double proba_int = -1;
+      // /* check there is only two electrons first*/
+      // snemo::datamodel::particle_track_data::particle_collection_type::const_iterator
+      //   it = particles.begin();
+      // const snemo::datamodel::particle_track & electron_1 = it->get();
+      // ++it;
+      // const snemo::datamodel::particle_track & electron_2 = it->get();
 
-      _TOFD_.get()->process(electron_1, electron_2, proba_int, proba_ext);
+      // double proba_ext = -1;
+      // double proba_int = -1;
 
-      double delta_vertices_y = 0;
-      double delta_vertices_z = 0;
+      // _TOFD_.get()->process(electron_1, electron_2, proba_int, proba_ext);
 
-      _DVD_.get()->process(electron_1, electron_2, delta_vertices_y, delta_vertices_z);
+      // double delta_vertices_y = 0;
+      // double delta_vertices_z = 0;
 
-      //Fill in td_
+      // _DVD_.get()->process(electron_1, electron_2, delta_vertices_y, delta_vertices_z);
 
-      datatools::properties & aux_td = td_.grab_auxiliaries();
-      aux_td.update("DeltaY",delta_vertices_y);
-      aux_td.update("DeltaZ",delta_vertices_z);
+      // //Fill in td_
 
-      aux_td.dump();
+      // datatools::properties & aux_td = td_.grab_auxiliaries();
+      // aux_td.update("DeltaY",delta_vertices_y);
+      // aux_td.update("DeltaZ",delta_vertices_z);
+
+      // aux_td.dump();
       DT_LOG_TRACE(get_logging_priority(), "Exiting.");
       return 0;
+    }
+
+    std::string topology_driver::_build_classification_(const snemo::datamodel::particle_track_data & ptd_)
+    {
+      const datatools::properties & aux = ptd_.get_auxiliaries();
+      std::ostringstream classification;
+
+      std::string key;
+      if (aux.has_key(key = snemo::datamodel::pid_utils::electron_label())) {
+        classification << aux.fetch_integer(key) << "e";
+      }
+      if (aux.has_key(key = snemo::datamodel::pid_utils::positron_label())) {
+        classification << aux.fetch_integer(key) << "p";
+      }
+      if (aux.has_key(key = snemo::datamodel::pid_utils::gamma_label())) {
+        classification << aux.fetch_integer(key) << "g";
+      }
+      if (aux.has_key(key = snemo::datamodel::pid_utils::alpha_label())) {
+        classification << aux.fetch_integer(key) << "a";
+      }
+      if (aux.has_key(key = snemo::datamodel::pid_utils::undefined_label())) {
+        classification << aux.fetch_integer(key) << "X";
+      }
+      return classification.str();
+    }
+
+    void topology_driver::_fill_2e_topology_(const snemo::datamodel::particle_track_data & ptd_,
+                                             snemo::datamodel::topology_data & td_)
+    {
+      snemo::datamodel::topology_data::handle_pattern h_pattern;
+      h_pattern.reset(new snemo::datamodel::topology_2e_pattern);
     }
 
   }  // end of namespace reconstruction

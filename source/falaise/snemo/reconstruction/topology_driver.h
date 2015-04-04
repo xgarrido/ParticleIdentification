@@ -31,8 +31,6 @@
 #ifndef FALAISE_TOPOLOGY_PLUGIN_SNEMO_RECONSTRUCTION_TOPOLOGY_DRIVER_H
 #define FALAISE_TOPOLOGY_PLUGIN_SNEMO_RECONSTRUCTION_TOPOLOGY_DRIVER_H 1
 
-// Standard library:
-
 // - Boost:
 #include <boost/scoped_ptr.hpp>
 
@@ -110,6 +108,15 @@ namespace snemo {
       /// Main identification method
       virtual int _process_algo(const snemo::datamodel::particle_track_data & ptd_,
                                 snemo::datamodel::topology_data & td_);
+
+    private:
+
+      /// Build event classification label
+      static std::string _build_classification_(const snemo::datamodel::particle_track_data & ptd_);
+
+      /// Fill 2 electrons topology event
+      void _fill_2e_topology_(const snemo::datamodel::particle_track_data & ptd_,
+                              snemo::datamodel::topology_data & td_);
 
     private:
 
