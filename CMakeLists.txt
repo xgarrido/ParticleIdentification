@@ -18,34 +18,40 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/source)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/source/falaise)
 
 # - Headers:
-list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/reconstruction/particle_identification_driver.h)
-list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/reconstruction/particle_identification_module.h)
-list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/reconstruction/topology_module.h)
-list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/reconstruction/topology_driver.h)
-list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/reconstruction/tof_driver.h)
-list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/reconstruction/delta_vertices_driver.h)
-list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/cuts/topology_cut.h)
-list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/datamodels/topology_data.h)
-list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/datamodels/topology_data.ipp)
-list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/datamodels/the_serializable_bis.h)
-list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/datamodels/the_serializable_bis.ipp)
-list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/datamodels/base_topology_pattern.h)
-list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/datamodels/base_topology_pattern.ipp)
-list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/datamodels/topology_2e_pattern.h)
-list(APPEND FalaiseParticleIdentificationPlugin_HEADERS source/falaise/snemo/datamodels/topology_2e_pattern.ipp)
+list(APPEND FalaiseParticleIdentificationPlugin_HEADERS
+  source/falaise/snemo/reconstruction/particle_identification_driver.h
+  source/falaise/snemo/reconstruction/particle_identification_module.h
+  source/falaise/snemo/reconstruction/topology_module.h
+  source/falaise/snemo/reconstruction/topology_driver.h
+  source/falaise/snemo/reconstruction/tof_driver.h
+  source/falaise/snemo/reconstruction/delta_vertices_driver.h
+  source/falaise/snemo/cuts/topology_cut.h
+  source/falaise/snemo/datamodels/topology_data.h
+  source/falaise/snemo/datamodels/topology_data.ipp
+  source/falaise/snemo/datamodels/the_serializable_bis.h
+  source/falaise/snemo/datamodels/the_serializable_bis.ipp
+  source/falaise/snemo/datamodels/base_topology_pattern.h
+  source/falaise/snemo/datamodels/base_topology_pattern.ipp
+  source/falaise/snemo/datamodels/topology_2e_pattern.h
+  source/falaise/snemo/datamodels/topology_2e_pattern.ipp
+  source/falaise/snemo/datamodels/pid_utils.h
+  )
 
 # - Sources:
-list(APPEND FalaiseParticleIdentificationPlugin_SOURCES source/falaise/snemo/reconstruction/particle_identification_driver.cc)
-list(APPEND FalaiseParticleIdentificationPlugin_SOURCES source/falaise/snemo/reconstruction/particle_identification_module.cc)
-list(APPEND FalaiseParticleIdentificationPlugin_SOURCES source/falaise/snemo/reconstruction/topology_module.cc)
-list(APPEND FalaiseParticleIdentificationPlugin_SOURCES source/falaise/snemo/reconstruction/topology_driver.cc)
-list(APPEND FalaiseParticleIdentificationPlugin_SOURCES source/falaise/snemo/reconstruction/tof_driver.cc)
-list(APPEND FalaiseParticleIdentificationPlugin_SOURCES source/falaise/snemo/reconstruction/delta_vertices_driver.cc)
-list(APPEND FalaiseParticleIdentificationPlugin_SOURCES source/falaise/snemo/cuts/topology_cut.cc)
-list(APPEND FalaiseParticleIdentificationPlugin_SOURCES source/falaise/snemo/datamodels/topology_data.cc)
-list(APPEND FalaiseParticleIdentificationPlugin_SOURCES source/falaise/snemo/datamodels/the_serializable_bis.cc)
-list(APPEND FalaiseParticleIdentificationPlugin_SOURCES source/falaise/snemo/datamodels/base_topology_pattern.cc)
-list(APPEND FalaiseParticleIdentificationPlugin_SOURCES source/falaise/snemo/datamodels/topology_2e_pattern.cc)
+list(APPEND FalaiseParticleIdentificationPlugin_SOURCES
+  source/falaise/snemo/reconstruction/particle_identification_driver.cc
+  source/falaise/snemo/reconstruction/particle_identification_module.cc
+  source/falaise/snemo/reconstruction/topology_module.cc
+  source/falaise/snemo/reconstruction/topology_driver.cc
+  source/falaise/snemo/reconstruction/tof_driver.cc
+  source/falaise/snemo/reconstruction/delta_vertices_driver.cc
+  source/falaise/snemo/cuts/topology_cut.cc
+  source/falaise/snemo/datamodels/topology_data.cc
+  source/falaise/snemo/datamodels/the_serializable_bis.cc
+  source/falaise/snemo/datamodels/base_topology_pattern.cc
+  source/falaise/snemo/datamodels/topology_2e_pattern.cc
+  source/falaise/snemo/datamodels/pid_utils.cc
+)
 
 ############################################################################################
 
