@@ -1,6 +1,6 @@
 /// \file falaise/snemo/datamodels/topology_data.h
-/* Author (s) : Steven Calvez    <calvez@lal.in2p3.fr>
-                Xavier Garrido   <garrido@lal.in2p3.fr>
+/* Author (s) : Steven Calvez  <calvez@lal.in2p3.fr>
+                Xavier Garrido <garrido@lal.in2p3.fr>
  * Creation date: 2015-03-31
  * Last modified: 2015-03-31
  *
@@ -26,6 +26,7 @@
 #include <datatools/properties.h>
 
 // This project:
+#include <falaise/snemo/datamodels/particle_track_data.h>
 #include <falaise/snemo/datamodels/base_topology_pattern.h>
 
 namespace snemo {
@@ -40,8 +41,11 @@ namespace snemo {
     {
     public:
 
-      /// Handle on trajectory pattern
+      /// Handle on topology pattern
       typedef datatools::handle<base_topology_pattern> handle_pattern;
+
+      /// Handle on particle track data
+      typedef datatools::handle<snemo::datamodel::particle_track_data> handle_ptd;
 
       /// Default constructor
       topology_data();
@@ -51,6 +55,21 @@ namespace snemo {
 
       // /// Check if the object has a valid internal structure
       // bool is_valid() const;
+
+      /// Check if the particle track data is present
+      bool has_particle_track_data() const;
+
+      /// Detach the particle track data
+      void detach_particle_track_data();
+
+      /// Attach a pattern by handle
+      void set_particle_track_data_handle(const handle_ptd & ptd_handle_);
+
+      /// Return a non mutable reference on the particle track data handle
+      const handle_ptd & get_particle_track_data_handle() const;
+
+      /// Return a non mutable reference on the particle track data
+      const snemo::datamodel::particle_track_data & get_particle_track_data() const;
 
       /// Check if the pattern is present
       bool has_pattern() const;
@@ -93,8 +112,10 @@ namespace snemo {
 
     private :
 
-      handle_pattern          _pattern_; /// Handle to a topology pattern
+      handle_ptd _ptd_;                    //!< Handle to particle track data
+      handle_pattern _pattern_;            //!< Handle to a topology pattern
       datatools::properties _auxiliaries_; //!< Auxiliary properties
+
       DATATOOLS_SERIALIZATION_DECLARATION();
 
     };

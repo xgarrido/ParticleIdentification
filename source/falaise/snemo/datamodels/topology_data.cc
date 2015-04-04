@@ -7,15 +7,31 @@ namespace snemo {
 
   namespace datamodel {
 
-
-    datatools::properties & topology_data::grab_auxiliaries()
+    bool topology_data::has_particle_track_data() const
     {
-      return _auxiliaries_;
+      return _ptd_.has_data();
     }
 
-    const datatools::properties & topology_data::get_auxiliaries() const
+    void topology_data::detach_particle_track_data()
     {
-      return _auxiliaries_;
+      _ptd_.reset();
+      return;
+    }
+
+    void topology_data::set_particle_track_data_handle(const topology_data::handle_ptd & ptd_)
+    {
+      _ptd_ = ptd_;
+      return;
+    }
+
+    const topology_data::handle_ptd & topology_data::get_particle_track_data_handle() const
+    {
+      return _ptd_;
+    }
+
+    const snemo::datamodel::particle_track_data & topology_data::get_particle_track_data() const
+    {
+      return _ptd_.get();
     }
 
     bool topology_data::has_pattern() const
@@ -55,17 +71,14 @@ namespace snemo {
       return _pattern_.get();
     }
 
-    void topology_data::reset()
+    datatools::properties & topology_data::grab_auxiliaries()
     {
-      this->clear();
-      return;
+      return _auxiliaries_;
     }
 
-    void topology_data::clear()
+    const datatools::properties & topology_data::get_auxiliaries() const
     {
-      detach_pattern();
-      _auxiliaries_.clear();
-      return;
+      return _auxiliaries_;
     }
 
     topology_data::topology_data()
@@ -76,6 +89,19 @@ namespace snemo {
     topology_data::~topology_data()
     {
       this->reset();
+      return;
+    }
+
+    void topology_data::reset()
+    {
+      this->clear();
+      return;
+    }
+
+    void topology_data::clear()
+    {
+      detach_pattern();
+      _auxiliaries_.clear();
       return;
     }
 
