@@ -30,8 +30,8 @@ namespace snemo {
 
       class TOF_info
       {
-        double Pint;
-        double Pext;
+        double internal_probability;
+        double external_probability;
         // std::pair <snemo::datamodel::particle_track::handle_type & ,
         //            snemo::datamodel::particle_track::handle_type & > pair_particle_track_handle;
       };
