@@ -237,6 +237,10 @@ namespace snemo {
     {
       snemo::datamodel::topology_data::handle_pattern h_pattern;
       h_pattern.reset(new snemo::datamodel::topology_2e_pattern);
+      td_.set_pattern_handle(h_pattern);
+
+      double proba_int = datatools::invalid_real();
+      double proba_ext = datatools::invalid_real();
     }
 
   }  // end of namespace reconstruction
