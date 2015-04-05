@@ -107,6 +107,12 @@ namespace snemo {
     // Initialization :
     void tof_driver::initialize(const datatools::properties & setup_)
     {
+      // Logging priority
+      datatools::logger::priority lp = datatools::logger::extract_logging_configuration(setup_);
+      DT_THROW_IF(lp == datatools::logger::PRIO_UNDEFINED, std::logic_error,
+                  "Invalid logging priority level for geometry manager !");
+      set_logging_priority(lp);
+
       std::string key;
       if (setup_.has_key(key = "sigma_t_gamma_interaction")) {
         _sigma_t_gamma_interaction_ = setup_.fetch_real(key);
