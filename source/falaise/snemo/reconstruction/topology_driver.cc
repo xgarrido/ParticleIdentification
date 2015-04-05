@@ -105,9 +105,7 @@ namespace snemo {
            idriver != driver_names.end(); ++idriver) {
         const std::string & a_driver_name = *idriver;
 
-        if (a_driver_name == "TD") {
-          continue;
-        } else if (a_driver_name == "TOFD") {
+        if (a_driver_name == "TOFD") {
           // Initialize TOF Driver
           _TOFD_.reset(new snemo::reconstruction::tof_driver);
           datatools::properties TOFD_config;
@@ -239,8 +237,20 @@ namespace snemo {
       h_pattern.reset(new snemo::datamodel::topology_2e_pattern);
       td_.set_pattern_handle(h_pattern);
 
-      double proba_int = datatools::invalid_real();
-      double proba_ext = datatools::invalid_real();
+      const snemo::datamodel::particle_track_data::particle_collection_type & the_particles
+        = ptd_.get_particles();
+      const snemo::datamodel::particle_track & pt1 = the_particles.front().get();
+      const snemo::datamodel::particle_track & pt2 = the_particles.back().get();
+
+      if (pt1.has_associated_calorimeter_hits() && pt2.has_associated_calorimeter_hits()) {
+        // To be replaced by dedicated fields of 'topology_2e_pattern'
+        double proba_int = datatools::invalid_real();
+        double proba_ext = datatools::invalid_real();
+        _TOFD_->process(pt1, pt2, proba_int, proba_ext);
+      } else {
+        DT_LOG_DEBUG(get_logging_priority(),
+                     "Electron particles do not have associated calorimeter hit !");
+      }
     }
 
   }  // end of namespace reconstruction

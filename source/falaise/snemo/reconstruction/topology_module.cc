@@ -59,31 +59,13 @@ namespace snemo {
       }
 
       // Drivers :
-      DT_THROW_IF(! setup_.has_key("drivers"), std::logic_error, "Missing 'drivers' key !");
-      std::vector<std::string> driver_names;
-      setup_.fetch("drivers", driver_names);
-      for (std::vector<std::string>::const_iterator
-             idriver = driver_names.begin();
-           idriver != driver_names.end(); ++idriver) {
-        const std::string & a_driver_name = *idriver;
+      _driver_.reset(new snemo::reconstruction::topology_driver);
+      _driver_->initialize(setup_);
+      // _driver_->set_geometry_manager(dpp::base_module::get_geometry_manager());
 
-        if (a_driver_name == "TD") {
-          // Initialize Topology Driver
-          _driver_.reset(new snemo::reconstruction::topology_driver);
-          // _driver_->set_geometry_manager(dpp::base_module::get_geometry_manager());
-
-          // datatools::properties TD_config;
-          // setup_.export_and_rename_starting_with(TD_config, std::string(a_driver_name + "."), "");
-          // _driver_->initialize(TD_config);
-
-          _driver_->initialize(setup_);
-        }
-        else if (a_driver_name == "TOFD" || a_driver_name == "DVD")
-          continue;
-        else {
-          DT_THROW_IF(true, std::logic_error, "Driver '" << a_driver_name << "' does not exist !");
-        }
-      }
+      // datatools::properties TD_config;
+      // setup_.export_and_rename_starting_with(TD_config, std::string(a_driver_name + "."), "");
+      // _driver_->initialize(TD_config);
 
       _set_initialized(true);
       return;
