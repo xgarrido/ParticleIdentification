@@ -100,7 +100,7 @@ namespace snemo {
     void tof_driver::_set_defaults()
     {
       _logging_priority_ = datatools::logger::PRIO_WARNING;
-      _sigma_t_gamma_interaction_uncertainty_ = 0.6 * CLHEP::ns;
+      _sigma_t_gamma_interaction_ = 0.6 * CLHEP::ns;
       return;
     }
 
@@ -108,11 +108,10 @@ namespace snemo {
     void tof_driver::initialize(const datatools::properties & setup_)
     {
       std::string key;
-
-      if (setup_.has_key(key = "sigma_t_gamma_interaction_uncertainty")) {
-        _sigma_t_gamma_interaction_uncertainty_ = setup_.fetch_real(key);
+      if (setup_.has_key(key = "sigma_t_gamma_interaction")) {
+        _sigma_t_gamma_interaction_ = setup_.fetch_real(key);
         if (! setup_.has_explicit_unit(key)) {
-          _sigma_t_gamma_interaction_uncertainty_ *= CLHEP::ns;
+          _sigma_t_gamma_interaction_ *= CLHEP::ns;
         }
       }
 

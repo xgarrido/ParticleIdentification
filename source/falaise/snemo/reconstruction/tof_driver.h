@@ -151,7 +151,7 @@ namespace snemo {
     private:
       bool _initialized_;            //!< Initialization status
       datatools::logger::priority _logging_priority_; //!< Logging priority
-      double _sigma_t_gamma_interaction_uncertainty_;     //!< The uncertainty on the track length
+      double _sigma_t_gamma_interaction_;     //!< The uncertainty on the track length
     };
 
   }  // end of namespace reconstruction
