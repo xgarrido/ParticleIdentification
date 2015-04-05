@@ -15,6 +15,8 @@ namespace snemo {
 
   namespace datamodel {
 
+    class particle_track;
+
     struct pid_utils {
 
       /// The default prefix value for all pid_utils property keys
@@ -37,6 +39,21 @@ namespace snemo {
 
       /// The label of undefined particle
       static const std::string & undefined_label();
+
+      /// Check a particle pid label
+      static bool particle_is(const snemo::datamodel::particle_track &, const std::string &);
+
+      /// Check a particle is electron
+      static bool particle_is_electron(const snemo::datamodel::particle_track &);
+
+      /// Check a particle is positron
+      static bool particle_is_positron(const snemo::datamodel::particle_track &);
+
+      /// Check a particle is alpha
+      static bool particle_is_alpha(const snemo::datamodel::particle_track &);
+
+      /// Check a particle is gamma
+      static bool particle_is_gamma(const snemo::datamodel::particle_track &);
 
     };
 
