@@ -11,9 +11,9 @@
 // - Boost:
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/nvp.hpp>
-#include <boost/serialization/string.hpp>
-// - Bayeux/datatools:
-#include <datatools/i_serializable.ipp>
+
+// This project:
+#include <falaise/snemo/datamodels/base_topology_pattern.ipp>
 
 namespace snemo {
 
@@ -23,7 +23,7 @@ namespace snemo {
     template<class Archive>
     void topology_2e_pattern::serialize(Archive & ar, const unsigned int /* version */)
     {
-      ar_ & BOOST_SERIALIZATION_BASE_OBJECT_NVP(base_topology_pattern);
+      ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(base_topology_pattern);
       return;
     }
 

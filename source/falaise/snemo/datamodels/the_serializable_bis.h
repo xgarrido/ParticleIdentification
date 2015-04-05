@@ -10,27 +10,15 @@
 // - Bayeux/datatools:
 #include <datatools/archives_instantiation.h>
 
-/*************************************************
- * snemo::datamodel::tracker_trajectory_solution *
- *************************************************/
+/***********************************
+ * snemo::datamodel::topology_data *
+ ***********************************/
 
-// #include <falaise/snemo/datamodels/base_trajectory_pattern.ipp>
-// #include <falaise/snemo/datamodels/line_trajectory_pattern.ipp>
-// DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snemo::datamodel::line_trajectory_pattern)
-// BOOST_CLASS_EXPORT_IMPLEMENT(snemo::datamodel::line_trajectory_pattern)
+#include <falaise/snemo/datamodels/base_topology_pattern.ipp>
+#include <falaise/snemo/datamodels/topology_2e_pattern.ipp>
+DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snemo::datamodel::topology_2e_pattern)
+BOOST_CLASS_EXPORT_IMPLEMENT(snemo::datamodel::topology_2e_pattern)
 
-// #include <falaise/snemo/datamodels/helix_trajectory_pattern.ipp>
-// DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snemo::datamodel::helix_trajectory_pattern)
-// BOOST_CLASS_EXPORT_IMPLEMENT(snemo::datamodel::helix_trajectory_pattern)
-
-// #include <falaise/snemo/datamodels/polyline_trajectory_pattern.ipp>
-// DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snemo::datamodel::polyline_trajectory_pattern)
-// BOOST_CLASS_EXPORT_IMPLEMENT(snemo::datamodel::polyline_trajectory_pattern)
-
-// #include <falaise/snemo/datamodels/topology.ipp>
-// #include <falaise/snemo/datamodels/topology_solution.ipp>
-// DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snemo::datamodel::topology)
-// DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snemo::datamodel::topology_solution)
 #include <falaise/snemo/datamodels/topology_data.ipp>
 DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snemo::datamodel::topology_data)
 BOOST_CLASS_EXPORT_IMPLEMENT(snemo::datamodel::topology_data)
