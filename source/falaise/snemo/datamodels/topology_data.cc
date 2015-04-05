@@ -7,33 +7,6 @@ namespace snemo {
 
   namespace datamodel {
 
-    bool topology_data::has_particle_track_data() const
-    {
-      return _ptd_.has_data();
-    }
-
-    void topology_data::detach_particle_track_data()
-    {
-      _ptd_.reset();
-      return;
-    }
-
-    void topology_data::set_particle_track_data_handle(const topology_data::handle_ptd & ptd_)
-    {
-      _ptd_ = ptd_;
-      return;
-    }
-
-    const topology_data::handle_ptd & topology_data::get_particle_track_data_handle() const
-    {
-      return _ptd_;
-    }
-
-    const snemo::datamodel::particle_track_data & topology_data::get_particle_track_data() const
-    {
-      return _ptd_.get();
-    }
-
     bool topology_data::has_pattern() const
     {
       return _pattern_.has_data();
