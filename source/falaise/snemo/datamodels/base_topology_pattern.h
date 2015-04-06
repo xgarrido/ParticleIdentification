@@ -15,7 +15,7 @@
 // Third party:
 // - Bayeux/datatools:
 #include <datatools/i_serializable.h>
-
+#include <datatools/i_tree_dump.h>
 // Falaise:
 #include <falaise/snemo/datamodels/particle_track.h>
 
@@ -24,35 +24,10 @@ namespace snemo {
   namespace datamodel {
 
     /// \brief The base class of reconstructed topology
-    class base_topology_pattern : DATATOOLS_SERIALIZABLE_CLASS
+    class base_topology_pattern : DATATOOLS_SERIALIZABLE_CLASS,
+                                  public datatools::i_tree_dumpable
     {
     public:
-
-      class TOF_info
-      {
-        double internal_probability;
-        double external_probability;
-        // std::pair <snemo::datamodel::particle_track::handle_type & ,
-        //            snemo::datamodel::particle_track::handle_type & > pair_particle_track_handle;
-      };
-
-      class delta_vertices_info
-      {
-        double delta_vertices_y;
-        double delta_vertices_z;
-        // std::pair <snemo::datamodel::particle_track::handle_type & ,
-        //            snemo::datamodel::particle_track::handle_type & > pair_particle_track_handle;
-      };
-
-      /// Typedef for pairing particles
-      typedef std::pair<snemo::datamodel::particle_track::handle_type,
-                        snemo::datamodel::particle_track::handle_type> particle_pair_type;
-
-      /// Typedef for TOF dictionnary
-      typedef std::map<particle_pair_type, TOF_info> TOF_dict_type;
-
-      /// Typedef for TOF dictionnary
-      typedef std::map<particle_pair_type, delta_vertices_info> delta_vertices_dict_type;
 
       /// Check if a valid pattern ID exists
       bool has_pattern_id() const;
@@ -65,6 +40,12 @@ namespace snemo {
 
       /// Destructor
       virtual ~base_topology_pattern();
+
+      /// Smart print
+      virtual void tree_dump(std::ostream      & out_    = std::clog,
+                             const std::string & title_  = "",
+                             const std::string & indent_ = "",
+                             bool inherit_               = false) const;
 
     protected:
 

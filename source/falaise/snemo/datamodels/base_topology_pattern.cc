@@ -40,6 +40,30 @@ namespace snemo {
       return;
     }
 
+    void base_topology_pattern::tree_dump(std::ostream      & out_,
+                                          const std::string & title_,
+                                          const std::string & indent_,
+                                          bool /*inherit_*/) const
+    {
+      std::string indent;
+      if (! indent_.empty()) {
+        indent = indent_;
+      }
+      if (! title_.empty()) {
+        out_ << indent << title_ << std::endl;
+      }
+
+      out_ << indent << datatools::i_tree_dumpable::tag
+           << "Pattern ID : ";
+      if(! has_pattern_id()) {
+        out_ << "<none>";
+      } else {
+        out_ << "'" << get_pattern_id() << "'";
+      }
+      out_ << std::endl;
+      return;
+    }
+
   } // end of namespace datamodel
 
 } // end of namespace snemo

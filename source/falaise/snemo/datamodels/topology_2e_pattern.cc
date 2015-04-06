@@ -22,6 +22,8 @@ namespace snemo {
     topology_2e_pattern::topology_2e_pattern()
       : base_topology_pattern(topology_2e_pattern::pattern_id())
     {
+      datatools::invalidate(_tof_.internal_probability);
+      datatools::invalidate(_tof_.external_probability);
       return;
     }
 
@@ -30,6 +32,59 @@ namespace snemo {
       return;
     }
 
+    // bool topology_2e_pattern::has_TOF_measurement() const
+    // {
+    //   return has_internal_probability() && has_external_probability();
+    // }
+
+    bool topology_2e_pattern::has_internal_probability() const
+    {
+      return datatools::is_valid(_tof_.internal_probability);
+    }
+
+    void topology_2e_pattern::set_internal_probability(const double prob_)
+    {
+      _tof_.internal_probability = prob_;
+      return;
+    }
+
+    double topology_2e_pattern::get_internal_probability() const
+    {
+      return _tof_.internal_probability;
+    }
+
+    bool topology_2e_pattern::has_external_probability() const
+    {
+      return datatools::is_valid(_tof_.internal_probability);
+    }
+
+    void topology_2e_pattern::set_external_probability(const double prob_)
+    {
+      _tof_.external_probability = prob_;
+      return;
+    }
+
+    double topology_2e_pattern::get_external_probability() const
+    {
+      return _tof_.external_probability;
+    }
+
+    void topology_2e_pattern::tree_dump(std::ostream      & out_,
+                                        const std::string & title_,
+                                        const std::string & indent_,
+                                        bool inherit_) const
+    {
+      std::string indent;
+      if (! indent_.empty()) indent = indent_;
+      base_topology_pattern::tree_dump(out_, title_, indent_, true);
+
+      out_ << indent << datatools::i_tree_dumpable::tag
+           << "Internal probability : " << get_internal_probability() << std::endl;
+      out_ << indent << datatools::i_tree_dumpable::tag
+           << "External probability : " << get_external_probability() << std::endl;
+
+      return;
+    }
   } // end of namespace datamodel
 
 } // end of namespace snemo

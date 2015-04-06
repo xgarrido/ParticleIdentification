@@ -26,6 +26,28 @@ namespace snemo {
     {
     public:
 
+      struct TOF_measurement
+      {
+        double internal_probability;
+        double external_probability;
+      };
+
+      struct delta_vertices_measurement
+      {
+        double delta_vertices_y;
+        double delta_vertices_z;
+      };
+
+      // /// Typedef for pairing particles
+      // typedef std::pair<snemo::datamodel::particle_track::handle_type,
+      //                   snemo::datamodel::particle_track::handle_type> particle_pair_type;
+
+      // /// Typedef for TOF dictionnary
+      // typedef std::map<particle_pair_type, TOF_measurement> TOF_dict_type;
+
+      // /// Typedef for TOF dictionnary
+      // typedef std::map<particle_pair_type, delta_vertices_measurement> delta_vertices_dict_type;
+
       /// Return pattern identifier of the pattern
       static const std::string & pattern_id();
 
@@ -35,9 +57,33 @@ namespace snemo {
       /// Destructor
       virtual ~topology_2e_pattern();
 
+      /// Check internal probability validity
+      bool has_internal_probability() const;
+
+      /// Set internal probability
+      void set_internal_probability(const double prob_);
+
+      /// Return internal probability
+      double get_internal_probability() const;
+
+      /// Check internal probability validity
+      bool has_external_probability() const;
+
+      /// Set external probability
+      void set_external_probability(const double prob_);
+
+      /// Return external probability
+      double get_external_probability() const;
+
+      /// Smart print
+      virtual void tree_dump(std::ostream      & out_    = std::clog,
+                             const std::string & title_  = "",
+                             const std::string & indent_ = "",
+                             bool inherit_               = false) const;
+
     private:
 
-      TOF_dict_type _TOF_infos_;
+      TOF_measurement _tof_;
 
       DATATOOLS_SERIALIZATION_DECLARATION();
 

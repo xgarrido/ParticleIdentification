@@ -234,7 +234,8 @@ namespace snemo {
                                              snemo::datamodel::topology_data & td_)
     {
       snemo::datamodel::topology_data::handle_pattern h_pattern;
-      h_pattern.reset(new snemo::datamodel::topology_2e_pattern);
+      snemo::datamodel::topology_2e_pattern * t2ep = new snemo::datamodel::topology_2e_pattern;
+      h_pattern.reset(t2ep);
       td_.set_pattern_handle(h_pattern);
 
       const snemo::datamodel::particle_track_data::particle_collection_type & the_particles
@@ -247,10 +248,17 @@ namespace snemo {
         double proba_int = datatools::invalid_real();
         double proba_ext = datatools::invalid_real();
         _TOFD_->process(pt1, pt2, proba_int, proba_ext);
+        t2ep->set_internal_probability(proba_int);
+        t2ep->set_external_probability(proba_ext);
       } else {
         DT_LOG_DEBUG(get_logging_priority(),
                      "Electron particles do not have associated calorimeter hit !");
       }
+      if (get_logging_priority() >= datatools::logger::PRIO_DEBUG) {
+        DT_LOG_DEBUG(get_logging_priority(), "Topology data dump :");
+        td_.tree_dump();
+      }
+      return;
     }
 
   }  // end of namespace reconstruction
