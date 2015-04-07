@@ -150,83 +150,62 @@ namespace snemo {
 
     int delta_vertices_driver::_process_algo(const snemo::datamodel::particle_track & pt1_,
                                              const snemo::datamodel::particle_track & pt2_,
-                                             double & delta_vertices_y,
-                                             double & delta_vertices_z)
+                                             double & delta_vertices_y_,
+                                             double & delta_vertices_z_)
     {
       DT_LOG_TRACE(get_logging_priority(), "Entering...");
 
-      const datatools::properties & aux_1 = pt1_.get_auxiliaries();
-      const datatools::properties & aux_2 = pt2_.get_auxiliaries();
+      DT_THROW_IF(snemo::datamodel::pid_utils::particle_is_gamma(pt1_) ||
+                  snemo::datamodel::pid_utils::particle_is_gamma(pt2_),
+                  std::logic_error,
+                  "Cannot compute delta vertices when one particle is a gamma !");
 
-      /*probably a cleaner way to do it*/
-      if(! aux_1.has_key(snemo::datamodel::pid_utils::pid_label_key()) ||
-         ! aux_2.has_key(snemo::datamodel::pid_utils::pid_label_key()))
-        DT_THROW_IF(true, std::logic_error,
-                    "Missing pid_label information on a particle type !");
-
-      const std::string label_1 = aux_1.fetch_string(snemo::datamodel::pid_utils::pid_label_key());
-      const std::string label_2 = aux_2.fetch_string(snemo::datamodel::pid_utils::pid_label_key());
-
-      if(label_1 == snemo::datamodel::pid_utils::gamma_label() ||
-         label_2 == snemo::datamodel::pid_utils::gamma_label())
-        DT_THROW_IF(true, std::logic_error,
-                    "Cannot compute Delta vertices when one particle is a gamma !");
+      // Invalidate results
+      datatools::invalidate(delta_vertices_y_);
+      datatools::invalidate(delta_vertices_z_);
 
       geomtools::vector_3d v1;
       geomtools::invalidate(v1);
+      const snemo::datamodel::particle_track::vertex_collection_type & the_vertices_1
+        = pt1_.get_vertices();
+      for (snemo::datamodel::particle_track::vertex_collection_type::const_iterator
+             ivertex = the_vertices_1.begin();
+           ivertex != the_vertices_1.end(); ++ivertex) {
+        const geomtools::blur_spot & a_vertex = ivertex->get();
+        if (! snemo::datamodel::particle_track::vertex_is_on_source_foil(a_vertex)) {
+          DT_LOG_DEBUG(get_logging_priority(),
+                       "Vertex " << a_vertex.get_position() << " is not on the source foil !");
+          continue;
+        }
+        v1 = a_vertex.get_position();
+        break;
+      }
 
       geomtools::vector_3d v2;
       geomtools::invalidate(v2);
-
-      const snemo::datamodel::particle_track::vertex_collection_type & the_vertices_1
-        = pt1_.get_vertices();
       const snemo::datamodel::particle_track::vertex_collection_type & the_vertices_2
         = pt2_.get_vertices();
-
-      for (snemo::datamodel::particle_track::vertex_collection_type::const_iterator
-             ivertex = the_vertices_1.begin();
-           ivertex != the_vertices_1.end(); ++ivertex)
-        {
-          const geomtools::blur_spot & a_vertex = ivertex->get();
-          const datatools::properties & aux = a_vertex.get_auxiliaries();
-
-          if(!snemo::datamodel::particle_track::vertex_is_on_source_foil(a_vertex))
-            {
-              DT_LOG_DEBUG(get_logging_priority(),
-                           "Vertex " << a_vertex.get_position()
-                           << " is not on the source foil !");
-              continue;
-            }
-          v1 = a_vertex.get_position();
-          break;
-        }
-
       for (snemo::datamodel::particle_track::vertex_collection_type::const_iterator
              ivertex = the_vertices_2.begin();
-           ivertex != the_vertices_2.end(); ++ivertex)
-        {
-          const geomtools::blur_spot & a_vertex = ivertex->get();
-          const datatools::properties & aux = a_vertex.get_auxiliaries();
-
-          if(!snemo::datamodel::particle_track::vertex_is_on_source_foil(a_vertex))
-            {
-              DT_LOG_DEBUG(get_logging_priority(),
-                           "Vertex " << a_vertex.get_position()
-                           << " is not on the source foil !");
-              continue;
-            }
-          v2 = a_vertex.get_position();
-          break;
+           ivertex != the_vertices_2.end(); ++ivertex) {
+        const geomtools::blur_spot & a_vertex = ivertex->get();
+        if (! snemo::datamodel::particle_track::vertex_is_on_source_foil(a_vertex)) {
+          DT_LOG_DEBUG(get_logging_priority(),
+                       "Vertex " << a_vertex.get_position() << " is not on the source foil !");
+          continue;
         }
+        v2 = a_vertex.get_position();
+        break;
+      }
 
-      // std::cout << "delta y : " << v1.y()-v2.y() << std::endl;
-      // std::cout << "delta z : " << v1.z()-v2.z() << std::endl;
-
-      delta_vertices_y = v1.y()-v2.y();
-      delta_vertices_z = v1.z()-v2.z();
+      if (geomtools::is_valid(v1) && geomtools::is_valid(v2)) {
+        delta_vertices_y_ = v1.y() - v2.y();
+        delta_vertices_z_ = v1.z() - v2.z();
+      }
+      DT_LOG_DEBUG(get_logging_priority(), "Delta vertex y = " << delta_vertices_y_/CLHEP::mm << " mm");
+      DT_LOG_DEBUG(get_logging_priority(), "Delta vertex z = " << delta_vertices_z_/CLHEP::mm << " mm");
 
       DT_LOG_TRACE(get_logging_priority(), "Exiting...");
-
       return 0;
     }
 

@@ -106,9 +106,6 @@ namespace snemo {
            idriver != driver_names.end(); ++idriver) {
         const std::string & a_driver_name = *idriver;
 
-        if (a_driver_name == "TD") {
-          continue;
-        }
         if (a_driver_name == "TOFD") {
           // Initialize TOF Driver
           _TOFD_.reset(new snemo::reconstruction::tof_driver);
@@ -227,7 +224,6 @@ namespace snemo {
       const snemo::datamodel::particle_track & pt2 = the_particles.back().get();
 
       if (pt1.has_associated_calorimeter_hits() && pt2.has_associated_calorimeter_hits()) {
-        // To be replaced by dedicated fields of 'topology_2e_pattern'
         double proba_int = datatools::invalid_real();
         double proba_ext = datatools::invalid_real();
         _TOFD_->process(pt1, pt2, proba_int, proba_ext);
@@ -241,12 +237,9 @@ namespace snemo {
 
       double delta_vertices_y = datatools::invalid_real();
       double delta_vertices_z = datatools::invalid_real();
-
       _DVD_->process(pt1, pt2, delta_vertices_y, delta_vertices_z);
       t2ep->set_delta_vertices_y(delta_vertices_y);
       t2ep->set_delta_vertices_z(delta_vertices_z);
-
-      // td_.tree_dump();
 
       if (get_logging_priority() >= datatools::logger::PRIO_DEBUG) {
         DT_LOG_DEBUG(get_logging_priority(), "Topology data dump :");
