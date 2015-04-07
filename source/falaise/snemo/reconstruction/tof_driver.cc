@@ -149,8 +149,12 @@ namespace snemo {
       } else if (snemo::datamodel::pid_utils::particle_is_gamma(pt1_) &&
                  ! snemo::datamodel::pid_utils::particle_is_gamma(pt2_)) {
         ///
-      } else if (snemo::datamodel::pid_utils::particle_is_gamma(pt1_) &&
+        _process_charged_gamma_particles(pt2_, pt1_, proba_int_, proba_ext_);
+      } else if (! snemo::datamodel::pid_utils::particle_is_gamma(pt1_) &&
                  snemo::datamodel::pid_utils::particle_is_gamma(pt2_)) {
+
+        _process_charged_gamma_particles(pt1_, pt2_, proba_int_, proba_ext_);
+
         // // should take care in the topology driver not to feed two gamma
         // /* /!\ For now, suppose the gamma */
 
@@ -216,18 +220,80 @@ namespace snemo {
       DT_LOG_DEBUG(get_logging_priority(), "t2 meas. : " << t2/CLHEP::ns << " ns");
 
       const double sigma_l = 0.6 * CLHEP::ns;
-      const double sigma_exp_int
+      const double sigma_exp
         = std::pow(sigma_t1, 2) + std::pow(sigma_t2, 2) + std::pow(sigma_l, 2);
-      const double sigma_exp_ext
-        = std::pow(sigma_t1, 2) + std::pow(sigma_t2, 2) + std::pow(sigma_l, 2);
+      // const double sigma_exp_ext
+      //   = std::pow(sigma_t1, 2) + std::pow(sigma_t2, 2) + std::pow(sigma_l, 2);
 
-      const double chi2_int = std::pow(t1 - t2 - (t1_th - t2_th), 2)/sigma_exp_int;
-      const double chi2_ext = std::pow(std::abs(t1 - t2) - (t1_th + t2_th), 2)/sigma_exp_ext;
+      const double chi2_int = std::pow(t1 - t2 - (t1_th - t2_th), 2)/sigma_exp;
+      const double chi2_ext = std::pow(std::abs(t1 - t2) - (t1_th + t2_th), 2)/sigma_exp;
 
       proba_int_ = gsl_cdf_chisq_Q(chi2_int, 1);
       proba_ext_ = gsl_cdf_chisq_Q(chi2_ext, 1);
       DT_LOG_DEBUG(get_logging_priority(), "P_int " << proba_int_);
       DT_LOG_DEBUG(get_logging_priority(), "P_ext " << proba_ext_);
+
+      return;
+    }
+
+    void tof_driver::_process_charged_gamma_particles(const snemo::datamodel::particle_track & pt1_,
+                                                      const snemo::datamodel::particle_track & pt2_,
+                                                      double & proba_int_, double & proba_ext_)
+    {
+      /* ensured beforehand the pt1_ is the electron and the pt2_ is the gamma*/
+
+      // Compute theoritical times given energy, mass and track length
+      const double E1 = _get_energy(pt1_);
+      const double E2 = 1; // dummy, non-zero value
+      const double m1 = _get_mass(pt1_);
+      const double m2 = _get_mass(pt2_);
+
+      const double tl1 = _get_charged_particle_track_length(pt1_);
+      const double t1_th = _get_theoretical_time(E1, m1, tl1);
+      double t1, sigma_t1;
+      _get_time(pt1_, t1, sigma_t1);
+      DT_LOG_DEBUG(get_logging_priority(), "t1 meas. : " << t1/CLHEP::ns << " ns");
+
+      const double tl2_int = _get_gamma_track_length(pt2_, pt1_);
+      const double t2_th_int = _get_theoretical_time(E2, m2, tl2_int);
+      double t2_int, sigma_t2_int;
+      _get_time(pt2_, t2_int, sigma_t2_int);
+      DT_LOG_DEBUG(get_logging_priority(), "t2 int meas. : " << t2_int/CLHEP::ns << " ns");
+
+      // For now, only the case where the gamma creates an electron after its last deposit is considered,
+      // to be improved later
+
+      const double tl2_ext = _get_gamma_track_length_external_hyp(pt2_, pt1_);
+      const double t2_th_ext = _get_theoretical_time(E2, m2, tl2_ext);
+      double t2_ext, sigma_t2_ext;
+      _get_time_external_hyp(pt2_, t2_ext, sigma_t2_ext);
+
+      DT_LOG_DEBUG(get_logging_priority(), "t1 th : " << t1_th/CLHEP::ns << " ns");
+      DT_LOG_DEBUG(get_logging_priority(), "t2 th int : " << t2_th_int/CLHEP::ns << " ns");
+      DT_LOG_DEBUG(get_logging_priority(), "t2 th ext : " << t2_th_ext/CLHEP::ns << " ns");
+
+      const double sigma_l = 0.6 * CLHEP::ns;
+      const double sigma_exp_int
+        = std::pow(sigma_t1, 2) + std::pow(sigma_t2_int, 2) + std::pow(sigma_l, 2);
+      const double sigma_exp_ext
+        = std::pow(sigma_t1, 2) + std::pow(sigma_t2_ext, 2) + std::pow(sigma_l, 2);
+
+      const double chi2_int = std::pow(t1 - t2_int - (t1_th - t2_th_int), 2)/sigma_exp_int;
+
+      /*gamma creating electron*/
+      const double chi2_ext_g2e = std::pow(std::abs(t1 - t2_ext) - (t1_th + t2_th_ext), 2)/sigma_exp_ext;
+
+      /*electron creating gamma*/
+      const double chi2_ext_e2g = std::pow(std::abs(t1 - t2_int) - (t1_th + t2_th_int), 2)/sigma_exp_int;
+
+      proba_int_ = gsl_cdf_chisq_Q(chi2_int, 1);
+
+      /*return the max of P_ext_g2e and P_ext_e2g ???*/
+
+      proba_ext_ = gsl_cdf_chisq_Q(chi2_ext_g2e, 1);
+      DT_LOG_DEBUG(get_logging_priority(), "P_int " << proba_int_);
+      DT_LOG_DEBUG(get_logging_priority(), "P_ext " << proba_ext_);
+
       return;
     }
 
@@ -263,11 +329,24 @@ namespace snemo {
                   "Particle track is not associated to any calorimeter block !");
       const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
         the_calorimeters = particle_.get_associated_calorimeter_hits ();
-      DT_THROW_IF(the_calorimeters.size() >= 2, std::logic_error,
-                  "Particle track is associated to more than 1 calorimeter block !");
+      // DT_THROW_IF(the_calorimeters.size() >= 2, std::logic_error,
+      //             "Particle track is associated to more than 1 calorimeter block !");
 
       t_ = the_calorimeters.front().get().get_time();
       sigma_t_ = the_calorimeters.front().get().get_sigma_time();
+      return;
+    }
+
+    void tof_driver::_get_time_external_hyp(const snemo::datamodel::particle_track & particle_,
+                               double & t_, double & sigma_t_)
+    {
+      DT_THROW_IF(! particle_.has_associated_calorimeter_hits(), std::logic_error,
+                  "Particle track is not associated to any calorimeter block !");
+      const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
+        the_calorimeters = particle_.get_associated_calorimeter_hits ();
+
+      t_ = the_calorimeters.back().get().get_time();
+      sigma_t_ = the_calorimeters.back().get().get_sigma_time();
       return;
     }
 
@@ -368,25 +447,92 @@ namespace snemo {
 
       const snemo::datamodel::particle_track::vertex_collection_type & the_vertices = pte_.get_vertices();
       geomtools::vector_3d electron_foil_vertex;
-      bool found_calorimeter_vertex = false;
+      bool found_foil_vertex = false;
       for(snemo::datamodel::particle_track::vertex_collection_type::const_iterator i_vtx = the_vertices.begin(); i_vtx<the_vertices.end(); ++i_vtx)
         {
-          if(!snemo::datamodel::particle_track::vertex_is_on_main_calorimeter(i_vtx->get()) || !snemo::datamodel::particle_track::vertex_is_on_x_calorimeter(i_vtx->get())
-             || !snemo::datamodel::particle_track::vertex_is_on_gamma_veto(i_vtx->get()))
+          if(snemo::datamodel::particle_track::vertex_is_on_main_calorimeter(i_vtx->get()) || snemo::datamodel::particle_track::vertex_is_on_x_calorimeter(i_vtx->get())
+             || snemo::datamodel::particle_track::vertex_is_on_gamma_veto(i_vtx->get()))
             continue;
 
-          found_calorimeter_vertex = true;
+          found_foil_vertex = true;
           electron_foil_vertex = i_vtx->get().get_position();
           break;
         }
+      if(!found_foil_vertex)
+        DT_THROW_IF(true, std::logic_error,
+                   "Electron has no vertices on the calorimeter !");
+
+      if(!ptg_.has_vertices())
+        DT_THROW_IF(true, std::logic_error,
+                    "Gamma has no vertices associated !");
+      const snemo::datamodel::particle_track::vertex_collection_type & the_gamma_vertices = ptg_.get_vertices();
+      geomtools::vector_3d gamma_first_calo_vertex;
+      bool found_calorimeter_vertex = false;
+      for(snemo::datamodel::particle_track::vertex_collection_type::const_iterator i_vtx = the_gamma_vertices.begin(); i_vtx<the_gamma_vertices.end(); ++i_vtx)
+        {
+          if(snemo::datamodel::particle_track::vertex_is_on_main_calorimeter(i_vtx->get()) || snemo::datamodel::particle_track::vertex_is_on_x_calorimeter(i_vtx->get())
+             || snemo::datamodel::particle_track::vertex_is_on_gamma_veto(i_vtx->get())) {
+            found_calorimeter_vertex = true;
+            gamma_first_calo_vertex = i_vtx->get().get_position();
+            break;
+          }
+        }
+
       if(!found_calorimeter_vertex)
         DT_THROW_IF(true, std::logic_error,
-                    "Gamma particle has no vertices on the calorimeter !");
+                    "Electron has no vertices on the calorimeter !");
 
-      const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
-        the_calorimeters = ptg_.get_associated_calorimeter_hits ();
+      return (electron_foil_vertex - gamma_first_calo_vertex).mag();
 
-      // different track length for internal and external hypothesis
+      return 0; // for now
+    }
+
+    double tof_driver::_get_gamma_track_length_external_hyp(const snemo::datamodel::particle_track & ptg_,
+                                                            const snemo::datamodel::particle_track & pte_)
+    {
+      /*the first vertex on calorimeter is the first in time but is it always true ???*/
+      if(!pte_.has_vertices())
+        DT_THROW_IF(true, std::logic_error,
+                    "Electron has no vertices associated !");
+
+      const snemo::datamodel::particle_track::vertex_collection_type & the_vertices = pte_.get_vertices();
+      geomtools::vector_3d electron_foil_vertex;
+      bool found_foil_vertex = false;
+      for(snemo::datamodel::particle_track::vertex_collection_type::const_iterator i_vtx = the_vertices.begin(); i_vtx<the_vertices.end(); ++i_vtx)
+        {
+          if(snemo::datamodel::particle_track::vertex_is_on_main_calorimeter(i_vtx->get()) || snemo::datamodel::particle_track::vertex_is_on_x_calorimeter(i_vtx->get())
+             || snemo::datamodel::particle_track::vertex_is_on_gamma_veto(i_vtx->get()))
+            continue;
+
+          found_foil_vertex = true;
+          electron_foil_vertex = i_vtx->get().get_position();
+          break;
+        }
+      if(!found_foil_vertex)
+        DT_THROW_IF(true, std::logic_error,
+                   "Electron has no vertices on the calorimeter !");
+
+      if(!ptg_.has_vertices())
+        DT_THROW_IF(true, std::logic_error,
+                    "Gamma has no vertices associated !");
+      const snemo::datamodel::particle_track::vertex_collection_type & the_gamma_vertices = ptg_.get_vertices();
+      geomtools::vector_3d gamma_last_calo_vertex;
+      bool found_calorimeter_vertex = false;
+      for(snemo::datamodel::particle_track::vertex_collection_type::const_iterator i_vtx = the_gamma_vertices.begin(); i_vtx<the_gamma_vertices.end(); ++i_vtx)
+        {
+          if(snemo::datamodel::particle_track::vertex_is_on_main_calorimeter(i_vtx->get()) || snemo::datamodel::particle_track::vertex_is_on_x_calorimeter(i_vtx->get())
+             || snemo::datamodel::particle_track::vertex_is_on_gamma_veto(i_vtx->get())) {
+            found_calorimeter_vertex = true;
+            gamma_last_calo_vertex = i_vtx->get().get_position();
+            break;
+          }
+        }
+
+      if(!found_calorimeter_vertex)
+        DT_THROW_IF(true, std::logic_error,
+                    "Electron has no vertices on the calorimeter !");
+
+      return (electron_foil_vertex - gamma_last_calo_vertex).mag();
 
       return 0; // for now
     }

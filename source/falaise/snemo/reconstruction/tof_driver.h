@@ -117,6 +117,11 @@ namespace snemo {
                                       const snemo::datamodel::particle_track & particle_2_,
                                       double & proba_int_, double & proba_ext_);
 
+      /// Special method to process charged particles
+      void _process_charged_gamma_particles(const snemo::datamodel::particle_track & particle_1_,
+                                            const snemo::datamodel::particle_track & particle_2_,
+                                            double & proba_int_, double & proba_ext_);
+
       /// Gives the energy of particle_
       static double _get_energy(const snemo::datamodel::particle_track & particle_);
 
@@ -128,6 +133,10 @@ namespace snemo {
 
       /// Gives the times for two charged particles (single deposit)
       void _get_time(const snemo::datamodel::particle_track & particle_,
+                     double & t_, double & sigma_t);
+
+      /// Gives the times for two charged particles, last gamma deposit
+      void _get_time_external_hyp(const snemo::datamodel::particle_track & particle_,
                      double & t_, double & sigma_t);
 
       // /// Gives the times of the relevant vertices
@@ -148,6 +157,10 @@ namespace snemo {
 
       /// Gives the track length of a gamma from the electron vertex
       double _get_gamma_track_length(const snemo::datamodel::particle_track & pt_gamma_,
+                                     const snemo::datamodel::particle_track & pt_electron_);
+
+      /// Gives the track length of a gamma from the electron vertex for the external hypothesis
+      double _get_gamma_track_length_external_hyp(const snemo::datamodel::particle_track & pt_gamma_,
                                      const snemo::datamodel::particle_track & pt_electron_);
 
       /// Give default values to specific class members.
