@@ -49,6 +49,12 @@ namespace snemo {
   namespace datamodel {
     class topology_data;
   }
+  namespace datamodel {
+    class pid_utils;
+  }
+  namespace datamodel {
+    class base_topology_pattern;
+  }
 
   namespace reconstruction {
 
@@ -116,6 +122,10 @@ namespace snemo {
 
       /// Fill 2 electrons topology event
       void _fill_2e_topology_(const snemo::datamodel::particle_track_data & ptd_,
+                              snemo::datamodel::topology_data & td_);
+
+      /// Fill 1 electron 1 gamma topology event
+      void _fill_1e1g_topology_(const snemo::datamodel::particle_track_data & ptd_,
                               snemo::datamodel::topology_data & td_);
 
     private:
