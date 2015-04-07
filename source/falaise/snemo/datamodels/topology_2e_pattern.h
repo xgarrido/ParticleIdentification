@@ -75,6 +75,24 @@ namespace snemo {
       /// Return external probability
       double get_external_probability() const;
 
+      /// Check delta vertices y validity
+      bool has_delta_vertices_y() const;
+
+      /// Set delta vertices y
+      void set_delta_vertices_y(const double prob_);
+
+      /// Return delta vertices y
+      double get_delta_vertices_y() const;
+
+      /// Check delta vertices z validity
+      bool has_delta_vertices_z() const;
+
+      /// Set delta vertices z
+      void set_delta_vertices_z(const double prob_);
+
+      /// Return delta vertices z
+      double get_delta_vertices_z() const;
+
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,
                              const std::string & title_  = "",
@@ -84,6 +102,7 @@ namespace snemo {
     private:
 
       TOF_measurement _tof_;
+      delta_vertices_measurement _DeltaV_;
 
       DATATOOLS_SERIALIZATION_DECLARATION();
 

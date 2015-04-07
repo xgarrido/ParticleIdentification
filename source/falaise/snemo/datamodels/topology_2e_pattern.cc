@@ -69,6 +69,38 @@ namespace snemo {
       return _tof_.external_probability;
     }
 
+    bool topology_2e_pattern::has_delta_vertices_y() const
+    {
+      return datatools::is_valid(_DeltaV_.delta_vertices_y);
+    }
+
+    void topology_2e_pattern::set_delta_vertices_y(const double deltaV_y_)
+    {
+      _DeltaV_.delta_vertices_y = deltaV_y_;
+      return;
+    }
+
+    double topology_2e_pattern::get_delta_vertices_y() const
+    {
+      return _DeltaV_.delta_vertices_y;
+    }
+
+    bool topology_2e_pattern::has_delta_vertices_z() const
+    {
+      return datatools::is_valid(_DeltaV_.delta_vertices_z);
+    }
+
+    void topology_2e_pattern::set_delta_vertices_z(const double deltaV_z_)
+    {
+      _DeltaV_.delta_vertices_z = deltaV_z_;
+      return;
+    }
+
+    double topology_2e_pattern::get_delta_vertices_z() const
+    {
+      return _DeltaV_.delta_vertices_z;
+    }
+
     void topology_2e_pattern::tree_dump(std::ostream      & out_,
                                         const std::string & title_,
                                         const std::string & indent_,
@@ -82,6 +114,10 @@ namespace snemo {
            << "Internal probability : " << get_internal_probability() << std::endl;
       out_ << indent << datatools::i_tree_dumpable::tag
            << "External probability : " << get_external_probability() << std::endl;
+      out_ << indent << datatools::i_tree_dumpable::tag
+           << "Delta Vertices Y : " << get_delta_vertices_y() << std::endl;
+      out_ << indent << datatools::i_tree_dumpable::tag
+           << "Delta Vertices Z : " << get_delta_vertices_z() << std::endl;
 
       return;
     }
