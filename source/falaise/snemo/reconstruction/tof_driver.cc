@@ -226,13 +226,13 @@ namespace snemo {
       const double tl1 = _get_charged_particle_track_length(a_charged);
       const double t1_th = _get_theoretical_time(E1, m1, tl1);
       double t1, sigma_t1;
-      _get_time(pt1_, t1, sigma_t1);
+      _get_time(a_charged, t1, sigma_t1);
       DT_LOG_DEBUG(get_logging_priority(), "t1 meas. : " << t1/CLHEP::ns << " ns");
 
       const double tl2_int = _get_gamma_track_length(a_gamma, a_charged);
       const double t2_th_int = _get_theoretical_time(E2, m2, tl2_int);
       double t2_int, sigma_t2_int;
-      _get_time(pt2_, t2_int, sigma_t2_int);
+      _get_time(a_gamma, t2_int, sigma_t2_int);
       DT_LOG_DEBUG(get_logging_priority(), "t2 int meas. : " << t2_int/CLHEP::ns << " ns");
 
       // For now, only the case where the gamma creates an electron after its last deposit is considered,
