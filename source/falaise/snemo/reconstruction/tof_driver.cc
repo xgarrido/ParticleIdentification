@@ -144,7 +144,13 @@ namespace snemo {
 
       if (! pt1_.has_associated_calorimeter_hits() ||
           ! pt2_.has_associated_calorimeter_hits()) {
-        DT_LOG_DEBUG(get_logging_priority(), "No associated calorimeter !");
+        DT_LOG_WARNING(get_logging_priority(), "No associated calorimeter !");
+        return 1;
+      }
+
+      if (snemo::datamodel::pid_utils::particle_is_gamma(pt1_) &&
+          snemo::datamodel::pid_utils::particle_is_gamma(pt2_)) {
+        DT_LOG_WARNING(get_logging_priority(), "TOF calculation can not be done for 2 gammas !");
         return 1;
       }
 
@@ -152,10 +158,7 @@ namespace snemo {
       if (! snemo::datamodel::pid_utils::particle_is_gamma(pt1_) &&
           ! snemo::datamodel::pid_utils::particle_is_gamma(pt2_)) {
         _process_charged_particles(pt1_, pt2_, proba_int_, proba_ext_);
-      } else if (snemo::datamodel::pid_utils::particle_is_gamma(pt1_) &&
-                 ! snemo::datamodel::pid_utils::particle_is_gamma(pt2_)) {
-        _process_charged_gamma_particles(pt2_, pt1_, proba_int_, proba_ext_);
-      } else if (! snemo::datamodel::pid_utils::particle_is_gamma(pt1_) &&
+      } else if (snemo::datamodel::pid_utils::particle_is_gamma(pt1_) ||
                  snemo::datamodel::pid_utils::particle_is_gamma(pt2_)) {
         _process_charged_gamma_particles(pt1_, pt2_, proba_int_, proba_ext_);
       } else {
@@ -209,21 +212,24 @@ namespace snemo {
                                                       const snemo::datamodel::particle_track & pt2_,
                                                       double & proba_int_, double & proba_ext_)
     {
-      /* ensured beforehand the pt1_ is the electron and the pt2_ is the gamma*/
+      const snemo::datamodel::particle_track & a_gamma
+        = (snemo::datamodel::pid_utils::particle_is_gamma(pt1_) ? pt1_ : pt2_);
+      const snemo::datamodel::particle_track & a_charged
+        = (snemo::datamodel::pid_utils::particle_is_gamma(pt1_) ? pt2_ : pt1_);
 
       // Compute theoritical times given energy, mass and track length
-      const double E1 = _get_energy(pt1_);
+      const double E1 = _get_energy(a_charged);
       const double E2 = 1; // dummy, non-zero value
-      const double m1 = _get_mass(pt1_);
-      const double m2 = _get_mass(pt2_);
+      const double m1 = _get_mass(a_charged);
+      const double m2 = _get_mass(a_gamma);
 
-      const double tl1 = _get_charged_particle_track_length(pt1_);
+      const double tl1 = _get_charged_particle_track_length(a_charged);
       const double t1_th = _get_theoretical_time(E1, m1, tl1);
       double t1, sigma_t1;
       _get_time(pt1_, t1, sigma_t1);
       DT_LOG_DEBUG(get_logging_priority(), "t1 meas. : " << t1/CLHEP::ns << " ns");
 
-      const double tl2_int = _get_gamma_track_length(pt2_, pt1_);
+      const double tl2_int = _get_gamma_track_length(a_gamma, a_charged);
       const double t2_th_int = _get_theoretical_time(E2, m2, tl2_int);
       double t2_int, sigma_t2_int;
       _get_time(pt2_, t2_int, sigma_t2_int);
@@ -232,7 +238,7 @@ namespace snemo {
       // For now, only the case where the gamma creates an electron after its last deposit is considered,
       // to be improved later
 
-      const double tl2_ext = _get_gamma_track_length_external_hyp(pt2_, pt1_);
+      const double tl2_ext = _get_gamma_track_length_external_hyp(a_gamma, a_charged);
       const double t2_th_ext = _get_theoretical_time(E2, m2, tl2_ext);
       double t2_ext, sigma_t2_ext;
       _get_time_external_hyp(pt2_, t2_ext, sigma_t2_ext);
@@ -268,10 +274,8 @@ namespace snemo {
 
     double tof_driver::_get_energy(const snemo::datamodel::particle_track & particle_)
     {
-      if (! particle_.has_associated_calorimeter_hits()) {
-        DT_THROW_IF(true, std::logic_error,
-                    "Particle track is not associated to any calorimeter block !");
-      }
+      DT_THROW_IF(! particle_.has_associated_calorimeter_hits(), std::logic_error,
+                  "Particle track is not associated to any calorimeter block !");
       const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
         the_calorimeters = particle_.get_associated_calorimeter_hits ();
       if (the_calorimeters.size() >= 2) {
