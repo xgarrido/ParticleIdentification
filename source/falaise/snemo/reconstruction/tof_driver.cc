@@ -148,51 +148,16 @@ namespace snemo {
         _process_charged_particles(pt1_, pt2_, proba_int_, proba_ext_);
       } else if (snemo::datamodel::pid_utils::particle_is_gamma(pt1_) &&
                  ! snemo::datamodel::pid_utils::particle_is_gamma(pt2_)) {
-        ///
         _process_charged_gamma_particles(pt2_, pt1_, proba_int_, proba_ext_);
       } else if (! snemo::datamodel::pid_utils::particle_is_gamma(pt1_) &&
                  snemo::datamodel::pid_utils::particle_is_gamma(pt2_)) {
-
         _process_charged_gamma_particles(pt1_, pt2_, proba_int_, proba_ext_);
-
-        // // should take care in the topology driver not to feed two gamma
-        // /* /!\ For now, suppose the gamma */
-
-        // E1 = 1.; // not relevant for gamma since beta=1
-        // E2 = 1.; // but still, not 0 because involved in fraction
-
-        // _get_times(pt1_, t1, sigma_t1);
-        // _get_times(pt2_, t2, sigma_t2);
-
-        // _get_track_length(pt1_, pt2_, track_length_1, track_length_2);
-
       } else {
         DT_LOG_WARNING(get_logging_priority(), "Topology not supported !");
         return 1;
       }
 
-      // double t1_first, t1_last, t2_first, t2_last;
-      // double sigma_t1_first, sigma_t1_last, sigma_t2_first, sigma_t2_last;
-
-      // _get_times(pt1_, t1_first, sigma_t1_first, t1_last, sigma_t1_last);
-      // _get_times(pt2_, t2_first, sigma_t2_first, t2_last, sigma_t2_last);
-
-      // std::cout << "E1 : " <<  E1 << std::endl
-      //           << "E2 : " <<  E2 << std::endl;
-
-
-      // _get_track_length(pt1_, pt2_, track_length_1, track_length_2);
-
-      // std::cout << "track length 1 : " <<  track_length_1 << std::endl
-      //           << "track length 2 : " <<  track_length_2 << std::endl
-      //           << "t1_first " << t1_first << " +/- " << sigma_t1_first << std::endl
-      //           << "t1_last " << t1_last << " +/- " << sigma_t1_last << std::endl
-      //           << "t2_first " << t2_first << " +/- " << sigma_t2_first << std::endl
-      //           << "t2_last " << t2_last << " +/- " << sigma_t2_last << std::endl;
-
-
       DT_LOG_TRACE(get_logging_priority(), "Exiting...");
-
       return 0;
     }
 
