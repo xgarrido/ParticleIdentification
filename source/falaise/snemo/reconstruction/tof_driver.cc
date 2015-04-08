@@ -142,6 +142,12 @@ namespace snemo {
       datatools::invalidate(proba_int_);
       datatools::invalidate(proba_ext_);
 
+      if (! pt1_.has_associated_calorimeter_hits() ||
+          ! pt2_.has_associated_calorimeter_hits()) {
+        DT_LOG_DEBUG(get_logging_priority(), "No associated calorimeter !");
+        return 1;
+      }
+
       // Either specialize the methods or consider the case here
       if (! snemo::datamodel::pid_utils::particle_is_gamma(pt1_) &&
           ! snemo::datamodel::pid_utils::particle_is_gamma(pt2_)) {
@@ -187,8 +193,6 @@ namespace snemo {
       const double sigma_l = 0.6 * CLHEP::ns;
       const double sigma_exp
         = std::pow(sigma_t1, 2) + std::pow(sigma_t2, 2) + std::pow(sigma_l, 2);
-      // const double sigma_exp_ext
-      //   = std::pow(sigma_t1, 2) + std::pow(sigma_t2, 2) + std::pow(sigma_l, 2);
 
       const double chi2_int = std::pow(t1 - t2 - (t1_th - t2_th), 2)/sigma_exp;
       const double chi2_ext = std::pow(std::abs(t1 - t2) - (t1_th + t2_th), 2)/sigma_exp;

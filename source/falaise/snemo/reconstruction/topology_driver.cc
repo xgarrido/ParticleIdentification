@@ -222,17 +222,11 @@ namespace snemo {
       const snemo::datamodel::particle_track & pt1 = the_particles.front().get();
       const snemo::datamodel::particle_track & pt2 = the_particles.back().get();
 
-      if (pt1.has_associated_calorimeter_hits() && pt2.has_associated_calorimeter_hits()) {
-        double proba_int = datatools::invalid_real();
-        double proba_ext = datatools::invalid_real();
-        _TOFD_->process(pt1, pt2, proba_int, proba_ext);
-        t2ep->set_internal_probability(proba_int);
-        t2ep->set_external_probability(proba_ext);
-
-      } else {
-        DT_LOG_DEBUG(get_logging_priority(),
-                     "Electron particles do not have associated calorimeter hit !");
-      }
+      double proba_int = datatools::invalid_real();
+      double proba_ext = datatools::invalid_real();
+      _TOFD_->process(pt1, pt2, proba_int, proba_ext);
+      t2ep->set_internal_probability(proba_int);
+      t2ep->set_external_probability(proba_ext);
 
       double delta_vertices_y = datatools::invalid_real();
       double delta_vertices_z = datatools::invalid_real();
@@ -260,17 +254,12 @@ namespace snemo {
       const snemo::datamodel::particle_track & pt1 = the_particles.front().get();
       const snemo::datamodel::particle_track & pt2 = the_particles.back().get();
 
-      if (pt1.has_associated_calorimeter_hits() && pt2.has_associated_calorimeter_hits()) {
-        // To be replaced by dedicated fields of 'topology_1e1g_pattern'
-        double proba_int = datatools::invalid_real();
-        double proba_ext = datatools::invalid_real();
-        _TOFD_->process(pt1, pt2, proba_int, proba_ext);
-        t1e1gp->set_internal_probability(proba_int);
-        t1e1gp->set_external_probability(proba_ext);
-      } else {
-        DT_LOG_DEBUG(get_logging_priority(),
-                     "Electron and gamma particles do not have associated calorimeter hit !");
-      }
+      double proba_int = datatools::invalid_real();
+      double proba_ext = datatools::invalid_real();
+      _TOFD_->process(pt1, pt2, proba_int, proba_ext);
+      t1e1gp->set_internal_probability(proba_int);
+      t1e1gp->set_external_probability(proba_ext);
+
       if (get_logging_priority() >= datatools::logger::PRIO_DEBUG) {
         DT_LOG_DEBUG(get_logging_priority(), "Topology data dump :");
         td_.tree_dump();
