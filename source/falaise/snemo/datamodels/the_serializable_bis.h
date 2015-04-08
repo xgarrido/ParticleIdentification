@@ -18,6 +18,9 @@
 #include <falaise/snemo/datamodels/topology_2e_pattern.ipp>
 DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snemo::datamodel::topology_2e_pattern)
 BOOST_CLASS_EXPORT_IMPLEMENT(snemo::datamodel::topology_2e_pattern)
+#include <falaise/snemo/datamodels/topology_1e1g_pattern.ipp>
+DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snemo::datamodel::topology_1e1g_pattern)
+BOOST_CLASS_EXPORT_IMPLEMENT(snemo::datamodel::topology_1e1g_pattern)
 
 #include <falaise/snemo/datamodels/topology_data.ipp>
 DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snemo::datamodel::topology_data)
