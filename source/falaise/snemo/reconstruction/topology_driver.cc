@@ -213,7 +213,6 @@ namespace snemo {
                                              snemo::datamodel::topology_data & td_)
     {
       snemo::datamodel::topology_data::handle_pattern h_pattern;
-      // typedef datatools::handle< snemo::datamodel::base_topology_pattern > h_pattern;
       snemo::datamodel::topology_2e_pattern * t2ep = new snemo::datamodel::topology_2e_pattern;
       h_pattern.reset(t2ep);
       td_.set_pattern_handle(h_pattern);
