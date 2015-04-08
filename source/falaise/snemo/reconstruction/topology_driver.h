@@ -128,6 +128,10 @@ namespace snemo {
       void _fill_1e1g_topology_(const snemo::datamodel::particle_track_data & ptd_,
                               snemo::datamodel::topology_data & td_);
 
+      /// Fill 2 electrons 1 gamma topology event
+      void _fill_2e1g_topology_(const snemo::datamodel::particle_track_data & ptd_,
+                              snemo::datamodel::topology_data & td_);
+
     private:
 
       bool _initialized_;                             //!< Initialize flag

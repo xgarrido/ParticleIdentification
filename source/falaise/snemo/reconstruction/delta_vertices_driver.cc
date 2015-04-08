@@ -168,9 +168,11 @@ namespace snemo {
       const std::string label_2 = aux_2.fetch_string(snemo::datamodel::pid_utils::pid_label_key());
 
       if(label_1 == snemo::datamodel::pid_utils::gamma_label() ||
-         label_2 == snemo::datamodel::pid_utils::gamma_label())
-        DT_THROW_IF(true, std::logic_error,
-                    "Cannot compute Delta vertices when one particle is a gamma !");
+         label_2 == snemo::datamodel::pid_utils::gamma_label()) {
+          DT_LOG_WARNING(get_logging_priority(),
+                         "Cannot compute Delta vertices when one particle is a gamma !");
+          return 1;
+        }
 
       geomtools::vector_3d v1;
       geomtools::invalidate(v1);

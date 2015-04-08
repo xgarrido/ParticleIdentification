@@ -11,10 +11,10 @@
 #include <falaise/snemo/datamodels/particle_track_data.h>
 #include <falaise/snemo/datamodels/topology_data.h>
 #include <falaise/snemo/datamodels/pid_utils.h>
-#include <falaise/snemo/datamodels/base_topology_pattern.h>
 
 #include <falaise/snemo/datamodels/topology_2e_pattern.h>
 #include <falaise/snemo/datamodels/topology_1e1g_pattern.h>
+#include <falaise/snemo/datamodels/topology_2e1g_pattern.h>
 
 #include <snemo/reconstruction/tof_driver.h>
 #include <snemo/reconstruction/delta_vertices_driver.h>
@@ -279,6 +279,58 @@ namespace snemo {
         DT_LOG_DEBUG(get_logging_priority(),
                      "Electron and gamma particles do not have associated calorimeter hit !");
       }
+      if (get_logging_priority() >= datatools::logger::PRIO_DEBUG) {
+        DT_LOG_DEBUG(get_logging_priority(), "Topology data dump :");
+        td_.tree_dump();
+      }
+      return;
+    }
+
+
+    void topology_driver::_fill_2e1g_topology_(const snemo::datamodel::particle_track_data & ptd_,
+                                               snemo::datamodel::topology_data & td_)
+    {
+      snemo::datamodel::topology_data::handle_pattern h_pattern;
+      snemo::datamodel::topology_2e1g_pattern * t2e1gp = new snemo::datamodel::topology_2e1g_pattern;
+      h_pattern.reset(t2e1gp);
+      td_.set_pattern_handle(h_pattern);
+
+      const snemo::datamodel::particle_track_data::particle_collection_type & the_particles
+        = ptd_.get_particles();
+
+      // const snemo::datamodel::particle_track & pt1 = the_particles.at(0).get();
+      // const snemo::datamodel::particle_track & pt2 = the_particles.at(1).get();
+      // const snemo::datamodel::particle_track & pt3 = the_particles.at(the_particles.size()-1).get();
+
+      // for (snemo::datamodel::particle_track_data::particle_collection_type::const_iterator
+      //        iparticle = the_particles.begin();
+      //      iparticle != the_particles.back();
+      //      ++iparticle) {
+      //   for (snemo::datamodel::particle_track_data::particle_collection_type::const_iterator
+      //          iparticle_next = iparticle;
+      //        iparticle != the_particles.end();
+      //        ++iparticle) {
+
+      for (size_t i_particle = 0; i_particle != the_particles.size()-1; ++i_particle) {
+        for (size_t j_particle = i_particle + 1; j_particle != the_particles.size(); ++j_particle) {
+
+          const snemo::datamodel::particle_track & pt_i = the_particles.at(i_particle).get();
+          const snemo::datamodel::particle_track & pt_j = the_particles.at(j_particle).get();
+
+          // To be replaced by dedicated fields of 'topology_2e1g_pattern'
+
+          double proba_int = datatools::invalid_real();
+          double proba_ext = datatools::invalid_real();
+
+          _TOFD_->process(pt_i, pt_j, proba_int, proba_ext);
+
+          if(datatools::is_valid(proba_int) && datatools::is_valid(proba_ext)) {
+            t2e1gp->set_internal_probability(proba_int);
+            t2e1gp->set_external_probability(proba_ext);
+          }
+        }
+      }
+
       if (get_logging_priority() >= datatools::logger::PRIO_DEBUG) {
         DT_LOG_DEBUG(get_logging_priority(), "Topology data dump :");
         td_.tree_dump();
