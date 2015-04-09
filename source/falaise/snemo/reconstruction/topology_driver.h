@@ -60,6 +60,7 @@ namespace snemo {
 
     class tof_driver;
     class delta_vertices_driver;
+    class angle_measurement_driver;
 
     /// Driver for the topology algorithm
     class topology_driver
@@ -140,6 +141,7 @@ namespace snemo {
       const geomtools::manager * _geometry_manager_;       //!< The SuperNEMO geometry manager
       boost::scoped_ptr< ::snemo::reconstruction::tof_driver> _TOFD_; //!< Handle to the embedded TOF computation algorithm with dynamic memory auto-deletion
       boost::scoped_ptr< ::snemo::reconstruction::delta_vertices_driver> _DVD_; //!< Handle to the embedded delta vertices algorithm with dynamic memory auto-deletion
+      boost::scoped_ptr< ::snemo::reconstruction::angle_measurement_driver> _AMD_; //!< Handle to the embedded angle measurement algorithm with dynamic memory auto-deletion
     };
 
   }  // end of namespace reconstruction
