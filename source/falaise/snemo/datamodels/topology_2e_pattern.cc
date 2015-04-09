@@ -115,9 +115,9 @@ namespace snemo {
       out_ << indent << datatools::i_tree_dumpable::tag
            << "External probability : " << get_external_probability() << std::endl;
       out_ << indent << datatools::i_tree_dumpable::tag
-           << "Delta Vertices Y : " << get_delta_vertices_y() << std::endl;
+           << "Delta vertices Y : " << get_delta_vertices_y()/CLHEP::mm << " mm" << std::endl;
       out_ << indent << datatools::i_tree_dumpable::tag
-           << "Delta Vertices Z : " << get_delta_vertices_z() << std::endl;
+           << "Delta vertices Z : " << get_delta_vertices_z()/CLHEP::mm << " mm" << std::endl;
 
       return;
     }

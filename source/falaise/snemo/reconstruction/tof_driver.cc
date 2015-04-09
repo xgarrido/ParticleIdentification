@@ -144,7 +144,13 @@ namespace snemo {
 
       if (! pt1_.has_associated_calorimeter_hits() ||
           ! pt2_.has_associated_calorimeter_hits()) {
-        DT_LOG_DEBUG(get_logging_priority(), "No associated calorimeter !");
+        DT_LOG_WARNING(get_logging_priority(), "No associated calorimeter !");
+        return 1;
+      }
+
+      if (snemo::datamodel::pid_utils::particle_is_gamma(pt1_) &&
+          snemo::datamodel::pid_utils::particle_is_gamma(pt2_)) {
+        DT_LOG_WARNING(get_logging_priority(), "TOF calculation can not be done for 2 gammas !");
         return 1;
       }
 
@@ -161,7 +167,6 @@ namespace snemo {
       }
 
       DT_LOG_TRACE(get_logging_priority(), "Exiting...");
-
       return 0;
     }
 
@@ -191,8 +196,6 @@ namespace snemo {
       const double sigma_l = 0.6 * CLHEP::ns;
       const double sigma_exp
         = std::pow(sigma_t1, 2) + std::pow(sigma_t2, 2) + std::pow(sigma_l, 2);
-      // const double sigma_exp_ext
-      //   = std::pow(sigma_t1, 2) + std::pow(sigma_t2, 2) + std::pow(sigma_l, 2);
 
       const double chi2_int = std::pow(t1 - t2 - (t1_th - t2_th), 2)/sigma_exp;
       const double chi2_ext = std::pow(std::abs(t1 - t2) - (t1_th + t2_th), 2)/sigma_exp;
@@ -209,13 +212,10 @@ namespace snemo {
                                                       const snemo::datamodel::particle_track & pt2_,
                                                       double & proba_int_, double & proba_ext_)
     {
-      /* ensured beforehand the pt1_ is the electron and the pt2_ is the gamma*/
-
       const snemo::datamodel::particle_track & a_gamma
         = (snemo::datamodel::pid_utils::particle_is_gamma(pt1_) ? pt1_ : pt2_);
       const snemo::datamodel::particle_track & a_charged
         = (snemo::datamodel::pid_utils::particle_is_gamma(pt1_) ? pt2_ : pt1_);
-
 
       // Compute theoritical times given energy, mass and track length
       const double E1 = _get_energy(a_charged);
@@ -274,10 +274,8 @@ namespace snemo {
 
     double tof_driver::_get_energy(const snemo::datamodel::particle_track & particle_)
     {
-      if (! particle_.has_associated_calorimeter_hits()) {
-        DT_THROW_IF(true, std::logic_error,
-                    "Particle track is not associated to any calorimeter block !");
-      }
+      DT_THROW_IF(! particle_.has_associated_calorimeter_hits(), std::logic_error,
+                  "Particle track is not associated to any calorimeter block !");
       const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
         the_calorimeters = particle_.get_associated_calorimeter_hits ();
       if (the_calorimeters.size() >= 2) {

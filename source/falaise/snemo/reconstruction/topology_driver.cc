@@ -107,9 +107,6 @@ namespace snemo {
            idriver != driver_names.end(); ++idriver) {
         const std::string & a_driver_name = *idriver;
 
-        if (a_driver_name == "TD") {
-          continue;
-        }
         if (a_driver_name == "TOFD") {
           // Initialize TOF Driver
           _TOFD_.reset(new snemo::reconstruction::tof_driver);
@@ -225,7 +222,6 @@ namespace snemo {
                                              snemo::datamodel::topology_data & td_)
     {
       snemo::datamodel::topology_data::handle_pattern h_pattern;
-      // typedef datatools::handle< snemo::datamodel::base_topology_pattern > h_pattern;
       snemo::datamodel::topology_2e_pattern * t2ep = new snemo::datamodel::topology_2e_pattern;
       h_pattern.reset(t2ep);
       td_.set_pattern_handle(h_pattern);
@@ -235,22 +231,14 @@ namespace snemo {
       const snemo::datamodel::particle_track & pt1 = the_particles.front().get();
       const snemo::datamodel::particle_track & pt2 = the_particles.back().get();
 
-      if (pt1.has_associated_calorimeter_hits() && pt2.has_associated_calorimeter_hits()) {
-        // To be replaced by dedicated fields of 'topology_2e_pattern'
-        double proba_int = datatools::invalid_real();
-        double proba_ext = datatools::invalid_real();
-        _TOFD_->process(pt1, pt2, proba_int, proba_ext);
-        t2ep->set_internal_probability(proba_int);
-        t2ep->set_external_probability(proba_ext);
-
-      } else {
-        DT_LOG_DEBUG(get_logging_priority(),
-                     "Electron particles do not have associated calorimeter hit !");
-      }
+      double proba_int = datatools::invalid_real();
+      double proba_ext = datatools::invalid_real();
+      _TOFD_->process(pt1, pt2, proba_int, proba_ext);
+      t2ep->set_internal_probability(proba_int);
+      t2ep->set_external_probability(proba_ext);
 
       double delta_vertices_y = datatools::invalid_real();
       double delta_vertices_z = datatools::invalid_real();
-
       _DVD_->process(pt1, pt2, delta_vertices_y, delta_vertices_z);
       t2ep->set_delta_vertices_y(delta_vertices_y);
       t2ep->set_delta_vertices_z(delta_vertices_z);
@@ -347,6 +335,12 @@ namespace snemo {
           }
         }
       }
+
+      double proba_int = datatools::invalid_real();
+      double proba_ext = datatools::invalid_real();
+      _TOFD_->process(pt1, pt2, proba_int, proba_ext);
+      t1e1gp->set_internal_probability(proba_int);
+      t1e1gp->set_external_probability(proba_ext);
 
       if (get_logging_priority() >= datatools::logger::PRIO_DEBUG) {
         DT_LOG_DEBUG(get_logging_priority(), "Topology data dump :");
