@@ -142,54 +142,23 @@ namespace snemo {
       datatools::invalidate(proba_int_);
       datatools::invalidate(proba_ext_);
 
+      if (! pt1_.has_associated_calorimeter_hits() ||
+          ! pt2_.has_associated_calorimeter_hits()) {
+        DT_LOG_DEBUG(get_logging_priority(), "No associated calorimeter !");
+        return 1;
+      }
+
       // Either specialize the methods or consider the case here
       if (! snemo::datamodel::pid_utils::particle_is_gamma(pt1_) &&
           ! snemo::datamodel::pid_utils::particle_is_gamma(pt2_)) {
         _process_charged_particles(pt1_, pt2_, proba_int_, proba_ext_);
-      } else if (snemo::datamodel::pid_utils::particle_is_gamma(pt1_) &&
-                 ! snemo::datamodel::pid_utils::particle_is_gamma(pt2_)) {
-        ///
-        _process_charged_gamma_particles(pt2_, pt1_, proba_int_, proba_ext_);
-      } else if (! snemo::datamodel::pid_utils::particle_is_gamma(pt1_) &&
+      } else if (snemo::datamodel::pid_utils::particle_is_gamma(pt1_) ||
                  snemo::datamodel::pid_utils::particle_is_gamma(pt2_)) {
-
         _process_charged_gamma_particles(pt1_, pt2_, proba_int_, proba_ext_);
-
-        // // should take care in the topology driver not to feed two gamma
-        // /* /!\ For now, suppose the gamma */
-
-        // E1 = 1.; // not relevant for gamma since beta=1
-        // E2 = 1.; // but still, not 0 because involved in fraction
-
-        // _get_times(pt1_, t1, sigma_t1);
-        // _get_times(pt2_, t2, sigma_t2);
-
-        // _get_track_length(pt1_, pt2_, track_length_1, track_length_2);
-
       } else {
         DT_LOG_WARNING(get_logging_priority(), "Topology not supported !");
         return 1;
       }
-
-      // double t1_first, t1_last, t2_first, t2_last;
-      // double sigma_t1_first, sigma_t1_last, sigma_t2_first, sigma_t2_last;
-
-      // _get_times(pt1_, t1_first, sigma_t1_first, t1_last, sigma_t1_last);
-      // _get_times(pt2_, t2_first, sigma_t2_first, t2_last, sigma_t2_last);
-
-      // std::cout << "E1 : " <<  E1 << std::endl
-      //           << "E2 : " <<  E2 << std::endl;
-
-
-      // _get_track_length(pt1_, pt2_, track_length_1, track_length_2);
-
-      // std::cout << "track length 1 : " <<  track_length_1 << std::endl
-      //           << "track length 2 : " <<  track_length_2 << std::endl
-      //           << "t1_first " << t1_first << " +/- " << sigma_t1_first << std::endl
-      //           << "t1_last " << t1_last << " +/- " << sigma_t1_last << std::endl
-      //           << "t2_first " << t2_first << " +/- " << sigma_t2_first << std::endl
-      //           << "t2_last " << t2_last << " +/- " << sigma_t2_last << std::endl;
-
 
       DT_LOG_TRACE(get_logging_priority(), "Exiting...");
 
@@ -242,31 +211,37 @@ namespace snemo {
     {
       /* ensured beforehand the pt1_ is the electron and the pt2_ is the gamma*/
 
-      // Compute theoritical times given energy, mass and track length
-      const double E1 = _get_energy(pt1_);
-      const double E2 = 1; // dummy, non-zero value
-      const double m1 = _get_mass(pt1_);
-      const double m2 = _get_mass(pt2_);
+      const snemo::datamodel::particle_track & a_gamma
+        = (snemo::datamodel::pid_utils::particle_is_gamma(pt1_) ? pt1_ : pt2_);
+      const snemo::datamodel::particle_track & a_charged
+        = (snemo::datamodel::pid_utils::particle_is_gamma(pt1_) ? pt2_ : pt1_);
 
-      const double tl1 = _get_charged_particle_track_length(pt1_);
+
+      // Compute theoritical times given energy, mass and track length
+      const double E1 = _get_energy(a_charged);
+      const double E2 = 1; // dummy, non-zero value
+      const double m1 = _get_mass(a_charged);
+      const double m2 = _get_mass(a_gamma);
+
+      const double tl1 = _get_charged_particle_track_length(a_charged);
       const double t1_th = _get_theoretical_time(E1, m1, tl1);
       double t1, sigma_t1;
-      _get_time(pt1_, t1, sigma_t1);
+      _get_time(a_charged, t1, sigma_t1);
       DT_LOG_DEBUG(get_logging_priority(), "t1 meas. : " << t1/CLHEP::ns << " ns");
 
-      const double tl2_int = _get_gamma_track_length(pt2_, pt1_);
+      const double tl2_int = _get_gamma_track_length(a_gamma, a_charged);
       const double t2_th_int = _get_theoretical_time(E2, m2, tl2_int);
       double t2_int, sigma_t2_int;
-      _get_time(pt2_, t2_int, sigma_t2_int);
+      _get_time(a_gamma, t2_int, sigma_t2_int);
       DT_LOG_DEBUG(get_logging_priority(), "t2 int meas. : " << t2_int/CLHEP::ns << " ns");
 
       // For now, only the case where the gamma creates an electron after its last deposit is considered,
       // to be improved later
 
-      const double tl2_ext = _get_gamma_track_length_external_hyp(pt2_, pt1_);
+      const double tl2_ext = _get_gamma_track_length_external_hyp(a_gamma, a_charged);
       const double t2_th_ext = _get_theoretical_time(E2, m2, tl2_ext);
       double t2_ext, sigma_t2_ext;
-      _get_time_external_hyp(pt2_, t2_ext, sigma_t2_ext);
+      _get_time_external_hyp(a_gamma, t2_ext, sigma_t2_ext);
 
       DT_LOG_DEBUG(get_logging_priority(), "t1 th : " << t1_th/CLHEP::ns << " ns");
       DT_LOG_DEBUG(get_logging_priority(), "t2 th int : " << t2_th_int/CLHEP::ns << " ns");
@@ -350,32 +325,6 @@ namespace snemo {
       return;
     }
 
-    // void tof_driver::_get_times(const snemo::datamodel::particle_track & particle_,
-    //                             double & t_first_, double & sigma_t_first_,
-    //                             double & t_last_, double & sigma_t_last_)
-    // {
-    //   if (! particle_.has_associated_calorimeter_hits()) {
-    //     DT_THROW_IF(true, std::logic_error,
-    //                 "Particle track is not associated to any calorimeter block !");
-    //   }
-
-    //   const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
-    //     the_calorimeters = particle_.get_associated_calorimeter_hits ();
-
-    //   // if (the_calorimeters.size() >= 2)
-    //   //   {
-    //   //     DT_THROW_IF(true, std::logic_error,
-    //   //                 "Particle track is associated to more than 1 calorimeter block !");
-    //   //     return 0;
-    //   //   }
-
-    //   t_first_ = the_calorimeters.front().get().get_time();
-    //   sigma_t_first_ = the_calorimeters.front().get().get_sigma_time();
-    //   t_last_ = the_calorimeters.back().get().get_time();
-    //   sigma_t_last_ = the_calorimeters.back().get().get_sigma_time();
-    //   return;
-    // }
-
     double tof_driver::_get_mass(const snemo::datamodel::particle_track & particle_)
     {
       double mass = datatools::invalid_real();
@@ -393,40 +342,6 @@ namespace snemo {
       }
       return mass;
     }
-
-    // int tof_driver::_get_track_length(const snemo::datamodel::particle_track & pt1_,
-    //                                   const snemo::datamodel::particle_track & pt2_,
-    //                                   double & tl1_, double & tl2_)
-    // {
-    //   DT_LOG_TRACE(get_logging_priority(), "Entering...");
-
-    //   double length = datatools::invalid_real();
-    //   if (snemo::datamodel::pid_utils::particle_is_electron(particle_)) {
-    //     length = _get_electron_track_length(particle_);
-    //   } else if(snemo::datamodel::pid_utils::particle_is_gamma())
-    //     {
-    //       tl1_ = _get_gamma_track_length(pt1_,pt2_);  // supposing there is not more than one gamma
-    //     }
-    //   else
-    //     DT_THROW_IF(true, std::logic_error,
-    //                 "Particle type inappropriate for TOF calculations !");
-
-    //   if(label_2 == snemo::datamodel::pid_utils::electron_label())
-    //     {
-    //       tl2_ = _get_electron_track_length(pt2_);
-    //     }
-    //   else if(label_2 == snemo::datamodel::pid_utils::gamma_label())
-    //     {
-    //       tl2_ = _get_gamma_track_length(pt2_,pt1_); // supposing there is not more than one gamma
-    //     }
-    //   else
-    //     DT_THROW_IF(true, std::logic_error,
-    //                 "Particle type inappropriate for TOF calculations !");
-
-    //   DT_LOG_TRACE(get_logging_priority(), "Exiting...");
-
-    //   return 0;
-    // }
 
     double tof_driver::_get_charged_particle_track_length(const snemo::datamodel::particle_track & particle_)
     {
@@ -524,7 +439,6 @@ namespace snemo {
              || snemo::datamodel::particle_track::vertex_is_on_gamma_veto(i_vtx->get())) {
             found_calorimeter_vertex = true;
             gamma_last_calo_vertex = i_vtx->get().get_position();
-            break;
           }
         }
 
