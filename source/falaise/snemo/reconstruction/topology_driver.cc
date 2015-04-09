@@ -18,6 +18,7 @@
 
 #include <snemo/reconstruction/tof_driver.h>
 #include <snemo/reconstruction/delta_vertices_driver.h>
+#include <snemo/reconstruction/angle_measurement_driver.h>
 
 namespace snemo {
 
@@ -122,6 +123,13 @@ namespace snemo {
           datatools::properties DVD_config;
           setup_.export_and_rename_starting_with(DVD_config, std::string(a_driver_name + "."), "");
           _DVD_->initialize(DVD_config);
+        } else if (a_driver_name == "AMD") {
+          // Initialize Delta Vertices Driver
+          _AMD_.reset(new snemo::reconstruction::angle_measurement_driver);
+          // _AMD_->set_geometry_manager(get_geometry_manager());
+          datatools::properties AMD_config;
+          setup_.export_and_rename_starting_with(AMD_config, std::string(a_driver_name + "."), "");
+          _AMD_->initialize(AMD_config);
         } else {
           DT_THROW_IF(true, std::logic_error, "Driver '" << a_driver_name << "' does not exist !");
         }
@@ -160,6 +168,7 @@ namespace snemo {
       _logging_priority_ = datatools::logger::PRIO_WARNING;
       _TOFD_.reset(0);
       _DVD_.reset(0);
+      _AMD_.reset(0);
 
       return;
     }
@@ -246,6 +255,11 @@ namespace snemo {
       t2ep->set_delta_vertices_y(delta_vertices_y);
       t2ep->set_delta_vertices_z(delta_vertices_z);
 
+      // if(std::abs(delta_vertices_y) < 50. && std::abs(delta_vertices_z) < 50.) {
+      if(1) {
+        double angle = datatools::invalid_real();
+        _AMD_->process(pt1, pt2, angle);
+      }
       // td_.tree_dump();
 
       if (get_logging_priority() >= datatools::logger::PRIO_DEBUG) {
@@ -279,13 +293,16 @@ namespace snemo {
         DT_LOG_DEBUG(get_logging_priority(),
                      "Electron and gamma particles do not have associated calorimeter hit !");
       }
+
+      double angle = datatools::invalid_real();
+      _AMD_->process(pt1, pt2, angle);
+
       if (get_logging_priority() >= datatools::logger::PRIO_DEBUG) {
         DT_LOG_DEBUG(get_logging_priority(), "Topology data dump :");
         td_.tree_dump();
       }
       return;
     }
-
 
     void topology_driver::_fill_2e1g_topology_(const snemo::datamodel::particle_track_data & ptd_,
                                                snemo::datamodel::topology_data & td_)
