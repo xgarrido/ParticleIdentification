@@ -61,13 +61,13 @@ list(APPEND FalaiseParticleIdentificationPlugin_SOURCES
   source/falaise/snemo/datamodels/topology_data.cc
   source/falaise/snemo/datamodels/the_serializable_bis.cc
   source/falaise/snemo/datamodels/base_topology_pattern.cc
-  source/falaise/snemo/datamodels/pid_utils.cc
   source/falaise/snemo/datamodels/topology_2e_pattern.cc
   source/falaise/snemo/datamodels/topology_1e1g_pattern.cc
   source/falaise/snemo/datamodels/topology_2e1g_pattern.cc
   source/falaise/snemo/datamodels/topology_1e1a_pattern.cc
   source/falaise/snemo/datamodels/topology_2e1a_pattern.cc
   source/falaise/snemo/datamodels/topology_1e1p_pattern.cc
+  source/falaise/snemo/datamodels/pid_utils.cc
   )
 
 ############################################################################################
