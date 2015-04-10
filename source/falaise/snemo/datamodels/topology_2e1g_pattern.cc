@@ -22,8 +22,8 @@ namespace snemo {
     topology_2e1g_pattern::topology_2e1g_pattern()
       : base_topology_pattern(topology_2e1g_pattern::pattern_id())
     {
-      datatools::invalidate(_tof_.internal_probability);
-      datatools::invalidate(_tof_.external_probability);
+      // datatools::invalidate(_tof_.internal_probability);
+      // datatools::invalidate(_tof_.external_probability);
       datatools::invalidate(_DeltaV_.delta_vertices_y);
       datatools::invalidate(_DeltaV_.delta_vertices_z);
       return;
@@ -41,32 +41,42 @@ namespace snemo {
 
     bool topology_2e1g_pattern::has_internal_probability() const
     {
-      return datatools::is_valid(_tof_.internal_probability);
+      for(std::vector<double>::const_iterator i_proba = _tof_.internal_probability.begin();
+          i_proba != _tof_.internal_probability.end(); ++i_proba)
+        if(!datatools::is_valid(*i_proba))
+          return false;
+
+      return true;
     }
 
-    void topology_2e1g_pattern::set_internal_probability(const double prob_)
+    void topology_2e1g_pattern::set_internal_probability(const std::vector<double> prob_)
     {
       _tof_.internal_probability = prob_;
       return;
     }
 
-    double topology_2e1g_pattern::get_internal_probability() const
+    std::vector<double> topology_2e1g_pattern::get_internal_probability() const
     {
       return _tof_.internal_probability;
     }
 
     bool topology_2e1g_pattern::has_external_probability() const
     {
-      return datatools::is_valid(_tof_.internal_probability);
+      for(std::vector<double>::const_iterator i_proba = _tof_.external_probability.begin();
+          i_proba != _tof_.external_probability.end(); ++i_proba)
+        if(!datatools::is_valid(*i_proba))
+          return false;
+
+      return true;
     }
 
-    void topology_2e1g_pattern::set_external_probability(const double prob_)
+    void topology_2e1g_pattern::set_external_probability(const std::vector<double> prob_)
     {
       _tof_.external_probability = prob_;
       return;
     }
 
-    double topology_2e1g_pattern::get_external_probability() const
+    std::vector<double> topology_2e1g_pattern::get_external_probability() const
     {
       return _tof_.external_probability;
     }
@@ -132,11 +142,12 @@ namespace snemo {
       std::string indent;
       if (! indent_.empty()) indent = indent_;
       base_topology_pattern::tree_dump(out_, title_, indent_, true);
-
-      out_ << indent << datatools::i_tree_dumpable::tag
-           << "Internal probability : " << get_internal_probability() << std::endl;
-      out_ << indent << datatools::i_tree_dumpable::tag
-           << "External probability : " << get_external_probability() << std::endl;
+      // std::vector<double> tmp = get_internal_probability();
+      out_ << indent << datatools::i_tree_dumpable::tag;
+      for(size_t i=0; i<get_internal_probability().size();++i)
+          out_ << "Internal probability : " << get_internal_probability().at(i) << std::endl;
+      // out_ << indent << datatools::i_tree_dumpable::tag
+      //      << "External probability : " << get_external_probability() << std::endl;
       out_ << indent << datatools::i_tree_dumpable::tag
            << "Delta Vertices Y : " << get_delta_vertices_y() << std::endl;
       out_ << indent << datatools::i_tree_dumpable::tag

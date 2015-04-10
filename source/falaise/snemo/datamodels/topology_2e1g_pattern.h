@@ -28,10 +28,10 @@ namespace snemo {
 
       struct TOF_measurement
       {
-        double internal_probability;
-        double external_probability;
-
-        // particle_pair_type particle_pair;
+        // double internal_probability;
+        // double external_probability;
+        std::vector <double> internal_probability;
+        std::vector <double> external_probability;
       };
 
       struct delta_vertices_measurement
@@ -40,12 +40,12 @@ namespace snemo {
         double delta_vertices_z;
       };
 
-      // /// Typedef for pairing particles
-      // typedef std::pair<snemo::datamodel::particle_track::handle_type,
-      //                   snemo::datamodel::particle_track::handle_type> particle_pair_type;
+      /// Typedef for pairing particles
+      typedef std::pair<snemo::datamodel::particle_track::handle_type,
+                        snemo::datamodel::particle_track::handle_type> particle_pair_type;
 
-      // /// Typedef for TOF dictionnary
-      // typedef std::map<particle_pair_type, TOF_measurement> TOF_dict_type;
+      /// Typedef for TOF dictionnary
+      typedef std::map<particle_pair_type, TOF_measurement> TOF_dict_type;
 
       // /// Typedef for TOF dictionnary
       // typedef std::map<particle_pair_type, delta_vertices_measurement> delta_vertices_dict_type;
@@ -63,19 +63,19 @@ namespace snemo {
       bool has_internal_probability() const;
 
       /// Set internal probability
-      void set_internal_probability(const double prob_);
+      void set_internal_probability(const std::vector<double> prob_);
 
       /// Return internal probability
-      double get_internal_probability() const;
+      std::vector<double> get_internal_probability() const;
 
       /// Check internal probability validity
       bool has_external_probability() const;
 
       /// Set external probability
-      void set_external_probability(const double prob_);
+      void set_external_probability(const std::vector<double> prob_);
 
       /// Return external probability
-      double get_external_probability() const;
+      std::vector <double> get_external_probability() const;
 
       /// Check delta vertices y validity
       bool has_delta_vertices_y() const;
