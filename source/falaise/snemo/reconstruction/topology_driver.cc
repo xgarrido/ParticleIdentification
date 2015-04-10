@@ -188,7 +188,11 @@ namespace snemo {
                        "Event classification '" << a_classification << "' unsupported !");
       }
 
-      // aux_td.dump();
+      if (get_logging_priority() >= datatools::logger::PRIO_DEBUG) {
+        DT_LOG_DEBUG(get_logging_priority(), "Topology data dump :");
+        td_.tree_dump();
+      }
+
       DT_LOG_TRACE(get_logging_priority(), "Exiting.");
       return 0;
     }
@@ -233,32 +237,26 @@ namespace snemo {
 
       double proba_int = datatools::invalid_real();
       double proba_ext = datatools::invalid_real();
-      _TOFD_->process(pt1, pt2, proba_int, proba_ext);
+      if (_TOFD_) _TOFD_->process(pt1, pt2, proba_int, proba_ext);
       t2ep->set_internal_probability(proba_int);
       t2ep->set_external_probability(proba_ext);
 
       double delta_vertices_y = datatools::invalid_real();
       double delta_vertices_z = datatools::invalid_real();
-      _DVD_->process(pt1, pt2, delta_vertices_y, delta_vertices_z);
+      if (_DVD_) _DVD_->process(pt1, pt2, delta_vertices_y, delta_vertices_z);
       t2ep->set_delta_vertices_y(delta_vertices_y);
       t2ep->set_delta_vertices_z(delta_vertices_z);
 
       // if(std::abs(delta_vertices_y) < 50. && std::abs(delta_vertices_z) < 50.) {
       if(1) {
         double angle = datatools::invalid_real();
-        _AMD_->process(pt1, pt2, angle);
-      }
-      // td_.tree_dump();
-
-      if (get_logging_priority() >= datatools::logger::PRIO_DEBUG) {
-        DT_LOG_DEBUG(get_logging_priority(), "Topology data dump :");
-        td_.tree_dump();
+        if (_AMD_) _AMD_->process(pt1, pt2, angle);
       }
       return;
     }
 
     void topology_driver::_fill_1e1g_topology_(const snemo::datamodel::particle_track_data & ptd_,
-                                             snemo::datamodel::topology_data & td_)
+                                               snemo::datamodel::topology_data & td_)
     {
       snemo::datamodel::topology_data::handle_pattern h_pattern;
       snemo::datamodel::topology_1e1g_pattern * t1e1gp = new snemo::datamodel::topology_1e1g_pattern;
@@ -270,25 +268,15 @@ namespace snemo {
       const snemo::datamodel::particle_track & pt1 = the_particles.front().get();
       const snemo::datamodel::particle_track & pt2 = the_particles.back().get();
 
-      if (pt1.has_associated_calorimeter_hits() && pt2.has_associated_calorimeter_hits()) {
-        // To be replaced by dedicated fields of 'topology_1e1g_pattern'
-        double proba_int = datatools::invalid_real();
-        double proba_ext = datatools::invalid_real();
-        _TOFD_->process(pt1, pt2, proba_int, proba_ext);
-        t1e1gp->set_internal_probability(proba_int);
-        t1e1gp->set_external_probability(proba_ext);
-      } else {
-        DT_LOG_DEBUG(get_logging_priority(),
-                     "Electron and gamma particles do not have associated calorimeter hit !");
-      }
+      double proba_int = datatools::invalid_real();
+      double proba_ext = datatools::invalid_real();
+      if (_TOFD_) _TOFD_->process(pt1, pt2, proba_int, proba_ext);
+      t1e1gp->set_internal_probability(proba_int);
+      t1e1gp->set_external_probability(proba_ext);
 
       double angle = datatools::invalid_real();
-      _AMD_->process(pt1, pt2, angle);
+      if (_AMD_) _AMD_->process(pt1, pt2, angle);
 
-      if (get_logging_priority() >= datatools::logger::PRIO_DEBUG) {
-        DT_LOG_DEBUG(get_logging_priority(), "Topology data dump :");
-        td_.tree_dump();
-      }
       return;
     }
 
@@ -327,7 +315,7 @@ namespace snemo {
           double proba_int = datatools::invalid_real();
           double proba_ext = datatools::invalid_real();
 
-          _TOFD_->process(pt_i, pt_j, proba_int, proba_ext);
+          if (_TOFD_) _TOFD_->process(pt_i, pt_j, proba_int, proba_ext);
 
           if(datatools::is_valid(proba_int) && datatools::is_valid(proba_ext)) {
             t2e1gp->set_internal_probability(proba_int);
@@ -336,10 +324,6 @@ namespace snemo {
         }
       }
 
-      if (get_logging_priority() >= datatools::logger::PRIO_DEBUG) {
-        DT_LOG_DEBUG(get_logging_priority(), "Topology data dump :");
-        td_.tree_dump();
-      }
       return;
     }
 
