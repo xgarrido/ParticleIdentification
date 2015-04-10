@@ -13,7 +13,7 @@ include_directories(${Bayeux_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/source)
 
-############################################################################################
+###########################################################################################
 # - GammaTracking modules:
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/source/falaise)
 
@@ -70,7 +70,7 @@ list(APPEND FalaiseParticleIdentificationPlugin_SOURCES
   source/falaise/snemo/datamodels/pid_utils.cc
   )
 
-############################################################################################
+###########################################################################################
 
 # Build a dynamic library from our sources
 add_library(Falaise_ParticleIdentification SHARED
