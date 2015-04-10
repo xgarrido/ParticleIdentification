@@ -157,11 +157,8 @@ namespace snemo {
 
       /// Gives the track length of a gamma from the electron vertex
       double _get_gamma_track_length(const snemo::datamodel::particle_track & pt_gamma_,
-                                     const snemo::datamodel::particle_track & pt_electron_);
-
-      /// Gives the track length of a gamma from the electron vertex for the external hypothesis
-      double _get_gamma_track_length_external_hyp(const snemo::datamodel::particle_track & pt_gamma_,
-                                     const snemo::datamodel::particle_track & pt_electron_);
+                                     const snemo::datamodel::particle_track & pt_electron_,
+                                     const bool external_hyp_ = false);
 
       /// Give default values to specific class members.
       void _set_defaults ();
