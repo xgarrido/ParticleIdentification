@@ -64,6 +64,9 @@ namespace snemo {
 
   namespace geometry {
     class locator_plugin;
+    class calo_locator;
+    class xcalo_locator;
+    class gveto_locator;
   }
 
   namespace reconstruction {
@@ -88,10 +91,28 @@ namespace snemo {
       /// Getting logging priority
       datatools::logger::priority get_logging_priority() const;
 
+      /// Return the main wall calorimeter locator
+      const snemo::geometry::calo_locator & get_calo_locator() const;
+
+      /// Return the X-wall calorimeter locator
+      const snemo::geometry::xcalo_locator & get_xcalo_locator() const;
+
+      /// Return the gamma veto calorimeter locator
+      const snemo::geometry::gveto_locator & get_gveto_locator() const;
+
+      /// Check the geometry manager
+      bool has_geometry_manager() const;
+
+      /// Address the geometry manager
+      void set_geometry_manager(const geomtools::manager & gmgr_);
+
+      /// Return a non-mutable reference to the geometry manager
+      const geomtools::manager & get_geometry_manager() const;
+
       /// Main process
       int process(const snemo::datamodel::particle_track & pt1_,
                   const snemo::datamodel::particle_track & pt2_,
-                  double & proba_int, double & proba_ext);
+                  std::vector<double> & proba_int, std::vector<double> & proba_ext);
 
       /// Check if theclusterizer is initialized
       bool is_initialized() const;
@@ -110,17 +131,23 @@ namespace snemo {
       /// Main method to process particles and to retrieve internal/external TOF probabilities
       int _process_algo(const snemo::datamodel::particle_track & particle_1_,
                         const snemo::datamodel::particle_track & particle_2_,
-                        double & proba_int_, double & proba_ext_);
+                        std::vector<double> & proba_int_, std::vector<double> & proba_ext_);
 
       /// Special method to process charged particles
       void _process_charged_particles(const snemo::datamodel::particle_track & particle_1_,
                                       const snemo::datamodel::particle_track & particle_2_,
-                                      double & proba_int_, double & proba_ext_);
+                                      std::vector<double> & proba_int_, std::vector<double> & proba_ext_);
 
       /// Special method to process charged particles
       void _process_charged_gamma_particles(const snemo::datamodel::particle_track & particle_1_,
                                             const snemo::datamodel::particle_track & particle_2_,
-                                            double & proba_int_, double & proba_ext_);
+                                            std::vector<double> & proba_int_, std::vector<double> & proba_ext_);
+
+      /// Special method to process charged particles
+      int _get_vertex_to_calo_info(const snemo::datamodel::particle_track & particle_charged_,
+                                    const snemo::datamodel::calibrated_calorimeter_hit & a_calo_hit,
+                                    double & track_length_,
+                                    double & time_, double & sigma_time_);
 
       /// Gives the energy of particle_
       static double _get_energy(const snemo::datamodel::particle_track & particle_);
@@ -167,6 +194,8 @@ namespace snemo {
       bool _initialized_;            //!< Initialization status
       datatools::logger::priority _logging_priority_; //!< Logging priority
       double _sigma_t_gamma_interaction_;     //!< The uncertainty on the track length
+      const snemo::geometry::locator_plugin * _locator_plugin_; //!< The SuperNEMO locator plugin
+      const geomtools::manager *           _geometry_manager_;       //!< The SuperNEMO geometry manager
     };
 
   }  // end of namespace reconstruction

@@ -30,6 +30,20 @@ namespace snemo {
     DPP_MODULE_REGISTRATION_IMPLEMENT(topology_module,
                                       "snemo::reconstruction::topology_module");
 
+
+    const geomtools::manager & topology_module::get_geometry_manager() const
+    {
+      return *_geometry_manager_;
+    }
+
+    void topology_module::set_geometry_manager(const geomtools::manager & gmgr_)
+    {
+      DT_THROW_IF(is_initialized(), std::logic_error,
+                  "Module '" << get_name() << "' is already initialized ! ");
+      _geometry_manager_ = &gmgr_;
+      return;
+    }
+
     void topology_module::_set_defaults()
     {
       _geometry_manager_ = 0;
@@ -58,10 +72,27 @@ namespace snemo {
         _TD_label_ = setup_.fetch_string("TD_label");
       }
 
+      std::string geometry_label;
+      if (setup_.has_key("Geo_label")) {
+        geometry_label = setup_.fetch_string("Geo_label");
+      }
+      // Geometry manager :
+      if (_geometry_manager_ == 0) {
+        DT_THROW_IF(geometry_label.empty(), std::logic_error,
+                    "Module '" << get_name() << "' has no valid '" << "Geo_label" << "' property !");
+        DT_THROW_IF(! service_manager_.has(geometry_label) ||
+                    ! service_manager_.is_a<geomtools::geometry_service>(geometry_label),
+                    std::logic_error,
+                    "Module '" << get_name() << "' has no '" << geometry_label << "' service !");
+        geomtools::geometry_service & Geo
+          = service_manager_.get<geomtools::geometry_service>(geometry_label);
+        set_geometry_manager(Geo.get_geom_manager());
+      }
+
       // Drivers :
       _driver_.reset(new snemo::reconstruction::topology_driver);
       _driver_->initialize(setup_);
-      // _driver_->set_geometry_manager(dpp::base_module::get_geometry_manager());
+      _driver_->set_geometry_manager(get_geometry_manager());
 
       // datatools::properties TD_config;
       // setup_.export_and_rename_starting_with(TD_config, std::string(a_driver_name + "."), "");

@@ -108,8 +108,10 @@ namespace snemo {
         const std::string & a_driver_name = *idriver;
 
         if (a_driver_name == "TOFD") {
+          std::cout << "initialize tofd" << std::endl;
           // Initialize TOF Driver
           _TOFD_.reset(new snemo::reconstruction::tof_driver);
+          _TOFD_->set_geometry_manager(get_geometry_manager());
           datatools::properties TOFD_config;
           setup_.export_and_rename_starting_with(TOFD_config, std::string(a_driver_name + "."), "");
           _TOFD_->initialize(TOFD_config);
@@ -183,6 +185,9 @@ namespace snemo {
       }
       else if (a_classification == "1e1g") {
         this->_fill_1e1g_topology_(ptd_, td_);
+      }
+      else if (a_classification == "2e1g") {
+        this->_fill_2e1g_topology_(ptd_, td_);
       } else {
         DT_LOG_WARNING(get_logging_priority(),
                        "Event classification '" << a_classification << "' unsupported !");
@@ -235,11 +240,13 @@ namespace snemo {
       const snemo::datamodel::particle_track & pt1 = the_particles.front().get();
       const snemo::datamodel::particle_track & pt2 = the_particles.back().get();
 
-      double proba_int = datatools::invalid_real();
-      double proba_ext = datatools::invalid_real();
+      std::vector<double> proba_int = std::numeric_limits< std::vector<double> >::quiet_NaN();
+      std::vector<double> proba_ext = std::numeric_limits< std::vector<double> >::quiet_NaN();
+
       if (_TOFD_) _TOFD_->process(pt1, pt2, proba_int, proba_ext);
-      t2ep->set_internal_probability(proba_int);
-      t2ep->set_external_probability(proba_ext);
+
+      t2ep->set_internal_probability(proba_int.front());
+      t2ep->set_external_probability(proba_ext.front());
 
       double delta_vertices_y = datatools::invalid_real();
       double delta_vertices_z = datatools::invalid_real();
@@ -268,11 +275,16 @@ namespace snemo {
       const snemo::datamodel::particle_track & pt1 = the_particles.front().get();
       const snemo::datamodel::particle_track & pt2 = the_particles.back().get();
 
-      double proba_int = datatools::invalid_real();
-      double proba_ext = datatools::invalid_real();
+      std::vector<double> proba_int = std::numeric_limits< std::vector<double> >::quiet_NaN();
+      std::vector<double> proba_ext = std::numeric_limits< std::vector<double> >::quiet_NaN();
+
       if (_TOFD_) _TOFD_->process(pt1, pt2, proba_int, proba_ext);
-      t1e1gp->set_internal_probability(proba_int);
-      t1e1gp->set_external_probability(proba_ext);
+
+      // double proba_int = datatools::invalid_real();
+      // double proba_ext = datatools::invalid_real();
+
+      t1e1gp->set_internal_probability(proba_int.front());
+      t1e1gp->set_external_probability(proba_ext.front());
 
       double angle = datatools::invalid_real();
       if (_AMD_) _AMD_->process(pt1, pt2, angle);
@@ -304,26 +316,35 @@ namespace snemo {
       //        iparticle != the_particles.end();
       //        ++iparticle) {
 
-      for (size_t i_particle = 0; i_particle != the_particles.size()-1; ++i_particle) {
-        for (size_t j_particle = i_particle + 1; j_particle != the_particles.size(); ++j_particle) {
+      for (size_t i_particle = 0; i_particle < the_particles.size()-1; ++i_particle) {
+        for (size_t j_particle = i_particle + 1; j_particle < the_particles.size(); ++j_particle) {
 
           const snemo::datamodel::particle_track & pt_i = the_particles.at(i_particle).get();
           const snemo::datamodel::particle_track & pt_j = the_particles.at(j_particle).get();
 
           // To be replaced by dedicated fields of 'topology_2e1g_pattern'
 
-          double proba_int = datatools::invalid_real();
-          double proba_ext = datatools::invalid_real();
+          // double proba_int = datatools::invalid_real();
+          // double proba_ext = datatools::invalid_real();
+
+          std::vector<double> proba_int = std::numeric_limits< std::vector<double> >::quiet_NaN();
+          std::vector<double> proba_ext = std::numeric_limits< std::vector<double> >::quiet_NaN();
 
           if (_TOFD_) _TOFD_->process(pt_i, pt_j, proba_int, proba_ext);
 
-          if(datatools::is_valid(proba_int) && datatools::is_valid(proba_ext)) {
+          std::cout << "i j " << i_particle << "  " << j_particle << std::endl;
+          std::cout << "proba_int size " << proba_int.size() << std::endl;
+          for(size_t i=0; i<proba_int.size();++i)
+            std::cout << "Internal probability : " << proba_int.at(i) << std::endl;
+
+          if(proba_int == proba_int && proba_ext == proba_ext) {
             t2e1gp->set_internal_probability(proba_int);
             t2e1gp->set_external_probability(proba_ext);
+            std::cout << "debug" << std::endl;
           }
         }
       }
-
+      //      t2e1gp->tree_dump();
       return;
     }
 

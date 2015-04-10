@@ -62,6 +62,12 @@ namespace snemo {
 
     public:
 
+      /// Setting Geometry manager
+      void set_geometry_manager(const geomtools::manager & gmgr_);
+
+      /// Getting Geometry manager
+      const geomtools::manager & get_geometry_manager() const;
+
       /// Constructor
       topology_module(datatools::logger::priority = datatools::logger::PRIO_FATAL);
 
