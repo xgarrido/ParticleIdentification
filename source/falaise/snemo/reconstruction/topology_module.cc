@@ -30,23 +30,8 @@ namespace snemo {
     DPP_MODULE_REGISTRATION_IMPLEMENT(topology_module,
                                       "snemo::reconstruction::topology_module");
 
-
-    const geomtools::manager & topology_module::get_geometry_manager() const
-    {
-      return *_geometry_manager_;
-    }
-
-    void topology_module::set_geometry_manager(const geomtools::manager & gmgr_)
-    {
-      DT_THROW_IF(is_initialized(), std::logic_error,
-                  "Module '" << get_name() << "' is already initialized ! ");
-      _geometry_manager_ = &gmgr_;
-      return;
-    }
-
     void topology_module::_set_defaults()
     {
-      _geometry_manager_ = 0;
       _PTD_label_ = snemo::datamodel::data_info::default_particle_track_data_label();
       _TD_label_ = "TD";//snemo::datamodel::data_info::default_topology_data_label();
       _driver_.reset(0);
@@ -55,7 +40,7 @@ namespace snemo {
 
     // Initialization :
     void topology_module::initialize(const datatools::properties  & setup_,
-                                     datatools::service_manager   & service_manager_,
+                                     datatools::service_manager   & /* service_manager_ */,
                                      dpp::module_handle_dict_type & /* module_dict_ */)
     {
       DT_THROW_IF (is_initialized(),
@@ -70,23 +55,6 @@ namespace snemo {
 
       if (setup_.has_key("TD_label")) {
         _TD_label_ = setup_.fetch_string("TD_label");
-      }
-
-      std::string geometry_label;
-      if (setup_.has_key("Geo_label")) {
-        geometry_label = setup_.fetch_string("Geo_label");
-      }
-      // Geometry manager :
-      if (_geometry_manager_ == 0) {
-        DT_THROW_IF(geometry_label.empty(), std::logic_error,
-                    "Module '" << get_name() << "' has no valid '" << "Geo_label" << "' property !");
-        DT_THROW_IF(! service_manager_.has(geometry_label) ||
-                    ! service_manager_.is_a<geomtools::geometry_service>(geometry_label),
-                    std::logic_error,
-                    "Module '" << get_name() << "' has no '" << geometry_label << "' service !");
-        geomtools::geometry_service & Geo
-          = service_manager_.get<geomtools::geometry_service>(geometry_label);
-        set_geometry_manager(Geo.get_geom_manager());
       }
 
       // Drivers :

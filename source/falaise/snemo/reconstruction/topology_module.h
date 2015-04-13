@@ -53,20 +53,12 @@ namespace snemo {
   namespace reconstruction {
 
     class topology_driver;
-    // class tof_driver;
-    // class delta_vertices_driver;
 
     /// \brief The data processing module for the gamma tracking
     class topology_module : public dpp::base_module
     {
 
     public:
-
-      /// Setting Geometry manager
-      void set_geometry_manager(const geomtools::manager & gmgr_);
-
-      /// Getting Geometry manager
-      const geomtools::manager & get_geometry_manager() const;
 
       /// Constructor
       topology_module(datatools::logger::priority = datatools::logger::PRIO_FATAL);
@@ -96,7 +88,6 @@ namespace snemo {
 
     private:
 
-      const geomtools::manager * _geometry_manager_; //!< The geometry manager
       std::string _PTD_label_; //!< The label of the input  data bank
       std::string _TD_label_; //!< The label of the output  data bank
 
