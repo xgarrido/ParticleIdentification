@@ -62,29 +62,29 @@ namespace snemo {
       /// Destructor
       virtual ~topology_2e1g_pattern();
 
-      /// Check internal probability validity
-      bool has_internal_probability() const;
+      // /// Check internal probability validity
+      // bool has_internal_probability() const;
 
-      /// Set internal probability
-      void set_internal_probability(const std::vector<double> prob_);
+      // /// Set internal probability
+      // void set_internal_probability(const std::vector<double> prob_);
 
-      /// Return internal probability
-      std::vector<double> get_internal_probability() const;
+      // /// Return internal probability
+      // std::vector<double> get_internal_probability() const;
 
-      /// Check internal probability validity
-      bool has_external_probability() const;
+      // /// Check internal probability validity
+      // bool has_external_probability() const;
 
-      /// Set external probability
-      void set_external_probability(const std::vector<double> prob_);
+      // /// Set external probability
+      // void set_external_probability(const std::vector<double> prob_);
 
-      /// Return external probability
-      std::vector <double> get_external_probability() const;
+      // /// Return external probability
+      // std::vector <double> get_external_probability() const;
 
       /// Check delta vertices y validity
       bool has_delta_vertices_y() const;
 
       /// Set delta vertices y
-      void set_delta_vertices_y(const double prob_);
+      void set_delta_vertices_y(const double & delta_vertices_y_);
 
       /// Return delta vertices y
       double get_delta_vertices_y() const;
@@ -93,7 +93,7 @@ namespace snemo {
       bool has_delta_vertices_z() const;
 
       /// Set delta vertices z
-      void set_delta_vertices_z(const double prob_);
+      void set_delta_vertices_z(const double & delta_vertices_z_);
 
       /// Return delta vertices z
       double get_delta_vertices_z() const;
@@ -102,14 +102,17 @@ namespace snemo {
       bool has_angle() const;
 
       /// Set angle
-      void set_angle(const double angle_);
+      void set_angle(const double & angle_);
 
       /// Return internal probability
       double get_angle() const;
 
-      void set_tof_dict(const snemo::datamodel::particle_track & pt1_,
-                        const snemo::datamodel::particle_track & pt2_,
-                        const TOF_measurement & tof_) const;
+      /// Return a non mutable reference to the TOF dictionary
+      const TOF_dict_type & get_TOF_dict() const;
+
+      /// Return a mutable reference to the TOF dictionary
+      TOF_dict_type & grab_TOF_dict();
+
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,
                              const std::string & title_  = "",
@@ -118,7 +121,7 @@ namespace snemo {
 
     private:
 
-      TOF_measurement _tof_;
+      // TOF_measurement _tof_;
       delta_vertices_measurement _DeltaV_;
       angle_measurement _angle_;
       TOF_dict_type _tof_dict_;

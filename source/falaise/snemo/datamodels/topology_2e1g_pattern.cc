@@ -22,8 +22,8 @@ namespace snemo {
     topology_2e1g_pattern::topology_2e1g_pattern()
       : base_topology_pattern(topology_2e1g_pattern::pattern_id())
     {
-      _tof_.internal_probability = std::numeric_limits< std::vector<double> >::quiet_NaN();
-      _tof_.external_probability = std::numeric_limits< std::vector<double> >::quiet_NaN();
+      // _tof_.internal_probability = std::numeric_limits< std::vector<double> >::quiet_NaN();
+      // _tof_.external_probability = std::numeric_limits< std::vector<double> >::quiet_NaN();
       datatools::invalidate(_DeltaV_.delta_vertices_y);
       datatools::invalidate(_DeltaV_.delta_vertices_z);
       return;
@@ -39,54 +39,54 @@ namespace snemo {
     //   return has_internal_probability() && has_external_probability();
     // }
 
-    bool topology_2e1g_pattern::has_internal_probability() const
-    {
-      for(std::vector<double>::const_iterator i_proba = _tof_.internal_probability.begin();
-          i_proba != _tof_.internal_probability.end(); ++i_proba)
-        if(!datatools::is_valid(*i_proba))
-          return false;
+    // bool topology_2e1g_pattern::has_internal_probability() const
+    // {
+    //   for(std::vector<double>::const_iterator i_proba = _tof_.internal_probability.begin();
+    //       i_proba != _tof_.internal_probability.end(); ++i_proba)
+    //     if(!datatools::is_valid(*i_proba))
+    //       return false;
 
-      return true;
-    }
+    //   return true;
+    // }
 
-    void topology_2e1g_pattern::set_internal_probability(const std::vector<double> prob_)
-    {
-      _tof_.internal_probability = prob_;
-      return;
-    }
+    // void topology_2e1g_pattern::set_internal_probability(const std::vector<double> prob_)
+    // {
+    //   _tof_.internal_probability = prob_;
+    //   return;
+    // }
 
-    std::vector<double> topology_2e1g_pattern::get_internal_probability() const
-    {
-      return _tof_.internal_probability;
-    }
+    // std::vector<double> topology_2e1g_pattern::get_internal_probability() const
+    // {
+    //   return _tof_.internal_probability;
+    // }
 
-    bool topology_2e1g_pattern::has_external_probability() const
-    {
-      for(std::vector<double>::const_iterator i_proba = _tof_.external_probability.begin();
-          i_proba != _tof_.external_probability.end(); ++i_proba)
-        if(!datatools::is_valid(*i_proba))
-          return false;
+    // bool topology_2e1g_pattern::has_external_probability() const
+    // {
+    //   for(std::vector<double>::const_iterator i_proba = _tof_.external_probability.begin();
+    //       i_proba != _tof_.external_probability.end(); ++i_proba)
+    //     if(!datatools::is_valid(*i_proba))
+    //       return false;
 
-      return true;
-    }
+    //   return true;
+    // }
 
-    void topology_2e1g_pattern::set_external_probability(const std::vector<double> prob_)
-    {
-      _tof_.external_probability = prob_;
-      return;
-    }
+    // void topology_2e1g_pattern::set_external_probability(const std::vector<double> prob_)
+    // {
+    //   _tof_.external_probability = prob_;
+    //   return;
+    // }
 
-    std::vector<double> topology_2e1g_pattern::get_external_probability() const
-    {
-      return _tof_.external_probability;
-    }
+    // std::vector<double> topology_2e1g_pattern::get_external_probability() const
+    // {
+    //   return _tof_.external_probability;
+    // }
 
     bool topology_2e1g_pattern::has_delta_vertices_y() const
     {
       return datatools::is_valid(_DeltaV_.delta_vertices_y);
     }
 
-    void topology_2e1g_pattern::set_delta_vertices_y(const double deltaV_y_)
+    void topology_2e1g_pattern::set_delta_vertices_y(const double & deltaV_y_)
     {
       _DeltaV_.delta_vertices_y = deltaV_y_;
       return;
@@ -102,7 +102,7 @@ namespace snemo {
       return datatools::is_valid(_DeltaV_.delta_vertices_z);
     }
 
-    void topology_2e1g_pattern::set_delta_vertices_z(const double deltaV_z_)
+    void topology_2e1g_pattern::set_delta_vertices_z(const double & deltaV_z_)
     {
       _DeltaV_.delta_vertices_z = deltaV_z_;
       return;
@@ -113,18 +113,18 @@ namespace snemo {
       return _DeltaV_.delta_vertices_z;
     }
 
-    bool topology_1e1g_pattern::has_angle() const
+    bool topology_2e1g_pattern::has_angle() const
     {
       return datatools::is_valid(_angle_.angle);
     }
 
-    void topology_1e1g_pattern::set_angle(const double angle_)
+    void topology_2e1g_pattern::set_angle(const double & angle_)
     {
       _angle_.angle = angle_;
       return;
     }
 
-    double topology_1e1g_pattern::get_angle() const
+    double topology_2e1g_pattern::get_angle() const
     {
       return _angle_.angle;
     }
@@ -150,18 +150,34 @@ namespace snemo {
     //   return _tof_.particle_pair = std::make_pair (hpt1,hpt2);
     // }
 
-    void topology_2e1g_pattern::set_tof_dict(const snemo::datamodel::particle_track & pt1_,
-                                             const snemo::datamodel::particle_track & pt2_,
-                                             const topology_2e1g_pattern::TOF_measurement & tof_) const
+    // void topology_2e1g_pattern::set_tof_dict(const snemo::datamodel::particle_track & pt1_,
+    //                                          const snemo::datamodel::particle_track & pt2_,
+    //                                          const topology_2e1g_pattern::TOF_measurement & tof_) const
+    // {
+    //   snemo::datamodel::particle_track::handle_type hpt1;
+    //   snemo::datamodel::particle_track::handle_type hpt2;
+    //   hpt1.grab () = pt1_;
+    //   hpt2.grab () = pt2_;
+    //   topology_2e1g_pattern::particle_pair_type pt_pair = std::make_pair (hpt1,hpt2);
+    //   _tof_dict_.insert(std::pair<topology_2e1g_pattern::particle_pair_type, double>(pt_pair,tof_));
+    //   return;
+    // }
+
+
+    const topology_2e1g_pattern::TOF_dict_type & topology_2e1g_pattern::get_TOF_dict() const
     {
-      snemo::datamodel::particle_track::handle_type hpt1;
-      snemo::datamodel::particle_track::handle_type hpt2;
-      hpt1.grab () = pt1_;
-      hpt2.grab () = pt2_;
-      topology_2e1g_pattern::particle_pair_type pt_pair = std::make_pair (hpt1,hpt2);
-      _tof_dict_.insert(std::pair<topology_2e1g_pattern::particle_pair_type, double>(pt_pair,tof_));
-      return;
+      return _tof_dict_;
     }
+
+    topology_2e1g_pattern::TOF_dict_type & topology_2e1g_pattern::grab_TOF_dict()
+    {
+      return _tof_dict_;
+    }
+
+    // get
+
+    // grab &
+
 
     void topology_2e1g_pattern::tree_dump(std::ostream      & out_,
                                         const std::string & title_,
@@ -172,12 +188,12 @@ namespace snemo {
       if (! indent_.empty()) indent = indent_;
       base_topology_pattern::tree_dump(out_, title_, indent_, true);
 
-      for(size_t i=0; i<get_internal_probability().size();++i) {
-        out_ << indent << datatools::i_tree_dumpable::tag
-             << "Internal probability : " << get_internal_probability().at(i) << std::endl;
-        out_ << indent << datatools::i_tree_dumpable::tag
-             << "External probability : " << get_external_probability().at(i) << std::endl;
-      }
+      // for(size_t i=0; i<get_internal_probability().size();++i) {
+      //   out_ << indent << datatools::i_tree_dumpable::tag
+      //        << "Internal probability : " << get_internal_probability().at(i) << std::endl;
+      //   out_ << indent << datatools::i_tree_dumpable::tag
+      //        << "External probability : " << get_external_probability().at(i) << std::endl;
+      // }
 
       // out_ << indent << datatools::i_tree_dumpable::tag
       //      << "Delta Vertices Y : " << get_delta_vertices_y() << std::endl;

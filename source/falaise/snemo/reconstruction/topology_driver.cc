@@ -281,29 +281,69 @@ namespace snemo {
       const snemo::datamodel::particle_track_data::particle_collection_type & the_particles
         = ptd_.get_particles();
 
-      for (size_t i_particle = 0; i_particle < the_particles.size()-1; ++i_particle) {
-        for (size_t j_particle = i_particle + 1; j_particle < the_particles.size(); ++j_particle) {
+      // for (size_t i_particle = 0; i_particle < the_particles.size()-1; ++i_particle) {
+      //   for (size_t j_particle = i_particle + 1; j_particle < the_particles.size(); ++j_particle) {
 
-          const snemo::datamodel::particle_track & pt_i = the_particles.at(i_particle).get();
-          const snemo::datamodel::particle_track & pt_j = the_particles.at(j_particle).get();
+      //     const snemo::datamodel::particle_track & pt_i = the_particles.at(i_particle).get();
+      //     const snemo::datamodel::particle_track & pt_j = the_particles.at(j_particle).get();
+
+      snemo::datamodel::topology_2e1g_pattern::TOF_dict_type & tof_dict = t2e1gp->grab_TOF_dict();
+
+      for (snemo::datamodel::particle_track_data::particle_collection_type::iterator i_particle = the_particles.begin(); i_particle != boost::prior(the_particles.end()); ++i_particle) {
+        for (snemo::datamodel::particle_track_data::particle_collection_type::iterator j_particle = boost::next(i_particle); j_particle != the_particles.end(); ++j_particle) {
 
           std::vector<double> proba_int = std::numeric_limits< std::vector<double> >::quiet_NaN();
           std::vector<double> proba_ext = std::numeric_limits< std::vector<double> >::quiet_NaN();
 
-          if (_TOFD_) _TOFD_->process(pt_i, pt_j, proba_int, proba_ext);
+          // snemo::datamodel::particle_track::handle_type hPT_i(new snemo::datamodel::particle_track);
+          // snemo::datamodel::particle_track::handle_type hPT_j(new snemo::datamodel::particle_track);
+          // hPT_i.grab() = i_particle->get();
+          // hPT_j.grab() = j_particle->get();
+          // snemo::datamodel::topology_2e1g_pattern::particle_pair_type pt_pair = std::make_pair(&i_particle,&j_particle);
+          snemo::datamodel::topology_2e1g_pattern::particle_pair_type pt_pair = std::make_pair(*i_particle,*j_particle);
+          // std::cout << "i j " << &i_particle << "  " << &j_particle << std::endl;
+          {
+            snemo::datamodel::topology_2e1g_pattern::TOF_measurement dummy;
+            tof_dict.insert(std::make_pair(pt_pair,dummy));
+          }
 
-          // std::cout << "i j " << i_particle << "  " << j_particle << std::endl;
+          snemo::datamodel::topology_2e1g_pattern::TOF_measurement & tof_measurement = tof_dict[pt_pair];
+          tof_measurement.internal_probability = proba_int;
+          tof_measurement.external_probability = proba_ext;
+
+          if (_TOFD_) _TOFD_->process(i_particle->get(), j_particle->get(), tof_measurement.internal_probability, tof_measurement.external_probability);
+
+          snemo::datamodel::topology_2e1g_pattern::TOF_measurement & test = tof_dict[pt_pair];
+
+          for(size_t i=0; i<test.internal_probability.size();++i)
+            std::cout << "Internal probability : " << test.internal_probability.at(i)  << std::endl;
+          std::cout << "size "<< tof_dict.size()<< std::endl;
+
+          // if (_TOFD_) _TOFD_->process(hPT_i.grab(), hPT_j.grab(), proba_int, proba_ext);
+
+          // std::cout << "i j " << std::endl;
           // std::cout << "proba_int size " << proba_int.size() << std::endl;
           // for(size_t i=0; i<proba_int.size();++i)
           //   std::cout << "Internal probability : " << proba_int.at(i) << std::endl;
 
-          if(proba_int == proba_int && proba_ext == proba_ext) {
-            t2e1gp->set_internal_probability(proba_int);
-            t2e1gp->set_external_probability(proba_ext);
+          // std::map<topology_2e1g_pattern::particle_pair_type, topology_2e1g_pattern::TOF_measurement> & toto
+          //   = ;
 
-          }
+          // if(proba_int == proba_int && proba_ext == proba_ext) {
+          //   t2e1gp->set_internal_probability(proba_int);
+          //   t2e1gp->set_external_probability(proba_ext);
+
+          // }
+          // tof_dict[pt_pair]
         }
       }
+
+      snemo::datamodel::topology_2e1g_pattern::TOF_dict_type::const_iterator it = t2e1gp->grab_TOF_dict().begin();
+      snemo::datamodel::topology_2e1g_pattern::TOF_measurement test = it->second;
+
+      std::cout << " ------ check fill " << t2e1gp->grab_TOF_dict().size() << std::endl;
+      std::cout << " --------- content " << test.internal_probability.at(0) << std::endl;
+
       //      t2e1gp->tree_dump();
       return;
     }
