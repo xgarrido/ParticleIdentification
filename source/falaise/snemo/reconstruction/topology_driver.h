@@ -37,10 +37,6 @@
 // - Bayeux/datatools:
 #include <datatools/logger.h>
 
-namespace geomtools {
-  class manager;
-}
-
 namespace snemo {
 
   namespace datamodel {
@@ -75,15 +71,6 @@ namespace snemo {
 
       /// Getting initialization flag
       bool is_initialized() const;
-
-      /// Check the geometry manager
-      bool has_geometry_manager() const;
-
-      /// Address the geometry manager
-      void set_geometry_manager(const geomtools::manager & gmgr_);
-
-      /// Return a non-mutable reference to the geometry manager
-      const geomtools::manager & get_geometry_manager() const;
 
       /// Setting logging priority
       void set_logging_priority(const datatools::logger::priority priority_);
@@ -138,7 +125,6 @@ namespace snemo {
       bool _initialized_;                             //!< Initialize flag
       datatools::logger::priority _logging_priority_; //!< Logging priority
 
-      const geomtools::manager * _geometry_manager_;       //!< The SuperNEMO geometry manager
       boost::scoped_ptr< ::snemo::reconstruction::tof_driver> _TOFD_; //!< Handle to the embedded TOF computation algorithm with dynamic memory auto-deletion
       boost::scoped_ptr< ::snemo::reconstruction::delta_vertices_driver> _DVD_; //!< Handle to the embedded delta vertices algorithm with dynamic memory auto-deletion
       boost::scoped_ptr< ::snemo::reconstruction::angle_measurement_driver> _AMD_; //!< Handle to the embedded angle measurement algorithm with dynamic memory auto-deletion

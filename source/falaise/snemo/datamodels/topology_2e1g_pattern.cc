@@ -22,8 +22,8 @@ namespace snemo {
     topology_2e1g_pattern::topology_2e1g_pattern()
       : base_topology_pattern(topology_2e1g_pattern::pattern_id())
     {
-      // datatools::invalidate(_tof_.internal_probability);
-      // datatools::invalidate(_tof_.external_probability);
+      _tof_.internal_probability = std::numeric_limits< std::vector<double> >::quiet_NaN();
+      _tof_.external_probability = std::numeric_limits< std::vector<double> >::quiet_NaN();
       datatools::invalidate(_DeltaV_.delta_vertices_y);
       datatools::invalidate(_DeltaV_.delta_vertices_z);
       return;
@@ -113,6 +113,22 @@ namespace snemo {
       return _DeltaV_.delta_vertices_z;
     }
 
+    bool topology_1e1g_pattern::has_angle() const
+    {
+      return datatools::is_valid(_angle_.angle);
+    }
+
+    void topology_1e1g_pattern::set_angle(const double angle_)
+    {
+      _angle_.angle = angle_;
+      return;
+    }
+
+    double topology_1e1g_pattern::get_angle() const
+    {
+      return _angle_.angle;
+    }
+
     // bool topology_2e1g_pattern::has_particle_pair() const
     // {
     //   return (_tof_.particle_pair.first.get().has_track_id &&
@@ -134,6 +150,19 @@ namespace snemo {
     //   return _tof_.particle_pair = std::make_pair (hpt1,hpt2);
     // }
 
+    void topology_2e1g_pattern::set_tof_dict(const snemo::datamodel::particle_track & pt1_,
+                                             const snemo::datamodel::particle_track & pt2_,
+                                             const topology_2e1g_pattern::TOF_measurement & tof_) const
+    {
+      snemo::datamodel::particle_track::handle_type hpt1;
+      snemo::datamodel::particle_track::handle_type hpt2;
+      hpt1.grab () = pt1_;
+      hpt2.grab () = pt2_;
+      topology_2e1g_pattern::particle_pair_type pt_pair = std::make_pair (hpt1,hpt2);
+      _tof_dict_.insert(std::pair<topology_2e1g_pattern::particle_pair_type, double>(pt_pair,tof_));
+      return;
+    }
+
     void topology_2e1g_pattern::tree_dump(std::ostream      & out_,
                                         const std::string & title_,
                                         const std::string & indent_,
@@ -142,16 +171,20 @@ namespace snemo {
       std::string indent;
       if (! indent_.empty()) indent = indent_;
       base_topology_pattern::tree_dump(out_, title_, indent_, true);
-      // std::vector<double> tmp = get_internal_probability();
-      out_ << indent << datatools::i_tree_dumpable::tag;
-      for(size_t i=0; i<get_internal_probability().size();++i)
-          out_ << "Internal probability : " << get_internal_probability().at(i) << std::endl;
+
+      for(size_t i=0; i<get_internal_probability().size();++i) {
+        out_ << indent << datatools::i_tree_dumpable::tag
+             << "Internal probability : " << get_internal_probability().at(i) << std::endl;
+        out_ << indent << datatools::i_tree_dumpable::tag
+             << "External probability : " << get_external_probability().at(i) << std::endl;
+      }
+
       // out_ << indent << datatools::i_tree_dumpable::tag
-      //      << "External probability : " << get_external_probability() << std::endl;
-      out_ << indent << datatools::i_tree_dumpable::tag
-           << "Delta Vertices Y : " << get_delta_vertices_y() << std::endl;
-      out_ << indent << datatools::i_tree_dumpable::tag
-           << "Delta Vertices Z : " << get_delta_vertices_z() << std::endl;
+      //      << "Delta Vertices Y : " << get_delta_vertices_y() << std::endl;
+      // out_ << indent << datatools::i_tree_dumpable::tag
+      //      << "Delta Vertices Z : " << get_delta_vertices_z() << std::endl;
+      // out_ << indent << datatools::i_tree_dumpable::tag
+      //      << "Angle Z : " << get_angle() << std::endl;
 
       return;
     }

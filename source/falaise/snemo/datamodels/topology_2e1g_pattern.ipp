@@ -24,8 +24,8 @@ namespace snemo {
     void topology_2e1g_pattern::serialize(Archive & ar, const unsigned int /* version */)
     {
       ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(base_topology_pattern);
-      ar & boost::serialization::make_nvp("tof", _tof_);
-      ar & boost::serialization::make_nvp("delta_vertices", _DeltaV_);
+      // ar & boost::serialization::make_nvp("tof", _tof_);
+      // ar & boost::serialization::make_nvp("delta_vertices", _DeltaV_);
       return;
     }
 

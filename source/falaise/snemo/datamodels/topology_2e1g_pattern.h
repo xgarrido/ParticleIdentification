@@ -28,8 +28,6 @@ namespace snemo {
 
       struct TOF_measurement
       {
-        // double internal_probability;
-        // double external_probability;
         std::vector <double> internal_probability;
         std::vector <double> external_probability;
       };
@@ -38,6 +36,11 @@ namespace snemo {
       {
         double delta_vertices_y;
         double delta_vertices_z;
+      };
+
+      struct angle_measurement
+      {
+        double angle;
       };
 
       /// Typedef for pairing particles
@@ -95,6 +98,18 @@ namespace snemo {
       /// Return delta vertices z
       double get_delta_vertices_z() const;
 
+      /// Check angle validity
+      bool has_angle() const;
+
+      /// Set angle
+      void set_angle(const double angle_);
+
+      /// Return internal probability
+      double get_angle() const;
+
+      void set_tof_dict(const snemo::datamodel::particle_track & pt1_,
+                        const snemo::datamodel::particle_track & pt2_,
+                        const TOF_measurement & tof_) const;
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,
                              const std::string & title_  = "",
@@ -105,6 +120,8 @@ namespace snemo {
 
       TOF_measurement _tof_;
       delta_vertices_measurement _DeltaV_;
+      angle_measurement _angle_;
+      TOF_dict_type _tof_dict_;
 
       DATATOOLS_SERIALIZATION_DECLARATION();
 

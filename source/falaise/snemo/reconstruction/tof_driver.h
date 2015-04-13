@@ -100,15 +100,6 @@ namespace snemo {
       /// Return the gamma veto calorimeter locator
       const snemo::geometry::gveto_locator & get_gveto_locator() const;
 
-      /// Check the geometry manager
-      bool has_geometry_manager() const;
-
-      /// Address the geometry manager
-      void set_geometry_manager(const geomtools::manager & gmgr_);
-
-      /// Return a non-mutable reference to the geometry manager
-      const geomtools::manager & get_geometry_manager() const;
-
       /// Main process
       int process(const snemo::datamodel::particle_track & pt1_,
                   const snemo::datamodel::particle_track & pt2_,
@@ -145,9 +136,11 @@ namespace snemo {
 
       /// Special method to process charged particles
       int _get_vertex_to_calo_info(const snemo::datamodel::particle_track & particle_charged_,
-                                    const snemo::datamodel::calibrated_calorimeter_hit & a_calo_hit,
-                                    double & track_length_,
-                                    double & time_, double & sigma_time_);
+                                   const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
+                                   the_gamma_calorimeters,
+                                   const geomtools::blur_spot & a_vertex,
+                                   double & track_length_,
+                                   double & time_, double & sigma_time_);
 
       /// Gives the energy of particle_
       static double _get_energy(const snemo::datamodel::particle_track & particle_);
@@ -194,8 +187,6 @@ namespace snemo {
       bool _initialized_;            //!< Initialization status
       datatools::logger::priority _logging_priority_; //!< Logging priority
       double _sigma_t_gamma_interaction_;     //!< The uncertainty on the track length
-      const snemo::geometry::locator_plugin * _locator_plugin_; //!< The SuperNEMO locator plugin
-      const geomtools::manager *           _geometry_manager_;       //!< The SuperNEMO geometry manager
     };
 
   }  // end of namespace reconstruction

@@ -173,8 +173,8 @@ namespace snemo {
     }
 
     int angle_measurement_driver::_process_charged_particles(const snemo::datamodel::particle_track & pt1_,
-                                                              const snemo::datamodel::particle_track & pt2_,
-                                                              double & angle_)
+                                                             const snemo::datamodel::particle_track & pt2_,
+                                                             double & angle_)
     {
       const snemo::datamodel::particle_track::vertex_collection_type & the_vertices_1 = pt1_.get_vertices();
       geomtools::vector_3d foil_vertex_1;

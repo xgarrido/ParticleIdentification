@@ -28,8 +28,13 @@ namespace snemo {
 
       struct TOF_measurement
       {
-        double internal_probability;
-        double external_probability;
+        std::vector <double> internal_probability;
+        std::vector <double> external_probability;
+      };
+
+      struct angle_measurement
+      {
+        double angle;
       };
 
       // /// Typedef for pairing particles
@@ -55,19 +60,28 @@ namespace snemo {
       bool has_internal_probability() const;
 
       /// Set internal probability
-      void set_internal_probability(const double prob_);
+      void set_internal_probability(const std::vector<double> prob_);
 
       /// Return internal probability
-      double get_internal_probability() const;
+      std::vector<double> get_internal_probability() const;
 
       /// Check internal probability validity
       bool has_external_probability() const;
 
       /// Set external probability
-      void set_external_probability(const double prob_);
+      void set_external_probability(const std::vector<double> prob_);
 
       /// Return external probability
-      double get_external_probability() const;
+      std::vector <double> get_external_probability() const;
+
+      /// Check angle validity
+      bool has_angle() const;
+
+      /// Set angle
+      void set_angle(const double angle_);
+
+      /// Return internal probability
+      double get_angle() const;
 
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,
@@ -78,6 +92,7 @@ namespace snemo {
     private:
 
       TOF_measurement _tof_;
+      angle_measurement _angle_;
 
       DATATOOLS_SERIALIZATION_DECLARATION();
 

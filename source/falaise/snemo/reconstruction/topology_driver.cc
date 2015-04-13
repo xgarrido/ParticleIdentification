@@ -41,24 +41,6 @@ namespace snemo {
       return _initialized_;
     }
 
-    bool topology_driver::has_geometry_manager() const
-    {
-      return _geometry_manager_ != 0;
-    }
-
-    void topology_driver::set_geometry_manager(const geomtools::manager & gmgr_)
-    {
-      DT_THROW_IF (is_initialized(), std::logic_error, "Already initialized/locked !");
-      _geometry_manager_ = &gmgr_;
-      return;
-    }
-
-    const geomtools::manager & topology_driver::get_geometry_manager() const
-    {
-      DT_THROW_IF (! has_geometry_manager(), std::logic_error, "No geometry manager is setup !");
-      return *_geometry_manager_;
-    }
-
     void topology_driver::set_logging_priority(const datatools::logger::priority priority_)
     {
       _logging_priority_ = priority_;
@@ -108,24 +90,20 @@ namespace snemo {
         const std::string & a_driver_name = *idriver;
 
         if (a_driver_name == "TOFD") {
-          std::cout << "initialize tofd" << std::endl;
           // Initialize TOF Driver
           _TOFD_.reset(new snemo::reconstruction::tof_driver);
-          _TOFD_->set_geometry_manager(get_geometry_manager());
           datatools::properties TOFD_config;
           setup_.export_and_rename_starting_with(TOFD_config, std::string(a_driver_name + "."), "");
           _TOFD_->initialize(TOFD_config);
         } else if (a_driver_name == "DVD") {
           // Initialize Delta Vertices Driver
           _DVD_.reset(new snemo::reconstruction::delta_vertices_driver);
-          // _DVD_->set_geometry_manager(get_geometry_manager());
           datatools::properties DVD_config;
           setup_.export_and_rename_starting_with(DVD_config, std::string(a_driver_name + "."), "");
           _DVD_->initialize(DVD_config);
         } else if (a_driver_name == "AMD") {
           // Initialize Delta Vertices Driver
           _AMD_.reset(new snemo::reconstruction::angle_measurement_driver);
-          // _AMD_->set_geometry_manager(get_geometry_manager());
           datatools::properties AMD_config;
           setup_.export_and_rename_starting_with(AMD_config, std::string(a_driver_name + "."), "");
           _AMD_->initialize(AMD_config);
@@ -283,8 +261,8 @@ namespace snemo {
       // double proba_int = datatools::invalid_real();
       // double proba_ext = datatools::invalid_real();
 
-      t1e1gp->set_internal_probability(proba_int.front());
-      t1e1gp->set_external_probability(proba_ext.front());
+      t1e1gp->set_internal_probability(proba_int);
+      t1e1gp->set_external_probability(proba_ext);
 
       double angle = datatools::invalid_real();
       if (_AMD_) _AMD_->process(pt1, pt2, angle);
@@ -303,44 +281,26 @@ namespace snemo {
       const snemo::datamodel::particle_track_data::particle_collection_type & the_particles
         = ptd_.get_particles();
 
-      // const snemo::datamodel::particle_track & pt1 = the_particles.at(0).get();
-      // const snemo::datamodel::particle_track & pt2 = the_particles.at(1).get();
-      // const snemo::datamodel::particle_track & pt3 = the_particles.at(the_particles.size()-1).get();
-
-      // for (snemo::datamodel::particle_track_data::particle_collection_type::const_iterator
-      //        iparticle = the_particles.begin();
-      //      iparticle != the_particles.back();
-      //      ++iparticle) {
-      //   for (snemo::datamodel::particle_track_data::particle_collection_type::const_iterator
-      //          iparticle_next = iparticle;
-      //        iparticle != the_particles.end();
-      //        ++iparticle) {
-
       for (size_t i_particle = 0; i_particle < the_particles.size()-1; ++i_particle) {
         for (size_t j_particle = i_particle + 1; j_particle < the_particles.size(); ++j_particle) {
 
           const snemo::datamodel::particle_track & pt_i = the_particles.at(i_particle).get();
           const snemo::datamodel::particle_track & pt_j = the_particles.at(j_particle).get();
 
-          // To be replaced by dedicated fields of 'topology_2e1g_pattern'
-
-          // double proba_int = datatools::invalid_real();
-          // double proba_ext = datatools::invalid_real();
-
           std::vector<double> proba_int = std::numeric_limits< std::vector<double> >::quiet_NaN();
           std::vector<double> proba_ext = std::numeric_limits< std::vector<double> >::quiet_NaN();
 
           if (_TOFD_) _TOFD_->process(pt_i, pt_j, proba_int, proba_ext);
 
-          std::cout << "i j " << i_particle << "  " << j_particle << std::endl;
-          std::cout << "proba_int size " << proba_int.size() << std::endl;
-          for(size_t i=0; i<proba_int.size();++i)
-            std::cout << "Internal probability : " << proba_int.at(i) << std::endl;
+          // std::cout << "i j " << i_particle << "  " << j_particle << std::endl;
+          // std::cout << "proba_int size " << proba_int.size() << std::endl;
+          // for(size_t i=0; i<proba_int.size();++i)
+          //   std::cout << "Internal probability : " << proba_int.at(i) << std::endl;
 
           if(proba_int == proba_int && proba_ext == proba_ext) {
             t2e1gp->set_internal_probability(proba_int);
             t2e1gp->set_external_probability(proba_ext);
-            std::cout << "debug" << std::endl;
+
           }
         }
       }
