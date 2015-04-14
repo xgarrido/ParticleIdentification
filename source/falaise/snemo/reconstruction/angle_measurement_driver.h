@@ -101,6 +101,9 @@ namespace snemo {
                   const snemo::datamodel::particle_track & pt2_,
                   double & angle_);
 
+      int process(const snemo::datamodel::particle_track & pt_,
+                  double & angle_);
+
       /// Check if theclusterizer is initialized
       bool is_initialized() const;
 
@@ -116,9 +119,17 @@ namespace snemo {
       void _set_initialized(bool);
 
       /// Special method to process and generate particle track data
+      int _process_algo(const snemo::datamodel::particle_track & pt_,
+                        double & angle);
+
+      /// Special method to process and generate particle track data
       int _process_algo(const snemo::datamodel::particle_track & pt1_,
                         const snemo::datamodel::particle_track & pt2_,
                         double & angle);
+
+      /// Computes the angle between the pt_ the X axis
+      int _process_single_charged(const snemo::datamodel::particle_track & pt_,
+                                  double & angle);
 
       /// Computes the angle between the pt1_ and pt2_ at the time of the emission
       int _process_charged_particles(const snemo::datamodel::particle_track & pt1_,

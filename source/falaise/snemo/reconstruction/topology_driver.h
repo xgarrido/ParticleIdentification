@@ -108,6 +108,10 @@ namespace snemo {
       /// Build event classification label
       static std::string _build_classification_(const snemo::datamodel::particle_track_data & ptd_);
 
+      /// Fill 1 electron topology event
+      void _fill_1e_topology_(const snemo::datamodel::particle_track_data & ptd_,
+                              snemo::datamodel::topology_data & td_);
+
       /// Fill 2 electrons topology event
       void _fill_2e_topology_(const snemo::datamodel::particle_track_data & ptd_,
                               snemo::datamodel::topology_data & td_);
