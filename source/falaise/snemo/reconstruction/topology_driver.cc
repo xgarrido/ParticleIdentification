@@ -240,13 +240,15 @@ namespace snemo {
       const snemo::datamodel::particle_track & pt1 = the_particles.front().get();
       const snemo::datamodel::particle_track & pt2 = the_particles.back().get();
 
-      std::vector<double> proba_int = std::numeric_limits< std::vector<double> >::quiet_NaN();
-      std::vector<double> proba_ext = std::numeric_limits< std::vector<double> >::quiet_NaN();
+      double proba_int = datatools::invalid_real();
+      double proba_ext = datatools::invalid_real();
 
       if (_TOFD_) _TOFD_->process(pt1, pt2, proba_int, proba_ext);
 
-      t2ep->set_internal_probability(proba_int.front());
-      t2ep->set_external_probability(proba_ext.front());
+      if(datatools::is_valid(proba_int))
+        t2ep->set_internal_probability(proba_int);
+      if(datatools::is_valid(proba_ext))
+        t2ep->set_external_probability(proba_ext);
 
       double delta_vertices_y = datatools::invalid_real();
       double delta_vertices_z = datatools::invalid_real();
