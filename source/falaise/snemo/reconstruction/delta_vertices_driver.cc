@@ -155,10 +155,12 @@ namespace snemo {
     {
       DT_LOG_TRACE(get_logging_priority(), "Entering...");
 
-      DT_THROW_IF(snemo::datamodel::pid_utils::particle_is_gamma(pt1_) ||
-                  snemo::datamodel::pid_utils::particle_is_gamma(pt2_),
-                  std::logic_error,
-                  "Cannot compute delta vertices when one particle is a gamma !");
+      if (snemo::datamodel::pid_utils::particle_is_gamma(pt1_) &&
+          snemo::datamodel::pid_utils::particle_is_gamma(pt2_)) {
+        DT_LOG_WARNING(get_logging_priority(),
+                       "Delta vertices cannot be computed if one particle is a gamma!");
+        return 1;
+      }
 
       // Invalidate results
       datatools::invalidate(delta_vertices_y_);
