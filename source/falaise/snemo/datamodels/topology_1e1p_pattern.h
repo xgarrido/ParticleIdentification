@@ -38,6 +38,11 @@ namespace snemo {
         double delta_vertices_z;
       };
 
+      struct angle_measurement
+      {
+        double angle;
+      };
+
       // /// Typedef for pairing particles
       // typedef std::pair<snemo::datamodel::particle_track::handle_type,
       //                   snemo::datamodel::particle_track::handle_type> particle_pair_type;
@@ -61,7 +66,7 @@ namespace snemo {
       bool has_internal_probability() const;
 
       /// Set internal probability
-      void set_internal_probability(const double prob_);
+      void set_internal_probability(const double & prob_);
 
       /// Return internal probability
       double get_internal_probability() const;
@@ -70,7 +75,7 @@ namespace snemo {
       bool has_external_probability() const;
 
       /// Set external probability
-      void set_external_probability(const double prob_);
+      void set_external_probability(const double & prob_);
 
       /// Return external probability
       double get_external_probability() const;
@@ -79,7 +84,7 @@ namespace snemo {
       bool has_delta_vertices_y() const;
 
       /// Set delta vertices y
-      void set_delta_vertices_y(const double prob_);
+      void set_delta_vertices_y(const double & delta_vertices_y_);
 
       /// Return delta vertices y
       double get_delta_vertices_y() const;
@@ -88,10 +93,19 @@ namespace snemo {
       bool has_delta_vertices_z() const;
 
       /// Set delta vertices z
-      void set_delta_vertices_z(const double prob_);
+      void set_delta_vertices_z(const double & delta_vertices_z_);
 
       /// Return delta vertices z
       double get_delta_vertices_z() const;
+
+      /// Check angle validity
+      bool has_angle() const;
+
+      /// Set angle
+      void set_angle(const double & angle_);
+
+      /// Return internal probability
+      double get_angle() const;
 
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,
@@ -103,7 +117,7 @@ namespace snemo {
 
       TOF_measurement _tof_;
       delta_vertices_measurement _DeltaV_;
-
+      angle_measurement _angle_;
       DATATOOLS_SERIALIZATION_DECLARATION();
 
     };

@@ -174,11 +174,6 @@ namespace snemo {
       return _tof_dict_;
     }
 
-    // get
-
-    // grab &
-
-
     void topology_2e1g_pattern::tree_dump(std::ostream      & out_,
                                         const std::string & title_,
                                         const std::string & indent_,

@@ -26,6 +26,8 @@ namespace snemo {
       datatools::invalidate(_tof_.external_probability);
       datatools::invalidate(_DeltaV_.delta_vertices_y);
       datatools::invalidate(_DeltaV_.delta_vertices_z);
+      datatools::invalidate(_angle_.angle);
+      datatools::invalidate(_angle_.angle);
       return;
     }
 
@@ -44,7 +46,7 @@ namespace snemo {
       return datatools::is_valid(_tof_.internal_probability);
     }
 
-    void topology_1e1p_pattern::set_internal_probability(const double prob_)
+    void topology_1e1p_pattern::set_internal_probability(const double & prob_)
     {
       _tof_.internal_probability = prob_;
       return;
@@ -60,7 +62,7 @@ namespace snemo {
       return datatools::is_valid(_tof_.internal_probability);
     }
 
-    void topology_1e1p_pattern::set_external_probability(const double prob_)
+    void topology_1e1p_pattern::set_external_probability(const double & prob_)
     {
       _tof_.external_probability = prob_;
       return;
@@ -76,7 +78,7 @@ namespace snemo {
       return datatools::is_valid(_DeltaV_.delta_vertices_y);
     }
 
-    void topology_1e1p_pattern::set_delta_vertices_y(const double deltaV_y_)
+    void topology_1e1p_pattern::set_delta_vertices_y(const double & deltaV_y_)
     {
       _DeltaV_.delta_vertices_y = deltaV_y_;
       return;
@@ -92,7 +94,7 @@ namespace snemo {
       return datatools::is_valid(_DeltaV_.delta_vertices_z);
     }
 
-    void topology_1e1p_pattern::set_delta_vertices_z(const double deltaV_z_)
+    void topology_1e1p_pattern::set_delta_vertices_z(const double & deltaV_z_)
     {
       _DeltaV_.delta_vertices_z = deltaV_z_;
       return;
@@ -101,6 +103,22 @@ namespace snemo {
     double topology_1e1p_pattern::get_delta_vertices_z() const
     {
       return _DeltaV_.delta_vertices_z;
+    }
+
+    bool topology_1e1p_pattern::has_angle() const
+    {
+      return datatools::is_valid(_angle_.angle);
+    }
+
+    void topology_1e1p_pattern::set_angle(const double & angle_)
+    {
+      _angle_.angle = angle_;
+      return;
+    }
+
+    double topology_1e1p_pattern::get_angle() const
+    {
+      return _angle_.angle;
     }
 
     void topology_1e1p_pattern::tree_dump(std::ostream      & out_,
@@ -120,6 +138,8 @@ namespace snemo {
            << "Delta Vertices Y : " << get_delta_vertices_y() << std::endl;
       out_ << indent << datatools::i_tree_dumpable::tag
            << "Delta Vertices Z : " << get_delta_vertices_z() << std::endl;
+      out_ << indent << datatools::i_tree_dumpable::tag
+           << "Angle : " << get_angle() << std::endl;
 
       return;
     }

@@ -14,6 +14,7 @@
 
 #include <falaise/snemo/datamodels/topology_1e_pattern.h>
 #include <falaise/snemo/datamodels/topology_2e_pattern.h>
+#include <falaise/snemo/datamodels/topology_1e1p_pattern.h>
 #include <falaise/snemo/datamodels/topology_1e1g_pattern.h>
 #include <falaise/snemo/datamodels/topology_2e1g_pattern.h>
 
@@ -165,6 +166,9 @@ namespace snemo {
       else if (a_classification == "2e") {
         this->_fill_2e_topology_(ptd_, td_);
       }
+      else if (a_classification == "1e1p") {
+        this->_fill_2e_topology_(ptd_, td_);
+      }
       else if (a_classification == "1e1g") {
         this->_fill_1e1g_topology_(ptd_, td_);
       }
@@ -253,13 +257,60 @@ namespace snemo {
       double delta_vertices_y = datatools::invalid_real();
       double delta_vertices_z = datatools::invalid_real();
       if (_DVD_) _DVD_->process(pt1, pt2, delta_vertices_y, delta_vertices_z);
-      t2ep->set_delta_vertices_y(delta_vertices_y);
-      t2ep->set_delta_vertices_z(delta_vertices_z);
 
-      // if(std::abs(delta_vertices_y) < 50. && std::abs(delta_vertices_z) < 50.) {
-      if(1) {
+      if(datatools::is_valid(delta_vertices_y))
+        t2ep->set_delta_vertices_y(delta_vertices_y);
+      if(datatools::is_valid(delta_vertices_z))
+        t2ep->set_delta_vertices_z(delta_vertices_z);
+
+      if(std::abs(delta_vertices_y) < 100. && std::abs(delta_vertices_z) < 100.
+         && proba_int > 0.04 && proba_ext < 0.01) {
         double angle = datatools::invalid_real();
         if (_AMD_) _AMD_->process(pt1, pt2, angle);
+        if(datatools::is_valid(angle))
+          t2ep->set_angle(angle);
+      }
+      return;
+    }
+
+  void topology_driver::_fill_1e1p_topology_(const snemo::datamodel::particle_track_data & ptd_,
+                                             snemo::datamodel::topology_data & td_)
+    {
+      snemo::datamodel::topology_data::handle_pattern h_pattern;
+      snemo::datamodel::topology_1e1p_pattern * t1e1pp = new snemo::datamodel::topology_1e1p_pattern;
+      h_pattern.reset(t1e1pp);
+      td_.set_pattern_handle(h_pattern);
+
+      const snemo::datamodel::particle_track_data::particle_collection_type & the_particles
+        = ptd_.get_particles();
+      const snemo::datamodel::particle_track & pt1 = the_particles.front().get();
+      const snemo::datamodel::particle_track & pt2 = the_particles.back().get();
+
+      double proba_int = datatools::invalid_real();
+      double proba_ext = datatools::invalid_real();
+
+      if (_TOFD_) _TOFD_->process(pt1, pt2, proba_int, proba_ext);
+
+      if(datatools::is_valid(proba_int))
+        t1e1pp->set_internal_probability(proba_int);
+      if(datatools::is_valid(proba_ext))
+        t1e1pp->set_external_probability(proba_ext);
+
+      double delta_vertices_y = datatools::invalid_real();
+      double delta_vertices_z = datatools::invalid_real();
+      if (_DVD_) _DVD_->process(pt1, pt2, delta_vertices_y, delta_vertices_z);
+
+      if(datatools::is_valid(delta_vertices_y))
+        t1e1pp->set_delta_vertices_y(delta_vertices_y);
+      if(datatools::is_valid(delta_vertices_z))
+        t1e1pp->set_delta_vertices_z(delta_vertices_z);
+
+      if(std::abs(delta_vertices_y) < 100. && std::abs(delta_vertices_z) < 100.
+         && proba_int > 0.04 && proba_ext < 0.01) {
+        double angle = datatools::invalid_real();
+        if (_AMD_) _AMD_->process(pt1, pt2, angle);
+        if(datatools::is_valid(angle))
+          t1e1pp->set_angle(angle);
       }
       return;
     }
@@ -285,11 +336,18 @@ namespace snemo {
       // double proba_int = datatools::invalid_real();
       // double proba_ext = datatools::invalid_real();
 
+      // check validity for vector
       t1e1gp->set_internal_probability(proba_int);
       t1e1gp->set_external_probability(proba_ext);
 
-      double angle = datatools::invalid_real();
-      if (_AMD_) _AMD_->process(pt1, pt2, angle);
+      // if(proba_int > 0.04 && proba_ext < 0.01) {
+      //condition or not ?
+      if(1) {
+        double angle = datatools::invalid_real();
+        if (_AMD_) _AMD_->process(pt1, pt2, angle);
+        if(datatools::is_valid(angle))
+          t1e1gp->set_angle(angle);
+      }
 
       return;
     }
@@ -304,17 +362,9 @@ namespace snemo {
 
       double delta_vertices_y = datatools::invalid_real();
       double delta_vertices_z = datatools::invalid_real();
-      t2e1gp->set_delta_vertices_y(delta_vertices_y);
-      t2e1gp->set_delta_vertices_z(delta_vertices_z);
 
       const snemo::datamodel::particle_track_data::particle_collection_type & the_particles
         = ptd_.get_particles();
-
-      // for (size_t i_particle = 0; i_particle < the_particles.size()-1; ++i_particle) {
-      //   for (size_t j_particle = i_particle + 1; j_particle < the_particles.size(); ++j_particle) {
-
-      //     const snemo::datamodel::particle_track & pt_i = the_particles.at(i_particle).get();
-      //     const snemo::datamodel::particle_track & pt_j = the_particles.at(j_particle).get();
 
       snemo::datamodel::topology_2e1g_pattern::TOF_dict_type & tof_dict = t2e1gp->grab_TOF_dict();
 

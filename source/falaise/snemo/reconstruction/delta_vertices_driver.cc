@@ -204,6 +204,7 @@ namespace snemo {
         delta_vertices_y_ = v1.y() - v2.y();
         delta_vertices_z_ = v1.z() - v2.z();
       }
+
       DT_LOG_DEBUG(get_logging_priority(), "Delta vertex y = " << delta_vertices_y_/CLHEP::mm << " mm");
       DT_LOG_DEBUG(get_logging_priority(), "Delta vertex z = " << delta_vertices_z_/CLHEP::mm << " mm");
 
