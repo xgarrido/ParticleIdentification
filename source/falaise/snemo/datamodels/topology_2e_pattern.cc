@@ -22,8 +22,6 @@ namespace snemo {
     topology_2e_pattern::topology_2e_pattern()
       : base_topology_pattern(topology_2e_pattern::pattern_id())
     {
-      datatools::invalidate(_tof_.internal_probability);
-      datatools::invalidate(_tof_.external_probability);
       return;
     }
 
@@ -39,34 +37,34 @@ namespace snemo {
 
     bool topology_2e_pattern::has_internal_probability() const
     {
-      return datatools::is_valid(_tof_.internal_probability);
+      return datatools::is_valid(_tof_.get_internal_probabilities().front());
     }
 
-    void topology_2e_pattern::set_internal_probability(const double & prob_)
+    void topology_2e_pattern::set_internal_probability(double prob_)
     {
-      _tof_.internal_probability = prob_;
+      _tof_.grab_internal_probabilities().push_back(prob_);
       return;
     }
 
     double topology_2e_pattern::get_internal_probability() const
     {
-      return _tof_.internal_probability;
+      return _tof_.get_internal_probabilities().front();
     }
 
     bool topology_2e_pattern::has_external_probability() const
     {
-      return datatools::is_valid(_tof_.internal_probability);
+      return datatools::is_valid(_tof_.get_external_probabilities().front());
     }
 
-    void topology_2e_pattern::set_external_probability(const double & prob_)
+    void topology_2e_pattern::set_external_probability(double prob_)
     {
-      _tof_.external_probability = prob_;
+      _tof_.grab_external_probabilities().push_back(prob_);
       return;
     }
 
     double topology_2e_pattern::get_external_probability() const
     {
-      return _tof_.external_probability;
+      return _tof_.get_external_probabilities().front();
     }
 
     bool topology_2e_pattern::has_delta_vertices_y() const
@@ -74,7 +72,7 @@ namespace snemo {
       return datatools::is_valid(_DeltaV_.delta_vertices_y);
     }
 
-    void topology_2e_pattern::set_delta_vertices_y(const double & deltaV_y_)
+    void topology_2e_pattern::set_delta_vertices_y(double deltaV_y_)
     {
       _DeltaV_.delta_vertices_y = deltaV_y_;
       return;
@@ -90,7 +88,7 @@ namespace snemo {
       return datatools::is_valid(_DeltaV_.delta_vertices_z);
     }
 
-    void topology_2e_pattern::set_delta_vertices_z(const double & deltaV_z_)
+    void topology_2e_pattern::set_delta_vertices_z(double deltaV_z_)
     {
       _DeltaV_.delta_vertices_z = deltaV_z_;
       return;
@@ -106,7 +104,7 @@ namespace snemo {
       return datatools::is_valid(_angle_.angle);
     }
 
-    void topology_2e_pattern::set_angle(const double & angle_)
+    void topology_2e_pattern::set_angle(double angle_)
     {
       _angle_.angle = angle_;
       return;
