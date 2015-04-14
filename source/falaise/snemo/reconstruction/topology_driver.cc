@@ -394,7 +394,7 @@ namespace snemo {
           // hPT_j.grab() = j_particle->get();
           // snemo::datamodel::topology_2eNg_pattern::particle_pair_type pt_pair = std::make_pair(hPT_i.grab(),hPT_j.grab());
 
-          snemo::datamodel::topology_2e1g_pattern::particle_pair_type pt_pair(ht1, ht2);
+          snemo::datamodel::topology_2eNg_pattern::particle_pair_type pt_pair(ht1, ht2);
           std::cout << "i j " << &(*i_particle) << "  " << &(*j_particle) << std::endl;
 
           {
@@ -402,7 +402,7 @@ namespace snemo {
             tof_dict.insert(std::make_pair(pt_pair,dummy));
           }
 
-          snemo::datamodel::topology_2e1g_pattern::TOF_measurement & tof_measurement = tof_dict[pt_pair];
+          snemo::datamodel::topology_2eNg_pattern::TOF_measurement & tof_measurement = tof_dict[pt_pair];
 
           if (_TOFD_) _TOFD_->process(i_particle->get(), j_particle->get(),
                                       tof_measurement.internal_probability,

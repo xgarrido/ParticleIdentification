@@ -99,6 +99,7 @@ namespace snemo {
     private:
 
       std::string _PTD_label_; //!< Name of the "Particle track data" bank
+      std::string _TD_label_; //!< Name of the "Particle track data" bank
       uint32_t    _mode_;      //!< Mode of the cut
 
       particle_range _electron_range_;
@@ -109,6 +110,10 @@ namespace snemo {
 
       particle_range _unassociated_calorimeter_hits_range_;
 
+      double _prob_int_;
+      double _prob_ext_;
+      double _delta_vertices_y_;
+      double _delta_vertices_z_;
       // Macro to automate the registration of the cut :
       CUT_REGISTRATION_INTERFACE(topology_cut);
     };

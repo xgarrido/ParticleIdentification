@@ -15,6 +15,9 @@
 // SuperNEMO data models :
 #include <falaise/snemo/datamodels/data_model.h>
 #include <falaise/snemo/datamodels/particle_track_data.h>
+#include <falaise/snemo/datamodels/topology_data.h>
+#include <falaise/snemo/datamodels/base_topology_pattern.h>
+#include <falaise/snemo/datamodels/topology_2e_pattern.h>
 
 namespace snemo {
 
@@ -57,6 +60,7 @@ namespace snemo {
     {
       _mode_ = MODE_UNDEFINED;
       _PTD_label_ = snemo::datamodel::data_info::default_particle_track_data_label();
+      _PTD_label_ = "TD";//snemo::datamodel::data_info::default_topology_data_label();
       return;
     }
 
@@ -99,6 +103,10 @@ namespace snemo {
         _PTD_label_ = configuration_.fetch_string("PTD_label");
       }
 
+      if (configuration_.has_key("TD_label")) {
+        _TD_label_ = configuration_.fetch_string("TD_label");
+      }
+
       _electron_range_.parse(configuration_, "electron");
       _positron_range_.parse(configuration_, "positron");
       _gamma_range_.parse(configuration_, "gamma");
@@ -106,6 +114,30 @@ namespace snemo {
       _undefined_range_.parse(configuration_, "undefined");
 
       _unassociated_calorimeter_hits_range_.parse(configuration_, "unassociated_calos");
+
+      if (configuration_.has_key ("internal_probability")) {
+        const double Pint = configuration_.fetch_real ("internal_probability");
+        DT_THROW_IF (Pint < 0 || Pint >1, std::logic_error, "Invalid internal probability (" << Pint << ") !");
+      _prob_int_ = Pint;
+      }
+
+      if (configuration_.has_key ("external_probability")) {
+        const double Pext = configuration_.fetch_real ("external_probability");
+        DT_THROW_IF (Pext < 0 || Pext >1, std::logic_error, "Invalid external probability (" << Pext << ") !");
+        _prob_ext_ = Pext;
+      }
+
+      if (configuration_.has_key ("delta_vertices_y")) {
+        const double delta_y = configuration_.fetch_real ("delta_vertices_y");
+        // DT_THROW_IF (delta_y < 0, std::logic_error, "Invalid internal probability (" << Pint << ") !");
+        _delta_vertices_y_ = std::abs(delta_y);
+      }
+
+      if (configuration_.has_key ("delta_vertices_z")) {
+        const double delta_z = configuration_.fetch_real ("delta_vertices_z");
+        // DT_THROW_IF (delta_z < 0, std::logic_error, "Invalid internal probability (" << Pint << ") !");
+        _delta_vertices_z_ = std::abs(delta_z);
+      }
 
       this->i_cut::_set_initialized(true);
       return;
@@ -168,6 +200,37 @@ namespace snemo {
 
       DT_LOG_TRACE(get_logging_priority(), "n_unasso_calos = " << n_unasso_calos);
 
+      if (! ER.has(_TD_label_)) {
+        DT_LOG_DEBUG(get_logging_priority(), "Event record has no '" << _TD_label_ << "' bank !");
+        return cut_returned;
+      }
+
+      std::cout << "-------------- DEBUG " << std::endl;
+
+      const snemo::datamodel::topology_data & TD
+        = ER.get<snemo::datamodel::topology_data>(_TD_label_);
+      const snemo::datamodel::base_topology_pattern & a_pattern = TD.get_pattern();
+
+      DT_THROW_IF(!a_pattern.has_pattern_id(), std::logic_error,
+                  "The topology pattern ID is missing ! ");
+      const std::string & a_pattern_id = a_pattern.get_pattern_id();
+
+      double internal_prob = datatools::invalid_real();
+      double external_prob = datatools::invalid_real();
+      double delta_vertices_y = datatools::invalid_real();
+      double delta_vertices_z = datatools::invalid_real();
+
+      if(a_pattern_id == snemo::datamodel::topology_2e_pattern::pattern_id()) {
+      const snemo::datamodel::topology_2e_pattern * ptr_2e_pattern
+        = dynamic_cast<const snemo::datamodel::topology_2e_pattern *>(&a_pattern);
+      // std::cout << "--------------pattern id " << a_pattern.get_pattern_id() << std::endl;
+
+      internal_prob    = ptr_2e_pattern->get_internal_probability();
+      external_prob    = ptr_2e_pattern->get_external_probability();
+      delta_vertices_y = ptr_2e_pattern->get_delta_vertices_y();
+      delta_vertices_z = ptr_2e_pattern->get_delta_vertices_z();
+    }
+
       bool check = true;
       if (! _electron_range_.check(nelectrons)) check = false;
       if (! _positron_range_.check(npositrons)) check = false;
@@ -179,6 +242,14 @@ namespace snemo {
           check = false;
           // std::cout << "not in range " << std::endl;
         }
+      if (internal_prob < _prob_int_)
+        check = false;
+      if (external_prob > _prob_ext_)
+        check = false;
+      if (delta_vertices_y > _delta_vertices_y_)
+        check = false;
+      if (delta_vertices_z > _delta_vertices_z_)
+        check = false;
 
       cut_returned = cuts::SELECTION_ACCEPTED;
       if (! check) {
