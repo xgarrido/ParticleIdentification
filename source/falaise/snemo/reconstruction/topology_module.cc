@@ -61,10 +61,6 @@ namespace snemo {
       _driver_.reset(new snemo::reconstruction::topology_driver);
       _driver_->initialize(setup_);
 
-      // datatools::properties TD_config;
-      // setup_.export_and_rename_starting_with(TD_config, std::string(a_driver_name + "."), "");
-      // _driver_->initialize(TD_config);
-
       _set_initialized(true);
       return;
     }
