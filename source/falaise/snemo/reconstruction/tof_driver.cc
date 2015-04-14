@@ -78,6 +78,29 @@ namespace snemo {
 
     int tof_driver::process(const snemo::datamodel::particle_track & pt1_,
                             const snemo::datamodel::particle_track & pt2_,
+                            double & proba_int_, double & proba_ext_)
+    {
+      int status = 0;
+
+      std::vector<double> v_proba_int = std::numeric_limits< std::vector<double> >::quiet_NaN();
+      std::vector<double> v_proba_ext = std::numeric_limits< std::vector<double> >::quiet_NaN();
+
+      status = _process_algo(pt1_, pt2_, v_proba_int, v_proba_ext);
+
+      proba_int_ = v_proba_int.front();
+      proba_ext_ = v_proba_ext.front();
+
+      if (status != 0) {
+        DT_LOG_ERROR(get_logging_priority(),
+                     "Computing TOF measurements with '" << tof_id() << "' algorithm has failed !");
+        return status;
+      }
+
+      return status;
+    }
+
+    int tof_driver::process(const snemo::datamodel::particle_track & pt1_,
+                            const snemo::datamodel::particle_track & pt2_,
                             std::vector<double> & proba_int_, std::vector<double> & proba_ext_)
     {
       int status = 0;

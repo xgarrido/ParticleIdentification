@@ -130,6 +130,23 @@ namespace snemo {
       return;
     }
 
+    int angle_measurement_driver::process(const snemo::datamodel::particle_track & pt_,
+                                          double & angle_)
+    {
+      int status = 0;
+      DT_THROW_IF(! is_initialized(), std::logic_error, "Driver '" << angle_measurement_id() << "' is already initialized !");
+
+      status = _process_algo(pt_, angle_);
+
+      if (status != 0) {
+        DT_LOG_ERROR(get_logging_priority(),
+                     "Computing topology quantities with '" << angle_measurement_id() << "' algorithm has failed !");
+        return status;
+      }
+
+      return status;
+    }
+
     int angle_measurement_driver::process(const snemo::datamodel::particle_track & pt1_,
                                           const snemo::datamodel::particle_track & pt2_,
                                           double & angle_)
@@ -146,6 +163,26 @@ namespace snemo {
       }
 
       return status;
+    }
+
+    int angle_measurement_driver::_process_algo(const snemo::datamodel::particle_track & pt_,
+                                                double & angle_)
+    {
+      DT_LOG_TRACE(get_logging_priority(), "Entering...");
+
+      datatools::invalidate(angle_);
+
+      if (snemo::datamodel::pid_utils::particle_is_gamma(pt_)) {
+        DT_LOG_WARNING(get_logging_priority(),
+                       "No angle can be deduced from a single gamma !");
+        return 1;
+      } else {
+        _process_single_charged(pt_, angle_);
+      }
+
+      DT_LOG_TRACE(get_logging_priority(), "Exiting...");
+
+      return 0;
     }
 
     int angle_measurement_driver::_process_algo(const snemo::datamodel::particle_track & pt1_,
@@ -169,6 +206,38 @@ namespace snemo {
 
       DT_LOG_TRACE(get_logging_priority(), "Exiting...");
 
+      return 0;
+    }
+
+    int angle_measurement_driver::_process_single_charged(const snemo::datamodel::particle_track & pt_,
+                                                          double & angle_)
+    {
+      const snemo::datamodel::particle_track::vertex_collection_type & the_vertices = pt_.get_vertices();
+      geomtools::vector_3d foil_vertex;
+      bool found_foil_vertex = false;
+      for(snemo::datamodel::particle_track::vertex_collection_type::const_iterator i_vtx = the_vertices.begin(); i_vtx<the_vertices.end(); ++i_vtx)
+        {
+          if(! snemo::datamodel::particle_track::vertex_is_on_source_foil(i_vtx->get()) )
+            continue;
+
+          found_foil_vertex = true;
+          foil_vertex = i_vtx->get().get_position();
+          break;
+        }
+      if(!found_foil_vertex)
+        DT_THROW_IF(true, std::logic_error,
+                    "Electron has no vertices on the calorimeter !");
+
+      const snemo::datamodel::tracker_trajectory & a_trajectory = pt_.get_trajectory();
+      const snemo::datamodel::base_trajectory_pattern & a_track_pattern = a_trajectory.get_pattern();
+      geomtools::vector_3d dir = a_track_pattern.get_shape().get_direction_on_curve(foil_vertex);
+
+      geomtools::vector_3d Ox;
+      Ox.setX(1);
+      Ox /= Ox.mag();
+      /*vectors already normalized*/
+      angle_ = std::acos(dir * Ox) / 2 / M_PI * 360;
+      std::cout << "  Angle is " << angle_ << std::endl;
       return 0;
     }
 
@@ -277,12 +346,12 @@ namespace snemo {
       geomtools::vector_3d dir2 = first_calo_vertex - foil_vertex_charged;
       dir2 /= dir2.mag();
 
-      std::cout << " dir1.mag() = " << dir1.mag() << std::endl;
-      std::cout << " dir2.mag() = " << dir2.mag() << std::endl;
-      std::cout << " dir1 * dir2 = " << dir1 * dir2 << std::endl;
+      // std::cout << " dir1.mag() = " << dir1.mag() << std::endl;
+      // std::cout << " dir2.mag() = " << dir2.mag() << std::endl;
+      // std::cout << " dir1 * dir2 = " << dir1 * dir2 << std::endl;
 
       angle_ = std::acos(dir1 * dir2) / 2 / M_PI * 360;
-      std::cout << "angle is " << angle_ << std::endl;
+      // std::cout << "angle is " << angle_ << std::endl;
       return 0;
     }
 

@@ -105,6 +105,10 @@ namespace snemo {
                   const snemo::datamodel::particle_track & pt2_,
                   std::vector<double> & proba_int, std::vector<double> & proba_ext);
 
+      int process(const snemo::datamodel::particle_track & pt1_,
+                  const snemo::datamodel::particle_track & pt2_,
+                  double & proba_int, double & proba_ext);
+
       /// Check if theclusterizer is initialized
       bool is_initialized() const;
 
