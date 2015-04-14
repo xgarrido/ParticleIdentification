@@ -101,6 +101,22 @@ namespace snemo {
       return _DeltaV_.delta_vertices_z;
     }
 
+    bool topology_1e_pattern::has_angle() const
+    {
+      return datatools::is_valid(_angle_.angle);
+    }
+
+    void topology_1e_pattern::set_angle(const double angle_)
+    {
+      _angle_.angle = angle_;
+      return;
+    }
+
+    double topology_1e_pattern::get_angle() const
+    {
+      return _angle_.angle;
+    }
+
     void topology_2e_pattern::tree_dump(std::ostream      & out_,
                                         const std::string & title_,
                                         const std::string & indent_,
@@ -118,6 +134,8 @@ namespace snemo {
            << "Delta vertices Y : " << get_delta_vertices_y()/CLHEP::mm << " mm" << std::endl;
       out_ << indent << datatools::i_tree_dumpable::tag
            << "Delta vertices Z : " << get_delta_vertices_z()/CLHEP::mm << " mm" << std::endl;
+      out_ << indent << datatools::i_tree_dumpable::tag
+           << "Angle : " << get_angle() << std::endl;
 
       return;
     }

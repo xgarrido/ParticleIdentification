@@ -38,6 +38,11 @@ namespace snemo {
         double delta_vertices_z;
       };
 
+      struct angle_measurement
+      {
+        double angle;
+      };
+
       // /// Typedef for pairing particles
       // typedef std::pair<snemo::datamodel::particle_track::handle_type,
       //                   snemo::datamodel::particle_track::handle_type> particle_pair_type;
@@ -93,6 +98,15 @@ namespace snemo {
       /// Return delta vertices z
       double get_delta_vertices_z() const;
 
+      /// Check angle validity
+      bool has_angle() const;
+
+      /// Set angle
+      void set_angle(const double & angle_);
+
+      /// Return internal probability
+      double get_angle() const;
+
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,
                              const std::string & title_  = "",
@@ -103,6 +117,7 @@ namespace snemo {
 
       TOF_measurement _tof_;
       delta_vertices_measurement _DeltaV_;
+      angle_measurement _angle_;
 
       DATATOOLS_SERIALIZATION_DECLARATION();
 
