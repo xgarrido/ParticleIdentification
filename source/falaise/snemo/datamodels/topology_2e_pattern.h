@@ -84,7 +84,7 @@ namespace snemo {
       bool has_delta_vertices_y() const;
 
       /// Set delta vertices y
-      void set_delta_vertices_y(const double & prob_);
+      void set_delta_vertices_y(const double & delta_vertices_y_);
 
       /// Return delta vertices y
       double get_delta_vertices_y() const;
@@ -93,7 +93,7 @@ namespace snemo {
       bool has_delta_vertices_z() const;
 
       /// Set delta vertices z
-      void set_delta_vertices_z(const double & prob_);
+      void set_delta_vertices_z(const double & delta_vertices_z_);
 
       /// Return delta vertices z
       double get_delta_vertices_z() const;
