@@ -10,6 +10,14 @@
 // - Bayeux/datatools:
 #include <datatools/archives_instantiation.h>
 
+/******************************************
+ * snemo::datamodel::topology_measurement *
+ ******************************************/
+#include <falaise/snemo/datamodels/topology_measurement.ipp>
+DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snemo::datamodel::TOF_measurement)
+BOOST_CLASS_EXPORT_IMPLEMENT(snemo::datamodel::TOF_measurement)
+
+
 /***********************************
  * snemo::datamodel::topology_data *
  ***********************************/
@@ -18,6 +26,9 @@
 #include <falaise/snemo/datamodels/topology_2e_pattern.ipp>
 DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snemo::datamodel::topology_2e_pattern)
 BOOST_CLASS_EXPORT_IMPLEMENT(snemo::datamodel::topology_2e_pattern)
+#include <falaise/snemo/datamodels/topology_2eNg_pattern.ipp>
+DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snemo::datamodel::topology_2eNg_pattern)
+BOOST_CLASS_EXPORT_IMPLEMENT(snemo::datamodel::topology_2eNg_pattern)
 #include <falaise/snemo/datamodels/topology_1e1g_pattern.ipp>
 DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snemo::datamodel::topology_1e1g_pattern)
 BOOST_CLASS_EXPORT_IMPLEMENT(snemo::datamodel::topology_1e1g_pattern)

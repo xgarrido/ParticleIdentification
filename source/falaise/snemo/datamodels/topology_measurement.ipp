@@ -4,6 +4,9 @@
 #ifndef FALAISE_SNEMO_DATAMODEL_TOPOLOGY_MEASUREMENT_IPP
 #define FALAISE_SNEMO_DATAMODEL_TOPOLOGY_MEASUREMENT_IPP 1
 
+// Ourselves:
+#include <falaise/snemo/datamodels/topology_measurement.h>
+
 namespace snemo {
 
   namespace datamodel {
