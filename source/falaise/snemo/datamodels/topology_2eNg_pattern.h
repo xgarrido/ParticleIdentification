@@ -1,13 +1,13 @@
-/// \file falaise/snemo/datamodels/topology_2e1g_pattern.h
+/// \file falaise/snemo/datamodels/topology_2eNg_pattern.h
 /* Author(s) :    François Mauger <mauger@lpccaen.in2p3.fr>
  * Creation date: 2012-03-19
  * Last modified: 2014-01-27
  *
- * Description: The 2e1g class of trajectory patterns
+ * Description: The 2eNg class of trajectory patterns
  */
 
-#ifndef FALAISE_SNEMO_DATAMODEL_TOPOLOGY_2E1G_PATTERN_H
-#define FALAISE_SNEMO_DATAMODEL_TOPOLOGY_2E1G_PATTERN_H 1
+#ifndef FALAISE_SNEMO_DATAMODEL_TOPOLOGY_2ENG_PATTERN_H
+#define FALAISE_SNEMO_DATAMODEL_TOPOLOGY_2ENG_PATTERN_H 1
 
 // Standard library:
 #include <string>
@@ -21,8 +21,8 @@ namespace snemo {
 
   namespace datamodel {
 
-    /// \brief The 2e1g class of reconstructed topology
-    class topology_2e1g_pattern : public base_topology_pattern
+    /// \brief The 2eNg class of reconstructed topology
+    class topology_2eNg_pattern : public base_topology_pattern
     {
     public:
 
@@ -57,10 +57,10 @@ namespace snemo {
       static const std::string & pattern_id();
 
       /// Constructor
-      topology_2e1g_pattern();
+      topology_2eNg_pattern();
 
       /// Destructor
-      virtual ~topology_2e1g_pattern();
+      virtual ~topology_2eNg_pattern();
 
       // /// Check internal probability validity
       // bool has_internal_probability() const;
@@ -107,6 +107,12 @@ namespace snemo {
       /// Return internal probability
       double get_angle() const;
 
+      /// Set number of gammas
+      void set_number_of_gammas(const size_t & ngammas_);
+
+      /// Return internal probability
+      size_t get_number_of_gammas() const;
+
       /// Return a non mutable reference to the TOF dictionary
       const TOF_dict_type & get_TOF_dict() const;
 
@@ -125,6 +131,7 @@ namespace snemo {
       delta_vertices_measurement _DeltaV_;
       angle_measurement _angle_;
       TOF_dict_type _tof_dict_;
+      size_t _Ngammas_;
 
       DATATOOLS_SERIALIZATION_DECLARATION();
 
@@ -135,10 +142,10 @@ namespace snemo {
 } // end of namespace snemo
 
 #include <boost/serialization/export.hpp>
-BOOST_CLASS_EXPORT_KEY2(snemo::datamodel::topology_2e1g_pattern,
-                        "snemo::datamodel::topology_2e1g_pattern")
+BOOST_CLASS_EXPORT_KEY2(snemo::datamodel::topology_2eNg_pattern,
+                        "snemo::datamodel::topology_2eNg_pattern")
 
-#endif // FALAISE_SNEMO_DATAMODEL_TOPOLOGY_2E1G_PATTERN_H
+#endif // FALAISE_SNEMO_DATAMODEL_TOPOLOGY_2ENG_PATTERN_H
 
 /*
 ** Local Variables: --

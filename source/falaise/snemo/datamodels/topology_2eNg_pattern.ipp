@@ -1,11 +1,11 @@
 // -*- mode: c++ ; -*-
-/// \file falaise/snemo/datamodels/topology_2e1g_pattern.ipp
+/// \file falaise/snemo/datamodels/topology_2eNg_pattern.ipp
 
-#ifndef FALAISE_SNEMO_DATAMODEL_TOPOLOGY_2E1G_PATTERN_IPP
-#define FALAISE_SNEMO_DATAMODEL_TOPOLOGY_2E1G_PATTERN_IPP 1
+#ifndef FALAISE_SNEMO_DATAMODEL_TOPOLOGY_2ENG_PATTERN_IPP
+#define FALAISE_SNEMO_DATAMODEL_TOPOLOGY_2ENG_PATTERN_IPP 1
 
 // Ourselves:
-#include <falaise/snemo/datamodels/topology_2e1g_pattern.h>
+#include <falaise/snemo/datamodels/topology_2eNg_pattern.h>
 
 // Third party:
 // - Boost:
@@ -21,7 +21,7 @@ namespace snemo {
 
     /// Serialization method
     template<class Archive>
-    void topology_2e1g_pattern::serialize(Archive & ar, const unsigned int /* version */)
+    void topology_2eNg_pattern::serialize(Archive & ar, const unsigned int /* version */)
     {
       ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(base_topology_pattern);
       // ar & boost::serialization::make_nvp("tof", _tof_);
@@ -33,4 +33,4 @@ namespace snemo {
 
 } // end of namespace snemo
 
-#endif // FALAISE_SNEMO_DATAMODEL_TOPOLOGY_2E1G_PATTERN_IPP
+#endif // FALAISE_SNEMO_DATAMODEL_TOPOLOGY_2ENG_PATTERN_IPP

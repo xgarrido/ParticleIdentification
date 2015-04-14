@@ -16,7 +16,7 @@
 #include <falaise/snemo/datamodels/topology_2e_pattern.h>
 #include <falaise/snemo/datamodels/topology_1e1p_pattern.h>
 #include <falaise/snemo/datamodels/topology_1e1g_pattern.h>
-#include <falaise/snemo/datamodels/topology_2e1g_pattern.h>
+#include <falaise/snemo/datamodels/topology_2eNg_pattern.h>
 
 #include <snemo/reconstruction/tof_driver.h>
 #include <snemo/reconstruction/delta_vertices_driver.h>
@@ -172,8 +172,12 @@ namespace snemo {
       else if (a_classification == "1e1g") {
         this->_fill_1e1g_topology_(ptd_, td_);
       }
-      else if (a_classification == "2e1g") {
-        this->_fill_2e1g_topology_(ptd_, td_);
+      else if (a_classification == "2e1g" ||
+               a_classification == "2e2g" ||
+               a_classification == "2e3g" ||
+               a_classification == "2e4g" ||
+               a_classification == "2e5g") {
+        this->_fill_2eNg_topology_(ptd_, td_);
       } else {
         DT_LOG_WARNING(get_logging_priority(),
                        "Event classification '" << a_classification << "' unsupported !");
@@ -352,12 +356,12 @@ namespace snemo {
       return;
     }
 
-    void topology_driver::_fill_2e1g_topology_(const snemo::datamodel::particle_track_data & ptd_,
+    void topology_driver::_fill_2eNg_topology_(const snemo::datamodel::particle_track_data & ptd_,
                                                snemo::datamodel::topology_data & td_)
     {
       snemo::datamodel::topology_data::handle_pattern h_pattern;
-      snemo::datamodel::topology_2e1g_pattern * t2e1gp = new snemo::datamodel::topology_2e1g_pattern;
-      h_pattern.reset(t2e1gp);
+      snemo::datamodel::topology_2eNg_pattern * t2eNgp = new snemo::datamodel::topology_2eNg_pattern;
+      h_pattern.reset(t2eNgp);
       td_.set_pattern_handle(h_pattern);
 
       double delta_vertices_y = datatools::invalid_real();
@@ -366,7 +370,11 @@ namespace snemo {
       const snemo::datamodel::particle_track_data::particle_collection_type & the_particles
         = ptd_.get_particles();
 
-      snemo::datamodel::topology_2e1g_pattern::TOF_dict_type & tof_dict = t2e1gp->grab_TOF_dict();
+      snemo::datamodel::particle_track_data::particle_collection_type gamma_particles;
+      t2eNgp->set_number_of_gammas(ptd_.fetch_particles(gamma_particles,
+                                        snemo::datamodel::particle_track::NEUTRAL));
+
+      snemo::datamodel::topology_2eNg_pattern::TOF_dict_type & tof_dict = t2eNgp->grab_TOF_dict();
 
       for (snemo::datamodel::particle_track_data::particle_collection_type::const_iterator i_particle = the_particles.begin(); i_particle != boost::prior(the_particles.end()); ++i_particle) {
         for (snemo::datamodel::particle_track_data::particle_collection_type::const_iterator j_particle = boost::next(i_particle); j_particle != the_particles.end(); ++j_particle) {
@@ -374,9 +382,9 @@ namespace snemo {
           if (_DVD_) _DVD_->process(i_particle->get(), j_particle->get(), delta_vertices_y, delta_vertices_z);
 
           if(datatools::is_valid(delta_vertices_y))
-            t2e1gp->set_delta_vertices_y(delta_vertices_y);
+            t2eNgp->set_delta_vertices_y(delta_vertices_y);
           if(datatools::is_valid(delta_vertices_z))
-            t2e1gp->set_delta_vertices_z(delta_vertices_z);
+            t2eNgp->set_delta_vertices_z(delta_vertices_z);
 
           std::vector<double> proba_int = std::numeric_limits< std::vector<double> >::quiet_NaN();
           std::vector<double> proba_ext = std::numeric_limits< std::vector<double> >::quiet_NaN();
@@ -387,17 +395,17 @@ namespace snemo {
           hPT_j = *j_particle;
           // hPT_i.grab() = i_particle->get();
           // hPT_j.grab() = j_particle->get();
-          // snemo::datamodel::topology_2e1g_pattern::particle_pair_type pt_pair = std::make_pair(hPT_i.grab(),hPT_j.grab());
+          // snemo::datamodel::topology_2eNg_pattern::particle_pair_type pt_pair = std::make_pair(hPT_i.grab(),hPT_j.grab());
 
-          snemo::datamodel::topology_2e1g_pattern::particle_pair_type pt_pair = std::make_pair((*i_particle),(*j_particle));
+          snemo::datamodel::topology_2eNg_pattern::particle_pair_type pt_pair = std::make_pair((*i_particle),(*j_particle));
           std::cout << "i j " << *(&(*i_particle)) << "  " << &(*j_particle) << std::endl;
 
           {
-            snemo::datamodel::topology_2e1g_pattern::TOF_measurement dummy;
+            snemo::datamodel::topology_2eNg_pattern::TOF_measurement dummy;
             tof_dict.insert(std::make_pair(pt_pair,dummy));
           }
 
-          snemo::datamodel::topology_2e1g_pattern::TOF_measurement & tof_measurement = tof_dict[pt_pair];
+          snemo::datamodel::topology_2eNg_pattern::TOF_measurement & tof_measurement = tof_dict[pt_pair];
           tof_measurement.internal_probability = proba_int;
           tof_measurement.external_probability = proba_ext;
 
@@ -409,7 +417,7 @@ namespace snemo {
               _AMD_->process(i_particle->get(), j_particle->get(), angle);
           }
 
-          snemo::datamodel::topology_2e1g_pattern::TOF_measurement & test = tof_dict[pt_pair];
+          snemo::datamodel::topology_2eNg_pattern::TOF_measurement & test = tof_dict[pt_pair];
 
           for(size_t i=0; i<test.internal_probability.size();++i)
             std::cout << "Internal probability : " << test.internal_probability.at(i)  << std::endl;
@@ -423,25 +431,25 @@ namespace snemo {
           // for(size_t i=0; i<proba_int.size();++i)
           //   std::cout << "Internal probability : " << proba_int.at(i) << std::endl;
 
-          // std::map<topology_2e1g_pattern::particle_pair_type, topology_2e1g_pattern::TOF_measurement> & toto
+          // std::map<topology_2eNg_pattern::particle_pair_type, topology_2eNg_pattern::TOF_measurement> & toto
           //   = ;
 
           // if(proba_int == proba_int && proba_ext == proba_ext) {
-          //   t2e1gp->set_internal_probability(proba_int);
-          //   t2e1gp->set_external_probability(proba_ext);
+          //   t2eNgp->set_internal_probability(proba_int);
+          //   t2eNgp->set_external_probability(proba_ext);
 
           // }
           // tof_dict[pt_pair]
         }
       }
 
-      snemo::datamodel::topology_2e1g_pattern::TOF_dict_type::const_iterator it = t2e1gp->grab_TOF_dict().begin();
-      snemo::datamodel::topology_2e1g_pattern::TOF_measurement test = it->second;
+      snemo::datamodel::topology_2eNg_pattern::TOF_dict_type::const_iterator it = t2eNgp->grab_TOF_dict().begin();
+      snemo::datamodel::topology_2eNg_pattern::TOF_measurement test = it->second;
 
-      std::cout << " ------ check fill " << t2e1gp->grab_TOF_dict().size() << std::endl;
+      std::cout << " ------ check fill " << t2eNgp->grab_TOF_dict().size() << std::endl;
       std::cout << " --------- content " << test.internal_probability.at(0) << std::endl;
 
-      //      t2e1gp->tree_dump();
+      //      t2eNgp->tree_dump();
       return;
     }
 

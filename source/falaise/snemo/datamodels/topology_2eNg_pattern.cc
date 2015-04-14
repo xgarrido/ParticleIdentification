@@ -1,26 +1,26 @@
-/** \file falaise/snemo/datamodels/topology_2e1g_pattern.cc
+/** \file falaise/snemo/datamodels/topology_2eNg_pattern.cc
  */
 
 // Ourselves:
-#include <falaise/snemo/datamodels/topology_2e1g_pattern.h>
+#include <falaise/snemo/datamodels/topology_2eNg_pattern.h>
 
 namespace snemo {
 
   namespace datamodel {
 
     // Serial tag for datatools::i_serializable interface :
-    DATATOOLS_SERIALIZATION_SERIAL_TAG_IMPLEMENTATION(topology_2e1g_pattern,
-                                                      "snemo::datamodel::topology_2e1g_pattern")
+    DATATOOLS_SERIALIZATION_SERIAL_TAG_IMPLEMENTATION(topology_2eNg_pattern,
+                                                      "snemo::datamodel::topology_2eNg_pattern")
 
     // static
-    const std::string & topology_2e1g_pattern::pattern_id()
+    const std::string & topology_2eNg_pattern::pattern_id()
     {
-      static const std::string _id("2e1g");
+      static const std::string _id("2eNg");
       return _id;
     }
 
-    topology_2e1g_pattern::topology_2e1g_pattern()
-      : base_topology_pattern(topology_2e1g_pattern::pattern_id())
+    topology_2eNg_pattern::topology_2eNg_pattern()
+      : base_topology_pattern(topology_2eNg_pattern::pattern_id())
     {
       // _tof_.internal_probability = std::numeric_limits< std::vector<double> >::quiet_NaN();
       // _tof_.external_probability = std::numeric_limits< std::vector<double> >::quiet_NaN();
@@ -29,17 +29,17 @@ namespace snemo {
       return;
     }
 
-    topology_2e1g_pattern::~topology_2e1g_pattern()
+    topology_2eNg_pattern::~topology_2eNg_pattern()
     {
       return;
     }
 
-    // bool topology_2e1g_pattern::has_TOF_measurement() const
+    // bool topology_2eNg_pattern::has_TOF_measurement() const
     // {
     //   return has_internal_probability() && has_external_probability();
     // }
 
-    // bool topology_2e1g_pattern::has_internal_probability() const
+    // bool topology_2eNg_pattern::has_internal_probability() const
     // {
     //   for(std::vector<double>::const_iterator i_proba = _tof_.internal_probability.begin();
     //       i_proba != _tof_.internal_probability.end(); ++i_proba)
@@ -49,18 +49,18 @@ namespace snemo {
     //   return true;
     // }
 
-    // void topology_2e1g_pattern::set_internal_probability(const std::vector<double> prob_)
+    // void topology_2eNg_pattern::set_internal_probability(const std::vector<double> prob_)
     // {
     //   _tof_.internal_probability = prob_;
     //   return;
     // }
 
-    // std::vector<double> topology_2e1g_pattern::get_internal_probability() const
+    // std::vector<double> topology_2eNg_pattern::get_internal_probability() const
     // {
     //   return _tof_.internal_probability;
     // }
 
-    // bool topology_2e1g_pattern::has_external_probability() const
+    // bool topology_2eNg_pattern::has_external_probability() const
     // {
     //   for(std::vector<double>::const_iterator i_proba = _tof_.external_probability.begin();
     //       i_proba != _tof_.external_probability.end(); ++i_proba)
@@ -70,77 +70,88 @@ namespace snemo {
     //   return true;
     // }
 
-    // void topology_2e1g_pattern::set_external_probability(const std::vector<double> prob_)
+    // void topology_2eNg_pattern::set_external_probability(const std::vector<double> prob_)
     // {
     //   _tof_.external_probability = prob_;
     //   return;
     // }
 
-    // std::vector<double> topology_2e1g_pattern::get_external_probability() const
+    // std::vector<double> topology_2eNg_pattern::get_external_probability() const
     // {
     //   return _tof_.external_probability;
     // }
 
-    bool topology_2e1g_pattern::has_delta_vertices_y() const
+    bool topology_2eNg_pattern::has_delta_vertices_y() const
     {
       return datatools::is_valid(_DeltaV_.delta_vertices_y);
     }
 
-    void topology_2e1g_pattern::set_delta_vertices_y(const double & deltaV_y_)
+    void topology_2eNg_pattern::set_delta_vertices_y(const double & deltaV_y_)
     {
       _DeltaV_.delta_vertices_y = deltaV_y_;
       return;
     }
 
-    double topology_2e1g_pattern::get_delta_vertices_y() const
+    double topology_2eNg_pattern::get_delta_vertices_y() const
     {
       return _DeltaV_.delta_vertices_y;
     }
 
-    bool topology_2e1g_pattern::has_delta_vertices_z() const
+    bool topology_2eNg_pattern::has_delta_vertices_z() const
     {
       return datatools::is_valid(_DeltaV_.delta_vertices_z);
     }
 
-    void topology_2e1g_pattern::set_delta_vertices_z(const double & deltaV_z_)
+    void topology_2eNg_pattern::set_delta_vertices_z(const double & deltaV_z_)
     {
       _DeltaV_.delta_vertices_z = deltaV_z_;
       return;
     }
 
-    double topology_2e1g_pattern::get_delta_vertices_z() const
+    double topology_2eNg_pattern::get_delta_vertices_z() const
     {
       return _DeltaV_.delta_vertices_z;
     }
 
-    bool topology_2e1g_pattern::has_angle() const
+    bool topology_2eNg_pattern::has_angle() const
     {
       return datatools::is_valid(_angle_.angle);
     }
 
-    void topology_2e1g_pattern::set_angle(const double & angle_)
+    void topology_2eNg_pattern::set_angle(const double & angle_)
     {
       _angle_.angle = angle_;
       return;
     }
 
-    double topology_2e1g_pattern::get_angle() const
+    double topology_2eNg_pattern::get_angle() const
     {
       return _angle_.angle;
     }
 
-    // bool topology_2e1g_pattern::has_particle_pair() const
+    void topology_2eNg_pattern::set_number_of_gammas(const size_t & ngammas_)
+    {
+      _Ngammas_ = ngammas_;
+      return;
+    }
+
+    size_t topology_2eNg_pattern::get_number_of_gammas() const
+    {
+      return _Ngammas_;
+    }
+
+    // bool topology_2eNg_pattern::has_particle_pair() const
     // {
     //   return (_tof_.particle_pair.first.get().has_track_id &&
     //           _tof_.particle_pair.second.get().has_track_id);
     // }
 
-    // particle_pair_type topology_2e1g_pattern::get_particle_pair() const
+    // particle_pair_type topology_2eNg_pattern::get_particle_pair() const
     // {
     //   return _tof_.particle_pair;
     // }
 
-    // void topology_2e1g_pattern::set_particle_pair(const snemo::datamodel::particle_track & pt1_,
+    // void topology_2eNg_pattern::set_particle_pair(const snemo::datamodel::particle_track & pt1_,
     //                                               const snemo::datamodel::particle_track & pt2_) const
     // {
     //   snemo::datamodel::particle_track::handle_type hpt1;
@@ -150,31 +161,31 @@ namespace snemo {
     //   return _tof_.particle_pair = std::make_pair (hpt1,hpt2);
     // }
 
-    // void topology_2e1g_pattern::set_tof_dict(const snemo::datamodel::particle_track & pt1_,
+    // void topology_2eNg_pattern::set_tof_dict(const snemo::datamodel::particle_track & pt1_,
     //                                          const snemo::datamodel::particle_track & pt2_,
-    //                                          const topology_2e1g_pattern::TOF_measurement & tof_) const
+    //                                          const topology_2eNg_pattern::TOF_measurement & tof_) const
     // {
     //   snemo::datamodel::particle_track::handle_type hpt1;
     //   snemo::datamodel::particle_track::handle_type hpt2;
     //   hpt1.grab () = pt1_;
     //   hpt2.grab () = pt2_;
-    //   topology_2e1g_pattern::particle_pair_type pt_pair = std::make_pair (hpt1,hpt2);
-    //   _tof_dict_.insert(std::pair<topology_2e1g_pattern::particle_pair_type, double>(pt_pair,tof_));
+    //   topology_2eNg_pattern::particle_pair_type pt_pair = std::make_pair (hpt1,hpt2);
+    //   _tof_dict_.insert(std::pair<topology_2eNg_pattern::particle_pair_type, double>(pt_pair,tof_));
     //   return;
     // }
 
 
-    const topology_2e1g_pattern::TOF_dict_type & topology_2e1g_pattern::get_TOF_dict() const
+    const topology_2eNg_pattern::TOF_dict_type & topology_2eNg_pattern::get_TOF_dict() const
     {
       return _tof_dict_;
     }
 
-    topology_2e1g_pattern::TOF_dict_type & topology_2e1g_pattern::grab_TOF_dict()
+    topology_2eNg_pattern::TOF_dict_type & topology_2eNg_pattern::grab_TOF_dict()
     {
       return _tof_dict_;
     }
 
-    void topology_2e1g_pattern::tree_dump(std::ostream      & out_,
+    void topology_2eNg_pattern::tree_dump(std::ostream      & out_,
                                         const std::string & title_,
                                         const std::string & indent_,
                                         bool inherit_) const
