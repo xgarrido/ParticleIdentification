@@ -14,44 +14,19 @@
 
 // This project:
 #include <falaise/snemo/datamodels/base_topology_pattern.h>
-#include <falaise/snemo/datamodels/particle_track.h>
-#include <falaise/snemo/datamodels/topology_data.h>
+#include <falaise/snemo/datamodels/topology_measurement.h>
 
 namespace snemo {
 
   namespace datamodel {
 
-    /// \brief The 2eNg class of reconstructed topology
+    /// \brief The 2 election - N gammas class of reconstructed topology
     class topology_2eNg_pattern : public base_topology_pattern
     {
     public:
 
-      struct TOF_measurement
-      {
-        std::vector <double> internal_probability;
-        std::vector <double> external_probability;
-      };
-
-      struct delta_vertices_measurement
-      {
-        double delta_vertices_y;
-        double delta_vertices_z;
-      };
-
-      struct angle_measurement
-      {
-        double angle;
-      };
-
-      /// Typedef for pairing particles
-      typedef std::pair<snemo::datamodel::particle_track::handle_type,
-                        snemo::datamodel::particle_track::handle_type> particle_pair_type;
-
       /// Typedef for TOF dictionnary
-      typedef std::map<particle_pair_type, TOF_measurement> TOF_dict_type;
-
-      // /// Typedef for TOF dictionnary
-      // typedef std::map<particle_pair_type, delta_vertices_measurement> delta_vertices_dict_type;
+      typedef std::vector<TOF_measurement> TOF_collection_type;
 
       /// Return pattern identifier of the pattern
       static const std::string & pattern_id();
@@ -62,62 +37,17 @@ namespace snemo {
       /// Destructor
       virtual ~topology_2eNg_pattern();
 
-      // /// Check internal probability validity
-      // bool has_internal_probability() const;
-
-      // /// Set internal probability
-      // void set_internal_probability(const std::vector<double> prob_);
-
-      // /// Return internal probability
-      // std::vector<double> get_internal_probability() const;
-
-      // /// Check internal probability validity
-      // bool has_external_probability() const;
-
-      // /// Set external probability
-      // void set_external_probability(const std::vector<double> prob_);
-
-      // /// Return external probability
-      // std::vector <double> get_external_probability() const;
-
-      /// Check delta vertices y validity
-      bool has_delta_vertices_y() const;
-
-      /// Set delta vertices y
-      void set_delta_vertices_y(const double & delta_vertices_y_);
-
-      /// Return delta vertices y
-      double get_delta_vertices_y() const;
-
-      /// Check delta vertices z validity
-      bool has_delta_vertices_z() const;
-
-      /// Set delta vertices z
-      void set_delta_vertices_z(const double & delta_vertices_z_);
-
-      /// Return delta vertices z
-      double get_delta_vertices_z() const;
-
-      /// Check angle validity
-      bool has_angle() const;
-
-      /// Set angle
-      void set_angle(const double & angle_);
-
-      /// Return internal probability
-      double get_angle() const;
-
       /// Set number of gammas
-      void set_number_of_gammas(const size_t & ngammas_);
+      void set_number_of_gammas(const size_t ngammas_);
 
       /// Return internal probability
       size_t get_number_of_gammas() const;
 
-      /// Return a non mutable reference to the TOF dictionary
-      const TOF_dict_type & get_TOF_dict() const;
+      /// Return a non mutable reference to the TOF collection
+      const TOF_collection_type & get_TOF_collection() const;
 
       /// Return a mutable reference to the TOF dictionary
-      TOF_dict_type & grab_TOF_dict();
+      TOF_collection_type & grab_TOF_collection();
 
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,
@@ -127,11 +57,8 @@ namespace snemo {
 
     private:
 
-      // TOF_measurement _tof_;
-      delta_vertices_measurement _DeltaV_;
-      angle_measurement _angle_;
-      TOF_dict_type _tof_dict_;
-      size_t _Ngammas_;
+      size_t _number_of_gammas_;
+      TOF_collection_type _tofs_;
 
       DATATOOLS_SERIALIZATION_DECLARATION();
 

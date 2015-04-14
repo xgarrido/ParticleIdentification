@@ -364,25 +364,25 @@ namespace snemo {
       h_pattern.reset(t2eNgp);
       td_.set_pattern_handle(h_pattern);
 
-      double delta_vertices_y = datatools::invalid_real();
-      double delta_vertices_z = datatools::invalid_real();
+      // double delta_vertices_y = datatools::invalid_real();
+      // double delta_vertices_z = datatools::invalid_real();
 
-      const snemo::datamodel::particle_track_data::particle_collection_type & the_particles
-        = ptd_.get_particles();
+      // const snemo::datamodel::particle_track_data::particle_collection_type & the_particles
+      //   = ptd_.get_particles();
 
-      // C'est pas bon !
-      snemo::datamodel::particle_track_data::particle_collection_type gamma_particles;
-      t2eNgp->set_number_of_gammas(ptd_.fetch_particles(gamma_particles,
-                                                        snemo::datamodel::particle_track::NEUTRAL));
+      // // C'est pas bon !
+      // snemo::datamodel::particle_track_data::particle_collection_type gamma_particles;
+      // t2eNgp->set_number_of_gammas(ptd_.fetch_particles(gamma_particles,
+      //                                                   snemo::datamodel::particle_track::NEUTRAL));
 
-      snemo::datamodel::topology_2eNg_pattern::TOF_dict_type & tof_dict = t2eNgp->grab_TOF_dict();
+      // snemo::datamodel::topology_2eNg_pattern::TOF_dict_type & tof_dict = t2eNgp->grab_TOF_dict();
 
-      for (snemo::datamodel::particle_track_data::particle_collection_type::const_iterator
-             i_particle = the_particles.begin();
-           i_particle != boost::prior(the_particles.end()); ++i_particle) {
-        for (snemo::datamodel::particle_track_data::particle_collection_type::const_iterator
-               j_particle = boost::next(i_particle);
-             j_particle != the_particles.end(); ++j_particle) {
+      // for (snemo::datamodel::particle_track_data::particle_collection_type::const_iterator
+      //        i_particle = the_particles.begin();
+      //      i_particle != boost::prior(the_particles.end()); ++i_particle) {
+      //   for (snemo::datamodel::particle_track_data::particle_collection_type::const_iterator
+      //          j_particle = boost::next(i_particle);
+      //        j_particle != the_particles.end(); ++j_particle) {
 
           // const snemo::datamodel::particle_track::handle_type & ht1 = *i_particle;
           // const snemo::datamodel::particle_track::handle_type & ht2 = *j_particle;
@@ -435,8 +435,8 @@ namespace snemo {
 
           // }
           // tof_dict[pt_pair]
-        }
-      }
+      //   }
+      // }
 
       // snemo::datamodel::topology_2eNg_pattern::TOF_dict_type::const_iterator it = t2eNgp->grab_TOF_dict().begin();
       // snemo::datamodel::topology_2eNg_pattern::TOF_measurement test = it->second;
