@@ -42,6 +42,27 @@ namespace snemo {
       return _external_probabilities_;
     }
 
+    bool TOF_measurement::has_particle_tracks() const
+    {
+      return true;
+    }
+
+    const TOF_measurement::particle_pair_type & TOF_measurement::get_particle_tracks() const
+    {
+      return _particle_track_pair_;
+    }
+
+    TOF_measurement::particle_pair_type & TOF_measurement::grab_particle_tracks()
+    {
+      return _particle_track_pair_;
+    }
+
+    void TOF_measurement::set_particle_tracks(const snemo::datamodel::particle_track::handle_type & hpt1_,
+                                              const snemo::datamodel::particle_track::handle_type & hpt2_)
+    {
+      _particle_track_pair_ = std::make_pair(hpt1_, hpt2_);
+      return;
+    }
   } // end of namespace datamodel
 
 } // end of namespace snemo

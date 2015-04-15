@@ -17,6 +17,7 @@ namespace snemo {
     {
       ar_ & boost::serialization::make_nvp("internal_probabilities", _internal_probabilities_);
       ar_ & boost::serialization::make_nvp("external_probabilities", _external_probabilities_);
+      ar_ & boost::serialization::make_nvp("particle_track_pair", _particle_track_pair_);
       return;
     }
 

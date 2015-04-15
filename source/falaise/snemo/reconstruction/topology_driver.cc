@@ -385,7 +385,8 @@ namespace snemo {
             snemo::datamodel::TOF_measurement dummy;
             tofs.push_back(dummy);
           }
-          snemo::datamodel::TOF_measurement & a_tof = tofs.back();;
+          snemo::datamodel::TOF_measurement & a_tof = tofs.back();
+          a_tof.set_particle_tracks(*i_particle, *j_particle);
           if (_TOFD_) _TOFD_->process(i_particle->get(), j_particle->get(),
                                       a_tof.grab_internal_probabilities(),
                                       a_tof.grab_external_probabilities());

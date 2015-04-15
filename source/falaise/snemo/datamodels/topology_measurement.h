@@ -15,6 +15,8 @@
 // Third party:
 // - Bayeux/datatools:
 #include <datatools/i_serializable.h>
+// - Falaise:
+#include <falaise/snemo/datamodels/particle_track.h>
 
 namespace snemo {
 
@@ -27,6 +29,10 @@ namespace snemo {
 
       /// Typedef for probability type
       typedef std::vector<double> probability_type;
+
+      /// Typedef for pair of particle tracks
+      typedef std::pair<snemo::datamodel::particle_track::handle_type,
+                        snemo::datamodel::particle_track::handle_type> particle_pair_type;
 
       /// Constructor
       TOF_measurement();
@@ -46,10 +52,24 @@ namespace snemo {
       /// Get a mutable reference to external probabilities
       probability_type & grab_external_probabilities();
 
+      /// Check if particle tracks are associated
+      bool has_particle_tracks() const;
+
+      /// Get a non-mutable reference to particles tracks
+      const particle_pair_type & get_particle_tracks() const;
+
+      /// Get a mutable reference to particles tracks
+      particle_pair_type & grab_particle_tracks();
+
+      /// Attach a cluster by handle
+      void set_particle_tracks(const snemo::datamodel::particle_track::handle_type & hpt1_,
+                               const snemo::datamodel::particle_track::handle_type & hpt2_);
+
     private:
 
       probability_type _internal_probabilities_;
       probability_type _external_probabilities_;
+      particle_pair_type _particle_track_pair_;
 
       DATATOOLS_SERIALIZATION_DECLARATION();
    };
