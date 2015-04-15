@@ -22,12 +22,6 @@ namespace snemo {
     topology_1e1p_pattern::topology_1e1p_pattern()
       : base_topology_pattern(topology_1e1p_pattern::pattern_id())
     {
-      datatools::invalidate(_tof_.internal_probability);
-      datatools::invalidate(_tof_.external_probability);
-      datatools::invalidate(_DeltaV_.delta_vertices_y);
-      datatools::invalidate(_DeltaV_.delta_vertices_z);
-      datatools::invalidate(_angle_.angle);
-      datatools::invalidate(_angle_.angle);
       return;
     }
 
@@ -43,82 +37,82 @@ namespace snemo {
 
     bool topology_1e1p_pattern::has_internal_probability() const
     {
-      return datatools::is_valid(_tof_.internal_probability);
+      return datatools::is_valid(_tof_.get_internal_probabilities().front());
     }
 
-    void topology_1e1p_pattern::set_internal_probability(const double & prob_)
+    void topology_1e1p_pattern::set_internal_probability(double prob_)
     {
-      _tof_.internal_probability = prob_;
+      _tof_.grab_internal_probabilities().push_back(prob_);
       return;
     }
 
     double topology_1e1p_pattern::get_internal_probability() const
     {
-      return _tof_.internal_probability;
+      return _tof_.get_internal_probabilities().front();
     }
 
     bool topology_1e1p_pattern::has_external_probability() const
     {
-      return datatools::is_valid(_tof_.internal_probability);
+      return datatools::is_valid(_tof_.get_external_probabilities().front());
     }
 
-    void topology_1e1p_pattern::set_external_probability(const double & prob_)
+    void topology_1e1p_pattern::set_external_probability(double prob_)
     {
-      _tof_.external_probability = prob_;
+      _tof_.grab_external_probabilities().push_back(prob_);
       return;
     }
 
     double topology_1e1p_pattern::get_external_probability() const
     {
-      return _tof_.external_probability;
+      return _tof_.get_external_probabilities().front();
     }
 
     bool topology_1e1p_pattern::has_delta_vertices_y() const
     {
-      return datatools::is_valid(_DeltaV_.delta_vertices_y);
+      return datatools::is_valid(_DeltaV_.get_delta_vertices_y());
     }
 
-    void topology_1e1p_pattern::set_delta_vertices_y(const double & deltaV_y_)
+    void topology_1e1p_pattern::set_delta_vertices_y(double deltaV_y_)
     {
-      _DeltaV_.delta_vertices_y = deltaV_y_;
+      _DeltaV_.grab_delta_vertices_y() = deltaV_y_;
       return;
     }
 
     double topology_1e1p_pattern::get_delta_vertices_y() const
     {
-      return _DeltaV_.delta_vertices_y;
+      return _DeltaV_.get_delta_vertices_y();
     }
 
     bool topology_1e1p_pattern::has_delta_vertices_z() const
     {
-      return datatools::is_valid(_DeltaV_.delta_vertices_z);
+      return datatools::is_valid(_DeltaV_.get_delta_vertices_z());
     }
 
-    void topology_1e1p_pattern::set_delta_vertices_z(const double & deltaV_z_)
+    void topology_1e1p_pattern::set_delta_vertices_z(double deltaV_z_)
     {
-      _DeltaV_.delta_vertices_z = deltaV_z_;
+      _DeltaV_.grab_delta_vertices_z() = deltaV_z_;
       return;
     }
 
     double topology_1e1p_pattern::get_delta_vertices_z() const
     {
-      return _DeltaV_.delta_vertices_z;
+      return _DeltaV_.get_delta_vertices_z();
     }
 
     bool topology_1e1p_pattern::has_angle() const
     {
-      return datatools::is_valid(_angle_.angle);
+      return datatools::is_valid(_angle_.get_angle());
     }
 
-    void topology_1e1p_pattern::set_angle(const double & angle_)
+    void topology_1e1p_pattern::set_angle(double angle_)
     {
-      _angle_.angle = angle_;
+      _angle_.grab_angle() = angle_;
       return;
     }
 
     double topology_1e1p_pattern::get_angle() const
     {
-      return _angle_.angle;
+      return _angle_.get_angle();
     }
 
     void topology_1e1p_pattern::tree_dump(std::ostream      & out_,
@@ -135,9 +129,9 @@ namespace snemo {
       out_ << indent << datatools::i_tree_dumpable::tag
            << "External probability : " << get_external_probability() << std::endl;
       out_ << indent << datatools::i_tree_dumpable::tag
-           << "Delta Vertices Y : " << get_delta_vertices_y() << std::endl;
+           << "Delta vertices Y : " << get_delta_vertices_y()/CLHEP::mm << " mm" << std::endl;
       out_ << indent << datatools::i_tree_dumpable::tag
-           << "Delta Vertices Z : " << get_delta_vertices_z() << std::endl;
+           << "Delta vertices Z : " << get_delta_vertices_z()/CLHEP::mm << " mm" << std::endl;
       out_ << indent << datatools::i_tree_dumpable::tag
            << "Angle : " << get_angle() << std::endl;
 
