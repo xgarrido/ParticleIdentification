@@ -14,8 +14,7 @@
 
 // This project:
 #include <falaise/snemo/datamodels/base_topology_pattern.h>
-#include <falaise/snemo/datamodels/particle_track.h>
-#include <falaise/snemo/datamodels/topology_data.h>
+#include <falaise/snemo/datamodels/topology_measurement.h>
 
 namespace snemo {
 
@@ -25,11 +24,6 @@ namespace snemo {
     class topology_1e_pattern : public base_topology_pattern
     {
     public:
-
-      struct angle_measurement
-      {
-        double angle;
-      };
 
       /// Return pattern identifier of the pattern
       static const std::string & pattern_id();

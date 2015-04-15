@@ -22,7 +22,6 @@ namespace snemo {
     topology_1e_pattern::topology_1e_pattern()
       : base_topology_pattern(topology_1e_pattern::pattern_id())
     {
-      datatools::invalidate(_angle_.angle);
       return;
     }
 
@@ -33,18 +32,18 @@ namespace snemo {
 
     bool topology_1e_pattern::has_angle() const
     {
-      return datatools::is_valid(_angle_.angle);
+      return datatools::is_valid(_angle_.get_angle());
     }
 
     void topology_1e_pattern::set_angle(const double angle_)
     {
-      _angle_.angle = angle_;
+      _angle_.grab_angle() = angle_;
       return;
     }
 
     double topology_1e_pattern::get_angle() const
     {
-      return _angle_.angle;
+      return _angle_.get_angle();
     }
 
     void topology_1e_pattern::tree_dump(std::ostream      & out_,
