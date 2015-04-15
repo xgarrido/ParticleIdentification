@@ -51,28 +51,17 @@ namespace snemo {
     {
     public:
 
-      /// Structure holding particle range
-      struct particle_range {
-        size_t min;
-        size_t max;
-
-        /// Constructor
-        particle_range();
-
-        /// Parse min/max value from configuration
-        void parse(const datatools::properties & setup_, const std::string & prefix_);
-
-        /// Check number of particle
-        bool check(const size_t n_);
-      };
-
       /// Mode of the cut
       enum mode_type {
-        MODE_UNDEFINED = 0
+        MODE_UNDEFINED = 0,
+        MODE_PATTERN_ID = datatools::bit_mask::bit01
       };
 
       /// Return the cut mode
       uint32_t get_mode() const;
+
+      /// Check mode PATTERN_ID
+      bool is_mode_pattern_id() const;
 
       /// Constructor
       topology_cut(datatools::logger::priority logging_priority_ = datatools::logger::PRIO_FATAL);
@@ -98,22 +87,15 @@ namespace snemo {
 
     private:
 
-      std::string _PTD_label_; //!< Name of the "Particle track data" bank
-      std::string _TD_label_; //!< Name of the "Particle track data" bank
-      uint32_t    _mode_;      //!< Mode of the cut
+      std::string _TD_label_; //!< Name of the "Topology data" bank
+      uint32_t    _mode_;     //!< Mode of the cut
 
-      particle_range _electron_range_;
-      particle_range _positron_range_;
-      particle_range _gamma_range_;
-      particle_range _alpha_range_;
-      particle_range _undefined_range_;
-
-      particle_range _unassociated_calorimeter_hits_range_;
-
+      std::string _pattern_id_label_; //!< Pattern ID label
       double _prob_int_;
       double _prob_ext_;
       double _delta_vertices_y_;
       double _delta_vertices_z_;
+
       // Macro to automate the registration of the cut :
       CUT_REGISTRATION_INTERFACE(topology_cut);
     };
