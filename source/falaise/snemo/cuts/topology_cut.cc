@@ -60,7 +60,7 @@ namespace snemo {
     {
       _mode_ = MODE_UNDEFINED;
       _PTD_label_ = snemo::datamodel::data_info::default_particle_track_data_label();
-      _PTD_label_ = "TD";//snemo::datamodel::data_info::default_topology_data_label();
+      _TD_label_ = "TD";//snemo::datamodel::data_info::default_topology_data_label();
       return;
     }
 
@@ -94,6 +94,8 @@ namespace snemo {
                                         datatools::service_manager  & /* service_manager_ */,
                                         cuts::cut_handle_dict_type  & /* cut_dict_ */)
     {
+      std::cout << "DEBUG initialize" << std::endl;
+
       DT_THROW_IF(is_initialized(), std::logic_error,
                   "Cut '" << get_name() << "' is already initialized ! ");
 
@@ -118,7 +120,8 @@ namespace snemo {
       if (configuration_.has_key ("internal_probability")) {
         const double Pint = configuration_.fetch_real ("internal_probability");
         DT_THROW_IF (Pint < 0 || Pint >1, std::logic_error, "Invalid internal probability (" << Pint << ") !");
-      _prob_int_ = Pint;
+        _prob_int_ = Pint;
+        std::cout << _prob_int_ << std::endl;
       }
 
       if (configuration_.has_key ("external_probability")) {
@@ -130,14 +133,16 @@ namespace snemo {
       if (configuration_.has_key ("delta_vertices_y")) {
         const double delta_y = configuration_.fetch_real ("delta_vertices_y");
         // DT_THROW_IF (delta_y < 0, std::logic_error, "Invalid internal probability (" << Pint << ") !");
-        _delta_vertices_y_ = std::abs(delta_y);
+        _delta_vertices_y_ = std::fabs(delta_y);
       }
 
       if (configuration_.has_key ("delta_vertices_z")) {
         const double delta_z = configuration_.fetch_real ("delta_vertices_z");
         // DT_THROW_IF (delta_z < 0, std::logic_error, "Invalid internal probability (" << Pint << ") !");
-        _delta_vertices_z_ = std::abs(delta_z);
+        _delta_vertices_z_ = std::fabs(delta_z);
       }
+
+      std::cout << "DEBUG initialized" << std::endl;
 
       this->i_cut::_set_initialized(true);
       return;
@@ -201,11 +206,11 @@ namespace snemo {
       DT_LOG_TRACE(get_logging_priority(), "n_unasso_calos = " << n_unasso_calos);
 
       if (! ER.has(_TD_label_)) {
-        DT_LOG_DEBUG(get_logging_priority(), "Event record has no '" << _TD_label_ << "' bank !");
+        DT_LOG_WARNING(get_logging_priority(), "Event record has no '" << _TD_label_ << "' bank !");
         return cut_returned;
       }
 
-      std::cout << "-------------- DEBUG " << std::endl;
+    //   std::cout << "-------------- DEBUG " << std::endl;
 
       const snemo::datamodel::topology_data & TD
         = ER.get<snemo::datamodel::topology_data>(_TD_label_);
@@ -227,8 +232,8 @@ namespace snemo {
 
       internal_prob    = ptr_2e_pattern->get_internal_probability();
       external_prob    = ptr_2e_pattern->get_external_probability();
-      delta_vertices_y = ptr_2e_pattern->get_delta_vertices_y();
-      delta_vertices_z = ptr_2e_pattern->get_delta_vertices_z();
+      delta_vertices_y = std::fabs(ptr_2e_pattern->get_delta_vertices_y());
+      delta_vertices_z = std::fabs(ptr_2e_pattern->get_delta_vertices_z());
     }
 
       bool check = true;
@@ -242,6 +247,9 @@ namespace snemo {
           check = false;
           // std::cout << "not in range " << std::endl;
         }
+
+      std::cout << _prob_int_ << " " << _prob_ext_ << " " << _delta_vertices_y_ << " " << _delta_vertices_z_ << std::endl;
+      std::cout << internal_prob << " " << external_prob << " " << delta_vertices_y << " " << delta_vertices_z << std::endl;
       if (internal_prob < _prob_int_)
         check = false;
       if (external_prob > _prob_ext_)
@@ -256,8 +264,9 @@ namespace snemo {
         DT_LOG_DEBUG(get_logging_priority(), "Event rejected by topology cut!");
         cut_returned = cuts::SELECTION_REJECTED;
       }
-      // if(check)
-      //   std::cout << "pass cut " << std::endl;
+      if(check)
+        std::cout << "pass cut " << std::endl;
+
       return cut_returned;
     }
 

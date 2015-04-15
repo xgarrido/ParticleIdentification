@@ -69,50 +69,50 @@ namespace snemo {
 
     bool topology_2e_pattern::has_delta_vertices_y() const
     {
-      return datatools::is_valid(_DeltaV_.delta_vertices_y);
+      return datatools::is_valid(_DeltaV_.get_delta_vertices_y());
     }
 
     void topology_2e_pattern::set_delta_vertices_y(double deltaV_y_)
     {
-      _DeltaV_.delta_vertices_y = deltaV_y_;
+      _DeltaV_.grab_delta_vertices_y() = deltaV_y_;
       return;
     }
 
     double topology_2e_pattern::get_delta_vertices_y() const
     {
-      return _DeltaV_.delta_vertices_y;
+      return _DeltaV_.get_delta_vertices_y();
     }
 
     bool topology_2e_pattern::has_delta_vertices_z() const
     {
-      return datatools::is_valid(_DeltaV_.delta_vertices_z);
+      return datatools::is_valid(_DeltaV_.get_delta_vertices_z());
     }
 
     void topology_2e_pattern::set_delta_vertices_z(double deltaV_z_)
     {
-      _DeltaV_.delta_vertices_z = deltaV_z_;
+      _DeltaV_.grab_delta_vertices_z() = deltaV_z_;
       return;
     }
 
     double topology_2e_pattern::get_delta_vertices_z() const
     {
-      return _DeltaV_.delta_vertices_z;
+      return _DeltaV_.get_delta_vertices_z();
     }
 
     bool topology_2e_pattern::has_angle() const
     {
-      return datatools::is_valid(_angle_.angle);
+      return datatools::is_valid(_angle_.get_angle());
     }
 
     void topology_2e_pattern::set_angle(double angle_)
     {
-      _angle_.angle = angle_;
+      _angle_.grab_angle() = angle_;
       return;
     }
 
     double topology_2e_pattern::get_angle() const
     {
-      return _angle_.angle;
+      return _angle_.get_angle();
     }
 
     void topology_2e_pattern::tree_dump(std::ostream      & out_,

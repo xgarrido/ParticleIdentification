@@ -21,6 +21,23 @@ namespace snemo {
       return;
     }
 
+    /// Serialization method
+    template<class Archive>
+    void delta_vertices_measurement::serialize(Archive & ar_, const unsigned int /* version */)
+    {
+      ar_ & boost::serialization::make_nvp("delta_vertices_y", _delta_vertices_y_);
+      ar_ & boost::serialization::make_nvp("delta_vertices_z", _delta_vertices_z_);
+      return;
+    }
+
+    /// Serialization method
+    template<class Archive>
+    void angle_measurement::serialize(Archive & ar_, const unsigned int /* version */)
+    {
+      ar_ & boost::serialization::make_nvp("angle", _angle_);
+      return;
+    }
+
   } // end of namespace datamodel
 
 } // end of namespace snemo

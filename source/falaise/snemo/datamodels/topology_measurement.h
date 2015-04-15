@@ -72,17 +72,62 @@ namespace snemo {
       particle_pair_type _particle_track_pair_;
 
       DATATOOLS_SERIALIZATION_DECLARATION();
-   };
-
-    struct delta_vertices_measurement
-    {
-      double delta_vertices_y;
-      double delta_vertices_z;
     };
 
-    struct angle_measurement
+    /// \brief The Delta Vertices measurement
+    class delta_vertices_measurement : DATATOOLS_SERIALIZABLE_CLASS
     {
-      double angle;
+    public:
+
+      /// Constructor
+      delta_vertices_measurement();
+
+      /// Destructor
+      ~delta_vertices_measurement();
+
+      /// Get a non-mutable reference to delta vertices y
+      const double & get_delta_vertices_y() const;
+
+      /// Get a mutable reference to delta vertices y
+      double & grab_delta_vertices_y();
+
+      /// Get a non-mutable reference to delta vertices z
+      const double & get_delta_vertices_z() const;
+
+      /// Get a mutable reference to delta vertices z
+      double & grab_delta_vertices_z();
+
+    private:
+
+      double _delta_vertices_y_;
+      double _delta_vertices_z_;
+
+      DATATOOLS_SERIALIZATION_DECLARATION();
+    };
+
+
+    /// \brief The Angle measurement
+    class angle_measurement : DATATOOLS_SERIALIZABLE_CLASS
+    {
+    public:
+
+      /// Constructor
+      angle_measurement();
+
+      /// Destructor
+      ~angle_measurement();
+
+      /// Get a non-mutable reference to delta vertices z
+      const double & get_angle() const;
+
+      /// Get a mutable reference to delta vertices z
+      double & grab_angle();
+
+    private:
+
+      double _angle_;
+
+      DATATOOLS_SERIALIZATION_DECLARATION();
     };
   }
 }
