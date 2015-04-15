@@ -42,6 +42,64 @@ namespace snemo {
       return _external_probabilities_;
     }
 
+    // Serial tag for datatools::i_serializable interface :
+    DATATOOLS_SERIALIZATION_SERIAL_TAG_IMPLEMENTATION(delta_vertices_measurement,
+                                                      "snemo::datamodel::delta_vertices_measurement")
+
+    delta_vertices_measurement::delta_vertices_measurement()
+    {
+      return;
+    }
+
+    delta_vertices_measurement::~delta_vertices_measurement()
+    {
+      return;
+    }
+
+    const double & delta_vertices_measurement::get_delta_vertices_y() const
+    {
+      return _delta_vertices_y_;
+    }
+
+    double & delta_vertices_measurement::grab_delta_vertices_y()
+    {
+      return _delta_vertices_y_;
+    }
+
+    const double & delta_vertices_measurement::get_delta_vertices_z() const
+    {
+      return _delta_vertices_z_;
+    }
+
+    double & delta_vertices_measurement::grab_delta_vertices_z()
+    {
+      return _delta_vertices_z_;
+    }
+
+    // Serial tag for datatools::i_serializable interface :
+    DATATOOLS_SERIALIZATION_SERIAL_TAG_IMPLEMENTATION(angle_measurement,
+                                                      "snemo::datamodel::angle_measurement")
+
+    angle_measurement::angle_measurement()
+    {
+      return;
+    }
+
+    angle_measurement::~angle_measurement()
+    {
+      return;
+    }
+
+    const double & angle_measurement::get_angle() const
+    {
+      return _angle_;
+    }
+
+    double & angle_measurement::grab_angle()
+    {
+      return _angle_;
+    }
+
   } // end of namespace datamodel
 
 } // end of namespace snemo
