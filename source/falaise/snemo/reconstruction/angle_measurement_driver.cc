@@ -236,7 +236,7 @@ namespace snemo {
       Ox.setX(1);
       Ox /= Ox.mag();
       /*vectors already normalized*/
-      angle_ = std::acos(dir * Ox) / 2 / M_PI * 360;
+      angle_ = std::acos(dir * Ox) / 2 / M_PI * 360 * CLHEP::degree;
       std::cout << "  Angle is " << angle_ << std::endl;
       return 0;
     }
@@ -290,7 +290,7 @@ namespace snemo {
       // std::cout << " dir1 * dir2 = " << dir1 * dir2 << std::endl;
 
       /*vectors already normalized*/
-      angle_ = std::acos(dir1 * dir2); // / 2 / M_PI * 360;
+      angle_ = std::acos(dir1 * dir2) / 2 / M_PI * 360 * CLHEP::degree;
       // std::cout << "angle is " << angle_ << std::endl;
       return 0;
     }
@@ -350,7 +350,7 @@ namespace snemo {
       // std::cout << " dir2.mag() = " << dir2.mag() << std::endl;
       // std::cout << " dir1 * dir2 = " << dir1 * dir2 << std::endl;
 
-      angle_ = std::acos(dir1 * dir2) / 2 / M_PI * 360;
+      angle_ = std::acos(dir1 * dir2) / 2 / M_PI * 360 * CLHEP::degree;
       // std::cout << "angle is " << angle_ << std::endl;
       return 0;
     }
