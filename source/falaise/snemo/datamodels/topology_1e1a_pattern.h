@@ -14,8 +14,7 @@
 
 // This project:
 #include <falaise/snemo/datamodels/base_topology_pattern.h>
-#include <falaise/snemo/datamodels/particle_track.h>
-#include <falaise/snemo/datamodels/topology_data.h>
+#include <falaise/snemo/datamodels/topology_measurement.h>
 
 namespace snemo {
 
@@ -25,28 +24,6 @@ namespace snemo {
     class topology_1e1a_pattern : public base_topology_pattern
     {
     public:
-
-      struct TOF_measurement
-      {
-        double internal_probability;
-        double external_probability;
-      };
-
-      struct delta_vertices_measurement
-      {
-        double delta_vertices_y;
-        double delta_vertices_z;
-      };
-
-      // /// Typedef for pairing particles
-      // typedef std::pair<snemo::datamodel::particle_track::handle_type,
-      //                   snemo::datamodel::particle_track::handle_type> particle_pair_type;
-
-      // /// Typedef for TOF dictionnary
-      // typedef std::map<particle_pair_type, TOF_measurement> TOF_dict_type;
-
-      // /// Typedef for TOF dictionnary
-      // typedef std::map<particle_pair_type, delta_vertices_measurement> delta_vertices_dict_type;
 
       /// Return pattern identifier of the pattern
       static const std::string & pattern_id();
@@ -61,7 +38,7 @@ namespace snemo {
       bool has_delta_vertices_y() const;
 
       /// Set delta vertices y
-      void set_delta_vertices_y(const double prob_);
+      void set_delta_vertices_y(double);
 
       /// Return delta vertices y
       double get_delta_vertices_y() const;
@@ -70,10 +47,19 @@ namespace snemo {
       bool has_delta_vertices_z() const;
 
       /// Set delta vertices z
-      void set_delta_vertices_z(const double prob_);
+      void set_delta_vertices_z(double);
 
       /// Return delta vertices z
       double get_delta_vertices_z() const;
+
+      /// Check angle validity
+      bool has_angle() const;
+
+      /// Set angle
+      void set_angle(double);
+
+      /// Return internal probability
+      double get_angle() const;
 
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,
@@ -84,6 +70,7 @@ namespace snemo {
     private:
 
       delta_vertices_measurement _DeltaV_;
+      angle_measurement _angle_;
 
       DATATOOLS_SERIALIZATION_DECLARATION();
 
