@@ -38,14 +38,12 @@ list(APPEND FalaiseParticleIdentificationPlugin_HEADERS
   source/falaise/snemo/datamodels/topology_1e_pattern.ipp
   source/falaise/snemo/datamodels/topology_2e_pattern.h
   source/falaise/snemo/datamodels/topology_2e_pattern.ipp
-  source/falaise/snemo/datamodels/topology_1e1g_pattern.h
-  source/falaise/snemo/datamodels/topology_1e1g_pattern.ipp
+  source/falaise/snemo/datamodels/topology_1eNg_pattern.h
+  source/falaise/snemo/datamodels/topology_1eNg_pattern.ipp
   source/falaise/snemo/datamodels/topology_2eNg_pattern.h
   source/falaise/snemo/datamodels/topology_2eNg_pattern.ipp
   source/falaise/snemo/datamodels/topology_1e1a_pattern.h
   source/falaise/snemo/datamodels/topology_1e1a_pattern.ipp
-  source/falaise/snemo/datamodels/topology_2e1a_pattern.h
-  source/falaise/snemo/datamodels/topology_2e1a_pattern.ipp
   source/falaise/snemo/datamodels/topology_1e1p_pattern.h
   source/falaise/snemo/datamodels/topology_1e1p_pattern.ipp
   source/falaise/snemo/datamodels/topology_measurement.h
@@ -69,10 +67,9 @@ list(APPEND FalaiseParticleIdentificationPlugin_SOURCES
   source/falaise/snemo/datamodels/base_topology_pattern.cc
   source/falaise/snemo/datamodels/topology_1e_pattern.cc
   source/falaise/snemo/datamodels/topology_2e_pattern.cc
-  source/falaise/snemo/datamodels/topology_1e1g_pattern.cc
+  source/falaise/snemo/datamodels/topology_1eNg_pattern.cc
   source/falaise/snemo/datamodels/topology_2eNg_pattern.cc
   source/falaise/snemo/datamodels/topology_1e1a_pattern.cc
-  source/falaise/snemo/datamodels/topology_2e1a_pattern.cc
   source/falaise/snemo/datamodels/topology_1e1p_pattern.cc
   source/falaise/snemo/datamodels/topology_measurement.cc
   source/falaise/snemo/datamodels/pid_utils.cc
