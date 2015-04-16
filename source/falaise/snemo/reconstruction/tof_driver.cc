@@ -222,11 +222,11 @@ namespace snemo {
       const double chi2_int = std::pow(t1 - t2 - (t1_th - t2_th), 2)/sigma_exp;
       const double chi2_ext = std::pow(std::abs(t1 - t2) - (t1_th + t2_th), 2)/sigma_exp;
 
-      proba_int_.push_back(gsl_cdf_chisq_Q(chi2_int, 1));
-      proba_ext_.push_back(gsl_cdf_chisq_Q(chi2_ext, 1));
+      proba_int_.push_back(gsl_cdf_chisq_Q(chi2_int, 1)*100.*CLHEP::perCent);
+      proba_ext_.push_back(gsl_cdf_chisq_Q(chi2_ext, 1)*100.*CLHEP::perCent);
 
-      DT_LOG_DEBUG(get_logging_priority(), "P_int " << proba_int_.front());
-      DT_LOG_DEBUG(get_logging_priority(), "P_ext " << proba_ext_.front());
+      DT_LOG_DEBUG(get_logging_priority(), "P_int " << proba_int_.front()/CLHEP::perCent << " %");
+      DT_LOG_DEBUG(get_logging_priority(), "P_ext " << proba_ext_.front()/CLHEP::perCent << " %");
       return;
     }
 
@@ -274,8 +274,8 @@ namespace snemo {
         const double chi2_int = std::pow(t1 - t2 - (t1_th - t2_th), 2)/sigma_exp;
         const double chi2_ext = std::pow(std::abs(t1 - t2) - (t1_th + t2_th), 2)/sigma_exp;
 
-        proba_int_.push_back(gsl_cdf_chisq_Q(chi2_int, 1));
-        proba_ext_.push_back(gsl_cdf_chisq_Q(chi2_ext, 1));
+        proba_int_.push_back(gsl_cdf_chisq_Q(chi2_int, 1)*100.*CLHEP::perCent);
+        proba_ext_.push_back(gsl_cdf_chisq_Q(chi2_ext, 1)*100.*CLHEP::perCent);
 
         // DT_LOG_DEBUG(get_logging_priority(), "P_int " << proba_int_.back());
         // DT_LOG_DEBUG(get_logging_priority(), "P_ext " << proba_ext_.back());
