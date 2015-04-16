@@ -26,7 +26,7 @@ namespace snemo {
       ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(base_topology_pattern);
       ar & boost::serialization::make_nvp("number_of_gammas", _number_of_gammas_);
       ar & boost::serialization::make_nvp("tofs", _tofs_);
-      // ar & boost::serialization::make_nvp("delta_vertices", _DeltaV_);
+      ar & boost::serialization::make_nvp("angles", _angles_);
       return;
     }
 

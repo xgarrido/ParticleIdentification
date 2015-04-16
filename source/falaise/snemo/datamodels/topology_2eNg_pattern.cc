@@ -52,6 +52,48 @@ namespace snemo {
       return _tofs_;
     }
 
+    const topology_2eNg_pattern::angle_collection_type & topology_2eNg_pattern::get_angle_collection() const
+    {
+      return _angles_;
+    }
+
+    topology_2eNg_pattern::angle_collection_type & topology_2eNg_pattern::grab_angle_collection()
+    {
+      return _angles_;
+    }
+
+    bool topology_2eNg_pattern::has_delta_vertices_y() const
+    {
+      return datatools::is_valid(_DeltaV_.get_delta_vertices_y());
+    }
+
+    void topology_2eNg_pattern::set_delta_vertices_y(double deltaV_y_)
+    {
+      _DeltaV_.grab_delta_vertices_y() = deltaV_y_;
+      return;
+    }
+
+    double topology_2eNg_pattern::get_delta_vertices_y() const
+    {
+      return _DeltaV_.get_delta_vertices_y();
+    }
+
+    bool topology_2eNg_pattern::has_delta_vertices_z() const
+    {
+      return datatools::is_valid(_DeltaV_.get_delta_vertices_z());
+    }
+
+    void topology_2eNg_pattern::set_delta_vertices_z(double deltaV_z_)
+    {
+      _DeltaV_.grab_delta_vertices_z() = deltaV_z_;
+      return;
+    }
+
+    double topology_2eNg_pattern::get_delta_vertices_z() const
+    {
+      return _DeltaV_.get_delta_vertices_z();
+    }
+
     void topology_2eNg_pattern::tree_dump(std::ostream      & out_,
                                           const std::string & title_,
                                           const std::string & indent_,
