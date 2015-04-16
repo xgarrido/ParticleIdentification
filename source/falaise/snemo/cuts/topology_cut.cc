@@ -249,14 +249,14 @@ namespace snemo {
         DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_DELTA_VERTICES_Y mode...");
         size_t count = 0;
         if (configuration_.has_key("range_delta_vertices_y.min")) {
-          const double delta_y_min = configuration_.fetch_real("range_delta_vertices_y.min");
+          double delta_y_min = configuration_.fetch_real("range_delta_vertices_y.min");
           DT_THROW_IF(delta_y_min < 0.0, std::range_error,
                       "Invalid minimal delta vertices y (" << delta_y_min << ") !");
           _delta_vertices_y_min_ = delta_y_min;
           count++;
         }
         if (configuration_.has_key("range_external_probablity.max")) {
-          const double delta_y_max = configuration_.fetch_real("range_delta_vertices_y.max");
+          double delta_y_max = configuration_.fetch_real("range_delta_vertices_y.max");
           DT_THROW_IF(delta_y_max < 0.0, std::range_error,
                       "Invalid maximal delta vertices y (" << delta_y_max << ") !");
           _delta_vertices_y_max_ = delta_y_max;
@@ -274,14 +274,14 @@ namespace snemo {
         DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_DELTA_VERTICES_Z mode...");
         size_t count = 0;
         if (configuration_.has_key("range_delta_vertices_z.min")) {
-          const double delta_z_min = configuration_.fetch_real("range_delta_vertices_z.min");
+          double delta_z_min = configuration_.fetch_real("range_delta_vertices_z.min");
           DT_THROW_IF(delta_z_min < 0.0, std::range_error,
                       "Invalid minimal delta vertices z (" << delta_z_min << ") !");
           _delta_vertices_z_min_ = delta_z_min;
           count++;
         }
         if (configuration_.has_key("range_external_probablity.max")) {
-          const double delta_z_max = configuration_.fetch_real("range_delta_vertices_z.max");
+          double delta_z_max = configuration_.fetch_real("range_delta_vertices_z.max");
           DT_THROW_IF(delta_z_max < 0.0, std::range_error,
                       "Invalid maximal delta vertices z (" << delta_z_max << ") !");
           _delta_vertices_z_max_ = delta_z_max;
@@ -299,15 +299,21 @@ namespace snemo {
         DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_ANGLE mode...");
         size_t count = 0;
         if (configuration_.has_key("range_angle.min")) {
-          const double angle_min = configuration_.fetch_real("range_angle.min");
-          DT_THROW_IF(angle_min < 0.0 || angle_min > 180., std::range_error,
+          double angle_min = configuration_.fetch_real("range_angle.min");
+          if (! configuration_.has_explicit_unit("range_angle.min")) {
+            angle_min *= CLHEP::degree;
+          }
+          DT_THROW_IF(angle_min < 0.0*CLHEP::degree || angle_min > 180.*CLHEP::degree, std::range_error,
                       "Invalid minimal angle (" << angle_min << ") !");
           _angle_min_ = angle_min;
           count++;
         }
         if (configuration_.has_key("range_angle.max")) {
-          const double angle_max = configuration_.fetch_real("range_angle.max");
-          DT_THROW_IF(angle_max < 0.0 || angle_max > 180., std::range_error,
+          double angle_max = configuration_.fetch_real("range_angle.max");
+          if (! configuration_.has_explicit_unit("range_angle.max")) {
+            angle_max *= CLHEP::degree;
+          }
+          DT_THROW_IF(angle_max < 0.0*CLHEP::degree || angle_max > 180.*CLHEP::degree, std::range_error,
                       "Invalid maximal angle (" << angle_max << ") !");
           _angle_max_ = angle_max;
           count++;
@@ -574,33 +580,6 @@ namespace snemo {
           }
         }
       }
-
-      // double internal_prob = datatools::invalid_real();
-      // double external_prob = datatools::invalid_real();
-      // double delta_vertices_y = datatools::invalid_real();
-      // double delta_vertices_z = datatools::invalid_real();
-
-      // if(a_pattern_id == snemo::datamodel::topology_2e_pattern::pattern_id()) {
-      //   const snemo::datamodel::topology_2e_pattern * ptr_2e_pattern
-      //     = dynamic_cast<const snemo::datamodel::topology_2e_pattern *>(&a_pattern);
-      //   // std::cout << "--------------pattern id " << a_pattern.get_pattern_id() << std::endl;
-
-      //   internal_prob    = ptr_2e_pattern->get_internal_probability();
-      //   external_prob    = ptr_2e_pattern->get_external_probability();
-      //   delta_vertices_y = std::fabs(ptr_2e_pattern->get_delta_vertices_y());
-      //   delta_vertices_z = std::fabs(ptr_2e_pattern->get_delta_vertices_z());
-      // }
-
-      // std::cout << _prob_int_ << " " << _prob_ext_ << " " << _delta_vertices_y_ << " " << _delta_vertices_z_ << std::endl;
-      // std::cout << internal_prob << " " << external_prob << " " << delta_vertices_y << " " << delta_vertices_z << std::endl;
-      // if (internal_prob < _prob_int_)
-      //   check = false;
-      // if (external_prob > _prob_ext_)
-      //   check = false;
-      // if (delta_vertices_y > _delta_vertices_y_)
-      //   check = false;
-      // if (delta_vertices_z > _delta_vertices_z_)
-      //   check = false;
 
       cut_returned = cuts::SELECTION_REJECTED;
       if (check_pattern_id &&
