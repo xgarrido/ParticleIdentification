@@ -128,15 +128,23 @@ namespace snemo {
         DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_INTERNAL_PROBABILITY mode...");
         size_t count = 0;
         if (configuration_.has_key("range_internal_probability.min")) {
-          const double pmin = configuration_.fetch_real("range_internal_probability.min");
-          DT_THROW_IF(pmin < 0.0 || pmin > 1.0, std::range_error,
+          double pmin = configuration_.fetch_real("range_internal_probability.min");
+          if (! configuration_.has_explicit_unit("range_internal_probability.min")) {
+            pmin *= CLHEP::perCent;
+          }
+          DT_THROW_IF(pmin < 0.0*CLHEP::perCent || pmin > 100.0*CLHEP::perCent,
+                      std::range_error,
                       "Invalid minimal internal probability (" << pmin << ") !");
           _prob_int_min_ = pmin;
           count++;
         }
         if (configuration_.has_key("range_internal_probablity.max")) {
-          const double pmax = configuration_.fetch_real("range_internal_probability.max");
-          DT_THROW_IF(pmax < 0.0 || pmax > 1.0, std::range_error,
+          double pmax = configuration_.fetch_real("range_internal_probability.max");
+          if (! configuration_.has_explicit_unit("range_internal_probability.max")) {
+            pmax *= CLHEP::perCent;
+          }
+          DT_THROW_IF(pmax < 0.0*CLHEP::perCent || pmax > 100.0*CLHEP::perCent,
+                      std::range_error,
                       "Invalid maximal internal probability (" << pmax << ") !");
           _prob_int_max_ = pmax;
           count++;
@@ -153,15 +161,23 @@ namespace snemo {
         DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_EXTERNAL_PROBABILITY mode...");
         size_t count = 0;
         if (configuration_.has_key("range_external_probability.min")) {
-          const double pmin = configuration_.fetch_real("range_external_probability.min");
-          DT_THROW_IF(pmin < 0.0 || pmin > 1.0, std::range_error,
+          double pmin = configuration_.fetch_real("range_external_probability.min");
+          if (! configuration_.has_explicit_unit("range_external_probability.min")) {
+            pmin *= CLHEP::perCent;
+          }
+          DT_THROW_IF(pmin < 0.0*CLHEP::perCent || pmin > 100.0*CLHEP::perCent,
+                      std::range_error,
                       "Invalid minimal external probability (" << pmin << ") !");
           _prob_ext_min_ = pmin;
           count++;
         }
         if (configuration_.has_key("range_external_probablity.max")) {
-          const double pmax = configuration_.fetch_real("range_external_probability.max");
-          DT_THROW_IF(pmax < 0.0 || pmax > 1.0, std::range_error,
+          double pmax = configuration_.fetch_real("range_external_probability.max");
+          if (! configuration_.has_explicit_unit("range_external_probability.max")) {
+            pmax *= CLHEP::perCent;
+          }
+          DT_THROW_IF(pmax < 0.0*CLHEP::perCent || pmax > 100.0*CLHEP::perCent,
+                      std::range_error,
                       "Invalid maximal external probability (" << pmax << ") !");
           _prob_ext_max_ = pmax;
           count++;
