@@ -28,6 +28,10 @@ namespace snemo {
     {
       _mode_ = MODE_UNDEFINED;
       _TD_label_ = "TD";//snemo::datamodel::data_info::default_topology_data_label();
+      datatools::invalidate(_prob_int_min_);
+      datatools::invalidate(_prob_int_max_);
+      datatools::invalidate(_prob_ext_min_);
+      datatools::invalidate(_prob_ext_max_);
       return;
     }
 
@@ -39,6 +43,16 @@ namespace snemo {
     bool topology_cut::is_mode_pattern_id() const
     {
       return _mode_ & MODE_PATTERN_ID;
+    }
+
+    bool topology_cut::is_mode_internal_probability() const
+    {
+      return _mode_ & MODE_INTERNAL_PROBABILITY;
+    }
+
+    bool topology_cut::is_mode_external_probability() const
+    {
+      return _mode_ & MODE_EXTERNAL_PROBABILITY;
     }
 
     topology_cut::topology_cut(datatools::logger::priority logger_priority_)
@@ -78,6 +92,12 @@ namespace snemo {
       if (configuration_.has_flag("mode.pattern_id")) {
         _mode_ |= MODE_PATTERN_ID;
       }
+      if (configuration_.has_flag("mode.internal_probability")) {
+        _mode_ |= MODE_INTERNAL_PROBABILITY;
+      }
+      if (configuration_.has_flag("mode.external_probability")) {
+        _mode_ |= MODE_EXTERNAL_PROBABILITY;
+      }
       DT_THROW_IF(_mode_ == MODE_UNDEFINED, std::logic_error,
                   "Missing at least a 'mode.XXX' property !");
 
@@ -88,30 +108,55 @@ namespace snemo {
         _pattern_id_label_ = configuration_.fetch_string("pattern_id.label");
       }
 
-      // if (configuration_.has_key ("internal_probability")) {
-      //   const double Pint = configuration_.fetch_real ("internal_probability");
-      //   DT_THROW_IF (Pint < 0 || Pint >1, std::logic_error, "Invalid internal probability (" << Pint << ") !");
-      //   _prob_int_ = Pint;
-      //   std::cout << _prob_int_ << std::endl;
-      // }
+      if (is_mode_internal_probability()) {
+        DT_LOG_DEBUG(get_logging_priority(), "Using INTERNAL_PROBABILITY mode...");
+        size_t count = 0;
+        if (configuration_.has_key("internal_probability.min")) {
+          const double pmin = configuration_.fetch_real("internal_probability.min");
+          DT_THROW_IF(pmin < 0.0 || pmin > 1.0, std::range_error,
+                      "Invalid minimal internal probability (" << pmin << ") !");
+          _prob_int_min_ = pmin;
+          count++;
+        }
+        if (configuration_.has_key("internal_probablity.max")) {
+          const double pmax = configuration_.fetch_real("internal_probability.max");
+          DT_THROW_IF(pmax < 0.0 || pmax > 1.0, std::range_error,
+                      "Invalid maximal internal probability (" << pmax << ") !");
+          _prob_int_max_ = pmax;
+          count++;
+        }
+        DT_THROW_IF(count == 0, std::logic_error,
+                    "Missing 'internal_probability.min' or 'internal_probability.max' property !");
+        if (count == 2 && _prob_int_min_ >= 0 && _prob_int_max_ >= 0) {
+          DT_THROW_IF(_prob_int_min_ > _prob_int_max_, std::logic_error,
+                      "Invalid 'internal_probability.min' > 'internal_probability.max' values !");
+        }
+      }
 
-      // if (configuration_.has_key ("external_probability")) {
-      //   const double Pext = configuration_.fetch_real ("external_probability");
-      //   DT_THROW_IF (Pext < 0 || Pext >1, std::logic_error, "Invalid external probability (" << Pext << ") !");
-      //   _prob_ext_ = Pext;
-      // }
-
-      // if (configuration_.has_key ("delta_vertices_y")) {
-      //   const double delta_y = configuration_.fetch_real ("delta_vertices_y");
-      //   // DT_THROW_IF (delta_y < 0, std::logic_error, "Invalid internal probability (" << Pint << ") !");
-      //   _delta_vertices_y_ = std::fabs(delta_y);
-      // }
-
-      // if (configuration_.has_key ("delta_vertices_z")) {
-      //   const double delta_z = configuration_.fetch_real ("delta_vertices_z");
-      //   // DT_THROW_IF (delta_z < 0, std::logic_error, "Invalid internal probability (" << Pint << ") !");
-      //   _delta_vertices_z_ = std::fabs(delta_z);
-      // }
+      if (is_mode_external_probability()) {
+        DT_LOG_DEBUG(get_logging_priority(), "Using EXTERNAL_PROBABILITY mode...");
+        size_t count = 0;
+        if (configuration_.has_key("external_probability.min")) {
+          const double pmin = configuration_.fetch_real("external_probability.min");
+          DT_THROW_IF(pmin < 0.0 || pmin > 1.0, std::range_error,
+                      "Invalid minimal external probability (" << pmin << ") !");
+          _prob_ext_min_ = pmin;
+          count++;
+        }
+        if (configuration_.has_key("external_probablity.max")) {
+          const double pmax = configuration_.fetch_real("external_probability.max");
+          DT_THROW_IF(pmax < 0.0 || pmax > 1.0, std::range_error,
+                      "Invalid maximal external probability (" << pmax << ") !");
+          _prob_ext_max_ = pmax;
+          count++;
+        }
+        DT_THROW_IF(count == 0, std::logic_error,
+                    "Missing 'external_probability.min' or 'external_probability.max' property !");
+        if (count == 2 && _prob_ext_min_ >= 0 && _prob_ext_max_ >= 0) {
+          DT_THROW_IF(_prob_ext_min_ > _prob_ext_max_, std::logic_error,
+                      "Invalid 'external_probability.min' > 'external_probability.max' values !");
+        }
+      }
 
       this->i_cut::_set_initialized(true);
       return;
@@ -131,19 +176,56 @@ namespace snemo {
       }
 
       const snemo::datamodel::topology_data & TD = ER.get<snemo::datamodel::topology_data>(_TD_label_);
-      TD.tree_dump();
+      if (! TD.has_pattern()) {
+        DT_LOG_DEBUG(get_logging_priority(), "Missing topology pattern !");
+        return cuts::SELECTION_INAPPLICABLE;
+      }
+      const snemo::datamodel::base_topology_pattern & a_pattern = TD.get_pattern();
+      const std::string & a_pattern_id = a_pattern.get_pattern_id();
 
       // Check if event has the correct pattern id
       bool check_pattern_id = true;
       if (is_mode_pattern_id()) {
         DT_LOG_DEBUG(get_logging_priority(), "Running PATTERN_ID mode...");
-        if (! TD.has_pattern()) {
-          DT_LOG_DEBUG(get_logging_priority(), "Missing topology pattern !");
+        if (a_pattern_id != _pattern_id_label_) check_pattern_id = false;
+      }
+
+      // Check if event has correct internal probability
+      bool check_internal_probability = true;
+      if (is_mode_internal_probability()) {
+        if (a_pattern_id != "2e") {
+          DT_LOG_DEBUG(get_logging_priority(), "Internal probability cut only applicable to '2e' topology !");
           return cuts::SELECTION_INAPPLICABLE;
         }
-        const snemo::datamodel::base_topology_pattern & a_pattern = TD.get_pattern();
-        const std::string & a_pattern_id = a_pattern.get_pattern_id();
-        if (a_pattern_id != _pattern_id_label_) check_pattern_id = false;
+        const snemo::datamodel::topology_2e_pattern * ptr_2e_pattern
+          = dynamic_cast<const snemo::datamodel::topology_2e_pattern *>(&a_pattern);
+
+        const double pint = ptr_2e_pattern->get_internal_probability();
+        if (datatools::is_valid(_prob_int_min_)) {
+          if (pint < _prob_int_min_) check_internal_probability = false;
+        }
+        if (datatools::is_valid(_prob_int_max_)) {
+          if (pint > _prob_int_max_) check_internal_probability = false;
+        }
+      }
+
+      // Check if event has correct external probability
+      bool check_external_probability = true;
+      if (is_mode_external_probability()) {
+        if (a_pattern_id != "2e") {
+          DT_LOG_DEBUG(get_logging_priority(), "External probability cut only applicable to '2e' topology !");
+          return cuts::SELECTION_INAPPLICABLE;
+        }
+        const snemo::datamodel::topology_2e_pattern * ptr_2e_pattern
+          = dynamic_cast<const snemo::datamodel::topology_2e_pattern *>(&a_pattern);
+
+        const double pext = ptr_2e_pattern->get_external_probability();
+        if (datatools::is_valid(_prob_ext_min_)) {
+          if (pext < _prob_ext_min_) check_external_probability = false;
+        }
+        if (datatools::is_valid(_prob_ext_max_)) {
+          if (pext > _prob_ext_max_) check_external_probability = false;
+        }
       }
 
       // double internal_prob = datatools::invalid_real();
@@ -174,7 +256,9 @@ namespace snemo {
       //   check = false;
 
       cut_returned = cuts::SELECTION_REJECTED;
-      if (check_pattern_id) {
+      if (check_pattern_id &&
+          check_internal_probability &&
+          check_external_probability) {
         DT_LOG_DEBUG(get_logging_priority(), "Event rejected by topology cut!");
         cut_returned = cuts::SELECTION_ACCEPTED;
       }

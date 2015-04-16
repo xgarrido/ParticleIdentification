@@ -54,7 +54,9 @@ namespace snemo {
       /// Mode of the cut
       enum mode_type {
         MODE_UNDEFINED = 0,
-        MODE_PATTERN_ID = datatools::bit_mask::bit01
+        MODE_PATTERN_ID = datatools::bit_mask::bit01,
+        MODE_INTERNAL_PROBABILITY = datatools::bit_mask::bit02,
+        MODE_EXTERNAL_PROBABILITY = datatools::bit_mask::bit03
       };
 
       /// Return the cut mode
@@ -62,6 +64,12 @@ namespace snemo {
 
       /// Check mode PATTERN_ID
       bool is_mode_pattern_id() const;
+
+      /// Check mode INTERNAL_PROBABILITY
+      bool is_mode_internal_probability() const;
+
+      /// Check mode EXTERNAL_PROBABILITY
+      bool is_mode_external_probability() const;
 
       /// Constructor
       topology_cut(datatools::logger::priority logging_priority_ = datatools::logger::PRIO_FATAL);
@@ -91,8 +99,10 @@ namespace snemo {
       uint32_t    _mode_;     //!< Mode of the cut
 
       std::string _pattern_id_label_; //!< Pattern ID label
-      double _prob_int_;
-      double _prob_ext_;
+      double _prob_int_min_;//!< Minimal internal probability
+      double _prob_int_max_;//!< Maximal internal probability
+      double _prob_ext_min_;//!< Minimal external probability
+      double _prob_ext_max_;//!< Maximal external probability
       double _delta_vertices_y_;
       double _delta_vertices_z_;
 
