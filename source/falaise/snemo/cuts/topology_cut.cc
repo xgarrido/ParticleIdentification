@@ -234,14 +234,14 @@ namespace snemo {
         size_t count = 0;
         if (configuration_.has_key("range_delta_vertices_y.min")) {
           const double delta_y_min = configuration_.fetch_real("range_delta_vertices_y.min");
-          DT_THROW_IF(delta_y_min < 0.0 || delta_y_min > 1.0, std::range_error,
+          DT_THROW_IF(delta_y_min < 0.0, std::range_error,
                       "Invalid minimal delta vertices y (" << delta_y_min << ") !");
           _delta_vertices_y_min_ = delta_y_min;
           count++;
         }
         if (configuration_.has_key("range_external_probablity.max")) {
           const double delta_y_max = configuration_.fetch_real("range_delta_vertices_y.max");
-          DT_THROW_IF(delta_y_max < 0.0 || delta_y_max > 1.0, std::range_error,
+          DT_THROW_IF(delta_y_max < 0.0, std::range_error,
                       "Invalid maximal delta vertices y (" << delta_y_max << ") !");
           _delta_vertices_y_max_ = delta_y_max;
           count++;
@@ -259,14 +259,14 @@ namespace snemo {
         size_t count = 0;
         if (configuration_.has_key("range_delta_vertices_z.min")) {
           const double delta_z_min = configuration_.fetch_real("range_delta_vertices_z.min");
-          DT_THROW_IF(delta_z_min < 0.0 || delta_z_min > 1.0, std::range_error,
+          DT_THROW_IF(delta_z_min < 0.0, std::range_error,
                       "Invalid minimal delta vertices z (" << delta_z_min << ") !");
           _delta_vertices_z_min_ = delta_z_min;
           count++;
         }
         if (configuration_.has_key("range_external_probablity.max")) {
           const double delta_z_max = configuration_.fetch_real("range_delta_vertices_z.max");
-          DT_THROW_IF(delta_z_max < 0.0 || delta_z_max > 1.0, std::range_error,
+          DT_THROW_IF(delta_z_max < 0.0, std::range_error,
                       "Invalid maximal delta vertices z (" << delta_z_max << ") !");
           _delta_vertices_z_max_ = delta_z_max;
           count++;
@@ -284,14 +284,14 @@ namespace snemo {
         size_t count = 0;
         if (configuration_.has_key("range_angle.min")) {
           const double angle_min = configuration_.fetch_real("range_angle.min");
-          DT_THROW_IF(angle_min < 0.0 || angle_min > 1.0, std::range_error,
+          DT_THROW_IF(angle_min < 0.0 || angle_min > 180., std::range_error,
                       "Invalid minimal angle (" << angle_min << ") !");
           _angle_min_ = angle_min;
           count++;
         }
         if (configuration_.has_key("range_angle.max")) {
           const double angle_max = configuration_.fetch_real("range_angle.max");
-          DT_THROW_IF(angle_max < 0.0 || angle_max > 1.0, std::range_error,
+          DT_THROW_IF(angle_max < 0.0 || angle_max > 180., std::range_error,
                       "Invalid maximal angle (" << angle_max << ") !");
           _angle_max_ = angle_max;
           count++;
@@ -591,7 +591,13 @@ namespace snemo {
           check_has_internal_probability &&
           check_has_external_probability &&
           check_range_internal_probability &&
-          check_range_external_probability) {
+          check_range_external_probability &&
+          check_has_delta_vertices_y &&
+          check_has_delta_vertices_z &&
+          check_range_delta_vertices_y &&
+          check_range_delta_vertices_z &&
+          check_has_angle &&
+          check_range_angle) {
         DT_LOG_DEBUG(get_logging_priority(), "Event rejected by topology cut!");
         cut_returned = cuts::SELECTION_ACCEPTED;
       }
