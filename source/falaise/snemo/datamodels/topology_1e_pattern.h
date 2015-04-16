@@ -38,7 +38,7 @@ namespace snemo {
       bool has_angle() const;
 
       /// Set angle
-      void set_angle(const double angle_);
+      void set_angle(double);
 
       /// Return internal probability
       double get_angle() const;
