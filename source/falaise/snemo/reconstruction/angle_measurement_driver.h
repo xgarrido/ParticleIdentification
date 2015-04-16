@@ -99,6 +99,10 @@ namespace snemo {
       //Main process
       int process(const snemo::datamodel::particle_track & pt1_,
                   const snemo::datamodel::particle_track & pt2_,
+                  std::vector<double> & angle_);
+
+      int process(const snemo::datamodel::particle_track & pt1_,
+                  const snemo::datamodel::particle_track & pt2_,
                   double & angle_);
 
       int process(const snemo::datamodel::particle_track & pt_,
@@ -125,7 +129,7 @@ namespace snemo {
       /// Special method to process and generate particle track data
       int _process_algo(const snemo::datamodel::particle_track & pt1_,
                         const snemo::datamodel::particle_track & pt2_,
-                        double & angle);
+                        std::vector<double> & angle);
 
       /// Computes the angle between the pt_ the X axis
       int _process_single_charged(const snemo::datamodel::particle_track & pt_,
@@ -134,13 +138,13 @@ namespace snemo {
       /// Computes the angle between the pt1_ and pt2_ at the time of the emission
       int _process_charged_particles(const snemo::datamodel::particle_track & pt1_,
                                      const snemo::datamodel::particle_track & pt2_,
-                                     double & angle);
+                                     std::vector<double> & angle);
 
       /// Computes the angle between the pt1_ and pt2_ at the time of the emission
       /// when one particle is a gamma
       int _process_charged_gamma_particles(const snemo::datamodel::particle_track & pt1_,
-                                     const snemo::datamodel::particle_track & pt2_,
-                                     double & angle);
+                                           const snemo::datamodel::particle_track & pt2_,
+                                           std::vector<double> & angle);
 
 
       /// Give default values to specific class members.
