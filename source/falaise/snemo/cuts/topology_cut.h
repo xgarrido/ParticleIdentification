@@ -54,9 +54,11 @@ namespace snemo {
       /// Mode of the cut
       enum mode_type {
         MODE_UNDEFINED = 0,
-        MODE_PATTERN_ID = datatools::bit_mask::bit01,
-        MODE_INTERNAL_PROBABILITY = datatools::bit_mask::bit02,
-        MODE_EXTERNAL_PROBABILITY = datatools::bit_mask::bit03
+        MODE_PATTERN_ID                 = datatools::bit_mask::bit01,
+        MODE_HAS_INTERNAL_PROBABILITY   = datatools::bit_mask::bit02,
+        MODE_HAS_EXTERNAL_PROBABILITY   = datatools::bit_mask::bit03,
+        MODE_RANGE_INTERNAL_PROBABILITY = datatools::bit_mask::bit04,
+        MODE_RANGE_EXTERNAL_PROBABILITY = datatools::bit_mask::bit05
       };
 
       /// Return the cut mode
@@ -65,11 +67,17 @@ namespace snemo {
       /// Check mode PATTERN_ID
       bool is_mode_pattern_id() const;
 
-      /// Check mode INTERNAL_PROBABILITY
-      bool is_mode_internal_probability() const;
+      /// Check mode HAS_INTERNAL_PROBABILITY
+      bool is_mode_has_internal_probability() const;
 
-      /// Check mode EXTERNAL_PROBABILITY
-      bool is_mode_external_probability() const;
+      /// Check mode HAS_EXTERNAL_PROBABILITY
+      bool is_mode_has_external_probability() const;
+
+      /// Check mode RANGE_INTERNAL_PROBABILITY
+      bool is_mode_range_internal_probability() const;
+
+      /// Check mode RANGE_EXTERNAL_PROBABILITY
+      bool is_mode_range_external_probability() const;
 
       /// Constructor
       topology_cut(datatools::logger::priority logging_priority_ = datatools::logger::PRIO_FATAL);
