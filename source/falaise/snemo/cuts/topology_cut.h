@@ -64,7 +64,7 @@ namespace snemo {
         MODE_RANGE_DELTA_VERTICES_Y     = datatools::bit_mask::bit08,
         MODE_RANGE_DELTA_VERTICES_Z     = datatools::bit_mask::bit09,
         MODE_HAS_ANGLE                  = datatools::bit_mask::bit10,
-        MODE_RANGE_ANGLE                = datatools::bit_mask::bit11,
+        MODE_RANGE_ANGLE                = datatools::bit_mask::bit11
       };
 
       /// Return the cut mode
