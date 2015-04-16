@@ -37,7 +37,7 @@ namespace snemo {
 
     bool topology_2e_pattern::has_internal_probability() const
     {
-      return datatools::is_valid(_tof_.get_internal_probabilities().front());
+      return ! _tof_.get_internal_probabilities().empty();
     }
 
     void topology_2e_pattern::set_internal_probability(double prob_)
@@ -48,12 +48,13 @@ namespace snemo {
 
     double topology_2e_pattern::get_internal_probability() const
     {
+      DT_THROW_IF(! has_internal_probability(), std::logic_error, "No internal probability !");
       return _tof_.get_internal_probabilities().front();
     }
 
     bool topology_2e_pattern::has_external_probability() const
     {
-      return datatools::is_valid(_tof_.get_external_probabilities().front());
+      return ! _tof_.get_external_probabilities().empty();
     }
 
     void topology_2e_pattern::set_external_probability(double prob_)
@@ -64,6 +65,7 @@ namespace snemo {
 
     double topology_2e_pattern::get_external_probability() const
     {
+      DT_THROW_IF(! has_external_probability(), std::logic_error, "No external probability !");
       return _tof_.get_external_probabilities().front();
     }
 
@@ -101,7 +103,7 @@ namespace snemo {
 
     bool topology_2e_pattern::has_angle() const
     {
-      return datatools::is_valid(_angle_.get_angle().front());
+      return !_angle_.get_angle().empty();
     }
 
     void topology_2e_pattern::set_angle(double angle_)
@@ -112,6 +114,7 @@ namespace snemo {
 
     double topology_2e_pattern::get_angle() const
     {
+      DT_THROW_IF(! has_angle(), std::logic_error, "No angle stored !");
       return _angle_.get_angle().front();
     }
 
@@ -125,15 +128,49 @@ namespace snemo {
       base_topology_pattern::tree_dump(out_, title_, indent_, true);
 
       out_ << indent << datatools::i_tree_dumpable::tag
-           << "Internal probability : " << get_internal_probability() << std::endl;
+           << "Internal probability : ";
+      if (has_external_probability()) {
+        out_ << get_internal_probability()/CLHEP::perCent << " %";
+      } else {
+        out_ << "No value";
+      }
+      out_ << std::endl;
+
       out_ << indent << datatools::i_tree_dumpable::tag
-           << "External probability : " << get_external_probability() << std::endl;
+           << "External probability : ";
+      if (has_external_probability()) {
+        out_ << get_external_probability()/CLHEP::perCent << " %";
+      } else {
+        out_ << "No value";
+      }
+      out_ << std::endl;
+
       out_ << indent << datatools::i_tree_dumpable::tag
-           << "Delta vertices Y : " << get_delta_vertices_y()/CLHEP::mm << " mm" << std::endl;
+           << "Delta vertices Y : ";
+      if (has_delta_vertices_y()) {
+        out_ << get_delta_vertices_y()/CLHEP::mm << " mm";
+      } else {
+        out_ << "No value";
+      }
+      out_ << std::endl;
+
       out_ << indent << datatools::i_tree_dumpable::tag
-           << "Delta vertices Z : " << get_delta_vertices_z()/CLHEP::mm << " mm" << std::endl;
-      out_ << indent << datatools::i_tree_dumpable::tag
-           << "Angle : " << get_angle() << std::endl;
+           << "Delta vertices Z : ";
+      if (has_delta_vertices_z()) {
+        out_ << get_delta_vertices_z()/CLHEP::mm << " mm";
+      } else {
+        out_ << "No value";
+      }
+      out_ << std::endl;
+
+      out_ << indent << datatools::i_tree_dumpable::inherit_tag(inherit_)
+           << "Angle : ";
+      if (has_angle()) {
+        out_ << get_angle()/CLHEP::degree << " °";
+      } else {
+        out_ << "No value";
+      }
+      out_ << std::endl;
 
       return;
     }

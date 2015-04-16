@@ -44,7 +44,7 @@ namespace snemo {
 
     bool TOF_measurement::has_particle_tracks() const
     {
-      return true;
+      return _particle_track_pair_.first.has_data() && _particle_track_pair_.second.has_data();
     }
 
     const TOF_measurement::particle_pair_type & TOF_measurement::get_particle_tracks() const
@@ -70,6 +70,8 @@ namespace snemo {
 
     delta_vertices_measurement::delta_vertices_measurement()
     {
+      datatools::invalidate(_delta_vertices_y_);
+      datatools::invalidate(_delta_vertices_z_);
       return;
     }
 
@@ -100,7 +102,7 @@ namespace snemo {
 
     bool delta_vertices_measurement::has_particle_tracks() const
     {
-      return true;
+      return _particle_track_pair_.first.has_data() && _particle_track_pair_.second.has_data();
     }
 
     const delta_vertices_measurement::particle_pair_type & delta_vertices_measurement::get_particle_tracks() const
@@ -146,7 +148,7 @@ namespace snemo {
 
     bool angle_measurement::has_particle_tracks() const
     {
-      return true;
+      return _particle_track_pair_.first.has_data() && _particle_track_pair_.second.has_data();
     }
 
     const angle_measurement::particle_pair_type & angle_measurement::get_particle_tracks() const
@@ -160,7 +162,7 @@ namespace snemo {
     }
 
     void angle_measurement::set_particle_tracks(const snemo::datamodel::particle_track::handle_type & hpt1_,
-                                              const snemo::datamodel::particle_track::handle_type & hpt2_)
+                                                const snemo::datamodel::particle_track::handle_type & hpt2_)
     {
       _particle_track_pair_ = std::make_pair(hpt1_, hpt2_);
       return;
