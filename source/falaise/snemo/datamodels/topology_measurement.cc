@@ -98,6 +98,28 @@ namespace snemo {
       return _delta_vertices_z_;
     }
 
+    bool delta_vertices_measurement::has_particle_tracks() const
+    {
+      return true;
+    }
+
+    const delta_vertices_measurement::particle_pair_type & delta_vertices_measurement::get_particle_tracks() const
+    {
+      return _particle_track_pair_;
+    }
+
+    delta_vertices_measurement::particle_pair_type & delta_vertices_measurement::grab_particle_tracks()
+    {
+      return _particle_track_pair_;
+    }
+
+    void delta_vertices_measurement::set_particle_tracks(const snemo::datamodel::particle_track::handle_type & hpt1_,
+                                              const snemo::datamodel::particle_track::handle_type & hpt2_)
+    {
+      _particle_track_pair_ = std::make_pair(hpt1_, hpt2_);
+      return;
+    }
+
     // Serial tag for datatools::i_serializable interface :
     DATATOOLS_SERIALIZATION_SERIAL_TAG_IMPLEMENTATION(angle_measurement,
                                                       "snemo::datamodel::angle_measurement")
@@ -112,14 +134,36 @@ namespace snemo {
       return;
     }
 
-    const double & angle_measurement::get_angle() const
+    const angle_measurement::angle_type & angle_measurement::get_angle() const
     {
       return _angle_;
     }
 
-    double & angle_measurement::grab_angle()
+    angle_measurement::angle_type & angle_measurement::grab_angle()
     {
       return _angle_;
+    }
+
+    bool angle_measurement::has_particle_tracks() const
+    {
+      return true;
+    }
+
+    const angle_measurement::particle_pair_type & angle_measurement::get_particle_tracks() const
+    {
+      return _particle_track_pair_;
+    }
+
+    angle_measurement::particle_pair_type & angle_measurement::grab_particle_tracks()
+    {
+      return _particle_track_pair_;
+    }
+
+    void angle_measurement::set_particle_tracks(const snemo::datamodel::particle_track::handle_type & hpt1_,
+                                              const snemo::datamodel::particle_track::handle_type & hpt2_)
+    {
+      _particle_track_pair_ = std::make_pair(hpt1_, hpt2_);
+      return;
     }
 
   } // end of namespace datamodel

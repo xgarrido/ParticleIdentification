@@ -79,6 +79,10 @@ namespace snemo {
     {
     public:
 
+      /// Typedef for pair of particle tracks
+      typedef std::pair<snemo::datamodel::particle_track::handle_type,
+                        snemo::datamodel::particle_track::handle_type> particle_pair_type;
+
       /// Constructor
       delta_vertices_measurement();
 
@@ -97,10 +101,24 @@ namespace snemo {
       /// Get a mutable reference to delta vertices z
       double & grab_delta_vertices_z();
 
+      /// Check if particle tracks are associated
+      bool has_particle_tracks() const;
+
+      /// Get a non-mutable reference to particles tracks
+      const particle_pair_type & get_particle_tracks() const;
+
+      /// Get a mutable reference to particles tracks
+      particle_pair_type & grab_particle_tracks();
+
+      /// Attach a cluster by handle
+      void set_particle_tracks(const snemo::datamodel::particle_track::handle_type & hpt1_,
+                               const snemo::datamodel::particle_track::handle_type & hpt2_);
+
     private:
 
       double _delta_vertices_y_;
       double _delta_vertices_z_;
+      particle_pair_type _particle_track_pair_;
 
       DATATOOLS_SERIALIZATION_DECLARATION();
     };
@@ -111,6 +129,13 @@ namespace snemo {
     {
     public:
 
+      /// Typedef for angle type
+      typedef std::vector<double> angle_type;
+
+      /// Typedef for pair of particle tracks
+      typedef std::pair<snemo::datamodel::particle_track::handle_type,
+                        snemo::datamodel::particle_track::handle_type> particle_pair_type;
+
       /// Constructor
       angle_measurement();
 
@@ -118,14 +143,28 @@ namespace snemo {
       ~angle_measurement();
 
       /// Get a non-mutable reference to delta vertices z
-      const double & get_angle() const;
+      const angle_type & get_angle() const;
 
       /// Get a mutable reference to delta vertices z
-      double & grab_angle();
+      angle_type & grab_angle();
+
+      /// Check if particle tracks are associated
+      bool has_particle_tracks() const;
+
+      /// Get a non-mutable reference to particles tracks
+      const particle_pair_type & get_particle_tracks() const;
+
+      /// Get a mutable reference to particles tracks
+      particle_pair_type & grab_particle_tracks();
+
+      /// Attach a cluster by handle
+      void set_particle_tracks(const snemo::datamodel::particle_track::handle_type & hpt1_,
+                               const snemo::datamodel::particle_track::handle_type & hpt2_);
 
     private:
 
-      double _angle_;
+      angle_type _angle_;
+      particle_pair_type _particle_track_pair_;
 
       DATATOOLS_SERIALIZATION_DECLARATION();
     };
