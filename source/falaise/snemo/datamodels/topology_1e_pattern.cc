@@ -59,7 +59,7 @@ namespace snemo {
       out_ << indent << datatools::i_tree_dumpable::inherit_tag(inherit_)
            << "Angle : ";
       if (has_angle()) {
-        out_ << get_angle()/CLHEP::degree << " °";
+        out_ << get_angle()/CLHEP::degree << "°";
       } else {
         out_ << "No value";
       }
