@@ -32,7 +32,7 @@ namespace snemo {
 
     bool topology_1e_pattern::has_angle() const
     {
-      return datatools::is_valid(_angle_.get_angle().front());
+      return !_angle_.get_angle().empty();
     }
 
     void topology_1e_pattern::set_angle(double angle_)
@@ -43,6 +43,7 @@ namespace snemo {
 
     double topology_1e_pattern::get_angle() const
     {
+      DT_THROW_IF(! has_angle(), std::logic_error, "No angle stored !");
       return _angle_.get_angle().front();
     }
 
@@ -55,8 +56,14 @@ namespace snemo {
       if (! indent_.empty()) indent = indent_;
       base_topology_pattern::tree_dump(out_, title_, indent_, true);
 
-      out_ << indent << datatools::i_tree_dumpable::tag
-           << "Angle : " << get_angle() << std::endl;
+      out_ << indent << datatools::i_tree_dumpable::inherit_tag(inherit_)
+           << "Angle : ";
+      if (has_angle()) {
+        out_ << get_angle()/CLHEP::degree << " °";
+      } else {
+        out_ << "No value";
+      }
+      out_ << std::endl;
 
       return;
     }
