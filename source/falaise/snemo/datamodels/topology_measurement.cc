@@ -8,6 +8,29 @@ namespace snemo {
 
   namespace datamodel {
 
+    bool i_particle_pairing::has_particle_tracks() const
+    {
+      return _particle_track_pair_.first.has_data() && _particle_track_pair_.second.has_data();
+    }
+
+    const i_particle_pairing::particle_pair_type & i_particle_pairing::get_particle_tracks() const
+    {
+      return _particle_track_pair_;
+    }
+
+    i_particle_pairing::particle_pair_type & i_particle_pairing::grab_particle_tracks()
+    {
+      return _particle_track_pair_;
+    }
+
+    void i_particle_pairing::set_particle_tracks(const snemo::datamodel::particle_track::handle_type & hpt1_,
+                                                 const snemo::datamodel::particle_track::handle_type & hpt2_)
+    {
+      _particle_track_pair_ = std::make_pair(hpt1_, hpt2_);
+      return;
+    }
+
+
     // Serial tag for datatools::i_serializable interface :
     DATATOOLS_SERIALIZATION_SERIAL_TAG_IMPLEMENTATION(TOF_measurement,
                                                       "snemo::datamodel::TOF_measurement")
@@ -40,28 +63,6 @@ namespace snemo {
     TOF_measurement::probability_type & TOF_measurement::grab_external_probabilities()
     {
       return _external_probabilities_;
-    }
-
-    bool TOF_measurement::has_particle_tracks() const
-    {
-      return _particle_track_pair_.first.has_data() && _particle_track_pair_.second.has_data();
-    }
-
-    const TOF_measurement::particle_pair_type & TOF_measurement::get_particle_tracks() const
-    {
-      return _particle_track_pair_;
-    }
-
-    TOF_measurement::particle_pair_type & TOF_measurement::grab_particle_tracks()
-    {
-      return _particle_track_pair_;
-    }
-
-    void TOF_measurement::set_particle_tracks(const snemo::datamodel::particle_track::handle_type & hpt1_,
-                                              const snemo::datamodel::particle_track::handle_type & hpt2_)
-    {
-      _particle_track_pair_ = std::make_pair(hpt1_, hpt2_);
-      return;
     }
 
     // Serial tag for datatools::i_serializable interface :
@@ -100,28 +101,6 @@ namespace snemo {
       return _delta_vertices_z_;
     }
 
-    bool delta_vertices_measurement::has_particle_tracks() const
-    {
-      return _particle_track_pair_.first.has_data() && _particle_track_pair_.second.has_data();
-    }
-
-    const delta_vertices_measurement::particle_pair_type & delta_vertices_measurement::get_particle_tracks() const
-    {
-      return _particle_track_pair_;
-    }
-
-    delta_vertices_measurement::particle_pair_type & delta_vertices_measurement::grab_particle_tracks()
-    {
-      return _particle_track_pair_;
-    }
-
-    void delta_vertices_measurement::set_particle_tracks(const snemo::datamodel::particle_track::handle_type & hpt1_,
-                                              const snemo::datamodel::particle_track::handle_type & hpt2_)
-    {
-      _particle_track_pair_ = std::make_pair(hpt1_, hpt2_);
-      return;
-    }
-
     // Serial tag for datatools::i_serializable interface :
     DATATOOLS_SERIALIZATION_SERIAL_TAG_IMPLEMENTATION(angle_measurement,
                                                       "snemo::datamodel::angle_measurement")
@@ -144,28 +123,6 @@ namespace snemo {
     angle_measurement::angle_type & angle_measurement::grab_angle()
     {
       return _angle_;
-    }
-
-    bool angle_measurement::has_particle_tracks() const
-    {
-      return _particle_track_pair_.first.has_data() && _particle_track_pair_.second.has_data();
-    }
-
-    const angle_measurement::particle_pair_type & angle_measurement::get_particle_tracks() const
-    {
-      return _particle_track_pair_;
-    }
-
-    angle_measurement::particle_pair_type & angle_measurement::grab_particle_tracks()
-    {
-      return _particle_track_pair_;
-    }
-
-    void angle_measurement::set_particle_tracks(const snemo::datamodel::particle_track::handle_type & hpt1_,
-                                                const snemo::datamodel::particle_track::handle_type & hpt2_)
-    {
-      _particle_track_pair_ = std::make_pair(hpt1_, hpt2_);
-      return;
     }
 
   } // end of namespace datamodel
