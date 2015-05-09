@@ -10,22 +10,10 @@
 // Third party:
 // - Bayeux/datatools:
 #include <datatools/service_manager.h>
-// - Bayeux/geomtools:
-#include <geomtools/geometry_service.h>
-#include <bayeux/geomtools/manager.h>
-
-//- GSL:
-#include <gsl/gsl_cdf.h>
 
 // This project:
-#include <falaise/snemo/datamodels/data_model.h>
 #include <falaise/snemo/datamodels/pid_utils.h>
-#include <falaise/snemo/datamodels/particle_track_data.h>
-#include <falaise/snemo/processing/services.h>
-#include <falaise/snemo/geometry/locator_plugin.h>
-#include <falaise/snemo/geometry/calo_locator.h>
-#include <falaise/snemo/geometry/xcalo_locator.h>
-#include <falaise/snemo/geometry/gveto_locator.h>
+#include <falaise/snemo/datamodels/particle_track.h>
 
 namespace snemo {
 
@@ -46,24 +34,6 @@ namespace snemo {
     {
       _initialized_ = i_;
       return;
-    }
-
-    bool delta_vertices_driver::has_geometry_manager() const
-    {
-      return _geometry_manager_ != 0;
-    }
-
-    void delta_vertices_driver::set_geometry_manager(const geomtools::manager & gmgr_)
-    {
-      DT_THROW_IF (is_initialized(), std::logic_error, "Already initialized/locked !");
-      _geometry_manager_ = &gmgr_;
-      return;
-    }
-
-    const geomtools::manager & delta_vertices_driver::get_geometry_manager() const
-    {
-      DT_THROW_IF (! has_geometry_manager(), std::logic_error, "No geometry manager is setup !");
-      return *_geometry_manager_;
     }
 
     void delta_vertices_driver::set_logging_priority(const datatools::logger::priority priority_)
@@ -98,26 +68,19 @@ namespace snemo {
 
       _initialized_ = 0;
       _logging_priority_ = datatools::logger::PRIO_WARNING;
-      _geometry_manager_ = 0;
-      _sigma_t_gamma_interaction_uncertainty_ = 0.6 * CLHEP::ns;
       return;
     }
 
     // Initialization :
     void delta_vertices_driver::initialize(const datatools::properties  & setup_)
     {
+      DT_THROW_IF(is_initialized(), std::logic_error, "Driver '" << delta_vertices_id() << "' is already initialized !");
 
-      std::string key;
-
-      if (setup_.has_key(key = "DVD.sigma_t_gamma_interaction_uncertainty")) {
-        _sigma_t_gamma_interaction_uncertainty_ = setup_.fetch_real(key);
-        if (! setup_.has_explicit_unit(key)) {
-          _sigma_t_gamma_interaction_uncertainty_ *= CLHEP::ns;
-        }
-      }
-
-      // Extract the setup of the gamma clustering algo :
-      setup_.export_and_rename_starting_with(_delta_vertices_setup_, "DVD.", "");
+      // Logging priority
+      datatools::logger::priority lp = datatools::logger::extract_logging_configuration(setup_);
+      DT_THROW_IF(lp == datatools::logger::PRIO_UNDEFINED, std::logic_error,
+                  "Invalid logging priority level for geometry manager !");
+      set_logging_priority(lp);
 
       _set_initialized(true);
       return;
