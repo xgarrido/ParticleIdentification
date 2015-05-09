@@ -143,9 +143,7 @@ namespace snemo {
       if (status != 0) {
         DT_LOG_ERROR(get_logging_priority(),
                      "Computing topology quantities with '" << angle_measurement_id() << "' algorithm has failed !");
-        return status;
       }
-
       return status;
     }
 
@@ -165,7 +163,6 @@ namespace snemo {
       }
 
       DT_LOG_TRACE(get_logging_priority(), "Exiting...");
-
       return 0;
     }
 
@@ -175,19 +172,20 @@ namespace snemo {
     {
       DT_LOG_TRACE(get_logging_priority(), "Entering...");
 
-      if (! snemo::datamodel::pid_utils::particle_is_gamma(pt1_) &&
-          ! snemo::datamodel::pid_utils::particle_is_gamma(pt2_)) {
-        _process_charged_particles(pt1_, pt2_, angle_);
-      } else if (snemo::datamodel::pid_utils::particle_is_gamma(pt1_) ||
-                 snemo::datamodel::pid_utils::particle_is_gamma(pt2_)) {
-        _process_charged_gamma_particles(pt1_, pt2_, angle_);
-      } else {
-        DT_LOG_WARNING(get_logging_priority(), "Topology not supported !");
+      if (snemo::datamodel::pid_utils::particle_is_gamma(pt1_) &&
+          snemo::datamodel::pid_utils::particle_is_gamma(pt2_)) {
+        DT_LOG_WARNING(get_logging_priority(), "The two particles are gammas ! No angle can be measured !");
         return 1;
       }
 
-      DT_LOG_TRACE(get_logging_priority(), "Exiting...");
+      if (! snemo::datamodel::pid_utils::particle_is_gamma(pt1_) &&
+          ! snemo::datamodel::pid_utils::particle_is_gamma(pt2_)) {
+        _process_charged_particles(pt1_, pt2_, angle_);
+      } else {
+        _process_charged_gamma_particles(pt1_, pt2_, angle_);
+      }
 
+      DT_LOG_TRACE(get_logging_priority(), "Exiting...");
       return 0;
     }
 
@@ -205,8 +203,10 @@ namespace snemo {
         foil_vertex = i_vtx->get().get_position();
         break;
       }
-      DT_THROW_IF(! geomtools::is_valid(foil_vertex), std::logic_error,
-                  "Charged particle has no vertices on the source foil !");
+      if (! geomtools::is_valid(foil_vertex)) {
+        DT_LOG_WARNING(get_logging_priority(), "Particle has no vertices on the source foil !");
+        return 1;
+      }
 
       const snemo::datamodel::tracker_trajectory & a_trajectory = pt_.get_trajectory();
       const snemo::datamodel::base_trajectory_pattern & a_track_pattern = a_trajectory.get_pattern();
@@ -236,8 +236,10 @@ namespace snemo {
         foil_vertex1 = i_vtx1->get().get_position();
         break;
       }
-      DT_THROW_IF(! geomtools::is_valid(foil_vertex1), std::logic_error,
-                  "First charged particle has no vertices on the source foil !");
+      if (! geomtools::is_valid(foil_vertex1)) {
+        DT_LOG_WARNING(get_logging_priority(), "First charged particle has no vertices on the source foil !");
+        return 1;
+      }
 
       const snemo::datamodel::particle_track::vertex_collection_type & the_vertices2 = pt2_.get_vertices();
       geomtools::vector_3d foil_vertex2;
@@ -250,8 +252,10 @@ namespace snemo {
         foil_vertex2 = i_vtx2->get().get_position();
         break;
       }
-      DT_THROW_IF(! geomtools::is_valid(foil_vertex2), std::logic_error,
-                  "Second charged particle has no vertices on the source foil !");
+      if(! geomtools::is_valid(foil_vertex2)) {
+        DT_LOG_WARNING(get_logging_priority(), "Second charged particle has no vertices on the source foil !");
+        return 1;
+      }
 
       const snemo::datamodel::tracker_trajectory & a_trajectory1 = pt1_.get_trajectory();
       const snemo::datamodel::base_trajectory_pattern & a_track_pattern1 = a_trajectory1.get_pattern();
@@ -289,8 +293,10 @@ namespace snemo {
         foil_vertex_charged = i_vtx_charged->get().get_position();
         break;
       }
-      DT_THROW_IF(! geomtools::is_valid(foil_vertex_charged), std::logic_error,
-                  "Charged particle has no vertices on the source foil !");
+      if (! geomtools::is_valid(foil_vertex_charged)) {
+        DT_LOG_WARNING(get_logging_priority(), "Charged particle has no vertices on the source foil !");
+        return 1;
+      }
       const snemo::datamodel::tracker_trajectory & a_trajectory_charged = pt_charged.get_trajectory();
       const snemo::datamodel::base_trajectory_pattern & a_track_pattern_charged = a_trajectory_charged.get_pattern();
       geomtools::vector_3d dir1 = a_track_pattern_charged.get_shape().get_direction_on_curve(foil_vertex_charged);
