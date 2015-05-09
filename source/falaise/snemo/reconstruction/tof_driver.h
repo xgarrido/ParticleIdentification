@@ -1,9 +1,9 @@
 /** \file falaise/snemo/reconstruction/tof_driver.h
- * Author(s)     : Xavier Garrido <garrido@lal.in2p3.fr>
- * Creation date : 2012-10-07
- * Last modified : 2014-02-09
+ * Author(s)     : Steven Calvez <calvez@lal.in2p3.fr>
+ * Creation date : 2015-04-01
+ * Last modified : 2015-04-01
  *
- * Copyright (C) 2012-2014 Xavier Garrido <garrido@lal.in2p3.fr>
+ * Copyright (C) 2015 Steven Calvez <calvez@lal.in2p3.fr>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
  *
  * Description:
  *
- *   A driver class that wraps the GammaClustering algorithm.
+ *   A driver class that wraps the Time-Of-Flight algorithm.
  *
  * History:
  *
