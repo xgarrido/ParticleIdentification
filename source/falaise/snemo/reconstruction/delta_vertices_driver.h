@@ -33,17 +33,10 @@
 
 // Standard library:
 #include <string>
-#include <list>
-#include <map>
-#include <vector>
 
 // Third party:
-// - Boost:
-#include <boost/scoped_ptr.hpp>
-
 // - Bayeux/datatools:
 #include <datatools/logger.h>
-#include <datatools/properties.h>
 
 namespace snemo {
 
