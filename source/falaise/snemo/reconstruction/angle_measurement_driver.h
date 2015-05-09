@@ -1,9 +1,9 @@
 /** \file falaise/snemo/reconstruction/angle_measurement_driver.h
- * Author(s)     : Xavier Garrido <garrido@lal.in2p3.fr>
- * Creation date : 2012-10-07
- * Last modified : 2014-02-09
+ * Author(s)     : Steven Calvez <calvez@lal.in2p3.fr>
+ * Creation date : 2015-04-01
+ * Last modified : 2015-04-01
  *
- * Copyright (C) 2012-2014 Xavier Garrido <garrido@lal.in2p3.fr>
+ * Copyright (C) 2015 Steven Calvez <calvez@lal.in2p3.fr>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,37 +33,15 @@
 
 // Standard library:
 #include <string>
-#include <list>
-#include <map>
 #include <vector>
-
-// Third party:
-// - Boost:
-#include <boost/scoped_ptr.hpp>
 
 // - Bayeux/datatools:
 #include <datatools/logger.h>
-#include <datatools/properties.h>
-
-// This project:
-#include <falaise/snemo/datamodels/particle_track.h>
-
-namespace geomtools {
-  class manager;
-}
 
 namespace snemo {
 
   namespace datamodel {
-    class particle_track_data;
-  }
-
-  namespace datamodel {
-    class topology_data;
-  }
-
-  namespace geometry {
-    class locator_plugin;
+    class particle_track;
   }
 
   namespace reconstruction {
@@ -73,16 +51,8 @@ namespace snemo {
     {
     public:
 
+      /// Dedicated driver id
       static const std::string & angle_measurement_id();
-
-      /// Check the geometry manager
-      bool has_geometry_manager() const;
-
-      /// Address the geometry manager
-      void set_geometry_manager(const geomtools::manager & gmgr_);
-
-      /// Return a non-mutable reference to the geometry manager
-      const geomtools::manager & get_geometry_manager() const;
 
       /// Setting logging priority
       void set_logging_priority(const datatools::logger::priority priority_);
@@ -138,24 +108,21 @@ namespace snemo {
       /// Computes the angle between the pt1_ and pt2_ at the time of the emission
       int _process_charged_particles(const snemo::datamodel::particle_track & pt1_,
                                      const snemo::datamodel::particle_track & pt2_,
-                                     std::vector<double> & angle);
+                                     std::vector<double> & angles_);
 
       /// Computes the angle between the pt1_ and pt2_ at the time of the emission
       /// when one particle is a gamma
       int _process_charged_gamma_particles(const snemo::datamodel::particle_track & pt1_,
                                            const snemo::datamodel::particle_track & pt2_,
-                                           std::vector<double> & angle);
+                                           std::vector<double> & angles_);
 
 
       /// Give default values to specific class members.
       void _set_defaults ();
 
     private:
-      bool                                 _initialized_;            //!< Initialization status
+      bool                        _initialized_;      //!< Initialization status
       datatools::logger::priority _logging_priority_; //!< Logging priority
-      double _sigma_t_gamma_interaction_uncertainty_;     //!< The uncertainty on the track length
-      datatools::properties _angle_measurement_setup_;                         //!< The Gamma Clustering parameters
-      const geomtools::manager *           _geometry_manager_;       //!< The SuperNEMO geometry manager
       // for members
     };
 
