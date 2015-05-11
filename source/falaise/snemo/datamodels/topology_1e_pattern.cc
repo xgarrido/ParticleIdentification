@@ -32,19 +32,19 @@ namespace snemo {
 
     bool topology_1e_pattern::has_angle() const
     {
-      return !_angle_.get_angle().empty();
+      return _angle_.has_angle();
     }
 
     void topology_1e_pattern::set_angle(double angle_)
     {
-      _angle_.grab_angle().push_back(angle_);
+      _angle_.set_angle(angle_);
       return;
     }
 
     double topology_1e_pattern::get_angle() const
     {
       DT_THROW_IF(! has_angle(), std::logic_error, "No angle stored !");
-      return _angle_.get_angle().front();
+      return _angle_.get_angle();
     }
 
     void topology_1e_pattern::tree_dump(std::ostream      & out_,

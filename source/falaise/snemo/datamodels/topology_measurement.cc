@@ -81,6 +81,17 @@ namespace snemo {
       return;
     }
 
+    bool delta_vertices_measurement::has_delta_vertices_y() const
+    {
+      return datatools::is_valid(_delta_vertices_y_);
+    }
+
+    void delta_vertices_measurement::set_delta_vertices_y(double delta_)
+    {
+      _delta_vertices_y_ = delta_;
+      return;
+    }
+
     const double & delta_vertices_measurement::get_delta_vertices_y() const
     {
       return _delta_vertices_y_;
@@ -89,6 +100,17 @@ namespace snemo {
     double & delta_vertices_measurement::grab_delta_vertices_y()
     {
       return _delta_vertices_y_;
+    }
+
+    bool delta_vertices_measurement::has_delta_vertices_z() const
+    {
+      return datatools::is_valid(_delta_vertices_z_);
+    }
+
+    void delta_vertices_measurement::set_delta_vertices_z(double delta_)
+    {
+      _delta_vertices_z_ = delta_;
+      return;
     }
 
     const double & delta_vertices_measurement::get_delta_vertices_z() const
@@ -115,12 +137,23 @@ namespace snemo {
       return;
     }
 
-    const angle_measurement::angle_type & angle_measurement::get_angle() const
+    bool angle_measurement::has_angle() const
+    {
+      return datatools::is_valid(_angle_);
+    }
+
+    void angle_measurement::set_angle(double angle_)
+    {
+      _angle_ = angle_;
+      return;
+    }
+
+    const double & angle_measurement::get_angle() const
     {
       return _angle_;
     }
 
-    angle_measurement::angle_type & angle_measurement::grab_angle()
+    double & angle_measurement::grab_angle()
     {
       return _angle_;
     }
