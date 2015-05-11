@@ -194,7 +194,8 @@ namespace snemo {
 
     void tof_driver::_process_charged_particles(const snemo::datamodel::particle_track & pt1_,
                                                 const snemo::datamodel::particle_track & pt2_,
-                                                std::vector<double> & proba_int_, std::vector<double> & proba_ext_)
+                                                std::vector<double> & proba_int_,
+                                                std::vector<double> & proba_ext_)
     {
       // Compute theoretical times given energy, mass and track length
       const double E1 = _get_energy(pt1_);
@@ -232,7 +233,8 @@ namespace snemo {
 
     void tof_driver::_process_charged_gamma_particles(const snemo::datamodel::particle_track & pt1_,
                                                       const snemo::datamodel::particle_track & pt2_,
-                                                      std::vector<double> & proba_int_, std::vector<double> & proba_ext_)
+                                                      std::vector<double> & proba_int_,
+                                                      std::vector<double> & proba_ext_)
     {
       const snemo::datamodel::particle_track & a_gamma
         = (snemo::datamodel::pid_utils::particle_is_gamma(pt1_) ? pt1_ : pt2_);
@@ -255,8 +257,9 @@ namespace snemo {
         the_gamma_calorimeters = a_gamma.get_associated_calorimeter_hits ();
 
       snemo::datamodel::particle_track::vertex_collection_type the_gamma_calos_vertices;
-      a_gamma.fetch_vertices(the_gamma_calos_vertices, snemo::datamodel::particle_track::VERTEX_ON_MAIN_CALORIMETER |
-                             snemo::datamodel::particle_track::VERTEX_ON_X_CALORIMETER              |
+      a_gamma.fetch_vertices(the_gamma_calos_vertices,
+                             snemo::datamodel::particle_track::VERTEX_ON_MAIN_CALORIMETER |
+                             snemo::datamodel::particle_track::VERTEX_ON_X_CALORIMETER    |
                              snemo::datamodel::particle_track::VERTEX_ON_GAMMA_VETO);
 
       for (snemo::datamodel::particle_track::vertex_collection_type::iterator
