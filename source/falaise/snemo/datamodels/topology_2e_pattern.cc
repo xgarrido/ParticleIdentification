@@ -71,12 +71,12 @@ namespace snemo {
 
     bool topology_2e_pattern::has_delta_vertices_y() const
     {
-      return datatools::is_valid(_DeltaV_.get_delta_vertices_y());
+      return _DeltaV_.has_delta_vertices_y();
     }
 
     void topology_2e_pattern::set_delta_vertices_y(double deltaV_y_)
     {
-      _DeltaV_.grab_delta_vertices_y() = deltaV_y_;
+      _DeltaV_.set_delta_vertices_y(deltaV_y_);
       return;
     }
 
@@ -87,12 +87,12 @@ namespace snemo {
 
     bool topology_2e_pattern::has_delta_vertices_z() const
     {
-      return datatools::is_valid(_DeltaV_.get_delta_vertices_z());
+      return _DeltaV_.has_delta_vertices_z();
     }
 
     void topology_2e_pattern::set_delta_vertices_z(double deltaV_z_)
     {
-      _DeltaV_.grab_delta_vertices_z() = deltaV_z_;
+      _DeltaV_.set_delta_vertices_z(deltaV_z_);
       return;
     }
 
@@ -103,19 +103,19 @@ namespace snemo {
 
     bool topology_2e_pattern::has_angle() const
     {
-      return !_angle_.get_angle().empty();
+      return !_angle_.has_angle();
     }
 
     void topology_2e_pattern::set_angle(double angle_)
     {
-      _angle_.grab_angle().push_back(angle_);
+      _angle_.set_angle(angle_);
       return;
     }
 
     double topology_2e_pattern::get_angle() const
     {
       DT_THROW_IF(! has_angle(), std::logic_error, "No angle stored !");
-      return _angle_.get_angle().front();
+      return _angle_.get_angle();
     }
 
     void topology_2e_pattern::tree_dump(std::ostream      & out_,

@@ -96,11 +96,23 @@ namespace snemo {
       /// Destructor
       ~delta_vertices_measurement();
 
+      /// Check y-delta vertices
+      bool has_delta_vertices_y() const;
+
+      /// Set y-delta vertices
+      void set_delta_vertices_y(double delta_);
+
       /// Get a non-mutable reference to delta vertices y
       const double & get_delta_vertices_y() const;
 
       /// Get a mutable reference to delta vertices y
       double & grab_delta_vertices_y();
+
+      /// Check z-delta vertices
+      bool has_delta_vertices_z() const;
+
+      /// Set z-delta vertices
+      void set_delta_vertices_z(double delta_);
 
       /// Get a non-mutable reference to delta vertices z
       const double & get_delta_vertices_z() const;
@@ -123,24 +135,27 @@ namespace snemo {
     {
     public:
 
-      /// Typedef for angle type
-      typedef std::vector<double> angle_type;
-
       /// Constructor
       angle_measurement();
 
       /// Destructor
       ~angle_measurement();
 
-      /// Get a non-mutable reference to delta vertices z
-      const angle_type & get_angle() const;
+      /// Check angle validity
+      bool has_angle() const;
 
-      /// Get a mutable reference to delta vertices z
-      angle_type & grab_angle();
+      /// Set angle value
+      void set_angle(double angle_);
+
+      /// Get a non-mutable reference to angle
+      const double & get_angle() const;
+
+      /// Get a mutable reference to angle
+      double & grab_angle();
 
     private:
 
-      angle_type _angle_;
+      double _angle_;
 
       DATATOOLS_SERIALIZATION_DECLARATION();
     };

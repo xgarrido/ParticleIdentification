@@ -37,6 +37,8 @@
 
 // - Bayeux/datatools:
 #include <datatools/logger.h>
+// - Bayeux/geomtools:
+#include <geomtools/clhep.h>
 
 namespace snemo {
 
@@ -66,25 +68,23 @@ namespace snemo {
       /// Destructor
       ~angle_measurement_driver();
 
-      //Main process
-      int process(const snemo::datamodel::particle_track & pt1_,
-                  const snemo::datamodel::particle_track & pt2_,
-                  std::vector<double> & angle_);
-
-      int process(const snemo::datamodel::particle_track & pt1_,
-                  const snemo::datamodel::particle_track & pt2_,
-                  double & angle_);
-
+      /// Main process for single prticle track measurement
       int process(const snemo::datamodel::particle_track & pt_,
                   double & angle_);
 
-      /// Check if theclusterizer is initialized
+      /// Main process for angle between two particle tracks
+      int process(const snemo::datamodel::particle_track & pt1_,
+                  const snemo::datamodel::particle_track & pt2_,
+                  double & angle_);
+
+
+      /// Check if the driver is initialized
       bool is_initialized() const;
 
-      /// Initialize the gamma tracker through configuration properties
+      /// Initialize the driver through configuration properties
       void initialize(const datatools::properties & setup_);
 
-      /// Reset the clusterizer
+      /// Reset the driver
       void reset();
 
     protected:
@@ -92,33 +92,21 @@ namespace snemo {
       /// Set the initialization flag
       void _set_initialized(bool);
 
-      /// Special method to process and generate particle track data
+      /// Give default values to specific class members.
+      void _set_defaults ();
+
+      /// Special method to process single particle track
       int _process_algo(const snemo::datamodel::particle_track & pt_,
                         double & angle);
 
-      /// Special method to process and generate particle track data
+      /// Special method to process two particle tracks
       int _process_algo(const snemo::datamodel::particle_track & pt1_,
                         const snemo::datamodel::particle_track & pt2_,
-                        std::vector<double> & angle);
+                        double & angle);
 
-      /// Computes the angle between the pt_ the X axis
-      int _process_single_charged(const snemo::datamodel::particle_track & pt_,
-                                  double & angle);
-
-      /// Computes the angle between the pt1_ and pt2_ at the time of the emission
-      int _process_charged_particles(const snemo::datamodel::particle_track & pt1_,
-                                     const snemo::datamodel::particle_track & pt2_,
-                                     std::vector<double> & angles_);
-
-      /// Computes the angle between the pt1_ and pt2_ at the time of the emission
-      /// when one particle is a gamma
-      int _process_charged_gamma_particles(const snemo::datamodel::particle_track & pt1_,
-                                           const snemo::datamodel::particle_track & pt2_,
-                                           std::vector<double> & angles_);
-
-
-      /// Give default values to specific class members.
-      void _set_defaults ();
+      /// Get direction of a particle track
+      void _get_direction(const snemo::datamodel::particle_track & pt_,
+                          geomtools::vector_3d & direction_);
 
     private:
       bool                        _initialized_;      //!< Initialization status

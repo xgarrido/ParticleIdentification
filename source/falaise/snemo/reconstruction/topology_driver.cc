@@ -133,7 +133,7 @@ namespace snemo {
       int status = 0;
       DT_THROW_IF(! is_initialized(), std::logic_error, "Driver '" << topology_id() << "' is already initialized !");
 
-      status = _process_algo(ptd_,td_);
+      status = _process_algo(ptd_, td_);
       if (status != 0) {
         DT_LOG_ERROR(get_logging_priority(),
                      "Computing topology quantities with '" << topology_id() << "' algorithm has failed !");
@@ -307,8 +307,9 @@ namespace snemo {
       if (datatools::is_valid(delta_vertices_y)) t1e1pp->set_delta_vertices_y(delta_vertices_y);
       if (datatools::is_valid(delta_vertices_z)) t1e1pp->set_delta_vertices_z(delta_vertices_z);
 
-      if (std::abs(delta_vertices_y) < 100. &&
-          std::abs(delta_vertices_z) < 100.) {
+      const double safe_delta_vertex = 100.*CLHEP::mm;
+      if (std::abs(delta_vertices_y) < safe_delta_vertex &&
+          std::abs(delta_vertices_z) < safe_delta_vertex) {
         double angle = datatools::invalid_real();
         if (_AMD_) _AMD_->process(pt1, pt2, angle);
         if (datatools::is_valid(angle)) t1e1pp->set_angle(angle);
@@ -449,7 +450,9 @@ namespace snemo {
       if (datatools::is_valid(delta_vertices_y)) t1e1ap->set_delta_vertices_y(delta_vertices_y);
       if (datatools::is_valid(delta_vertices_z)) t1e1ap->set_delta_vertices_z(delta_vertices_z);
 
-      if (std::abs(delta_vertices_y) < 100. && std::abs(delta_vertices_z) < 100.) {
+      const double safe_delta_vertex = 100.*CLHEP::mm;
+      if (std::abs(delta_vertices_y) < safe_delta_vertex &&
+          std::abs(delta_vertices_z) < safe_delta_vertex) {
         double angle = datatools::invalid_real();
         if (_AMD_) _AMD_->process(pt1, pt2, angle);
         if (datatools::is_valid(angle)) t1e1ap->set_angle(angle);
