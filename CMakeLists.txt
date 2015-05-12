@@ -26,7 +26,8 @@ list(APPEND FalaiseParticleIdentificationPlugin_HEADERS
   source/falaise/snemo/reconstruction/tof_driver.h
   source/falaise/snemo/reconstruction/delta_vertices_driver.h
   source/falaise/snemo/reconstruction/angle_measurement_driver.h
-  source/falaise/snemo/cuts/topology_cut.h
+  source/falaise/snemo/cuts/topology_data_cut.h
+  source/falaise/snemo/cuts/channel_2e_cut.h
   source/falaise/snemo/cuts/pid_cut.h
   source/falaise/snemo/datamodels/topology_data.h
   source/falaise/snemo/datamodels/topology_data.ipp
@@ -60,7 +61,8 @@ list(APPEND FalaiseParticleIdentificationPlugin_SOURCES
   source/falaise/snemo/reconstruction/tof_driver.cc
   source/falaise/snemo/reconstruction/delta_vertices_driver.cc
   source/falaise/snemo/reconstruction/angle_measurement_driver.cc
-  source/falaise/snemo/cuts/topology_cut.cc
+  source/falaise/snemo/cuts/topology_data_cut.cc
+  source/falaise/snemo/cuts/channel_2e_cut.cc
   source/falaise/snemo/cuts/pid_cut.cc
   source/falaise/snemo/datamodels/topology_data.cc
   source/falaise/snemo/datamodels/the_serializable_bis.cc

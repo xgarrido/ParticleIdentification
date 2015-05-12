@@ -1,7 +1,7 @@
-// falaise/snemo/cuts/topology_cut.cc
+// falaise/snemo/cuts/channel_2e_cut.cc
 
 // Ourselves:
-#include <falaise/snemo/cuts/topology_cut.h>
+#include <falaise/snemo/cuts/channel_2e_cut.h>
 
 // Standard library:
 #include <stdexcept>
@@ -22,12 +22,12 @@ namespace snemo {
   namespace cut {
 
     // Registration instantiation macro :
-    CUT_REGISTRATION_IMPLEMENT(topology_cut, "snemo::cut::topology_cut");
+    CUT_REGISTRATION_IMPLEMENT(channel_2e_cut, "snemo::cut::channel_2e_cut");
 
-    void topology_cut::_set_defaults()
+    void channel_2e_cut::_set_defaults()
     {
       _mode_ = MODE_UNDEFINED;
-      _TD_label_ = "TD";//snemo::datamodel::data_info::default_topology_data_label();
+      _TD_label_ = "TD";//snemo::datamodel::data_info::default_channel_2e_data_label();
       datatools::invalidate(_prob_int_min_);
       datatools::invalidate(_prob_int_max_);
       datatools::invalidate(_prob_ext_min_);
@@ -41,80 +41,75 @@ namespace snemo {
       return;
     }
 
-    uint32_t topology_cut::get_mode() const
+    uint32_t channel_2e_cut::get_mode() const
     {
       return _mode_;
     }
 
-    bool topology_cut::is_mode_pattern_id() const
-    {
-      return _mode_ & MODE_PATTERN_ID;
-    }
-
-    bool topology_cut::is_mode_has_internal_probability() const
+    bool channel_2e_cut::is_mode_has_internal_probability() const
     {
       return _mode_ & MODE_HAS_INTERNAL_PROBABILITY;
     }
 
-    bool topology_cut::is_mode_has_external_probability() const
+    bool channel_2e_cut::is_mode_has_external_probability() const
     {
       return _mode_ & MODE_HAS_EXTERNAL_PROBABILITY;
     }
 
-    bool topology_cut::is_mode_range_internal_probability() const
+    bool channel_2e_cut::is_mode_range_internal_probability() const
     {
       return _mode_ & MODE_RANGE_INTERNAL_PROBABILITY;
     }
 
-    bool topology_cut::is_mode_range_external_probability() const
+    bool channel_2e_cut::is_mode_range_external_probability() const
     {
       return _mode_ & MODE_RANGE_EXTERNAL_PROBABILITY;
     }
 
-    bool topology_cut::is_mode_has_delta_vertices_y() const
+    bool channel_2e_cut::is_mode_has_delta_vertices_y() const
     {
       return _mode_ & MODE_HAS_DELTA_VERTICES_Y;
     }
 
-    bool topology_cut::is_mode_range_delta_vertices_y() const
+    bool channel_2e_cut::is_mode_range_delta_vertices_y() const
     {
       return _mode_ & MODE_RANGE_DELTA_VERTICES_Y;
     }
 
-    bool topology_cut::is_mode_has_delta_vertices_z() const
+    bool channel_2e_cut::is_mode_has_delta_vertices_z() const
     {
       return _mode_ & MODE_HAS_DELTA_VERTICES_Z;
     }
 
-    bool topology_cut::is_mode_range_delta_vertices_z() const
+    bool channel_2e_cut::is_mode_range_delta_vertices_z() const
     {
       return _mode_ & MODE_RANGE_DELTA_VERTICES_Z;
     }
 
-    bool topology_cut::is_mode_has_angle() const
+    bool channel_2e_cut::is_mode_has_angle() const
     {
       return _mode_ & MODE_HAS_ANGLE;
     }
 
-    bool topology_cut::is_mode_range_angle() const
+    bool channel_2e_cut::is_mode_range_angle() const
     {
       return _mode_ & MODE_RANGE_ANGLE;
     }
 
-    topology_cut::topology_cut(datatools::logger::priority logger_priority_)
+    channel_2e_cut::channel_2e_cut(datatools::logger::priority logger_priority_)
       : cuts::i_cut(logger_priority_)
     {
       _set_defaults();
       return;
     }
 
-    topology_cut::~topology_cut()
+    channel_2e_cut::~channel_2e_cut()
     {
-      if (is_initialized()) this->topology_cut::reset();
+      if (is_initialized()) this->channel_2e_cut::reset();
       return;
     }
 
-    void topology_cut::reset()
+    void channel_2e_cut::reset()
     {
       _set_defaults();
       this->i_cut::_reset();
@@ -122,7 +117,7 @@ namespace snemo {
       return;
     }
 
-    void topology_cut::initialize(const datatools::properties & configuration_,
+    void channel_2e_cut::initialize(const datatools::properties & configuration_,
                                         datatools::service_manager  & /* service_manager_ */,
                                         cuts::cut_handle_dict_type  & /* cut_dict_ */)
     {
@@ -135,9 +130,6 @@ namespace snemo {
         _TD_label_ = configuration_.fetch_string("TD_label");
       }
 
-      if (configuration_.has_flag("mode.pattern_id")) {
-        _mode_ |= MODE_PATTERN_ID;
-      }
       if (configuration_.has_flag("mode.has_internal_probability")) {
         _mode_ |= MODE_HAS_INTERNAL_PROBABILITY;
       }
@@ -170,13 +162,6 @@ namespace snemo {
       }
       DT_THROW_IF(_mode_ == MODE_UNDEFINED, std::logic_error,
                   "Missing at least a 'mode.XXX' property !");
-
-      if (is_mode_pattern_id()) {
-        DT_LOG_DEBUG(get_logging_priority(), "Using PATTERN_ID mode...");
-        DT_THROW_IF(! configuration_.has_key("pattern_id.label"), std::logic_error,
-                    "Missing 'pattern_id.label' !");
-        _pattern_id_label_ = configuration_.fetch_string("pattern_id.label");
-      }
 
       if (is_mode_range_internal_probability()) {
         DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_INTERNAL_PROBABILITY mode...");
@@ -243,7 +228,6 @@ namespace snemo {
                       "Invalid 'range_external_probability.min' > 'range_external_probability.max' values !");
         }
       }
-
 
       if (is_mode_range_delta_vertices_y()) {
         DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_DELTA_VERTICES_Y mode...");
@@ -331,7 +315,7 @@ namespace snemo {
     }
 
 
-    int topology_cut::_accept()
+    int channel_2e_cut::_accept()
     {
       uint32_t cut_returned = cuts::SELECTION_INAPPLICABLE;
 
@@ -350,13 +334,6 @@ namespace snemo {
       }
       const snemo::datamodel::base_topology_pattern & a_pattern = TD.get_pattern();
       const std::string & a_pattern_id = a_pattern.get_pattern_id();
-
-      // Check if event has the correct pattern id
-      bool check_pattern_id = true;
-      if (is_mode_pattern_id()) {
-        DT_LOG_DEBUG(get_logging_priority(), "Running PATTERN_ID mode...");
-        if (a_pattern_id != _pattern_id_label_) check_pattern_id = false;
-      }
 
       // Check if event has internal probability
       bool check_has_internal_probability = true;
@@ -582,8 +559,7 @@ namespace snemo {
       }
 
       cut_returned = cuts::SELECTION_REJECTED;
-      if (check_pattern_id &&
-          check_has_internal_probability &&
+      if (check_has_internal_probability &&
           check_has_external_probability &&
           check_range_internal_probability &&
           check_range_external_probability &&
@@ -593,7 +569,7 @@ namespace snemo {
           check_range_delta_vertices_z &&
           check_has_angle &&
           check_range_angle) {
-        DT_LOG_DEBUG(get_logging_priority(), "Event rejected by topology cut!");
+        DT_LOG_DEBUG(get_logging_priority(), "Event rejected by channel 2e cut!");
         cut_returned = cuts::SELECTION_ACCEPTED;
       }
 

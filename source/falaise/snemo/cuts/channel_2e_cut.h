@@ -1,4 +1,4 @@
-/// \file falaise/snemo/cuts/topology_cut.h
+/// \file falaise/snemo/cuts/channel_2e_cut.h
 /* Author(s)     : Xavier Garrido <garrido@lal.in2p3.fr>
  * Creation date : 2015-03-18
  * Last modified : 2015-03-18
@@ -22,14 +22,14 @@
  *
  * Description:
  *
- *   Topology event cut.
+ *   Channel_2e event cut.
  *
  * History:
  *
  */
 
-#ifndef FALAISE_SNEMO_CUT_TOPOLOGY_CUT_H
-#define FALAISE_SNEMO_CUT_TOPOLOGY_CUT_H 1
+#ifndef FALAISE_SNEMO_CUT_CHANNEL_2E_CUT_H
+#define FALAISE_SNEMO_CUT_CHANNEL_2E_CUT_H 1
 
 // Standard library:
 #include <string>
@@ -46,32 +46,28 @@ namespace snemo {
 
   namespace cut {
 
-    /// \brief A topology event cut
-    class topology_cut : public cuts::i_cut
+    /// \brief A channel_2e event cut
+    class channel_2e_cut : public cuts::i_cut
     {
     public:
 
       /// Mode of the cut
       enum mode_type {
         MODE_UNDEFINED = 0,
-        MODE_PATTERN_ID                 = datatools::bit_mask::bit01,
-        MODE_HAS_INTERNAL_PROBABILITY   = datatools::bit_mask::bit02,
-        MODE_HAS_EXTERNAL_PROBABILITY   = datatools::bit_mask::bit03,
-        MODE_RANGE_INTERNAL_PROBABILITY = datatools::bit_mask::bit04,
-        MODE_RANGE_EXTERNAL_PROBABILITY = datatools::bit_mask::bit05,
-        MODE_HAS_DELTA_VERTICES_Y       = datatools::bit_mask::bit06,
-        MODE_HAS_DELTA_VERTICES_Z       = datatools::bit_mask::bit07,
-        MODE_RANGE_DELTA_VERTICES_Y     = datatools::bit_mask::bit08,
-        MODE_RANGE_DELTA_VERTICES_Z     = datatools::bit_mask::bit09,
-        MODE_HAS_ANGLE                  = datatools::bit_mask::bit10,
-        MODE_RANGE_ANGLE                = datatools::bit_mask::bit11
+        MODE_HAS_INTERNAL_PROBABILITY   = datatools::bit_mask::bit01,
+        MODE_HAS_EXTERNAL_PROBABILITY   = datatools::bit_mask::bit02,
+        MODE_RANGE_INTERNAL_PROBABILITY = datatools::bit_mask::bit03,
+        MODE_RANGE_EXTERNAL_PROBABILITY = datatools::bit_mask::bit04,
+        MODE_HAS_DELTA_VERTICES_Y       = datatools::bit_mask::bit05,
+        MODE_HAS_DELTA_VERTICES_Z       = datatools::bit_mask::bit06,
+        MODE_RANGE_DELTA_VERTICES_Y     = datatools::bit_mask::bit07,
+        MODE_RANGE_DELTA_VERTICES_Z     = datatools::bit_mask::bit08,
+        MODE_HAS_ANGLE                  = datatools::bit_mask::bit09,
+        MODE_RANGE_ANGLE                = datatools::bit_mask::bit10
       };
 
       /// Return the cut mode
       uint32_t get_mode() const;
-
-      /// Check mode PATTERN_ID
-      bool is_mode_pattern_id() const;
 
       /// Check mode HAS_INTERNAL_PROBABILITY
       bool is_mode_has_internal_probability() const;
@@ -104,10 +100,10 @@ namespace snemo {
       bool is_mode_range_angle() const;
 
       /// Constructor
-      topology_cut(datatools::logger::priority logging_priority_ = datatools::logger::PRIO_FATAL);
+      channel_2e_cut(datatools::logger::priority logging_priority_ = datatools::logger::PRIO_FATAL);
 
       /// Destructor
-      virtual ~topology_cut();
+      virtual ~channel_2e_cut();
 
       /// Initilization
       virtual void initialize(const datatools::properties & configuration_,
@@ -130,7 +126,6 @@ namespace snemo {
       std::string _TD_label_; //!< Name of the "Topology data" bank
       uint32_t    _mode_;     //!< Mode of the cut
 
-      std::string _pattern_id_label_; //!< Pattern ID label
       double _prob_int_min_;//!< Minimal internal probability
       double _prob_int_max_;//!< Maximal internal probability
       double _prob_ext_min_;//!< Minimal external probability
@@ -143,14 +138,14 @@ namespace snemo {
       double _angle_max_;
 
       // Macro to automate the registration of the cut :
-      CUT_REGISTRATION_INTERFACE(topology_cut);
+      CUT_REGISTRATION_INTERFACE(channel_2e_cut);
     };
 
   }  // end of namespace cut
 
 }  // end of namespace snemo
 
-#endif // FALAISE_SNEMO_CUT_TOPOLOGY_CUT_H
+#endif // FALAISE_SNEMO_CUT_CHANNEL_2E_CUT_H
 
 /*
 ** Local Variables: --
