@@ -272,13 +272,19 @@ namespace snemo {
       if (datatools::is_valid(delta_vertices_y)) t2ep->set_delta_vertices_y(delta_vertices_y);
       if (datatools::is_valid(delta_vertices_z)) t2ep->set_delta_vertices_z(delta_vertices_z);
 
-      if (std::abs(delta_vertices_y) < 100. &&
-          std::abs(delta_vertices_z) < 100. &&
-          proba_int > 0.04 && proba_ext < 0.01) {
+      // if (std::abs(delta_vertices_y) < 100. &&
+      //     std::abs(delta_vertices_z) < 100. &&
+      //     proba_int > 0.04 && proba_ext < 0.01) {
         double angle = datatools::invalid_real();
+
         if (_AMD_) _AMD_->process(pt1, pt2, angle);
-        if (datatools::is_valid(angle)) t2ep->set_angle(angle);
-      }
+        if (datatools::is_valid(angle))
+          {
+            std::cout << "td angle : " << angle << std::endl;
+            t2ep->set_angle(angle);
+          }
+
+        //}
       return;
     }
 
