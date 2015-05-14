@@ -258,33 +258,25 @@ namespace snemo {
       const snemo::datamodel::particle_track & pt1 = the_particles.front().get();
       const snemo::datamodel::particle_track & pt2 = the_particles.back().get();
 
+      // TOF measurements :
       double proba_int = datatools::invalid_real();
       double proba_ext = datatools::invalid_real();
-
       if (_TOFD_) _TOFD_->process(pt1, pt2, proba_int, proba_ext);
-
       if (datatools::is_valid(proba_int)) t2ep->set_internal_probability(proba_int);
       if (datatools::is_valid(proba_ext)) t2ep->set_external_probability(proba_ext);
 
+      // Delta vertices measurements :
       double delta_vertices_y = datatools::invalid_real();
       double delta_vertices_z = datatools::invalid_real();
       if (_DVD_) _DVD_->process(pt1, pt2, delta_vertices_y, delta_vertices_z);
       if (datatools::is_valid(delta_vertices_y)) t2ep->set_delta_vertices_y(delta_vertices_y);
       if (datatools::is_valid(delta_vertices_z)) t2ep->set_delta_vertices_z(delta_vertices_z);
 
-      // if (std::abs(delta_vertices_y) < 100. &&
-      //     std::abs(delta_vertices_z) < 100. &&
-      //     proba_int > 0.04 && proba_ext < 0.01) {
-        double angle = datatools::invalid_real();
+      // Angular measurement :
+      double angle = datatools::invalid_real();
+      if (_AMD_) _AMD_->process(pt1, pt2, angle);
+      if (datatools::is_valid(angle)) t2ep->set_angle(angle);
 
-        if (_AMD_) _AMD_->process(pt1, pt2, angle);
-        if (datatools::is_valid(angle))
-          {
-            std::cout << "td angle : " << angle << std::endl;
-            t2ep->set_angle(angle);
-          }
-
-        //}
       return;
     }
 
@@ -313,13 +305,10 @@ namespace snemo {
       if (datatools::is_valid(delta_vertices_y)) t1e1pp->set_delta_vertices_y(delta_vertices_y);
       if (datatools::is_valid(delta_vertices_z)) t1e1pp->set_delta_vertices_z(delta_vertices_z);
 
-      const double safe_delta_vertex = 100.*CLHEP::mm;
-      if (std::abs(delta_vertices_y) < safe_delta_vertex &&
-          std::abs(delta_vertices_z) < safe_delta_vertex) {
-        double angle = datatools::invalid_real();
-        if (_AMD_) _AMD_->process(pt1, pt2, angle);
-        if (datatools::is_valid(angle)) t1e1pp->set_angle(angle);
-      }
+      double angle = datatools::invalid_real();
+      if (_AMD_) _AMD_->process(pt1, pt2, angle);
+      if (datatools::is_valid(angle)) t1e1pp->set_angle(angle);
+
       return;
     }
 
@@ -433,7 +422,6 @@ namespace snemo {
         }
       }
 
-      //      t2eNgp->tree_dump();
       return;
     }
 
@@ -456,13 +444,10 @@ namespace snemo {
       if (datatools::is_valid(delta_vertices_y)) t1e1ap->set_delta_vertices_y(delta_vertices_y);
       if (datatools::is_valid(delta_vertices_z)) t1e1ap->set_delta_vertices_z(delta_vertices_z);
 
-      const double safe_delta_vertex = 100.*CLHEP::mm;
-      if (std::abs(delta_vertices_y) < safe_delta_vertex &&
-          std::abs(delta_vertices_z) < safe_delta_vertex) {
-        double angle = datatools::invalid_real();
-        if (_AMD_) _AMD_->process(pt1, pt2, angle);
-        if (datatools::is_valid(angle)) t1e1ap->set_angle(angle);
-      }
+      double angle = datatools::invalid_real();
+      if (_AMD_) _AMD_->process(pt1, pt2, angle);
+      if (datatools::is_valid(angle)) t1e1ap->set_angle(angle);
+
       return;
     }
 
