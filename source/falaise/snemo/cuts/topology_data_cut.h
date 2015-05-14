@@ -53,9 +53,9 @@ namespace snemo {
 
       /// Mode of the cut
       enum mode_type {
-        MODE_UNDEFINED = 0,
-        MODE_HAS_PATTERN_ID                 = datatools::bit_mask::bit01,
-        MODE_PATTERN_ID                 = datatools::bit_mask::bit02,
+        MODE_UNDEFINED      = 0,
+        MODE_HAS_PATTERN_ID = datatools::bit_mask::bit01,
+        MODE_PATTERN_ID     = datatools::bit_mask::bit02
       };
 
       /// Return the cut mode

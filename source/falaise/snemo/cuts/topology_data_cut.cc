@@ -113,28 +113,28 @@ namespace snemo {
       const snemo::datamodel::topology_data & TD = ER.get<snemo::datamodel::topology_data>(_TD_label_);
 
       // Check if event has the pattern id
-      bool check_has_pattern_id = false;
+      bool check_has_pattern_id = true;
       if (is_mode_has_pattern_id()) {
         DT_LOG_DEBUG(get_logging_priority(), "Running HAS_PATTERN_ID mode...");
-        if (TD.has_pattern())
-          check_has_pattern_id = true;
+        if (! TD.has_pattern()) check_has_pattern_id = false;
       }
-
-      if(!check_has_pattern_id)
-        return cuts::SELECTION_REJECTED;
-
-      const snemo::datamodel::base_topology_pattern & a_pattern = TD.get_pattern();
-      const std::string & a_pattern_id = a_pattern.get_pattern_id();
 
       // Check if event has the correct pattern id
       bool check_pattern_id = true;
       if (is_mode_pattern_id()) {
         DT_LOG_DEBUG(get_logging_priority(), "Running PATTERN_ID mode...");
+        if (! TD.has_pattern()) {
+          DT_LOG_DEBUG(get_logging_priority(), "The event does not have associated topology pattern !");
+          return cuts::SELECTION_INAPPLICABLE;
+        }
+        const snemo::datamodel::base_topology_pattern & a_pattern = TD.get_pattern();
+        const std::string & a_pattern_id = a_pattern.get_pattern_id();
         if (a_pattern_id != _pattern_id_label_) check_pattern_id = false;
       }
 
       cut_returned = cuts::SELECTION_REJECTED;
-      if (check_pattern_id) {
+      if (check_has_pattern_id &&
+          check_pattern_id) {
         DT_LOG_DEBUG(get_logging_priority(), "Event rejected by topology cut!");
         cut_returned = cuts::SELECTION_ACCEPTED;
       }

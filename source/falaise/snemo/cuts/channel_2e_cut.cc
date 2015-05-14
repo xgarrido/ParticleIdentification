@@ -118,8 +118,8 @@ namespace snemo {
     }
 
     void channel_2e_cut::initialize(const datatools::properties & configuration_,
-                                        datatools::service_manager  & /* service_manager_ */,
-                                        cuts::cut_handle_dict_type  & /* cut_dict_ */)
+                                    datatools::service_manager  & /* service_manager_ */,
+                                    cuts::cut_handle_dict_type  & /* cut_dict_ */)
     {
       DT_THROW_IF(is_initialized(), std::logic_error,
                   "Cut '" << get_name() << "' is already initialized ! ");
