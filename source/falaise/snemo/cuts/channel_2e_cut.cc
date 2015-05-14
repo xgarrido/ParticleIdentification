@@ -234,21 +234,21 @@ namespace snemo {
         size_t count = 0;
         if (configuration_.has_key("range_delta_vertices_y.min")) {
           double delta_y_min = configuration_.fetch_real("range_delta_vertices_y.min");
-          DT_THROW_IF(delta_y_min < 0.0, std::range_error,
-                      "Invalid minimal delta vertices y (" << delta_y_min << ") !");
+          // DT_THROW_IF(delta_y_min < 0.0, std::range_error,
+          //             "Invalid minimal delta vertices y (" << delta_y_min << ") !");
           _delta_vertices_y_min_ = delta_y_min;
           count++;
         }
         if (configuration_.has_key("range_external_probablity.max")) {
           double delta_y_max = configuration_.fetch_real("range_delta_vertices_y.max");
-          DT_THROW_IF(delta_y_max < 0.0, std::range_error,
-                      "Invalid maximal delta vertices y (" << delta_y_max << ") !");
+          // DT_THROW_IF(delta_y_max < 0.0, std::range_error,
+          //             "Invalid maximal delta vertices y (" << delta_y_max << ") !");
           _delta_vertices_y_max_ = delta_y_max;
           count++;
         }
         DT_THROW_IF(count == 0, std::logic_error,
                     "Missing 'range_delta_y_vertices.min' or 'range_delta_y_vertices.max' property !");
-        if (count == 2 && _delta_vertices_y_min_ >= 0 && _delta_vertices_y_max_ >= 0) {
+        if (count == 2) {// && _delta_vertices_y_min_ >= 0 && _delta_vertices_y_max_ >= 0) {
           DT_THROW_IF(_delta_vertices_y_min_ > _delta_vertices_y_max_, std::logic_error,
                       "Invalid 'range_delta_y_vertices.min' > 'range_delta_y_vertices.max' values !");
         }
@@ -259,21 +259,21 @@ namespace snemo {
         size_t count = 0;
         if (configuration_.has_key("range_delta_vertices_z.min")) {
           double delta_z_min = configuration_.fetch_real("range_delta_vertices_z.min");
-          DT_THROW_IF(delta_z_min < 0.0, std::range_error,
-                      "Invalid minimal delta vertices z (" << delta_z_min << ") !");
+          // DT_THROW_IF(delta_z_min < 0.0, std::range_error,
+          //             "Invalid minimal delta vertices z (" << delta_z_min << ") !");
           _delta_vertices_z_min_ = delta_z_min;
           count++;
         }
         if (configuration_.has_key("range_external_probablity.max")) {
           double delta_z_max = configuration_.fetch_real("range_delta_vertices_z.max");
-          DT_THROW_IF(delta_z_max < 0.0, std::range_error,
-                      "Invalid maximal delta vertices z (" << delta_z_max << ") !");
+          // DT_THROW_IF(delta_z_max < 0.0, std::range_error,
+          //             "Invalid maximal delta vertices z (" << delta_z_max << ") !");
           _delta_vertices_z_max_ = delta_z_max;
           count++;
         }
         DT_THROW_IF(count == 0, std::logic_error,
                     "Missing 'range_delta_z_vertices.min' or 'range_delta_z_vertices.max' property !");
-        if (count == 2 && _delta_vertices_z_min_ >= 0 && _delta_vertices_z_max_ >= 0) {
+        if (count == 2) {// && _delta_vertices_z_min_ >= 0 && _delta_vertices_z_max_ >= 0) {
           DT_THROW_IF(_delta_vertices_z_min_ > _delta_vertices_z_max_, std::logic_error,
                       "Invalid 'range_delta_z_vertices.min' > 'range_delta_z_vertices.max' values !");
         }

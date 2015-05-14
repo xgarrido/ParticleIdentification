@@ -114,7 +114,7 @@ namespace snemo {
 
     double topology_2e_pattern::get_angle() const
     {
-      DT_THROW_IF(! has_angle(), std::logic_error, "No angle stored !");
+      // DT_THROW_IF(! has_angle(), std::logic_error, "No angle stored !");
       return _angle_.get_angle();
     }
 
