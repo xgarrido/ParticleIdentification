@@ -111,7 +111,6 @@ namespace snemo {
     private:
       bool                        _initialized_;      //!< Initialization status
       datatools::logger::priority _logging_priority_; //!< Logging priority
-      // for members
     };
 
   }  // end of namespace reconstruction

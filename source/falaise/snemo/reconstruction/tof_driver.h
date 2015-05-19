@@ -42,8 +42,8 @@
 #include <boost/scoped_ptr.hpp>
 
 // - Bayeux/datatools:
-#include <datatools/logger.h>
-#include <datatools/properties.h>
+#include <bayeux/datatools/logger.h>
+#include <bayeux/datatools/properties.h>
 
 // This project:
 #include <falaise/snemo/datamodels/particle_track.h>
@@ -74,9 +74,9 @@ namespace snemo {
     /// Driver for the gamma clustering algorithms
     class tof_driver
     {
-
     public:
 
+      /// Dedicated driver id
       static const std::string & tof_id();
 
       /// Constructor
@@ -146,7 +146,7 @@ namespace snemo {
                                    double & track_length_,
                                    double & time_, double & sigma_time_);
 
-      /// Gives the energy of particle_
+      /// Gives the energy of particle
       static double _get_energy(const snemo::datamodel::particle_track & particle_);
 
       /// Gives the theoretical time of the track
@@ -188,9 +188,9 @@ namespace snemo {
       void _set_defaults ();
 
     private:
-      bool _initialized_;            //!< Initialization status
+      bool _initialized_;                             //!< Initialization status
       datatools::logger::priority _logging_priority_; //!< Logging priority
-      double _sigma_t_gamma_interaction_;     //!< The uncertainty on the track length
+      double _sigma_t_gamma_interaction_;             //!< The uncertainty on the track length
     };
 
   }  // end of namespace reconstruction
