@@ -129,6 +129,7 @@ namespace snemo {
 
     angle_measurement::angle_measurement()
     {
+      datatools::invalidate(_angle_);
       return;
     }
 
