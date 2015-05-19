@@ -19,6 +19,7 @@
 #include <falaise/snemo/datamodels/topology_2eNg_pattern.h>
 #include <falaise/snemo/datamodels/topology_1e1a_pattern.h>
 
+#include <snemo/datamodels/pid_utils.h>
 #include <snemo/reconstruction/tof_driver.h>
 #include <snemo/reconstruction/delta_vertices_driver.h>
 #include <snemo/reconstruction/angle_measurement_driver.h>
@@ -223,7 +224,6 @@ namespace snemo {
         classification << aux.fetch_integer(key) << "X";
       }
       return classification.str();
-
     }
 
     void topology_driver::_fill_1e_topology_(const snemo::datamodel::particle_track_data & ptd_,
@@ -447,6 +447,23 @@ namespace snemo {
       double angle = datatools::invalid_real();
       if (_AMD_) _AMD_->process(pt1, pt2, angle);
       if (datatools::is_valid(angle)) t1e1ap->set_angle(angle);
+
+      double alpha_delayed_time = datatools::invalid_real();
+      snemo::datamodel::particle_track_data::particle_collection_type alpha_tracks;
+      const size_t nalpha
+        = snemo::datamodel::pid_utils::fetch_particles(ptd_,
+                                                       alpha_tracks,
+                                                       snemo::datamodel::pid_utils::alpha_label());
+      DT_THROW_IF(nalpha != 1, std::logic_error, "More than 1 alpha particle !");
+      const snemo::datamodel::particle_track & alpha_track = alpha_tracks.front().get();
+      if (alpha_track.has_trajectory()) {
+        // Get alpha time delay from trajectory auxiliairies
+        const datatools::properties & aux = alpha_track.get_trajectory().get_auxiliaries();
+        if (aux.has_key("t0")) {
+          alpha_delayed_time = aux.fetch_real("t0");
+        }
+      }
+      if (datatools::is_valid(alpha_delayed_time)) t1e1ap->set_alpha_delayed_time(alpha_delayed_time);
 
       return;
     }
