@@ -11,11 +11,12 @@
 // Standard library:
 #include <string>
 
+// - Falaise:
+#include <falaise/snemo/datamodels/particle_track_data.h>
+
 namespace snemo {
 
   namespace datamodel {
-
-    class particle_track;
 
     struct pid_utils {
 
@@ -54,6 +55,12 @@ namespace snemo {
 
       /// Check a particle is gamma
       static bool particle_is_gamma(const snemo::datamodel::particle_track &);
+
+      /// Fetch particles given a Particle Identification label
+      static size_t fetch_particles(const snemo::datamodel::particle_track_data & ptd_,
+                                    snemo::datamodel::particle_track_data::particle_collection_type & particles_,
+                                    const std::string & label_,
+                                    bool clear_ = false);
 
     };
 

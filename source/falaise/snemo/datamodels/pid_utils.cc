@@ -4,9 +4,6 @@
 // Ourselves:
 #include <falaise/snemo/datamodels/pid_utils.h>
 
-// - Falaise:
-#include <falaise/snemo/datamodels/particle_track.h>
-
 namespace snemo {
 
   namespace datamodel {
@@ -85,6 +82,28 @@ namespace snemo {
       return particle_is(pt_, gamma_label());
     }
 
+    size_t pid_utils::fetch_particles(const snemo::datamodel::particle_track_data & ptd_,
+                                      snemo::datamodel::particle_track_data::particle_collection_type & particles_,
+                                      const std::string & label_,
+                                      const bool clear_)
+    {
+      if (clear_) particles_.clear();
+      size_t ipart = 0;
+
+      if (! ptd_.has_particles()) return ipart;
+      const snemo::datamodel::particle_track_data::particle_collection_type & the_particles
+        = ptd_.get_particles();
+
+      for (snemo::datamodel::particle_track_data::particle_collection_type::const_iterator
+             i = the_particles.begin(); i != the_particles.end(); ++i) {
+        const snemo::datamodel::particle_track::handle_type & a_particle = *i;
+        if (pid_utils::particle_is(a_particle.get(), label_)) {
+          particles_.push_back(a_particle);
+          ipart++;
+        }
+      }
+      return ipart;
+    }
 
   } // end of namespace datamodel
 
