@@ -22,6 +22,7 @@ namespace snemo {
     topology_1e1a_pattern::topology_1e1a_pattern()
       : base_topology_pattern(topology_1e1a_pattern::pattern_id())
     {
+      _alpha_delayed_time_ = datatools::invalid_real();
       return;
     }
 
@@ -78,6 +79,22 @@ namespace snemo {
       return _angle_.get_angle();
     }
 
+    bool topology_1e1a_pattern::has_alpha_delayed_time() const
+    {
+      return datatools::is_valid(_alpha_delayed_time_);
+    }
+
+    void topology_1e1a_pattern::set_alpha_delayed_time(double time_)
+    {
+      _alpha_delayed_time_ = time_;
+      return;
+    }
+
+    double topology_1e1a_pattern::get_alpha_delayed_time() const
+    {
+      return _alpha_delayed_time_;
+    }
+
     void topology_1e1a_pattern::tree_dump(std::ostream      & out_,
                                           const std::string & title_,
                                           const std::string & indent_,
@@ -87,10 +104,41 @@ namespace snemo {
       if (! indent_.empty()) indent = indent_;
       base_topology_pattern::tree_dump(out_, title_, indent_, true);
 
-      // out_ << indent << datatools::i_tree_dumpable::tag
-      //      << "Delta Vertices Y : " << get_delta_vertices_y() << std::endl;
-      // out_ << indent << datatools::i_tree_dumpable::tag
-      //      << "Delta Vertices Z : " << get_delta_vertices_z() << std::endl;
+            out_ << indent << datatools::i_tree_dumpable::tag
+           << "Delta vertices Y : ";
+      if (has_delta_vertices_y()) {
+        out_ << get_delta_vertices_y()/CLHEP::mm << " mm";
+      } else {
+        out_ << "No value";
+      }
+      out_ << std::endl;
+
+      out_ << indent << datatools::i_tree_dumpable::tag
+           << "Delta vertices Z : ";
+      if (has_delta_vertices_z()) {
+        out_ << get_delta_vertices_z()/CLHEP::mm << " mm";
+      } else {
+        out_ << "No value";
+      }
+      out_ << std::endl;
+
+      out_ << indent << datatools::i_tree_dumpable::inherit_tag(inherit_)
+           << "Angle : ";
+      if (has_angle()) {
+        out_ << get_angle()/CLHEP::degree << "°";
+      } else {
+        out_ << "No value";
+      }
+      out_ << std::endl;
+
+      out_ << indent << datatools::i_tree_dumpable::inherit_tag(inherit_)
+           << "Alpha delayed time : ";
+      if (has_alpha_delayed_time()) {
+        out_ << get_alpha_delayed_time()/CLHEP::ns << " ns";
+      } else {
+        out_ << "No value";
+      }
+      out_ << std::endl;
 
       return;
     }

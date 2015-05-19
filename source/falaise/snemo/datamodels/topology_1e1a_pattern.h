@@ -61,6 +61,15 @@ namespace snemo {
       /// Return internal probability
       double get_angle() const;
 
+      /// Check alpha delayed time validity
+      bool has_alpha_delayed_time() const;
+
+      /// Set alpha delayed time
+      void set_alpha_delayed_time(double);
+
+      /// Get alpha delayed time
+      double get_alpha_delayed_time() const;
+
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,
                              const std::string & title_  = "",
@@ -71,6 +80,7 @@ namespace snemo {
 
       delta_vertices_measurement _DeltaV_;
       angle_measurement _angle_;
+      double _alpha_delayed_time_;
 
       DATATOOLS_SERIALIZATION_DECLARATION();
 

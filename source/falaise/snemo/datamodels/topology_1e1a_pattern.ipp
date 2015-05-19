@@ -26,6 +26,7 @@ namespace snemo {
       ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(base_topology_pattern);
       ar & boost::serialization::make_nvp("delta_vertices", _DeltaV_);
       ar & boost::serialization::make_nvp("angle", _angle_);
+      ar & boost::serialization::make_nvp("alpha_delayed_time", _alpha_delayed_time_);
       return;
     }
 
