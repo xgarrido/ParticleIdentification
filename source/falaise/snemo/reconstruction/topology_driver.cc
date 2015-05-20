@@ -514,8 +514,8 @@ namespace snemo {
 
       // Invoke specific OCD support from the driver class:
       ::snemo::reconstruction::tof_driver::init_ocd(ocd_);
-      // ::snemo::reconstruction::delta_vertices_driver::init_ocd(ocd_);
-      // ::snemo::reconstruction::angle_measurement_driver::init_ocd(ocd_);
+      ::snemo::reconstruction::delta_vertices_driver::init_ocd(ocd_);
+      ::snemo::reconstruction::angle_measurement_driver::init_ocd(ocd_);
 
       return;
     }

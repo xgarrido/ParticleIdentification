@@ -87,6 +87,9 @@ namespace snemo {
       /// Reset the driver
       void reset();
 
+      /// OCD support:
+      static void init_ocd(datatools::object_configuration_description & ocd_);
+
     protected:
 
       /// Set the initialization flag
