@@ -41,15 +41,7 @@ namespace snemo {
 
   namespace datamodel {
     class particle_track_data;
-  }
-  namespace datamodel {
     class topology_data;
-  }
-  namespace datamodel {
-    class pid_utils;
-  }
-  namespace datamodel {
-    class base_topology_pattern;
   }
 
   namespace reconstruction {
@@ -93,6 +85,9 @@ namespace snemo {
       /// Main tracker trajectory driver
       int process(const snemo::datamodel::particle_track_data & ptd_,
                   snemo::datamodel::topology_data & td_);
+
+      /// OCD support:
+      static void init_ocd(datatools::object_configuration_description & ocd_);
 
     protected:
 

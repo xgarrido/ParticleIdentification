@@ -52,7 +52,7 @@ namespace snemo {
     public:
 
       /// Dedicated driver id
-      static const std::string & delta_vertices_id();
+      static const std::string & get_id();
 
       /// Setting logging priority
       void set_logging_priority(const datatools::logger::priority priority_);

@@ -15,9 +15,9 @@ namespace snemo {
 
   namespace reconstruction {
 
-    const std::string & delta_vertices_driver::delta_vertices_id()
+    const std::string & delta_vertices_driver::get_id()
     {
-      static const std::string _id("delta_vertices");
+      static const std::string _id("DVD");
       return _id;
     }
 
@@ -70,7 +70,7 @@ namespace snemo {
     // Initialization :
     void delta_vertices_driver::initialize(const datatools::properties  & setup_)
     {
-      DT_THROW_IF(is_initialized(), std::logic_error, "Driver '" << delta_vertices_id() << "' is already initialized !");
+      DT_THROW_IF(is_initialized(), std::logic_error, "Driver '" << get_id() << "' is already initialized !");
 
       // Logging priority
       datatools::logger::priority lp = datatools::logger::extract_logging_configuration(setup_);
@@ -94,13 +94,13 @@ namespace snemo {
                                        double & delta_vertices_y, double & delta_vertices_z)
     {
       int status = 0;
-      DT_THROW_IF(! is_initialized(), std::logic_error, "Driver '" << delta_vertices_id() << "' is already initialized !");
+      DT_THROW_IF(! is_initialized(), std::logic_error, "Driver '" << get_id() << "' is already initialized !");
 
       status = _process_algo(pt1_, pt2_, delta_vertices_y, delta_vertices_z);
 
       if (status != 0) {
         DT_LOG_ERROR(get_logging_priority(),
-                     "Computing topology quantities with '" << delta_vertices_id() << "' algorithm has failed !");
+                     "Computing topology quantities with '" << get_id() << "' algorithm has failed !");
         return status;
       }
 

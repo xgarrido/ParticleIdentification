@@ -1,39 +1,32 @@
 /// \file falaise/snemo/reconstruction/tof_driver.cc
 
 // Ourselves:
-#include <snemo/reconstruction/tof_driver.h>
+#include <falaise/snemo/reconstruction/tof_driver.h>
 
 // Standard library:
 #include <stdexcept>
 #include <sstream>
 
 // Third party:
-// - Bayeux/datatools:
-#include <datatools/service_manager.h>
-// - Bayeux/geomtools:
-#include <geomtools/geometry_service.h>
-#include <bayeux/geomtools/manager.h>
-
 //- GSL:
 #include <gsl/gsl_cdf.h>
 
 // This project:
 #include <falaise/snemo/datamodels/data_model.h>
-#include <falaise/snemo/datamodels/pid_utils.h>
 #include <falaise/snemo/datamodels/particle_track_data.h>
 #include <falaise/snemo/datamodels/topology_data.h>
-#include <falaise/snemo/processing/services.h>
-#include <falaise/snemo/datamodels/base_trajectory_pattern.h>
 #include <falaise/snemo/datamodels/line_trajectory_pattern.h>
 #include <falaise/snemo/datamodels/helix_trajectory_pattern.h>
+
+#include <falaise/snemo/datamodels/pid_utils.h>
 
 namespace snemo {
 
   namespace reconstruction {
 
-    const std::string & tof_driver::tof_id()
+    const std::string & tof_driver::get_id()
     {
-      static const std::string _id("tof");
+      static const std::string _id("TOFD");
       return _id;
     }
 
@@ -92,7 +85,7 @@ namespace snemo {
 
       if (status != 0) {
         DT_LOG_ERROR(get_logging_priority(),
-                     "Computing TOF measurements with '" << tof_id() << "' algorithm has failed !");
+                     "Computing TOF measurements with '" << get_id() << "' algorithm has failed !");
         return status;
       }
 
@@ -109,7 +102,7 @@ namespace snemo {
 
       if (status != 0) {
         DT_LOG_ERROR(get_logging_priority(),
-                     "Computing TOF measurements with '" << tof_id() << "' algorithm has failed !");
+                     "Computing TOF measurements with '" << get_id() << "' algorithm has failed !");
         return status;
       }
 
@@ -120,28 +113,19 @@ namespace snemo {
     {
       _initialized_ = false;
       _logging_priority_ = datatools::logger::PRIO_WARNING;
-      _sigma_t_gamma_interaction_ = 0.6 * CLHEP::ns;
       return;
     }
 
     // Initialization :
     void tof_driver::initialize(const datatools::properties & setup_)
     {
-      DT_THROW_IF(is_initialized(), std::logic_error, "Driver '" << tof_id() << "' is already initialized !");
+      DT_THROW_IF(is_initialized(), std::logic_error, "Driver '" << get_id() << "' is already initialized !");
 
       // Logging priority
       datatools::logger::priority lp = datatools::logger::extract_logging_configuration(setup_);
       DT_THROW_IF(lp == datatools::logger::PRIO_UNDEFINED, std::logic_error,
                   "Invalid logging priority level !");
       set_logging_priority(lp);
-
-      std::string key;
-      if (setup_.has_key(key = "sigma_t_gamma_interaction")) {
-        _sigma_t_gamma_interaction_ = setup_.fetch_real(key);
-        if (! setup_.has_explicit_unit(key)) {
-          _sigma_t_gamma_interaction_ *= CLHEP::ns;
-        }
-      }
 
       _set_initialized(true);
       return;
@@ -400,7 +384,6 @@ namespace snemo {
           if (! external_hyp_) break;
         }
       }
-
       DT_THROW_IF(! geomtools::is_valid(gamma_first_calo_vertex), std::logic_error,
                   "Gamma has no vertices on the calorimeter !");
 
@@ -453,6 +436,13 @@ namespace snemo {
       return 0;
     }
 
+    // static
+    void tof_driver::init_ocd(datatools::object_configuration_description & ocd_)
+    {
+      // Prefix "TOFD" stands for "Time-Of-Flight Driver" :
+      datatools::logger::declare_ocd_logging_configuration(ocd_, "fatal", "TOFD.");
+    }
+
   } // end of namespace reconstruction
 
 } // end of namespace snemo
@@ -464,10 +454,11 @@ DOCD_CLASS_IMPLEMENT_LOAD_BEGIN(snemo::reconstruction::tof_driver, ocd_)
   ocd_.set_class_name("snemo::reconstruction::tof_driver");
   ocd_.set_class_description("A driver class to measure Time-Of-Flight aka TOF");
   ocd_.set_class_library("Falaise_ParticleIdentification");
-  ocd_.set_class_documentation("The driver manager for the TOF measurement\n"
-                               "/todo What does the manager do ?"
-                               );
+  ocd_.set_class_documentation("The driver calculates the internal/external TOF values \n"
+                               "for different event topology");
 
+  // Invoke specific OCD support :
+  ::snemo::reconstruction::tof_driver::init_ocd(ocd_);
 
   ocd_.set_validation_support(true);
   ocd_.lock();

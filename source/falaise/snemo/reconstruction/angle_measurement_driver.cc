@@ -23,9 +23,9 @@ namespace snemo {
 
   namespace reconstruction {
 
-    const std::string & angle_measurement_driver::angle_measurement_id()
+    const std::string & angle_measurement_driver::get_id()
     {
-      static const std::string _id("angle_measurement");
+      static const std::string _id("AMD");
       return _id;
     }
 
@@ -79,7 +79,7 @@ namespace snemo {
     void angle_measurement_driver::initialize(const datatools::properties  & setup_)
     {
       DT_THROW_IF(is_initialized(), std::logic_error,
-                  "Driver '" << angle_measurement_id() << "' is already initialized !");
+                  "Driver '" << get_id() << "' is already initialized !");
 
       // Logging priority
       datatools::logger::priority lp = datatools::logger::extract_logging_configuration(setup_);
@@ -102,13 +102,13 @@ namespace snemo {
                                           double & angle_)
     {
       int status = 0;
-      DT_THROW_IF(! is_initialized(), std::logic_error, "Driver '" << angle_measurement_id() << "' is already initialized !");
+      DT_THROW_IF(! is_initialized(), std::logic_error, "Driver '" << get_id() << "' is already initialized !");
 
       status = _process_algo(pt_, angle_);
 
       if (status != 0) {
         DT_LOG_ERROR(get_logging_priority(),
-                     "Computing topology quantities with '" << angle_measurement_id() << "' algorithm has failed !");
+                     "Computing topology quantities with '" << get_id() << "' algorithm has failed !");
       }
       return status;
     }
@@ -118,13 +118,13 @@ namespace snemo {
                                           double & angle_)
     {
       int status = 0;
-      DT_THROW_IF(! is_initialized(), std::logic_error, "Driver '" << angle_measurement_id() << "' is already initialized !");
+      DT_THROW_IF(! is_initialized(), std::logic_error, "Driver '" << get_id() << "' is already initialized !");
 
       status = _process_algo(pt1_, pt2_, angle_);
 
       if (status != 0) {
         DT_LOG_ERROR(get_logging_priority(),
-                     "Computing topology quantities with '" << angle_measurement_id() << "' algorithm has failed !");
+                     "Computing topology quantities with '" << get_id() << "' algorithm has failed !");
       }
       return status;
     }

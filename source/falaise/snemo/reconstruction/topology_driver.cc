@@ -93,19 +93,19 @@ namespace snemo {
            idriver != driver_names.end(); ++idriver) {
         const std::string & a_driver_name = *idriver;
 
-        if (a_driver_name == "TOFD") {
+        if (a_driver_name == snemo::reconstruction::tof_driver::get_id()) {
           // Initialize TOF Driver
           _TOFD_.reset(new snemo::reconstruction::tof_driver);
           datatools::properties TOFD_config;
           setup_.export_and_rename_starting_with(TOFD_config, std::string(a_driver_name + "."), "");
           _TOFD_->initialize(TOFD_config);
-        } else if (a_driver_name == "DVD") {
+        } else if (a_driver_name == snemo::reconstruction::delta_vertices_driver::get_id()) {
           // Initialize Delta Vertices Driver
           _DVD_.reset(new snemo::reconstruction::delta_vertices_driver);
           datatools::properties DVD_config;
           setup_.export_and_rename_starting_with(DVD_config, std::string(a_driver_name + "."), "");
           _DVD_->initialize(DVD_config);
-        } else if (a_driver_name == "AMD") {
+        } else if (a_driver_name == snemo::reconstruction::angle_measurement_driver::get_id()) {
           // Initialize Delta Vertices Driver
           _AMD_.reset(new snemo::reconstruction::angle_measurement_driver);
           datatools::properties AMD_config;
@@ -506,6 +506,20 @@ namespace snemo {
       return;
     }
 
+    // static
+    void topology_driver::init_ocd(datatools::object_configuration_description & ocd_)
+    {
+      // Prefix "TD" stands for "Topology Driver" :
+      datatools::logger::declare_ocd_logging_configuration(ocd_, "fatal", "TD.");
+
+      // Invoke specific OCD support from the driver class:
+      ::snemo::reconstruction::tof_driver::init_ocd(ocd_);
+      // ::snemo::reconstruction::delta_vertices_driver::init_ocd(ocd_);
+      // ::snemo::reconstruction::angle_measurement_driver::init_ocd(ocd_);
+
+      return;
+    }
+
   }  // end of namespace reconstruction
 
 }  // end of namespace snemo
@@ -514,12 +528,14 @@ namespace snemo {
 DOCD_CLASS_IMPLEMENT_LOAD_BEGIN(snemo::reconstruction::topology_driver, ocd_)
 {
   ocd_.set_class_name("snemo::reconstruction::topology_driver");
-  ocd_.set_class_description("A driver class for the Topology algorithm");
-  ocd_.set_class_library("Falaise_Topology");
-  ocd_.set_class_documentation("The driver manager for the topoogy algorithm\n"
-                               "/todo What does the manager do ?"
+  ocd_.set_class_description("A driver class for the topology algorithms");
+  ocd_.set_class_library("Falaise_ParticleIdentification");
+  ocd_.set_class_documentation("The driver manages the different topology patterns\n"
+                               "and addresses the related measurements."
                                );
 
+  // Invoke specific OCD support :
+  ::snemo::reconstruction::topology_driver::init_ocd(ocd_);
 
   ocd_.set_validation_support(true);
   ocd_.lock();

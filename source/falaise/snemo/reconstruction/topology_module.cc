@@ -110,7 +110,6 @@ namespace snemo {
       /*********************************
        * Check particle track data     *
        *********************************/
-      const bool abort_at_former_output = false;
       const bool preserve_former_output = false;
 
       // check if some 'topology_data' are available in the data model:
@@ -190,7 +189,7 @@ DOCD_CLASS_IMPLEMENT_LOAD_BEGIN(snemo::reconstruction::topology_module, ocd_)
       .set_terse_description("The label/name of the 'topology data' bank")
       .set_traits(datatools::TYPE_STRING)
       .set_mandatory(false)
-      .set_long_description("This is the name of the bank to be used     \n"
+      .set_long_description("This is the name of the bank to be used   \n"
                             "to select events based on their topology. \n"
                             )
       .set_default_value_string("TD")//snemo::datamodel::data_info::default_topology_data_label())
@@ -202,15 +201,35 @@ DOCD_CLASS_IMPLEMENT_LOAD_BEGIN(snemo::reconstruction::topology_module, ocd_)
       ;
   }
 
+  {
+    datatools::configuration_property_description & cpd = ocd_.add_configuration_property_info();
+    cpd.set_name_pattern("drivers")
+      .set_terse_description("The driver ids tobe used")
+      .set_traits(datatools::TYPE_STRING,
+                  datatools::configuration_property_description::ARRAY)
+      .set_mandatory(false)
+      .add_example("Use TOF driver only::            \n"
+                   "                                 \n"
+                   "  drivers : string[1] = \"TOFD\" \n"
+                   "                                 \n"
+                   )
+      ;
+  }
+
+  // Invoke specific OCD support from the driver class:
+  ::snemo::reconstruction::topology_driver::init_ocd(ocd_);
+
   // Additionnal configuration hints :
-  ocd_.set_configuration_hints("Here is a full configuration example in the      \n"
-                               "``datatools::properties`` ASCII format::         \n"
-                               "                                         \n"
-                               "  PTD_label : string = \"PTD\"           \n"
-                               "                                         \n"
-                               "Additional specific parameters are used to configure         \n"
-                               "the embedded ``Topology`` driver itself; see the OCD support \n"
-                               "of the ``snemo::reconstruction::topology_driver`` class.     \n"
+  ocd_.set_configuration_hints("Here is a full configuration example in the        \n"
+                               "``datatools::properties`` ASCII format::           \n"
+                               "                                                   \n"
+                               "  PTD_label : string = \"PTD\"                     \n"
+                               "  TD_label  : string = \"TD\"                      \n"
+                               "  drivers   : string[3] = \"TOFD\" \"DVD\" \"AMD\" \n"
+                               "  TOFD.logging.priority : string = \"error\"       \n"
+                               "  DVD.logging.priority  : string = \"error\"       \n"
+                               "  AMD.logging.priority  : string = \"error\"       \n"
+                               "                                                   \n"
                                );
 
   ocd_.set_validation_support(true);

@@ -77,7 +77,7 @@ namespace snemo {
     public:
 
       /// Dedicated driver id
-      static const std::string & tof_id();
+      static const std::string & get_id();
 
       /// Constructor
       tof_driver();
@@ -90,15 +90,6 @@ namespace snemo {
 
       /// Getting logging priority
       datatools::logger::priority get_logging_priority() const;
-
-      /// Return the main wall calorimeter locator
-      const snemo::geometry::calo_locator & get_calo_locator() const;
-
-      /// Return the X-wall calorimeter locator
-      const snemo::geometry::xcalo_locator & get_xcalo_locator() const;
-
-      /// Return the gamma veto calorimeter locator
-      const snemo::geometry::gveto_locator & get_gveto_locator() const;
 
       /// Main process
       int process(const snemo::datamodel::particle_track & pt1_,
@@ -117,6 +108,9 @@ namespace snemo {
 
       /// Reset the clusterizer
       void reset();
+
+      /// OCD support:
+      static void init_ocd(datatools::object_configuration_description & ocd_);
 
     protected:
 
@@ -161,20 +155,10 @@ namespace snemo {
 
       /// Gives the times for two charged particles, last gamma deposit
       void _get_time_external_hyp(const snemo::datamodel::particle_track & particle_,
-                     double & t_, double & sigma_t);
-
-      // /// Gives the times of the relevant vertices
-      // void _get_times(const snemo::datamodel::particle_track & particle_,
-      //                 double & t_first_, double & sigma_t_first,
-      //                 double & t_last_, double & sigma_t_last);
+                                  double & t_, double & sigma_t);
 
       /// Gives the mass of the particle_
       double _get_mass(const snemo::datamodel::particle_track & particle_);
-
-      // /// Gives the track length of the particles
-      // int _get_track_length(const snemo::datamodel::particle_track & particle1_,
-      //                       const snemo::datamodel::particle_track & particle2_,
-      //                       double & track_length_1_, double & track_lengh_2_);
 
       /// Gives the track length of an electron
       double _get_charged_particle_track_length(const snemo::datamodel::particle_track & pt_);
@@ -190,7 +174,6 @@ namespace snemo {
     private:
       bool _initialized_;                             //!< Initialization status
       datatools::logger::priority _logging_priority_; //!< Logging priority
-      double _sigma_t_gamma_interaction_;             //!< The uncertainty on the track length
     };
 
   }  // end of namespace reconstruction

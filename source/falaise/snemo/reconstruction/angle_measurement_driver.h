@@ -54,7 +54,7 @@ namespace snemo {
     public:
 
       /// Dedicated driver id
-      static const std::string & angle_measurement_id();
+      static const std::string & get_id();
 
       /// Setting logging priority
       void set_logging_priority(const datatools::logger::priority priority_);
