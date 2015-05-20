@@ -22,6 +22,8 @@ namespace snemo {
     topology_2e_pattern::topology_2e_pattern()
       : base_topology_pattern(topology_2e_pattern::pattern_id())
     {
+      datatools::invalidate(_electron_minimal_energy_);
+      datatools::invalidate(_electron_maximal_energy_);
       return;
     }
 
