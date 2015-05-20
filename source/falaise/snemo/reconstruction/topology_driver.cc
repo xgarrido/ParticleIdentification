@@ -448,22 +448,60 @@ namespace snemo {
       if (_AMD_) _AMD_->process(pt1, pt2, angle);
       if (datatools::is_valid(angle)) t1e1ap->set_angle(angle);
 
-      double alpha_delayed_time = datatools::invalid_real();
-      snemo::datamodel::particle_track_data::particle_collection_type alpha_tracks;
-      const size_t nalpha
-        = snemo::datamodel::pid_utils::fetch_particles(ptd_,
-                                                       alpha_tracks,
-                                                       snemo::datamodel::pid_utils::alpha_label());
-      DT_THROW_IF(nalpha != 1, std::logic_error, "More than 1 alpha particle !");
-      const snemo::datamodel::particle_track & alpha_track = alpha_tracks.front().get();
-      if (alpha_track.has_trajectory()) {
-        // Get alpha time delay from trajectory auxiliairies
-        const datatools::properties & aux = alpha_track.get_trajectory().get_auxiliaries();
-        if (aux.has_key("t0")) {
-          alpha_delayed_time = aux.fetch_real("t0");
+      {
+        // Extract alpha track physical quantities i.e. time delay and length
+        snemo::datamodel::particle_track_data::particle_collection_type alpha_tracks;
+        const size_t nalphas
+          = snemo::datamodel::pid_utils::fetch_particles(ptd_,
+                                                         alpha_tracks,
+                                                         snemo::datamodel::pid_utils::alpha_label());
+        DT_THROW_IF(nalphas != 1, std::logic_error, "More than 1 alpha particle !");
+        const snemo::datamodel::particle_track & alpha_track = alpha_tracks.front().get();
+
+        double alpha_delayed_time = datatools::invalid_real();
+        double alpha_track_length = datatools::invalid_real();
+        if (alpha_track.has_trajectory()) {
+          const snemo::datamodel::tracker_trajectory & a_trajectory = alpha_track.get_trajectory();
+          const snemo::datamodel::base_trajectory_pattern & a_track_pattern = a_trajectory.get_pattern();
+          alpha_track_length = a_track_pattern.get_shape().get_length();
+          // Get alpha time delay from trajectory auxiliairies
+          const datatools::properties & aux = a_trajectory.get_auxiliaries();
+          if (aux.has_key("t0")) {
+            alpha_delayed_time = aux.fetch_real("t0");
+          }
         }
+        if (datatools::is_valid(alpha_delayed_time)) t1e1ap->set_alpha_delayed_time(alpha_delayed_time);
+        if (datatools::is_valid(alpha_track_length)) t1e1ap->set_alpha_track_length(alpha_track_length);
       }
-      if (datatools::is_valid(alpha_delayed_time)) t1e1ap->set_alpha_delayed_time(alpha_delayed_time);
+
+      {
+        // Extract electron track physical quantities i.e. track length & energy
+        snemo::datamodel::particle_track_data::particle_collection_type electron_tracks;
+        const size_t nelectrons
+          = snemo::datamodel::pid_utils::fetch_particles(ptd_,
+                                                         electron_tracks,
+                                                         snemo::datamodel::pid_utils::electron_label());
+        DT_THROW_IF(nelectrons != 1, std::logic_error, "More than 1 electron particle !");
+        const snemo::datamodel::particle_track & electron_track = electron_tracks.front().get();
+
+        double electron_track_length = datatools::invalid_real();
+        if (electron_track.has_trajectory()) {
+          const snemo::datamodel::tracker_trajectory & a_trajectory = electron_track.get_trajectory();
+          const snemo::datamodel::base_trajectory_pattern & a_track_pattern = a_trajectory.get_pattern();
+          electron_track_length = a_track_pattern.get_shape().get_length();
+        }
+        if (datatools::is_valid(electron_track_length)) t1e1ap->set_electron_track_length(electron_track_length);
+
+        double electron_energy = datatools::invalid_real();
+        if (electron_track.has_associated_calorimeter_hits()) {
+          const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
+            calos = electron_track.get_associated_calorimeter_hits();
+          if (calos.size() == 1) {
+            electron_energy = calos.front().get().get_energy();
+          }
+        }
+        if (datatools::is_valid(electron_energy)) t1e1ap->set_electron_energy(electron_energy);
+      }
 
       return;
     }

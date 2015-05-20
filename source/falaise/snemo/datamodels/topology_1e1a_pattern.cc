@@ -22,7 +22,10 @@ namespace snemo {
     topology_1e1a_pattern::topology_1e1a_pattern()
       : base_topology_pattern(topology_1e1a_pattern::pattern_id())
     {
-      _alpha_delayed_time_ = datatools::invalid_real();
+      datatools::invalidate(_alpha_delayed_time_);
+      datatools::invalidate(_alpha_track_length_);
+      datatools::invalidate(_electron_track_length_);
+      datatools::invalidate(_electron_energy_);
       return;
     }
 
@@ -33,34 +36,34 @@ namespace snemo {
 
     bool topology_1e1a_pattern::has_delta_vertices_y() const
     {
-      return _DeltaV_.has_delta_vertices_y();
+      return _delta_vertices_.has_delta_vertices_y();
     }
 
     void topology_1e1a_pattern::set_delta_vertices_y(double deltaV_y_)
     {
-      _DeltaV_.set_delta_vertices_y(deltaV_y_);
+      _delta_vertices_.set_delta_vertices_y(deltaV_y_);
       return;
     }
 
     double topology_1e1a_pattern::get_delta_vertices_y() const
     {
-      return _DeltaV_.get_delta_vertices_y();
+      return _delta_vertices_.get_delta_vertices_y();
     }
 
     bool topology_1e1a_pattern::has_delta_vertices_z() const
     {
-      return _DeltaV_.has_delta_vertices_z();
+      return _delta_vertices_.has_delta_vertices_z();
     }
 
     void topology_1e1a_pattern::set_delta_vertices_z(double deltaV_z_)
     {
-      _DeltaV_.set_delta_vertices_z(deltaV_z_);
+      _delta_vertices_.set_delta_vertices_z(deltaV_z_);
       return;
     }
 
     double topology_1e1a_pattern::get_delta_vertices_z() const
     {
-      return _DeltaV_.get_delta_vertices_z();
+      return _delta_vertices_.get_delta_vertices_z();
     }
 
     bool topology_1e1a_pattern::has_angle() const
@@ -95,6 +98,54 @@ namespace snemo {
       return _alpha_delayed_time_;
     }
 
+    bool topology_1e1a_pattern::has_alpha_track_length() const
+    {
+      return datatools::is_valid(_alpha_track_length_);
+    }
+
+    void topology_1e1a_pattern::set_alpha_track_length(double length_)
+    {
+      _alpha_track_length_ = length_;
+      return;
+    }
+
+    double topology_1e1a_pattern::get_alpha_track_length() const
+    {
+      return _alpha_track_length_;
+    }
+
+    bool topology_1e1a_pattern::has_electron_track_length() const
+    {
+      return datatools::is_valid(_electron_track_length_);
+    }
+
+    void topology_1e1a_pattern::set_electron_track_length(double length_)
+    {
+      _electron_track_length_ = length_;
+      return;
+    }
+
+    double topology_1e1a_pattern::get_electron_track_length() const
+    {
+      return _electron_track_length_;
+    }
+
+    bool topology_1e1a_pattern::has_electron_energy() const
+    {
+      return datatools::is_valid(_electron_energy_);
+    }
+
+    void topology_1e1a_pattern::set_electron_energy(double energy_)
+    {
+      _electron_energy_ = energy_;
+      return;
+    }
+
+    double topology_1e1a_pattern::get_electron_energy() const
+    {
+      return _electron_energy_;
+    }
+
     void topology_1e1a_pattern::tree_dump(std::ostream      & out_,
                                           const std::string & title_,
                                           const std::string & indent_,
@@ -122,7 +173,7 @@ namespace snemo {
       }
       out_ << std::endl;
 
-      out_ << indent << datatools::i_tree_dumpable::inherit_tag(inherit_)
+      out_ << indent << datatools::i_tree_dumpable::tag
            << "Angle : ";
       if (has_angle()) {
         out_ << get_angle()/CLHEP::degree << "°";
@@ -131,10 +182,37 @@ namespace snemo {
       }
       out_ << std::endl;
 
-      out_ << indent << datatools::i_tree_dumpable::inherit_tag(inherit_)
+      out_ << indent << datatools::i_tree_dumpable::tag
            << "Alpha delayed time : ";
       if (has_alpha_delayed_time()) {
-        out_ << get_alpha_delayed_time()/CLHEP::ns << " ns";
+        out_ << get_alpha_delayed_time()/CLHEP::microsecond << " us";
+      } else {
+        out_ << "No value";
+      }
+      out_ << std::endl;
+
+      out_ << indent << datatools::i_tree_dumpable::tag
+           << "Alpha track length : ";
+      if (has_alpha_track_length()) {
+        out_ << get_alpha_track_length()/CLHEP::cm << " cm";
+      } else {
+        out_ << "No value";
+      }
+      out_ << std::endl;
+
+      out_ << indent << datatools::i_tree_dumpable::tag
+           << "Electron track length : ";
+      if (has_electron_track_length()) {
+        out_ << get_electron_track_length()/CLHEP::cm << " cm";
+      } else {
+        out_ << "No value";
+      }
+      out_ << std::endl;
+
+      out_ << indent << datatools::i_tree_dumpable::inherit_tag(inherit_)
+           << "Electron energy : ";
+      if (has_electron_energy()) {
+        out_ << get_electron_energy()/CLHEP::keV << " keV";
       } else {
         out_ << "No value";
       }

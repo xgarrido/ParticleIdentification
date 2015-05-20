@@ -70,6 +70,33 @@ namespace snemo {
       /// Get alpha delayed time
       double get_alpha_delayed_time() const;
 
+      /// Check alpha track length validity
+      bool has_alpha_track_length() const;
+
+      /// Set alpha track_length
+      void set_alpha_track_length(double);
+
+      /// Get alpha track length
+      double get_alpha_track_length() const;
+
+      /// Check electron track length validity
+      bool has_electron_track_length() const;
+
+      /// Set electron track_length
+      void set_electron_track_length(double);
+
+      /// Get electron track length
+      double get_electron_track_length() const;
+
+      /// Check electron energy validity
+      bool has_electron_energy() const;
+
+      /// Set electron energy
+      void set_electron_energy(double);
+
+      /// Get electron energy
+      double get_electron_energy() const;
+
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,
                              const std::string & title_  = "",
@@ -78,9 +105,12 @@ namespace snemo {
 
     private:
 
-      delta_vertices_measurement _DeltaV_;
-      angle_measurement _angle_;
-      double _alpha_delayed_time_;
+      delta_vertices_measurement _delta_vertices_; //!< Delta vertices meas.
+      angle_measurement _angle_;                   //!< Angle meas.
+      double _alpha_delayed_time_;                 //!< Time delay of alpha particle
+      double _alpha_track_length_;                 //!< Track length of alpha particle
+      double _electron_track_length_;              //!< Track length of electron particle
+      double _electron_energy_;                    //!< Energy of electron particle
 
       DATATOOLS_SERIALIZATION_DECLARATION();
 
