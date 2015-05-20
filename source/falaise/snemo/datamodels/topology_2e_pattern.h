@@ -73,11 +73,32 @@ namespace snemo {
       /// Check angle validity
       bool has_angle() const;
 
-      /// Set angle
+      /// Set angle value
       void set_angle(double);
 
-      /// Return internal probability
+      /// Return angle measurement
       double get_angle() const;
+
+      /// Check minimal energy validity
+      bool has_minimal_energy() const;
+
+      /// Set minimal energy
+      void set_minimal_energy(double);
+
+      /// Return minimal energy
+      double get_minimal_energy() const;
+
+      /// Check maximal energy validity
+      bool has_maximal_energy() const;
+
+      /// Set maximal energy
+      void set_maximal_energy(double);
+
+      /// Return maximal energy
+      double get_maximal_energy() const;
+
+      /// Return total energy
+      double get_total_energy() const;
 
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,
@@ -87,9 +108,11 @@ namespace snemo {
 
     private:
 
-      TOF_measurement _tof_;
-      delta_vertices_measurement _DeltaV_;
-      angle_measurement _angle_;
+      TOF_measurement _tof_;                              //!< Time-Of-Flight meas.
+      delta_vertices_measurement _delta_vertices_source_; //!< Delta vertices on source foil
+      angle_measurement _angle_;                          //!< Angle meas.
+      double _electron_minimal_energy_;                   //!< Minimal energy of the electron
+      double _electron_maximal_energy_;                   //!< Maximal energy of the electron
 
       DATATOOLS_SERIALIZATION_DECLARATION();
 

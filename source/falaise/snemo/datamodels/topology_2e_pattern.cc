@@ -30,11 +30,6 @@ namespace snemo {
       return;
     }
 
-    // bool topology_2e_pattern::has_TOF_measurement() const
-    // {
-    //   return has_internal_probability() && has_external_probability();
-    // }
-
     bool topology_2e_pattern::has_internal_probability() const
     {
       return ! _tof_.get_internal_probabilities().empty();
@@ -71,39 +66,39 @@ namespace snemo {
 
     bool topology_2e_pattern::has_delta_vertices_y() const
     {
-      return _DeltaV_.has_delta_vertices_y();
+      return _delta_vertices_source_.has_delta_vertices_y();
     }
 
-    void topology_2e_pattern::set_delta_vertices_y(double deltaV_y_)
+    void topology_2e_pattern::set_delta_vertices_y(double delta_)
     {
-      _DeltaV_.set_delta_vertices_y(deltaV_y_);
+      _delta_vertices_source_.set_delta_vertices_y(delta_);
       return;
     }
 
     double topology_2e_pattern::get_delta_vertices_y() const
     {
-      return _DeltaV_.get_delta_vertices_y();
+      return _delta_vertices_source_.get_delta_vertices_y();
     }
 
     bool topology_2e_pattern::has_delta_vertices_z() const
     {
-      return _DeltaV_.has_delta_vertices_z();
+      return _delta_vertices_source_.has_delta_vertices_z();
     }
 
-    void topology_2e_pattern::set_delta_vertices_z(double deltaV_z_)
+    void topology_2e_pattern::set_delta_vertices_z(double delta_)
     {
-      _DeltaV_.set_delta_vertices_z(deltaV_z_);
+      _delta_vertices_source_.set_delta_vertices_z(delta_);
       return;
     }
 
     double topology_2e_pattern::get_delta_vertices_z() const
     {
-      return _DeltaV_.get_delta_vertices_z();
+      return _delta_vertices_source_.get_delta_vertices_z();
     }
 
     bool topology_2e_pattern::has_angle() const
     {
-      return !_angle_.has_angle();
+      return _angle_.has_angle();
     }
 
     void topology_2e_pattern::set_angle(double angle_)
@@ -114,8 +109,44 @@ namespace snemo {
 
     double topology_2e_pattern::get_angle() const
     {
-      // DT_THROW_IF(! has_angle(), std::logic_error, "No angle stored !");
       return _angle_.get_angle();
+    }
+
+    bool topology_2e_pattern::has_minimal_energy() const
+    {
+      return datatools::is_valid(_electron_minimal_energy_);
+    }
+
+    void topology_2e_pattern::set_minimal_energy(double energy_)
+    {
+      _electron_minimal_energy_ = energy_;
+      return;
+    }
+
+    double topology_2e_pattern::get_minimal_energy() const
+    {
+      return _electron_minimal_energy_;
+    }
+
+    bool topology_2e_pattern::has_maximal_energy() const
+    {
+      return datatools::is_valid(_electron_maximal_energy_);
+    }
+
+    void topology_2e_pattern::set_maximal_energy(double energy_)
+    {
+      _electron_maximal_energy_ = energy_;
+      return;
+    }
+
+    double topology_2e_pattern::get_maximal_energy() const
+    {
+      return _electron_maximal_energy_;
+    }
+
+    double topology_2e_pattern::get_total_energy() const
+    {
+      return get_maximal_energy() + get_minimal_energy();
     }
 
     void topology_2e_pattern::tree_dump(std::ostream      & out_,
@@ -163,10 +194,37 @@ namespace snemo {
       }
       out_ << std::endl;
 
-      out_ << indent << datatools::i_tree_dumpable::inherit_tag(inherit_)
+      out_ << indent << datatools::i_tree_dumpable::tag
            << "Angle : ";
       if (has_angle()) {
         out_ << get_angle()/CLHEP::degree << "°";
+      } else {
+        out_ << "No value";
+      }
+      out_ << std::endl;
+
+      out_ << indent << datatools::i_tree_dumpable::tag
+           << "Minimal energy : ";
+      if (has_minimal_energy()) {
+        out_ << get_minimal_energy()/CLHEP::keV << " keV";
+      } else {
+        out_ << "No value";
+      }
+      out_ << std::endl;
+
+      out_ << indent << datatools::i_tree_dumpable::tag
+           << "Maximal energy : ";
+      if (has_maximal_energy()) {
+        out_ << get_maximal_energy()/CLHEP::keV << " keV";
+      } else {
+        out_ << "No value";
+      }
+      out_ << std::endl;
+
+      out_ << indent << datatools::i_tree_dumpable::inherit_tag(inherit_)
+           << "Total energy : ";
+      if (has_minimal_energy() && has_maximal_energy()) {
+        out_ << get_total_energy()/CLHEP::keV << " keV";
       } else {
         out_ << "No value";
       }
