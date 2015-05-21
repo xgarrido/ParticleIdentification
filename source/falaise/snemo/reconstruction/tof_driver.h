@@ -76,6 +76,36 @@ namespace snemo {
     {
     public:
 
+      /// Toolbox for TOF calculation
+      struct tof_tool {
+
+        /// Gives the energy of particle
+        static double get_energy(const snemo::datamodel::particle_track & particle_);
+
+        /// Gives the mass of the particle
+        static double get_mass(const snemo::datamodel::particle_track & particle_);
+
+        /// Returns the beta
+        static double beta(double energy_, double mass_);
+
+        /// Gives the theoretical time of the track
+        static double get_theoretical_time(double energy_, double mass_, double track_length_);
+
+        /// Gives the times for two charged particles (single deposit)
+        static void get_time(const snemo::datamodel::particle_track & particle_,
+                             double & t_, double & sigma_t);
+
+        /// Gives the track length of an electron
+        static double get_charged_particle_track_length(const snemo::datamodel::particle_track & particle_);
+
+        /// Gives the track length of a gamma from the electron vertex
+        static double get_gamma_track_length(const snemo::datamodel::particle_track & gamma_,
+                                             const snemo::datamodel::particle_track & electron_,
+                                             const bool external_hyp_ = false);
+
+        static datatools::logger::priority logging; //!< Internal logging priority
+      };
+
       /// Dedicated driver id
       static const std::string & get_id();
 
@@ -117,6 +147,9 @@ namespace snemo {
       /// Set the initialization flag
       void _set_initialized(bool);
 
+      /// Give default values to specific class members.
+      void _set_defaults ();
+
       /// Main method to process particles and to retrieve internal/external TOF probabilities
       int _process_algo(const snemo::datamodel::particle_track & particle_1_,
                         const snemo::datamodel::particle_track & particle_2_,
@@ -139,37 +172,6 @@ namespace snemo {
                                    const geomtools::blur_spot & a_vertex,
                                    double & track_length_,
                                    double & time_, double & sigma_time_);
-
-      /// Gives the energy of particle
-      static double _get_energy(const snemo::datamodel::particle_track & particle_);
-
-      /// Gives the theoretical time of the track
-      static double _get_theoretical_time(double energy_, double mass_, double track_length_);
-
-      /// Returns the beta
-      static double _beta(double energy_, double mass_);
-
-      /// Gives the times for two charged particles (single deposit)
-      void _get_time(const snemo::datamodel::particle_track & particle_,
-                     double & t_, double & sigma_t);
-
-      /// Gives the times for two charged particles, last gamma deposit
-      void _get_time_external_hyp(const snemo::datamodel::particle_track & particle_,
-                                  double & t_, double & sigma_t);
-
-      /// Gives the mass of the particle_
-      double _get_mass(const snemo::datamodel::particle_track & particle_);
-
-      /// Gives the track length of an electron
-      double _get_charged_particle_track_length(const snemo::datamodel::particle_track & pt_);
-
-      /// Gives the track length of a gamma from the electron vertex
-      double _get_gamma_track_length(const snemo::datamodel::particle_track & pt_gamma_,
-                                     const snemo::datamodel::particle_track & pt_electron_,
-                                     const bool external_hyp_ = false);
-
-      /// Give default values to specific class members.
-      void _set_defaults ();
 
     private:
       bool _initialized_;                             //!< Initialization status
