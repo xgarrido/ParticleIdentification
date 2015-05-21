@@ -69,13 +69,13 @@ namespace snemo {
       ~angle_measurement_driver();
 
       /// Main process for single prticle track measurement
-      int process(const snemo::datamodel::particle_track & pt_,
-                  double & angle_);
+      void process(const snemo::datamodel::particle_track & pt_,
+                   double & angle_);
 
       /// Main process for angle between two particle tracks
-      int process(const snemo::datamodel::particle_track & pt1_,
-                  const snemo::datamodel::particle_track & pt2_,
-                  double & angle_);
+      void process(const snemo::datamodel::particle_track & pt1_,
+                   const snemo::datamodel::particle_track & pt2_,
+                   double & angle_);
 
 
       /// Check if the driver is initialized
@@ -99,13 +99,13 @@ namespace snemo {
       void _set_defaults ();
 
       /// Special method to process single particle track
-      int _process_algo(const snemo::datamodel::particle_track & pt_,
-                        double & angle);
+      void _process_algo(const snemo::datamodel::particle_track & pt_,
+                         double & angle);
 
       /// Special method to process two particle tracks
-      int _process_algo(const snemo::datamodel::particle_track & pt1_,
-                        const snemo::datamodel::particle_track & pt2_,
-                        double & angle);
+      void _process_algo(const snemo::datamodel::particle_track & pt1_,
+                         const snemo::datamodel::particle_track & pt2_,
+                         double & angle);
 
       /// Get direction of a particle track
       void _get_direction(const snemo::datamodel::particle_track & pt_,

@@ -121,14 +121,15 @@ namespace snemo {
       /// Getting logging priority
       datatools::logger::priority get_logging_priority() const;
 
-      /// Main process
-      int process(const snemo::datamodel::particle_track & pt1_,
-                  const snemo::datamodel::particle_track & pt2_,
-                  std::vector<double> & proba_int, std::vector<double> & proba_ext);
+      /// Main process of multiple calorimeters
+      void process(const snemo::datamodel::particle_track & pt1_,
+                   const snemo::datamodel::particle_track & pt2_,
+                   std::vector<double> & proba_int, std::vector<double> & proba_ext);
 
-      int process(const snemo::datamodel::particle_track & pt1_,
-                  const snemo::datamodel::particle_track & pt2_,
-                  double & proba_int, double & proba_ext);
+      /// Main process of charged particles
+      void process(const snemo::datamodel::particle_track & pt1_,
+                   const snemo::datamodel::particle_track & pt2_,
+                   double & proba_int, double & proba_ext);
 
       /// Check if theclusterizer is initialized
       bool is_initialized() const;
@@ -151,9 +152,9 @@ namespace snemo {
       void _set_defaults ();
 
       /// Main method to process particles and to retrieve internal/external TOF probabilities
-      int _process_algo(const snemo::datamodel::particle_track & particle_1_,
-                        const snemo::datamodel::particle_track & particle_2_,
-                        std::vector<double> & proba_int_, std::vector<double> & proba_ext_);
+      void _process_algo(const snemo::datamodel::particle_track & particle_1_,
+                         const snemo::datamodel::particle_track & particle_2_,
+                         std::vector<double> & proba_int_, std::vector<double> & proba_ext_);
 
       /// Special method to process charged particles
       void _process_charged_particles(const snemo::datamodel::particle_track & particle_1_,
@@ -166,12 +167,12 @@ namespace snemo {
                                             std::vector<double> & proba_int_, std::vector<double> & proba_ext_);
 
       /// Special method to process charged particles
-      int _get_vertex_to_calo_info(const snemo::datamodel::particle_track & particle_charged_,
-                                   const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
-                                   the_gamma_calorimeters,
-                                   const geomtools::blur_spot & a_vertex,
-                                   double & track_length_,
-                                   double & time_, double & sigma_time_);
+      void _get_vertex_to_calo_info(const snemo::datamodel::particle_track & particle_charged_,
+                                    const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
+                                    the_gamma_calorimeters,
+                                    const geomtools::blur_spot & a_vertex,
+                                    double & track_length_,
+                                    double & time_, double & sigma_time_);
 
     private:
       bool _initialized_;                             //!< Initialization status

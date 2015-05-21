@@ -62,7 +62,7 @@ namespace snemo {
     void delta_vertices_driver::_set_defaults()
     {
 
-      _initialized_ = 0;
+      _initialized_ = false;
       _logging_priority_ = datatools::logger::PRIO_WARNING;
       return;
     }
@@ -89,41 +89,31 @@ namespace snemo {
       return;
     }
 
-    int delta_vertices_driver::process(const snemo::datamodel::particle_track & pt1_,
-                                       const snemo::datamodel::particle_track & pt2_,
-                                       double & delta_vertices_y, double & delta_vertices_z)
+    void delta_vertices_driver::process(const snemo::datamodel::particle_track & pt1_,
+                                        const snemo::datamodel::particle_track & pt2_,
+                                        double & delta_vertices_y, double & delta_vertices_z)
     {
-      int status = 0;
       DT_THROW_IF(! is_initialized(), std::logic_error, "Driver '" << get_id() << "' is already initialized !");
-
-      status = _process_algo(pt1_, pt2_, delta_vertices_y, delta_vertices_z);
-
-      if (status != 0) {
-        DT_LOG_ERROR(get_logging_priority(),
-                     "Computing topology quantities with '" << get_id() << "' algorithm has failed !");
-        return status;
-      }
-
-      return status;
+      this->_process_algo(pt1_, pt2_, delta_vertices_y, delta_vertices_z);
+      return;
     }
 
-    int delta_vertices_driver::_process_algo(const snemo::datamodel::particle_track & pt1_,
-                                             const snemo::datamodel::particle_track & pt2_,
-                                             double & delta_vertices_y_,
-                                             double & delta_vertices_z_)
+    void delta_vertices_driver::_process_algo(const snemo::datamodel::particle_track & pt1_,
+                                              const snemo::datamodel::particle_track & pt2_,
+                                              double & delta_vertices_y_,
+                                              double & delta_vertices_z_)
     {
       DT_LOG_TRACE(get_logging_priority(), "Entering...");
+      // Invalidate results
+      datatools::invalidate(delta_vertices_y_);
+      datatools::invalidate(delta_vertices_z_);
 
       if (snemo::datamodel::pid_utils::particle_is_gamma(pt1_) &&
           snemo::datamodel::pid_utils::particle_is_gamma(pt2_)) {
         DT_LOG_WARNING(get_logging_priority(),
                        "Delta vertices cannot be computed if one particle is a gamma!");
-        return 1;
+        return;
       }
-
-      // Invalidate results
-      datatools::invalidate(delta_vertices_y_);
-      datatools::invalidate(delta_vertices_z_);
 
       geomtools::vector_3d v1;
       geomtools::invalidate(v1);
@@ -168,7 +158,7 @@ namespace snemo {
       DT_LOG_DEBUG(get_logging_priority(), "Delta vertex z = " << delta_vertices_z_/CLHEP::mm << " mm");
 
       DT_LOG_TRACE(get_logging_priority(), "Exiting...");
-      return 0;
+      return;
     }
 
     // static

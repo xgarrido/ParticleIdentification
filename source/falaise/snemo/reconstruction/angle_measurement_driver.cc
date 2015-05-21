@@ -98,39 +98,25 @@ namespace snemo {
       return;
     }
 
-    int angle_measurement_driver::process(const snemo::datamodel::particle_track & pt_,
-                                          double & angle_)
+    void angle_measurement_driver::process(const snemo::datamodel::particle_track & pt_,
+                                           double & angle_)
     {
-      int status = 0;
       DT_THROW_IF(! is_initialized(), std::logic_error, "Driver '" << get_id() << "' is already initialized !");
-
-      status = _process_algo(pt_, angle_);
-
-      if (status != 0) {
-        DT_LOG_ERROR(get_logging_priority(),
-                     "Computing topology quantities with '" << get_id() << "' algorithm has failed !");
-      }
-      return status;
+      this->_process_algo(pt_, angle_);
+      return;
     }
 
-    int angle_measurement_driver::process(const snemo::datamodel::particle_track & pt1_,
-                                          const snemo::datamodel::particle_track & pt2_,
-                                          double & angle_)
+    void angle_measurement_driver::process(const snemo::datamodel::particle_track & pt1_,
+                                           const snemo::datamodel::particle_track & pt2_,
+                                           double & angle_)
     {
-      int status = 0;
       DT_THROW_IF(! is_initialized(), std::logic_error, "Driver '" << get_id() << "' is already initialized !");
-
-      status = _process_algo(pt1_, pt2_, angle_);
-
-      if (status != 0) {
-        DT_LOG_ERROR(get_logging_priority(),
-                     "Computing topology quantities with '" << get_id() << "' algorithm has failed !");
-      }
-      return status;
+      this->_process_algo(pt1_, pt2_, angle_);
+      return;
     }
 
-    int angle_measurement_driver::_process_algo(const snemo::datamodel::particle_track & pt_,
-                                                double & angle_)
+    void angle_measurement_driver::_process_algo(const snemo::datamodel::particle_track & pt_,
+                                                 double & angle_)
     {
       DT_LOG_TRACE(get_logging_priority(), "Entering...");
 
@@ -140,7 +126,7 @@ namespace snemo {
       if (snemo::datamodel::pid_utils::particle_is_gamma(pt_)) {
         DT_LOG_WARNING(get_logging_priority(),
                        "No angle can be deduced from a single gamma !");
-        return 1;
+        return;
       }
       geomtools::vector_3d particle_dir;
       geomtools::invalidate(particle_dir);
@@ -152,12 +138,12 @@ namespace snemo {
       }
 
       DT_LOG_TRACE(get_logging_priority(), "Exiting...");
-      return 0;
+      return;
     }
 
-    int angle_measurement_driver::_process_algo(const snemo::datamodel::particle_track & pt1_,
-                                                const snemo::datamodel::particle_track & pt2_,
-                                                double & angle_)
+    void angle_measurement_driver::_process_algo(const snemo::datamodel::particle_track & pt1_,
+                                                 const snemo::datamodel::particle_track & pt2_,
+                                                 double & angle_)
     {
       DT_LOG_TRACE(get_logging_priority(), "Entering...");
 
@@ -167,7 +153,7 @@ namespace snemo {
       if (snemo::datamodel::pid_utils::particle_is_gamma(pt1_) &&
           snemo::datamodel::pid_utils::particle_is_gamma(pt2_)) {
         DT_LOG_WARNING(get_logging_priority(), "The two particles are gammas ! No angle can be measured !");
-        return 1;
+        return;
       }
 
       geomtools::vector_3d particle_dir1;
@@ -181,7 +167,7 @@ namespace snemo {
         angle_ = std::acos(particle_dir1 * particle_dir2) / M_PI * 180 * CLHEP::degree;
       }
       DT_LOG_TRACE(get_logging_priority(), "Exiting...");
-      return 0;
+      return;
     }
 
     void angle_measurement_driver::_get_direction(const snemo::datamodel::particle_track & pt_,

@@ -163,12 +163,15 @@ namespace snemo {
       DT_LOG_TRACE(get_logging_priority(), "Event classification : " << a_classification);
 
       if (a_classification == "1e") {
+        DT_LOG_NOTICE(get_logging_priority(), "Fill '1e' topology");
         this->_fill_1e_topology_(ptd_, td_);
       }
       else if (a_classification == "2e") {
+        DT_LOG_NOTICE(get_logging_priority(), "Fill '2e' topology");
         this->_fill_2e_topology_(ptd_, td_);
       }
       else if (a_classification == "1e1p") {
+        DT_LOG_NOTICE(get_logging_priority(), "Fill '1e1p' topology");
         this->_fill_2e_topology_(ptd_, td_);
       }
       else if (a_classification == "1e1g" ||
@@ -176,16 +179,19 @@ namespace snemo {
                a_classification == "1e3g" ||
                a_classification == "1e4g" ||
                a_classification == "1e5g") {
-         this->_fill_1eNg_topology_(ptd_, td_);
+        DT_LOG_NOTICE(get_logging_priority(), "Fill '1eNg' topology");
+        this->_fill_1eNg_topology_(ptd_, td_);
       }
       else if (a_classification == "2e1g" ||
                a_classification == "2e2g" ||
                a_classification == "2e3g" ||
                a_classification == "2e4g" ||
                a_classification == "2e5g") {
+        DT_LOG_NOTICE(get_logging_priority(), "Fill '2eNg' topology");
         this->_fill_2eNg_topology_(ptd_, td_);
       }
       else if (a_classification == "1e1a") {
+        DT_LOG_NOTICE(get_logging_priority(), "Fill '1e1a' topology");
         this->_fill_1e1a_topology_(ptd_, td_);
       }
       else {

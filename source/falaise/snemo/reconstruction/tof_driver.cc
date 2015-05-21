@@ -230,9 +230,9 @@ namespace snemo {
       return;
     }
 
-    int tof_driver::process(const snemo::datamodel::particle_track & pt1_,
-                            const snemo::datamodel::particle_track & pt2_,
-                            double & proba_int_, double & proba_ext_)
+    void tof_driver::process(const snemo::datamodel::particle_track & pt1_,
+                             const snemo::datamodel::particle_track & pt2_,
+                             double & proba_int_, double & proba_ext_)
     {
       DT_THROW_IF(! is_initialized(), std::logic_error,
                   "Driver '" << get_id() << "' is not initialized !");
@@ -241,49 +241,38 @@ namespace snemo {
       datatools::invalidate(proba_ext_);
       std::vector<double> v_proba_int;
       std::vector<double> v_proba_ext;
-      int status = _process_algo(pt1_, pt2_, v_proba_int, v_proba_ext);
-      if (status != 0) {
-        DT_LOG_ERROR(get_logging_priority(),
-                     "Computing TOF measurements with '" << get_id() << "' algorithm has failed !");
-        return status;
-      }
-
+      this->_process_algo(pt1_, pt2_, v_proba_int, v_proba_ext);
       if (! v_proba_int.empty()) proba_int_ = v_proba_int.front();
       if (! v_proba_ext.empty()) proba_ext_ = v_proba_ext.front();
-      return status;
+      return;
     }
 
-    int tof_driver::process(const snemo::datamodel::particle_track & pt1_,
-                            const snemo::datamodel::particle_track & pt2_,
-                            std::vector<double> & proba_int_, std::vector<double> & proba_ext_)
+    void tof_driver::process(const snemo::datamodel::particle_track & pt1_,
+                             const snemo::datamodel::particle_track & pt2_,
+                             std::vector<double> & proba_int_, std::vector<double> & proba_ext_)
     {
       DT_THROW_IF(! is_initialized(), std::logic_error,
                   "Driver '" << get_id() << "' is not initialized !");
-      int status = _process_algo(pt1_, pt2_, proba_int_, proba_ext_);
-      if (status != 0) {
-        DT_LOG_ERROR(get_logging_priority(),
-                     "Computing TOF measurements with '" << get_id() << "' algorithm has failed !");
-        return status;
-      }
-      return status;
+      this->_process_algo(pt1_, pt2_, proba_int_, proba_ext_);
+      return;
     }
 
-    int tof_driver::_process_algo(const snemo::datamodel::particle_track & pt1_,
-                                  const snemo::datamodel::particle_track & pt2_,
-                                  std::vector<double> & proba_int_, std::vector<double> & proba_ext_)
+    void tof_driver::_process_algo(const snemo::datamodel::particle_track & pt1_,
+                                   const snemo::datamodel::particle_track & pt2_,
+                                   std::vector<double> & proba_int_, std::vector<double> & proba_ext_)
     {
       DT_LOG_TRACE(get_logging_priority(), "Entering...");
 
       if (! pt1_.has_associated_calorimeter_hits() ||
           ! pt2_.has_associated_calorimeter_hits()) {
         DT_LOG_WARNING(get_logging_priority(), "No associated calorimeter !");
-        return 1;
+        return;
       }
 
       if (snemo::datamodel::pid_utils::particle_is_gamma(pt1_) &&
           snemo::datamodel::pid_utils::particle_is_gamma(pt2_)) {
-        DT_LOG_WARNING(get_logging_priority(), "TOF calculation can not be done for 2 gammas !");
-        return 1;
+        DT_LOG_NOTICE(get_logging_priority(), "TOF calculation not done for 2 gammas !");
+        return;
       }
 
       // Either specialize the methods or consider the case here
@@ -295,11 +284,11 @@ namespace snemo {
         _process_charged_gamma_particles(pt1_, pt2_, proba_int_, proba_ext_);
       } else {
         DT_LOG_WARNING(get_logging_priority(), "Topology not supported !");
-        return 1;
+        return;
       }
 
       DT_LOG_TRACE(get_logging_priority(), "Exiting...");
-      return 0;
+      return;
     }
 
     void tof_driver::_process_charged_particles(const snemo::datamodel::particle_track & pt1_,
@@ -394,12 +383,12 @@ namespace snemo {
       return;
     }
 
-    int tof_driver::_get_vertex_to_calo_info(const snemo::datamodel::particle_track & ptc_,
-                                             const snemo::datamodel::calibrated_calorimeter_hit::
-                                             collection_type & the_gamma_calorimeters_,
-                                             const geomtools::blur_spot & vertex_,
-                                             double & track_length_,
-                                             double & time_, double & sigma_time_)
+    void tof_driver::_get_vertex_to_calo_info(const snemo::datamodel::particle_track & ptc_,
+                                              const snemo::datamodel::calibrated_calorimeter_hit::
+                                              collection_type & the_gamma_calorimeters_,
+                                              const geomtools::blur_spot & vertex_,
+                                              double & track_length_,
+                                              double & time_, double & sigma_time_)
     {
       datatools::invalidate(track_length_);
       datatools::invalidate(time_);
@@ -407,7 +396,7 @@ namespace snemo {
 
       if (! ptc_.has_vertices()) {
         DT_LOG_WARNING(get_logging_priority(), "Electron has no vertices associated !");
-        return 1;
+        return;
       }
       const snemo::datamodel::particle_track::vertex_collection_type & the_vertices = ptc_.get_vertices();
       geomtools::vector_3d electron_foil_vertex;
@@ -423,7 +412,7 @@ namespace snemo {
       }
       if (! geomtools::is_valid(electron_foil_vertex)) {
         DT_LOG_WARNING(get_logging_priority(), "Electron has no vertices on the calorimeter !");
-        return 1;
+        return;
       }
 
       geomtools::base_hit::has_geom_id_predicate hit_pred(vertex_.get_geom_id());
@@ -440,8 +429,7 @@ namespace snemo {
       track_length_ = (electron_foil_vertex - vertex_.get_position()).mag();
       time_ = a_calo_hit.get_time();
       sigma_time_ = a_calo_hit.get_sigma_time();
-
-      return 0;
+      return;
     }
 
     // static
