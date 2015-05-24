@@ -10,23 +10,23 @@ namespace snemo {
 
     bool i_particle_pairing::has_particle_tracks() const
     {
-      return _particle_track_pair_.first.has_data() && _particle_track_pair_.second.has_data();
+      return _particle_track_pair.first.has_data() && _particle_track_pair.second.has_data();
     }
 
     const i_particle_pairing::particle_pair_type & i_particle_pairing::get_particle_tracks() const
     {
-      return _particle_track_pair_;
+      return _particle_track_pair;
     }
 
     i_particle_pairing::particle_pair_type & i_particle_pairing::grab_particle_tracks()
     {
-      return _particle_track_pair_;
+      return _particle_track_pair;
     }
 
     void i_particle_pairing::set_particle_tracks(const snemo::datamodel::particle_track::handle_type & hpt1_,
                                                  const snemo::datamodel::particle_track::handle_type & hpt2_)
     {
-      _particle_track_pair_ = std::make_pair(hpt1_, hpt2_);
+      _particle_track_pair = std::make_pair(hpt1_, hpt2_);
       return;
     }
 

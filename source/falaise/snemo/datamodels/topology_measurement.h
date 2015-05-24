@@ -46,7 +46,7 @@ namespace snemo {
 
     protected:
 
-      particle_pair_type _particle_track_pair_;
+      particle_pair_type _particle_track_pair;
     };
 
     /// \brief The Time Of Flight measurement

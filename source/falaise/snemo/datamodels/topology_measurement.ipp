@@ -17,7 +17,7 @@ namespace snemo {
     {
       ar_ & boost::serialization::make_nvp("internal_probabilities", _internal_probabilities_);
       ar_ & boost::serialization::make_nvp("external_probabilities", _external_probabilities_);
-      ar_ & boost::serialization::make_nvp("particle_track_pair", _particle_track_pair_);
+      ar_ & boost::serialization::make_nvp("particle_track_pair", _particle_track_pair);
       return;
     }
 
@@ -27,7 +27,7 @@ namespace snemo {
     {
       ar_ & boost::serialization::make_nvp("delta_vertices_y", _delta_vertices_y_);
       ar_ & boost::serialization::make_nvp("delta_vertices_z", _delta_vertices_z_);
-      ar_ & boost::serialization::make_nvp("particle_track_pair", _particle_track_pair_);
+      ar_ & boost::serialization::make_nvp("particle_track_pair", _particle_track_pair);
       return;
     }
 
@@ -36,7 +36,7 @@ namespace snemo {
     void angle_measurement::serialize(Archive & ar_, const unsigned int /* version */)
     {
       ar_ & boost::serialization::make_nvp("angle", _angle_);
-      ar_ & boost::serialization::make_nvp("particle_track_pair", _particle_track_pair_);
+      ar_ & boost::serialization::make_nvp("particle_track_pair", _particle_track_pair);
       return;
     }
 
