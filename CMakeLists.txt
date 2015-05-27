@@ -97,6 +97,12 @@ endif()
 # Install it:
 install(TARGETS Falaise_ParticleIdentification DESTINATION ${CMAKE_INSTALL_LIBDIR}/Falaise/modules)
 
+# - Publish headers
+foreach(_hdrin ${FalaiseParticleIdentificationPlugin_HEADERS})
+  string(REGEX REPLACE "source/falaise/" "" _hdrout "${_hdrin}")
+  configure_file(${_hdrin} ${Falaise_BUILDPRODUCT_DIR}/include/falaise/${_hdrout} @ONLY)
+endforeach()
+
 # # Test support:
 # option(FalaiseParticleIdentificationPlugin_ENABLE_TESTING "Build unit testing system for FalaiseParticleIdentification" ON)
 # if(FalaiseParticleIdentificationPlugin_ENABLE_TESTING)
