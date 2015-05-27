@@ -47,6 +47,22 @@ namespace snemo {
       return _angle_.get_angle();
     }
 
+    bool topology_1e_pattern::has_electron_energy() const
+    {
+      return datatools::is_valid(_electron_energy_);
+    }
+
+    void topology_1e_pattern::set_electron_energy(double energy_)
+    {
+      _electron_energy_ = energy_;
+      return;
+    }
+
+    double topology_1e_pattern::get_electron_energy() const
+    {
+      return _electron_energy_;
+    }
+
     void topology_1e_pattern::tree_dump(std::ostream      & out_,
                                         const std::string & title_,
                                         const std::string & indent_,

@@ -151,38 +151,6 @@ namespace snemo {
       return get_maximal_energy() + get_minimal_energy();
     }
 
-    bool topology_2e_pattern::has_electron_Emin_track_length() const
-    {
-      return datatools::is_valid(_electron_track_length_Emin_);
-    }
-
-    void topology_2e_pattern::set_electron_Emin_track_length(double length_)
-    {
-      _electron_track_length_Emin_ = length_;
-      return;
-    }
-
-    double topology_2e_pattern::get_electron_Emin_track_length() const
-    {
-      return _electron_track_length_Emin_;
-    }
-
-    bool topology_2e_pattern::has_electron_Emax_track_length() const
-    {
-      return datatools::is_valid(_electron_track_length_Emax_);
-    }
-
-    void topology_2e_pattern::set_electron_Emax_track_length(double length_)
-    {
-      _electron_track_length_Emax_ = length_;
-      return;
-    }
-
-    double topology_2e_pattern::get_electron_Emax_track_length() const
-    {
-      return _electron_track_length_Emax_;
-    }
-
     void topology_2e_pattern::tree_dump(std::ostream      & out_,
                                         const std::string & title_,
                                         const std::string & indent_,

@@ -100,24 +100,6 @@ namespace snemo {
       /// Return total energy
       double get_total_energy() const;
 
-      /// Check electron of minimal energy track length validity
-      bool has_electron_Emin_track_length() const;
-
-      /// Set electron of minimal energy track_length
-      void set_electron_Emin_track_length(double);
-
-      /// Get electron of minimal energy track length
-      double get_electron_Emin_track_length() const;
-
-      /// Check electron of maximal energy track length validity
-      bool has_electron_Emax_track_length() const;
-
-      /// Set electron of maximal energy track_length
-      void set_electron_Emax_track_length(double);
-
-      /// Get electron of maximal energy track length
-      double get_electron_Emax_track_length() const;
-
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,
                              const std::string & title_  = "",
@@ -131,10 +113,6 @@ namespace snemo {
       angle_measurement _angle_;                          //!< Angle meas.
       double _electron_minimal_energy_;                   //!< Minimal energy of the electron
       double _electron_maximal_energy_;                   //!< Maximal energy of the electron
-      double _electron_track_length_Emin_;                //!< Track length of the electron
-                                                          //!< of minimal energy
-      double _electron_track_length_Emax_;                //!< Track length of the electron
-                                                          //!< of maximal energy
 
       DATATOOLS_SERIALIZATION_DECLARATION();
 

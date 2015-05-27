@@ -43,6 +43,15 @@ namespace snemo {
       /// Return internal probability
       double get_angle() const;
 
+      /// Check electron energy validity
+      bool has_electron_energy() const;
+
+      /// Set electron energy
+      void set_electron_energy(double);
+
+      /// Get electron energy
+      double get_electron_energy() const;
+
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,
                              const std::string & title_  = "",
@@ -52,6 +61,7 @@ namespace snemo {
     private:
 
       angle_measurement _angle_;
+      double _electron_energy_;                    //!< Energy of electron particle
 
       DATATOOLS_SERIALIZATION_DECLARATION();
 

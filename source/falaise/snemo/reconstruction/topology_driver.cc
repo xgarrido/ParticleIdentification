@@ -248,6 +248,30 @@ namespace snemo {
       if (_AMD_) _AMD_->process(pt, angle);
       if (datatools::is_valid(angle)) t1ep->set_angle(angle);
 
+      {
+        // Extract electron track physical quantities i.e. track length & energy
+        snemo::datamodel::particle_track_data::particle_collection_type electron_tracks;
+        const size_t nelectrons
+          = snemo::datamodel::pid_utils::fetch_particles(ptd_,
+                                                         electron_tracks,
+                                                         snemo::datamodel::pid_utils::electron_label());
+        DT_THROW_IF(nelectrons != 1, std::logic_error, "Number of electrons different from 1 !");
+
+        const snemo::datamodel::particle_track & electron_track = electron_tracks.front().get();
+
+        double electron_energy = datatools::invalid_real();
+        if (electron_track.has_associated_calorimeter_hits()) {
+          const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
+            calos = electron_track.get_associated_calorimeter_hits();
+          if (calos.size() == 1) {
+            electron_energy = calos.front().get().get_energy();
+          }
+        }
+
+        if (datatools::is_valid(electron_energy))
+          t1ep->set_electron_energy(electron_energy);
+      }
+
       return;
     }
 
@@ -293,13 +317,6 @@ namespace snemo {
         DT_THROW_IF(nelectrons != 2, std::logic_error, "Number of electrons different from 2 !");
 
         const snemo::datamodel::particle_track & electron_track_1 = electron_tracks.front().get();
-        double electron_track_length_1 = datatools::invalid_real();
-
-        if (electron_track_1.has_trajectory()) {
-          const snemo::datamodel::tracker_trajectory & a_trajectory_1 = electron_track_1.get_trajectory();
-          const snemo::datamodel::base_trajectory_pattern & a_track_pattern_1 = a_trajectory_1.get_pattern();
-          electron_track_length_1 = a_track_pattern_1.get_shape().get_length();
-        }
 
         double electron_energy_1 = datatools::invalid_real();
         if (electron_track_1.has_associated_calorimeter_hits()) {
@@ -311,13 +328,6 @@ namespace snemo {
         }
 
         const snemo::datamodel::particle_track & electron_track_2 = electron_tracks.front().get();
-        double electron_track_length_2 = datatools::invalid_real();
-
-        if (electron_track_2.has_trajectory()) {
-          const snemo::datamodel::tracker_trajectory & a_trajectory_2 = electron_track_2.get_trajectory();
-          const snemo::datamodel::base_trajectory_pattern & a_track_pattern_2 = a_trajectory_2.get_pattern();
-          electron_track_length_2 = a_track_pattern_2.get_shape().get_length();
-        }
 
         double electron_energy_2 = datatools::invalid_real();
         if (electron_track_2.has_associated_calorimeter_hits()) {
@@ -331,17 +341,6 @@ namespace snemo {
         if (datatools::is_valid(electron_energy_1) && datatools::is_valid(electron_energy_2)) {
           t2ep->set_minimal_energy(std::min(electron_energy_1,electron_energy_2));
           t2ep->set_maximal_energy(std::max(electron_energy_1,electron_energy_2));
-        }
-
-        if (datatools::is_valid(electron_track_length_1) && datatools::is_valid(electron_track_length_2)) {
-          if(electron_energy_1 < electron_energy_2) {
-            t2ep->set_electron_Emin_track_length(electron_track_length_1);
-            t2ep->set_electron_Emax_track_length(electron_track_length_2);
-          }
-          else {
-            t2ep->set_electron_Emin_track_length(electron_track_length_2);
-            t2ep->set_electron_Emax_track_length(electron_track_length_1);
-          }
         }
       }
 
