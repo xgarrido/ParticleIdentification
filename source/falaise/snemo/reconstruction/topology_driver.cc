@@ -352,7 +352,7 @@ namespace snemo {
           t2ep->set_minimal_energy(min_energy);
         }
         if (! datatools::is_minus_infinity(max_energy)) {
-          t2ep->set_minimal_energy(max_energy);
+          t2ep->set_maximal_energy(max_energy);
         }
       }
 

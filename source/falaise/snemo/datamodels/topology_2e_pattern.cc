@@ -146,6 +146,11 @@ namespace snemo {
       return _electron_maximal_energy_;
     }
 
+    bool topology_2e_pattern::has_total_energy() const
+    {
+      return has_maximal_energy() && has_minimal_energy();
+    }
+
     double topology_2e_pattern::get_total_energy() const
     {
       return get_maximal_energy() + get_minimal_energy();
