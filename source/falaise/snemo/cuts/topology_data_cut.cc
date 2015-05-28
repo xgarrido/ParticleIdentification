@@ -125,7 +125,8 @@ namespace snemo {
         DT_LOG_DEBUG(get_logging_priority(), "Running PATTERN_ID mode...");
         if (! TD.has_pattern()) {
           DT_LOG_DEBUG(get_logging_priority(), "The event does not have associated topology pattern !");
-          return cuts::SELECTION_INAPPLICABLE;
+          //return cuts::SELECTION_INAPPLICABLE;
+          return cuts::SELECTION_REJECTED;
         }
         const snemo::datamodel::base_topology_pattern & a_pattern = TD.get_pattern();
         const std::string & a_pattern_id = a_pattern.get_pattern_id();
