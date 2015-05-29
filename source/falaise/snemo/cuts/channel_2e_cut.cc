@@ -334,8 +334,9 @@ namespace snemo {
       }
       const snemo::datamodel::base_topology_pattern & a_pattern = TD.get_pattern();
       const std::string & a_pattern_id = a_pattern.get_pattern_id();
-      if (a_pattern_id != "2e") {
-        DT_LOG_DEBUG(get_logging_priority(), "This cut is only applicable to '2e' topology !");
+      if (a_pattern_id != snemo::datamodel::topology_2e_pattern::pattern_id()) {
+        DT_LOG_DEBUG(get_logging_priority(), "This cut is only applicable to '"
+                     << snemo::datamodel::topology_2e_pattern::pattern_id() << "' topology !");
         return cuts::SELECTION_INAPPLICABLE;
       }
       const snemo::datamodel::topology_2e_pattern & a_2e_pattern
