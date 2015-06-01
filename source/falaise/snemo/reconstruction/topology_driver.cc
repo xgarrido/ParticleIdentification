@@ -327,7 +327,7 @@ namespace snemo {
           }
         }
 
-        const snemo::datamodel::particle_track & electron_track_2 = electron_tracks.front().get();
+        const snemo::datamodel::particle_track & electron_track_2 = electron_tracks.back().get();
 
         double electron_energy_2 = datatools::invalid_real();
         if (electron_track_2.has_associated_calorimeter_hits()) {
