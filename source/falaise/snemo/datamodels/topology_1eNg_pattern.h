@@ -58,6 +58,41 @@ namespace snemo {
       /// Return a mutable reference to the angle dictionary
       angle_collection_type & grab_angle_collection();
 
+      /// Check electron energy validity
+      bool has_electron_energy() const;
+
+      /// Set maximal energy
+      void set_electron_energy(double);
+
+      /// Get electron energy
+      double get_electron_energy() const;
+
+      /// Check gamma maximal energy validity
+      bool has_gamma_max_energy() const;
+
+      /// Set gamma maximal energy
+      void set_gamma_max_energy(double);
+
+      /// Get gamma maximal energy
+      double get_gamma_max_energy() const;
+
+      /// Check gamma middle energy validity
+      bool has_gamma_mid_energy() const;
+
+      /// Set gamma middle energy
+      void set_gamma_mid_energy(double);
+
+      /// Get gamma middle energy
+      double get_gamma_mid_energy() const;
+
+      /// Check gamma minimal energy validity
+      bool has_gamma_min_energy() const;
+
+      /// Set gamma minimal energy
+      void set_gamma_min_energy(double);
+
+      /// Get gamma minimal energy
+      double get_gamma_min_energy() const;
 
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,
@@ -70,6 +105,10 @@ namespace snemo {
       size_t _number_of_gammas_;
       TOF_collection_type _tofs_;
       angle_collection_type _angles_;
+      double _electron_energy_;
+      double _gamma_max_energy_;
+      double _gamma_mid_energy_;
+      double _gamma_min_energy_;
 
       DATATOOLS_SERIALIZATION_DECLARATION();
 

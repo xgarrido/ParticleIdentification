@@ -62,15 +62,79 @@ namespace snemo {
       return _angles_;
     }
 
+    bool topology_1eNg_pattern::has_electron_energy() const
+    {
+      return datatools::is_valid(_electron_energy_);
+    }
+
+    void topology_1eNg_pattern::set_electron_energy(double energy_)
+    {
+      _electron_energy_ = energy_;
+      return;
+    }
+
+    double topology_1eNg_pattern::get_electron_energy() const
+    {
+      return _electron_energy_;
+    }
+
+    bool topology_1eNg_pattern::has_gamma_max_energy() const
+    {
+      return datatools::is_valid(_gamma_max_energy_);
+    }
+
+    void topology_1eNg_pattern::set_gamma_max_energy(double energy_)
+    {
+      _gamma_max_energy_ = energy_;
+      return;
+    }
+
+    double topology_1eNg_pattern::get_gamma_max_energy() const
+    {
+      return _gamma_max_energy_;
+    }
+
+    bool topology_1eNg_pattern::has_gamma_mid_energy() const
+    {
+      return datatools::is_valid(_gamma_mid_energy_);
+    }
+
+    void topology_1eNg_pattern::set_gamma_mid_energy(double energy_)
+    {
+      _gamma_mid_energy_ = energy_;
+      return;
+    }
+
+    double topology_1eNg_pattern::get_gamma_mid_energy() const
+    {
+      return _gamma_mid_energy_;
+    }
+
+    bool topology_1eNg_pattern::has_gamma_min_energy() const
+    {
+      return datatools::is_valid(_gamma_min_energy_);
+    }
+
+    void topology_1eNg_pattern::set_gamma_min_energy(double energy_)
+    {
+      _gamma_min_energy_ = energy_;
+      return;
+    }
+
+    double topology_1eNg_pattern::get_gamma_min_energy() const
+    {
+      return _gamma_min_energy_;
+    }
+
     // bool topology_1eNg_pattern::has_TOF_measurement() const
     // {
     //   return has_internal_probability() && has_external_probability();
     // }
 
     void topology_1eNg_pattern::tree_dump(std::ostream      & out_,
-                                        const std::string & title_,
-                                        const std::string & indent_,
-                                        bool inherit_) const
+                                          const std::string & title_,
+                                          const std::string & indent_,
+                                          bool inherit_) const
     {
       std::string indent;
       if (! indent_.empty()) indent = indent_;

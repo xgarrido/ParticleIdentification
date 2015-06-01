@@ -436,10 +436,94 @@ namespace snemo {
           an_angle.set_particle_tracks(*i_particle, *j_particle);
           if (_AMD_) _AMD_->process(i_particle->get(), j_particle->get(),
                                     an_angle.grab_angle());
+        }
+      }
+
+      {
+        // Extract electron energies
+        snemo::datamodel::particle_track_data::particle_collection_type electron_tracks;
+        const size_t nelectrons
+          = snemo::datamodel::pid_utils::fetch_particles(ptd_, electron_tracks,
+                                                         snemo::datamodel::pid_utils::electron_label());
+        DT_THROW_IF(nelectrons != 1, std::logic_error, "Number of electrons different from 1 !");
+
+        // Store geom_id to avoid double inclusion of energy deposited
+        double electron_energy;
+        datatools::minus_infinity(electron_energy);
+
+        const snemo::datamodel::particle_track & the_electron = electron_tracks.front().get();
+        if (! the_electron.has_associated_calorimeter_hits())
+          DT_LOG_DEBUG(get_logging_priority(),
+                       "Particle track is not associated to any calorimeter block !");
+
+        const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
+          the_calorimeters = the_electron.get_associated_calorimeter_hits();
+        if (the_calorimeters.size() > 2)
+          DT_LOG_DEBUG(get_logging_priority(),
+                       "The particle is associated to more than 2 calorimeters !");
+
+        // const snemo::datamodel::calibrated_calorimeter_hit & a_calo = the_calorimeters.front();
+        electron_energy = the_calorimeters.front().get().get_energy();
+        if (the_calorimeters.size() == 1 && ! datatools::is_minus_infinity(electron_energy))
+          t1eNgp->set_electron_energy(electron_energy);
+
+        // Extract gammas energies
+        snemo::datamodel::particle_track_data::particle_collection_type gamma_tracks;
+        const int ngammas = snemo::datamodel::pid_utils::fetch_particles(ptd_, gamma_tracks,
+                                                                         snemo::datamodel::pid_utils::gamma_label());
+        DT_THROW_IF(ngammas == 0 , std::logic_error, "No gammas in 1eNg topology !");
+
+        std::vector<double> gamma_energies;
+        for (snemo::datamodel::particle_track_data::particle_collection_type::const_iterator
+               iparticle = gamma_tracks.begin(); iparticle != gamma_tracks.end();
+             ++iparticle) {
+          const snemo::datamodel::particle_track & a_gamma = iparticle->get();
+          if (! a_gamma.has_associated_calorimeter_hits()) {
+            DT_LOG_DEBUG(get_logging_priority(),
+                         "A gamma has no associated calorimeter block !");
+            continue;
           }
+          const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
+            the_calorimeters = a_gamma.get_associated_calorimeter_hits();
+
+          double a_gamma_energy = 0;
+          for (snemo::datamodel::calibrated_calorimeter_hit::collection_type::const_iterator
+                 icalo = the_calorimeters.begin(); icalo != the_calorimeters.end(); ++icalo) {
+            const snemo::datamodel::calibrated_calorimeter_hit & a_calo = icalo->get();
+            a_gamma_energy += a_calo.get_energy();
+          }
+          gamma_energies.push_back(a_gamma_energy);
         }
 
-      return;
+        // For now only up to three gammas is supported
+        if(ngammas == 1)
+          t1eNgp->set_gamma_max_energy(gamma_energies.back());
+        if(ngammas == 2) {
+          t1eNgp->set_gamma_max_energy(std::max(gamma_energies[0],gamma_energies[1]));
+          t1eNgp->set_gamma_min_energy(std::min(gamma_energies[0],gamma_energies[1]));
+        }
+        if(ngammas == 3) {
+          t1eNgp->set_gamma_max_energy(std::max(std::max(gamma_energies[0],gamma_energies[1]),gamma_energies[2]));
+          t1eNgp->set_gamma_mid_energy(std::max(std::min(gamma_energies[0],gamma_energies[1]),std::min(gamma_energies[1],gamma_energies[2])));
+          t1eNgp->set_gamma_min_energy(std::min(std::min(gamma_energies[0],gamma_energies[1]),gamma_energies[2]));
+        }
+      }
+
+      // std::cout << "Number of gammas : " << t1eNgp->get_number_of_gammas() << std::endl;
+      // if(t1eNgp->get_number_of_gammas() == 1) {
+      //   std::cout << "Emax : " << t1eNgp->get_gamma_max_energy() << std::endl;
+      // }
+      // if(t1eNgp->get_number_of_gammas() == 2) {
+      //   std::cout << "Emax : " << t1eNgp->get_gamma_max_energy() << std::endl;
+      //   std::cout << "Emin : " << t1eNgp->get_gamma_min_energy() << std::endl;
+      // }
+      // if(t1eNgp->get_number_of_gammas() == 3) {
+      //   std::cout << "Emax : " << t1eNgp->get_gamma_max_energy() << std::endl;
+      //   std::cout << "Emid : " << t1eNgp->get_gamma_mid_energy() << std::endl;
+      //   std::cout << "Emin : " << t1eNgp->get_gamma_min_energy() << std::endl;
+      // }
+
+        return;
     }
 
     void topology_driver::_fill_2eNg_topology_(const snemo::datamodel::particle_track_data & ptd_,
