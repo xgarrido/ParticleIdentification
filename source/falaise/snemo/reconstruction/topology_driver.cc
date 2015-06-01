@@ -308,39 +308,51 @@ namespace snemo {
       if (datatools::is_valid(angle)) t2ep->set_angle(angle);
 
       {
-        // Extract electron track physical quantities i.e. track length & energy
+        // Extract electron energies
         snemo::datamodel::particle_track_data::particle_collection_type electron_tracks;
         const size_t nelectrons
-          = snemo::datamodel::pid_utils::fetch_particles(ptd_,
-                                                         electron_tracks,
+          = snemo::datamodel::pid_utils::fetch_particles(ptd_, electron_tracks,
                                                          snemo::datamodel::pid_utils::electron_label());
         DT_THROW_IF(nelectrons != 2, std::logic_error, "Number of electrons different from 2 !");
 
-        const snemo::datamodel::particle_track & electron_track_1 = electron_tracks.front().get();
-
-        double electron_energy_1 = datatools::invalid_real();
-        if (electron_track_1.has_associated_calorimeter_hits()) {
+        // Store geom_id to avoid double inclusion of energy deposited
+        std::set<geomtools::geom_id> gids;
+        double min_energy;
+        double max_energy;
+        datatools::plus_infinity(min_energy);
+        datatools::minus_infinity(max_energy);
+        for (snemo::datamodel::particle_track_data::particle_collection_type::const_iterator
+               iparticle = the_particles.begin(); iparticle != the_particles.end();
+             ++iparticle) {
+          const snemo::datamodel::particle_track & a_particle = iparticle->get();
+          if (! a_particle.has_associated_calorimeter_hits()) {
+            DT_LOG_DEBUG(get_logging_priority(),
+                         "Particle track is not associated to any calorimeter block !");
+            continue;
+          }
           const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
-            calos = electron_track_1.get_associated_calorimeter_hits();
-          if (calos.size() == 1) {
-            electron_energy_1 = calos.front().get().get_energy();
+            the_calorimeters = a_particle.get_associated_calorimeter_hits();
+          if (the_calorimeters.size() > 2) {
+            DT_LOG_DEBUG(get_logging_priority(),
+                         "The particle is associated to more than 2 calorimeters !");
+            continue;
+          }
+
+          for (snemo::datamodel::calibrated_calorimeter_hit::collection_type::const_iterator
+                 icalo = the_calorimeters.begin(); icalo != the_calorimeters.end(); ++icalo) {
+            const snemo::datamodel::calibrated_calorimeter_hit & a_calo = icalo->get();
+            const geomtools::geom_id & gid = a_calo.get_geom_id();
+            if (gids.find(gid) != gids.end()) continue;
+            gids.insert(gid);
+            min_energy = std::min(a_calo.get_energy(), min_energy);
+            max_energy = std::max(a_calo.get_energy(), max_energy);
           }
         }
-
-        const snemo::datamodel::particle_track & electron_track_2 = electron_tracks.back().get();
-
-        double electron_energy_2 = datatools::invalid_real();
-        if (electron_track_2.has_associated_calorimeter_hits()) {
-          const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
-            calos = electron_track_2.get_associated_calorimeter_hits();
-          if (calos.size() == 1) {
-            electron_energy_2 = calos.front().get().get_energy();
-          }
+        if (! datatools::is_plus_infinity(min_energy)) {
+          t2ep->set_minimal_energy(min_energy);
         }
-
-        if (datatools::is_valid(electron_energy_1) && datatools::is_valid(electron_energy_2)) {
-          t2ep->set_minimal_energy(std::min(electron_energy_1,electron_energy_2));
-          t2ep->set_maximal_energy(std::max(electron_energy_1,electron_energy_2));
+        if (! datatools::is_minus_infinity(max_energy)) {
+          t2ep->set_maximal_energy(max_energy);
         }
       }
 
@@ -598,8 +610,7 @@ DOCD_CLASS_IMPLEMENT_LOAD_BEGIN(snemo::reconstruction::topology_driver, ocd_)
   ocd_.set_class_description("A driver class for the topology algorithms");
   ocd_.set_class_library("Falaise_ParticleIdentification");
   ocd_.set_class_documentation("The driver manages the different topology patterns\n"
-                               "and addresses the related measurements."
-                               );
+                               "and addresses the related measurements.");
 
   // Invoke specific OCD support :
   ::snemo::reconstruction::topology_driver::init_ocd(ocd_);

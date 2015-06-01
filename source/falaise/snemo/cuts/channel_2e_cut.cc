@@ -334,17 +334,18 @@ namespace snemo {
       }
       const snemo::datamodel::base_topology_pattern & a_pattern = TD.get_pattern();
       const std::string & a_pattern_id = a_pattern.get_pattern_id();
+      if (a_pattern_id != snemo::datamodel::topology_2e_pattern::pattern_id()) {
+        DT_LOG_DEBUG(get_logging_priority(), "This cut is only applicable to '"
+                     << snemo::datamodel::topology_2e_pattern::pattern_id() << "' topology !");
+        return cuts::SELECTION_INAPPLICABLE;
+      }
+      const snemo::datamodel::topology_2e_pattern & a_2e_pattern
+        = dynamic_cast<const snemo::datamodel::topology_2e_pattern &>(a_pattern);
 
       // Check if event has internal probability
       bool check_has_internal_probability = true;
       if (is_mode_has_internal_probability()) {
-        if (a_pattern_id != "2e") {
-          DT_LOG_DEBUG(get_logging_priority(), "Internal probability cut only applicable to '2e' topology !");
-          return cuts::SELECTION_INAPPLICABLE;
-        }
-        const snemo::datamodel::topology_2e_pattern * ptr_2e_pattern
-          = dynamic_cast<const snemo::datamodel::topology_2e_pattern *>(&a_pattern);
-        if (! ptr_2e_pattern->has_internal_probability()) {
+        if (! a_2e_pattern.has_internal_probability()) {
           check_has_internal_probability = false;
         }
       }
@@ -352,18 +353,11 @@ namespace snemo {
       // Check if event has correct internal probability
       bool check_range_internal_probability = true;
       if (is_mode_range_internal_probability()) {
-        if (a_pattern_id != "2e") {
-          DT_LOG_DEBUG(get_logging_priority(), "Internal probability cut only applicable to '2e' topology !");
-          return cuts::SELECTION_INAPPLICABLE;
-        }
-        const snemo::datamodel::topology_2e_pattern * ptr_2e_pattern
-          = dynamic_cast<const snemo::datamodel::topology_2e_pattern *>(&a_pattern);
-        if (! ptr_2e_pattern->has_internal_probability()) {
+        if (! a_2e_pattern.has_internal_probability()) {
           DT_LOG_DEBUG(get_logging_priority(), "Missing internal probability !");
           return cuts::SELECTION_INAPPLICABLE;
         }
-
-        const double pint = ptr_2e_pattern->get_internal_probability();
+        const double pint = a_2e_pattern.get_internal_probability();
         if (datatools::is_valid(_prob_int_min_)) {
           if (pint < _prob_int_min_) {
             DT_LOG_DEBUG(get_logging_priority(),
@@ -383,13 +377,7 @@ namespace snemo {
       // Check if event has external probability
       bool check_has_external_probability = true;
       if (is_mode_has_external_probability()) {
-        if (a_pattern_id != "2e") {
-          DT_LOG_DEBUG(get_logging_priority(), "External probability cut only applicable to '2e' topology !");
-          return cuts::SELECTION_INAPPLICABLE;
-        }
-        const snemo::datamodel::topology_2e_pattern * ptr_2e_pattern
-          = dynamic_cast<const snemo::datamodel::topology_2e_pattern *>(&a_pattern);
-        if (! ptr_2e_pattern->has_external_probability()) {
+        if (! a_2e_pattern.has_external_probability()) {
           check_has_external_probability = false;
         }
       }
@@ -397,18 +385,11 @@ namespace snemo {
       // Check if event has correct external probability
       bool check_range_external_probability = true;
       if (is_mode_range_external_probability()) {
-        if (a_pattern_id != "2e") {
-          DT_LOG_DEBUG(get_logging_priority(), "External probability cut only applicable to '2e' topology !");
-          return cuts::SELECTION_INAPPLICABLE;
-        }
-        const snemo::datamodel::topology_2e_pattern * ptr_2e_pattern
-          = dynamic_cast<const snemo::datamodel::topology_2e_pattern *>(&a_pattern);
-        if (! ptr_2e_pattern->has_external_probability()) {
+        if (! a_2e_pattern.has_external_probability()) {
           DT_LOG_DEBUG(get_logging_priority(), "Missing external probability !");
           return cuts::SELECTION_INAPPLICABLE;
         }
-
-        const double pext = ptr_2e_pattern->get_external_probability();
+        const double pext = a_2e_pattern.get_external_probability();
         if (datatools::is_valid(_prob_ext_min_)) {
           if (pext < _prob_ext_min_) check_range_external_probability = false;
         }
@@ -420,34 +401,19 @@ namespace snemo {
       // Check if event has delta vertices y
       bool check_has_delta_vertices_y = true;
       if (is_mode_has_delta_vertices_y()) {
-        if (a_pattern_id == "2e") {
-          const snemo::datamodel::topology_2e_pattern * ptr_2e_pattern
-            = dynamic_cast<const snemo::datamodel::topology_2e_pattern *>(&a_pattern);
-          if (! ptr_2e_pattern->has_delta_vertices_y()) {
-            check_has_delta_vertices_y = false;
-          }
-        }
-        else {
-          DT_LOG_DEBUG(get_logging_priority(), "Delta vertices y cut only applicable to '2e' topology !");
-          return cuts::SELECTION_INAPPLICABLE;
+        if (! a_2e_pattern.has_delta_vertices_y()) {
+          check_has_delta_vertices_y = false;
         }
       }
 
       // Check if event has required delta vertices y
       bool check_range_delta_vertices_y = true;
       if (is_mode_range_delta_vertices_y()) {
-        if (a_pattern_id != "2e") {
-          DT_LOG_DEBUG(get_logging_priority(), "Delta vertices y cut only applicable to '2e' topology !");
-          return cuts::SELECTION_INAPPLICABLE;
-        }
-        const snemo::datamodel::topology_2e_pattern * ptr_2e_pattern
-          = dynamic_cast<const snemo::datamodel::topology_2e_pattern *>(&a_pattern);
-        if (! ptr_2e_pattern->has_delta_vertices_y()) {
+        if (! a_2e_pattern.has_delta_vertices_y()) {
           DT_LOG_DEBUG(get_logging_priority(), "Missing delta vertices y !");
           return cuts::SELECTION_INAPPLICABLE;
         }
-
-        const double delta_vertices_y = ptr_2e_pattern->get_delta_vertices_y();
+        const double delta_vertices_y = a_2e_pattern.get_delta_vertices_y();
         if (datatools::is_valid(_delta_vertices_y_min_)) {
           if (delta_vertices_y < _delta_vertices_y_min_) {
             DT_LOG_DEBUG(get_logging_priority(),
@@ -467,34 +433,19 @@ namespace snemo {
       // Check if event has delta vertices z
       bool check_has_delta_vertices_z = true;
       if (is_mode_has_delta_vertices_z()) {
-        if (a_pattern_id == "2e") {
-          const snemo::datamodel::topology_2e_pattern * ptr_2e_pattern
-            = dynamic_cast<const snemo::datamodel::topology_2e_pattern *>(&a_pattern);
-          if (! ptr_2e_pattern->has_delta_vertices_z()) {
+          if (! a_2e_pattern.has_delta_vertices_z()) {
             check_has_delta_vertices_z = false;
           }
-        }
-        else {
-          DT_LOG_DEBUG(get_logging_priority(), "Delta vertices z cut only applicable to '2e' topology !");
-          return cuts::SELECTION_INAPPLICABLE;
-        }
       }
 
       // Check if event has required delta vertices
       bool check_range_delta_vertices_z = true;
       if (is_mode_range_delta_vertices_z()) {
-        if (a_pattern_id != "2e") {
-          DT_LOG_DEBUG(get_logging_priority(), "Delta vertices z cut only applicable to '2e' topology !");
-          return cuts::SELECTION_INAPPLICABLE;
-        }
-        const snemo::datamodel::topology_2e_pattern * ptr_2e_pattern
-          = dynamic_cast<const snemo::datamodel::topology_2e_pattern *>(&a_pattern);
-        if (! ptr_2e_pattern->has_delta_vertices_z()) {
+        if (! a_2e_pattern.has_delta_vertices_z()) {
           DT_LOG_DEBUG(get_logging_priority(), "Missing delta vertices z !");
           return cuts::SELECTION_INAPPLICABLE;
         }
-
-        const double delta_vertices_z = ptr_2e_pattern->get_delta_vertices_z();
+        const double delta_vertices_z = a_2e_pattern.get_delta_vertices_z();
         if (datatools::is_valid(_delta_vertices_z_min_)) {
           if (delta_vertices_z < _delta_vertices_z_min_) {
             DT_LOG_DEBUG(get_logging_priority(),
@@ -514,34 +465,19 @@ namespace snemo {
       // Check if event has angle
       bool check_has_angle = true;
       if (is_mode_has_angle()) {
-        if (a_pattern_id == "2e") {
-          const snemo::datamodel::topology_2e_pattern * ptr_2e_pattern
-            = dynamic_cast<const snemo::datamodel::topology_2e_pattern *>(&a_pattern);
-          if (! ptr_2e_pattern->has_angle()) {
+        if (! a_2e_pattern.has_angle()) {
             check_has_angle = false;
-          }
-        }
-        else {
-          DT_LOG_DEBUG(get_logging_priority(), "Angle cut only applicable to '2e' topology !");
-          return cuts::SELECTION_INAPPLICABLE;
         }
       }
 
       // Check if event has required angle
       bool check_range_angle = true;
       if (is_mode_range_angle()) {
-        if (a_pattern_id != "2e") {
-          DT_LOG_DEBUG(get_logging_priority(), "Angle cut only applicable to '2e' topology !");
-          return cuts::SELECTION_INAPPLICABLE;
-        }
-        const snemo::datamodel::topology_2e_pattern * ptr_2e_pattern
-          = dynamic_cast<const snemo::datamodel::topology_2e_pattern *>(&a_pattern);
-        if (! ptr_2e_pattern->has_angle()) {
+        if (! a_2e_pattern.has_angle()) {
           DT_LOG_DEBUG(get_logging_priority(), "Missing angle !");
           return cuts::SELECTION_INAPPLICABLE;
         }
-
-        const double angle = ptr_2e_pattern->get_angle();
+        const double angle = a_2e_pattern.get_angle();
         if (datatools::is_valid(_angle_min_)) {
           if (angle < _angle_min_) {
             DT_LOG_DEBUG(get_logging_priority(),

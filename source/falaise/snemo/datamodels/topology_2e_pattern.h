@@ -97,6 +97,9 @@ namespace snemo {
       /// Return maximal energy
       double get_maximal_energy() const;
 
+      /// Check total energy validity
+      bool has_total_energy() const;
+
       /// Return total energy
       double get_total_energy() const;
 
