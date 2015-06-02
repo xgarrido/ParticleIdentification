@@ -195,8 +195,8 @@ namespace snemo {
         this->_fill_1e1a_topology_(ptd_, td_);
       }
       else {
-        DT_LOG_WARNING(get_logging_priority(),
-                       "Event classification '" << a_classification << "' unsupported !");
+        // DT_LOG_WARNING(get_logging_priority(),
+        //                "Event classification '" << a_classification << "' unsupported !");
       }
 
       if (get_logging_priority() >= datatools::logger::PRIO_DEBUG) {

@@ -94,6 +94,12 @@ namespace snemo {
       /// Get gamma minimal energy
       double get_gamma_min_energy() const;
 
+      /// Check total energy validity
+      bool has_total_energy() const;
+
+      /// Return total energy
+      double get_total_energy() const;
+
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,
                              const std::string & title_  = "",

@@ -126,6 +126,34 @@ namespace snemo {
       return _gamma_min_energy_;
     }
 
+    bool topology_1eNg_pattern::has_total_energy() const
+    {
+      if(get_number_of_gammas() == 1)
+        return has_electron_energy() && has_gamma_max_energy();
+      else if(get_number_of_gammas() == 2)
+        return has_electron_energy() && has_gamma_max_energy()
+          && has_gamma_min_energy();
+      else if(get_number_of_gammas() == 3)
+        return get_electron_energy() && get_gamma_max_energy()
+          && get_gamma_mid_energy() && get_gamma_min_energy();
+      else
+        return false;
+    }
+
+    double topology_1eNg_pattern::get_total_energy() const
+    {
+      if(get_number_of_gammas() == 1)
+        return get_electron_energy() + get_gamma_max_energy();
+      else if(get_number_of_gammas() == 2)
+        return get_electron_energy() + get_gamma_max_energy()
+          + get_gamma_min_energy();
+      else if(get_number_of_gammas() == 3)
+        return get_electron_energy() + get_gamma_max_energy()
+          + get_gamma_mid_energy() + get_gamma_min_energy();
+      else
+        return 0;
+    }
+
     // bool topology_1eNg_pattern::has_TOF_measurement() const
     // {
     //   return has_internal_probability() && has_external_probability();
