@@ -126,10 +126,10 @@ namespace snemo {
       std::string _TD_label_; //!< Name of the "Topology data" bank
       uint32_t    _mode_;     //!< Mode of the cut
 
-      double _prob_int_min_;//!< Minimal internal probability
-      double _prob_int_max_;//!< Maximal internal probability
-      double _prob_ext_min_;//!< Minimal external probability
-      double _prob_ext_max_;//!< Maximal external probability
+      double _prob_int_min_; //!< Minimal internal probability
+      double _prob_int_max_; //!< Maximal internal probability
+      double _prob_ext_min_; //!< Minimal external probability
+      double _prob_ext_max_; //!< Maximal external probability
       double _delta_vertices_y_min_;
       double _delta_vertices_y_max_;
       double _delta_vertices_z_min_;

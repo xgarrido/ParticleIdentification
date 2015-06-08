@@ -433,9 +433,9 @@ namespace snemo {
       // Check if event has delta vertices z
       bool check_has_delta_vertices_z = true;
       if (is_mode_has_delta_vertices_z()) {
-          if (! a_2e_pattern.has_delta_vertices_z()) {
-            check_has_delta_vertices_z = false;
-          }
+        if (! a_2e_pattern.has_delta_vertices_z()) {
+          check_has_delta_vertices_z = false;
+        }
       }
 
       // Check if event has required delta vertices
