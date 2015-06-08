@@ -414,6 +414,10 @@ namespace snemo {
                j_particle = boost::next(i_particle);
              j_particle != the_particles.end(); ++j_particle) {
 
+          if(snemo::datamodel::pid_utils::particle_is_gamma(i_particle->get()) &&
+             snemo::datamodel::pid_utils::particle_is_gamma(j_particle->get()))
+            continue;
+
           snemo::datamodel::topology_1eNg_pattern::TOF_collection_type & tofs
             = t1eNgp->grab_TOF_collection();
           {
