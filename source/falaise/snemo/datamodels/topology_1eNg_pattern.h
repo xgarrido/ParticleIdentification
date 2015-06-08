@@ -58,6 +58,10 @@ namespace snemo {
       /// Return a mutable reference to the angle dictionary
       angle_collection_type & grab_angle_collection();
 
+      bool has_internal_probabilities() const;
+
+      bool has_external_probabilities() const;
+
       /// Check electron energy validity
       bool has_electron_energy() const;
 

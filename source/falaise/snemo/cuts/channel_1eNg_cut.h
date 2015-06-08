@@ -54,8 +54,12 @@ namespace snemo {
       /// Mode of the cut
       enum mode_type {
         MODE_UNDEFINED = 0,
-        MODE_HAS_GAMMA   = datatools::bit_mask::bit01,
-        MODE_RANGE_GAMMA   = datatools::bit_mask::bit02
+        MODE_HAS_GAMMA                  = datatools::bit_mask::bit01,
+        MODE_RANGE_GAMMA                = datatools::bit_mask::bit02,
+        MODE_HAS_INTERNAL_PROBABILITY   = datatools::bit_mask::bit03,
+        MODE_HAS_EXTERNAL_PROBABILITY   = datatools::bit_mask::bit04,
+        MODE_RANGE_INTERNAL_PROBABILITY = datatools::bit_mask::bit05,
+        MODE_RANGE_EXTERNAL_PROBABILITY = datatools::bit_mask::bit06
       };
 
       /// Return the cut mode
@@ -66,6 +70,18 @@ namespace snemo {
 
       /// Check mode HAS_THREE_GAMMA
       bool is_mode_range_gamma() const;
+
+      /// Check mode HAS_INTERNAL_PROBABILITY
+      bool is_mode_has_internal_probability() const;
+
+      /// Check mode HAS_EXTERNAL_PROBABILITY
+      bool is_mode_has_external_probability() const;
+
+      /// Check mode RANGE_INTERNAL_PROBABILITY
+      bool is_mode_range_internal_probability() const;
+
+      /// Check mode RANGE_EXTERNAL_PROBABILITY
+      bool is_mode_range_external_probability() const;
 
       /// Constructor
       channel_1eNg_cut(datatools::logger::priority logging_priority_ = datatools::logger::PRIO_FATAL);
@@ -96,6 +112,10 @@ namespace snemo {
 
       int    _number_of_gammas_min_;
       int    _number_of_gammas_max_;
+      double _prob_int_min_; //!< Minimal internal probability
+      double _prob_int_max_; //!< Maximal internal probability
+      double _prob_ext_min_; //!< Minimal external probability
+      double _prob_ext_max_; //!< Maximal external probability
 
       // Macro to automate the registration of the cut :
       CUT_REGISTRATION_INTERFACE(channel_1eNg_cut);

@@ -42,6 +42,26 @@ namespace snemo {
       return _number_of_gammas_;
     }
 
+    bool topology_1eNg_pattern::has_internal_probabilities() const
+    {
+      bool check_pair_has_internal_proba = true;
+      for(unsigned int i=0; i<get_TOF_collection().size(); i++)
+        if(get_TOF_collection().at(i).get_internal_probabilities().empty())
+          check_pair_has_internal_proba = false;
+
+      return check_pair_has_internal_proba;
+    }
+
+    bool topology_1eNg_pattern::has_external_probabilities() const
+    {
+      bool check_pair_has_external_proba = true;
+      for(unsigned int i=0; i<get_TOF_collection().size(); i++)
+        if(get_TOF_collection().at(i).get_external_probabilities().empty())
+          check_pair_has_external_proba = false;
+
+      return check_pair_has_external_proba;
+    }
+
     const topology_1eNg_pattern::TOF_collection_type & topology_1eNg_pattern::get_TOF_collection() const
     {
       return _tofs_;
