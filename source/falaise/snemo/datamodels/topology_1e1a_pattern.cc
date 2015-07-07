@@ -34,6 +34,43 @@ namespace snemo {
       return;
     }
 
+    bool topology_1e1a_pattern::is_valid() const
+    {
+      return has_electron_particle() && has_alpha_particle();
+    }
+
+    bool topology_1e1a_pattern::has_electron_particle() const
+    {
+      return _electron_particle_.has_data();
+    }
+
+    void topology_1e1a_pattern::set_electron_particle(const particle_track::handle_type & handle_)
+    {
+      _electron_particle_ = handle_;
+      return;
+    }
+
+    const particle_track & topology_1e1a_pattern::get_electron_particle() const
+    {
+      return _electron_particle_.get();
+    }
+
+    bool topology_1e1a_pattern::has_alpha_particle() const
+    {
+      return _alpha_particle_.has_data();
+    }
+
+    void topology_1e1a_pattern::set_alpha_particle(const particle_track::handle_type & handle_)
+    {
+      _alpha_particle_ = handle_;
+      return;
+    }
+
+    const particle_track & topology_1e1a_pattern::get_alpha_particle() const
+    {
+      return _alpha_particle_.get();
+    }
+
     bool topology_1e1a_pattern::has_delta_vertices_y() const
     {
       return _delta_vertices_.has_delta_vertices_y();

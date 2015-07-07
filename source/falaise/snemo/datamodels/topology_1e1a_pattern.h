@@ -14,13 +14,14 @@
 
 // This project:
 #include <falaise/snemo/datamodels/base_topology_pattern.h>
+#include <falaise/snemo/datamodels/particle_track.h>
 #include <falaise/snemo/datamodels/topology_measurement.h>
 
 namespace snemo {
 
   namespace datamodel {
 
-    /// \brief The 1e1a class of reconstructed topology
+    /// \brief The 1 electron - 1 alpha class of reconstructed topology
     class topology_1e1a_pattern : public base_topology_pattern
     {
     public:
@@ -33,6 +34,33 @@ namespace snemo {
 
       /// Destructor
       virtual ~topology_1e1a_pattern();
+
+      /// Check if topology is valid
+      bool is_valid() const;
+
+      /// Check if the electron particle is present
+      bool has_electron_particle() const;
+
+      /// Detach the electron particle
+      void detach_electron_particle();
+
+      /// Attach a electron particle by handle
+      void set_electron_particle(const particle_track::handle_type & handle_);
+
+      /// Return a non mutable reference on the electron particle
+      const particle_track & get_electron_particle() const;
+
+      /// Check if the alpha particle is present
+      bool has_alpha_particle() const;
+
+      /// Detach the alpha particle
+      void detach_alpha_particle();
+
+      /// Attach a alpha particle by handle
+      void set_alpha_particle(const particle_track::handle_type & handle_);
+
+      /// Return a non mutable reference on the alpha particle
+      const particle_track & get_alpha_particle() const;
 
       /// Check delta vertices y validity
       bool has_delta_vertices_y() const;
@@ -107,6 +135,8 @@ namespace snemo {
 
       delta_vertices_measurement _delta_vertices_; //!< Delta vertices meas.
       angle_measurement _angle_;                   //!< Angle meas.
+      particle_track::handle_type _electron_particle_;
+      particle_track::handle_type _alpha_particle_;
       double _alpha_delayed_time_;                 //!< Time delay of alpha particle
       double _alpha_track_length_;                 //!< Track length of alpha particle
       double _electron_track_length_;              //!< Track length of electron particle
