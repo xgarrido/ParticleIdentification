@@ -22,10 +22,6 @@ namespace snemo {
     topology_1e1a_pattern::topology_1e1a_pattern()
       : base_topology_pattern(topology_1e1a_pattern::pattern_id())
     {
-      datatools::invalidate(_alpha_delayed_time_);
-      datatools::invalidate(_alpha_track_length_);
-      datatools::invalidate(_electron_track_length_);
-      datatools::invalidate(_electron_energy_);
       return;
     }
 
@@ -119,68 +115,64 @@ namespace snemo {
       return _angle_.get_angle();
     }
 
-    bool topology_1e1a_pattern::has_alpha_delayed_time() const
-    {
-      return datatools::is_valid(_alpha_delayed_time_);
-    }
-
-    void topology_1e1a_pattern::set_alpha_delayed_time(double time_)
-    {
-      _alpha_delayed_time_ = time_;
-      return;
-    }
-
     double topology_1e1a_pattern::get_alpha_delayed_time() const
     {
-      return _alpha_delayed_time_;
-    }
-
-    bool topology_1e1a_pattern::has_alpha_track_length() const
-    {
-      return datatools::is_valid(_alpha_track_length_);
-    }
-
-    void topology_1e1a_pattern::set_alpha_track_length(double length_)
-    {
-      _alpha_track_length_ = length_;
-      return;
+      double time = datatools::invalid_real();
+      if (has_alpha_particle()) {
+        const snemo::datamodel::particle_track & the_alpha = get_alpha_particle();
+        if (the_alpha.has_trajectory()) {
+          const snemo::datamodel::tracker_trajectory & a_trajectory = the_alpha.get_trajectory();
+          const datatools::properties & aux = a_trajectory.get_auxiliaries();
+          if (aux.has_key("t0")) {
+            time = aux.fetch_real("t0");
+          }
+        }
+      }
+      return time;
     }
 
     double topology_1e1a_pattern::get_alpha_track_length() const
     {
-      return _alpha_track_length_;
-    }
-
-    bool topology_1e1a_pattern::has_electron_track_length() const
-    {
-      return datatools::is_valid(_electron_track_length_);
-    }
-
-    void topology_1e1a_pattern::set_electron_track_length(double length_)
-    {
-      _electron_track_length_ = length_;
-      return;
+      double length = datatools::invalid_real();
+      if (has_alpha_particle()) {
+        const snemo::datamodel::particle_track & the_alpha = get_alpha_particle();
+        if (the_alpha.has_trajectory()) {
+          const snemo::datamodel::tracker_trajectory & a_trajectory = the_alpha.get_trajectory();
+          const snemo::datamodel::base_trajectory_pattern & a_track_pattern = a_trajectory.get_pattern();
+          length = a_track_pattern.get_shape().get_length();
+        }
+      }
+      return length;
     }
 
     double topology_1e1a_pattern::get_electron_track_length() const
     {
-      return _electron_track_length_;
-    }
-
-    bool topology_1e1a_pattern::has_electron_energy() const
-    {
-      return datatools::is_valid(_electron_energy_);
-    }
-
-    void topology_1e1a_pattern::set_electron_energy(double energy_)
-    {
-      _electron_energy_ = energy_;
-      return;
+      double length = datatools::invalid_real();
+      if (has_electron_particle()) {
+        const snemo::datamodel::particle_track & the_electron = get_electron_particle();
+        if (the_electron.has_trajectory()) {
+          const snemo::datamodel::tracker_trajectory & a_trajectory = the_electron.get_trajectory();
+          const snemo::datamodel::base_trajectory_pattern & a_track_pattern = a_trajectory.get_pattern();
+          length = a_track_pattern.get_shape().get_length();
+        }
+      }
+      return length;
     }
 
     double topology_1e1a_pattern::get_electron_energy() const
     {
-      return _electron_energy_;
+      double energy = datatools::invalid_real();
+      if (has_electron_particle()) {
+        const snemo::datamodel::particle_track & the_electron = get_electron_particle();
+        if (the_electron.has_associated_calorimeter_hits()) {
+          const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
+            calos = the_electron.get_associated_calorimeter_hits();
+          if (calos.size() == 1) {
+            energy = calos.front().get().get_energy();
+          }
+        }
+      }
+      return energy;
     }
 
     void topology_1e1a_pattern::tree_dump(std::ostream      & out_,
@@ -192,7 +184,7 @@ namespace snemo {
       if (! indent_.empty()) indent = indent_;
       base_topology_pattern::tree_dump(out_, title_, indent_, true);
 
-            out_ << indent << datatools::i_tree_dumpable::tag
+      out_ << indent << datatools::i_tree_dumpable::tag
            << "Delta vertices Y : ";
       if (has_delta_vertices_y()) {
         out_ << get_delta_vertices_y()/CLHEP::mm << " mm";
@@ -220,40 +212,22 @@ namespace snemo {
       out_ << std::endl;
 
       out_ << indent << datatools::i_tree_dumpable::tag
-           << "Alpha delayed time : ";
-      if (has_alpha_delayed_time()) {
-        out_ << get_alpha_delayed_time()/CLHEP::microsecond << " us";
+           << "Electron particle : ";
+      if (has_electron_particle()) {
+        out_ << std::endl;
+        get_electron_particle().tree_dump(out_, title_, indent_, inherit_);
       } else {
-        out_ << "No value";
+        out_ << "<none>" << std::endl;
       }
-      out_ << std::endl;
 
       out_ << indent << datatools::i_tree_dumpable::tag
-           << "Alpha track length : ";
-      if (has_alpha_track_length()) {
-        out_ << get_alpha_track_length()/CLHEP::cm << " cm";
+           << "Alpha particle : ";
+      if (has_alpha_particle()) {
+        out_ << std::endl;
+        get_alpha_particle().tree_dump(out_, title_, indent_, inherit_);
       } else {
-        out_ << "No value";
+        out_ << "<none>" << std::endl;
       }
-      out_ << std::endl;
-
-      out_ << indent << datatools::i_tree_dumpable::tag
-           << "Electron track length : ";
-      if (has_electron_track_length()) {
-        out_ << get_electron_track_length()/CLHEP::cm << " cm";
-      } else {
-        out_ << "No value";
-      }
-      out_ << std::endl;
-
-      out_ << indent << datatools::i_tree_dumpable::inherit_tag(inherit_)
-           << "Electron energy : ";
-      if (has_electron_energy()) {
-        out_ << get_electron_energy()/CLHEP::keV << " keV";
-      } else {
-        out_ << "No value";
-      }
-      out_ << std::endl;
 
       return;
     }
