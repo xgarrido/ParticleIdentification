@@ -93,13 +93,13 @@ namespace snemo {
       double get_angle() const;
 
       /// Return minimal energy
-      double get_minimal_energy() const;
+      double get_minimal_energy();
 
       /// Return maximal energy
-      double get_maximal_energy() const;
+      double get_maximal_energy();
 
       /// Return total energy
-      double get_total_energy() const;
+      double get_total_energy();
 
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,
@@ -109,13 +109,19 @@ namespace snemo {
 
     private:
 
-      TOF_measurement _tof_;                              //!< Time-Of-Flight meas.
-      delta_vertices_measurement _delta_vertices_source_; //!< Delta vertices on source foil
-      angle_measurement _angle_;                          //!< Angle meas.
-      particle_track_data::particle_collection_type _electron_particles_;//!< Electron particles
+      /// Internal method to extract energy informations
+      void _compute_energies_();
 
-      double _electron_minimal_energy_;                   //!< Minimal energy of the electron
-      double _electron_maximal_energy_;                   //!< Maximal energy of the electron
+    private:
+
+      TOF_measurement _tof_;                                              //!< Time-Of-Flight meas.
+      delta_vertices_measurement _delta_vertices_source_;                 //!< Delta vertices on source foil
+      angle_measurement _angle_;                                          //!< Angle meas.
+      particle_track_data::particle_collection_type _electron_particles_; //!< Electron particles
+
+      // Internal work space
+      double _minimal_energy_; //!< Minimal energy of the electron
+      double _maximal_energy_; //!< Maximal energy of the electron
 
       DATATOOLS_SERIALIZATION_DECLARATION();
 
