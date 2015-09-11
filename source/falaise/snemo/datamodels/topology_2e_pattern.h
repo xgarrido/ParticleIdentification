@@ -119,7 +119,7 @@ namespace snemo {
       angle_measurement _angle_;                                          //!< Angle meas.
       particle_track_data::particle_collection_type _electron_particles_; //!< Electron particles
 
-      // Internal work space
+      // Internal work space (not serialized)
       double _minimal_energy_; //!< Minimal energy of the electron
       double _maximal_energy_; //!< Maximal energy of the electron
 
