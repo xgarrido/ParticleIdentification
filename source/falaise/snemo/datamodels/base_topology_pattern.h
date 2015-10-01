@@ -14,10 +14,8 @@
 
 // Third party:
 // - Bayeux/datatools:
-#include <datatools/i_serializable.h>
-#include <datatools/i_tree_dump.h>
-// Falaise:
-#include <falaise/snemo/datamodels/particle_track.h>
+#include <bayeux/datatools/i_serializable.h>
+#include <bayeux/datatools/i_tree_dump.h>
 
 namespace snemo {
 

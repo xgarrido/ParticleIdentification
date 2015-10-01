@@ -20,10 +20,11 @@
 // - Boost:
 #include <boost/serialization/access.hpp>
 // - Bayeux/datatools:
-#include <datatools/i_serializable.h>
-#include <datatools/i_tree_dump.h>
-#include <datatools/i_clear.h>
-#include <datatools/properties.h>
+#include <bayeux/datatools/i_serializable.h>
+#include <bayeux/datatools/i_tree_dump.h>
+#include <bayeux/datatools/i_clear.h>
+#include <bayeux/datatools/handle.h>
+#include <bayeux/datatools/properties.h>
 
 // This project:
 #include <falaise/snemo/datamodels/base_topology_pattern.h>
@@ -46,7 +47,7 @@ namespace snemo {
       /// Default constructor
       topology_data();
 
-      /// Destructor:
+      /// Destructor
       virtual ~topology_data();
 
       /// Check if the pattern is present

@@ -15,6 +15,7 @@
 // This project:
 #include <falaise/snemo/datamodels/base_topology_pattern.h>
 #include <falaise/snemo/datamodels/topology_measurement.h>
+#include <falaise/snemo/datamodels/particle_track_data.h>
 
 namespace snemo {
 
@@ -33,6 +34,18 @@ namespace snemo {
 
       /// Destructor
       virtual ~topology_2e_pattern();
+
+      /// Check if topology is valid
+      bool is_valid() const;
+
+      /// Check if there are electrons
+      bool has_electron_particles() const;
+
+      /// Add electron to the particle list
+      void add_electron_particle(const particle_track::handle_type & handle_);
+
+      /// Return list of electron particles
+      const particle_track_data::particle_collection_type & get_electron_particles() const;
 
       /// Check internal probability validity
       bool has_internal_probability() const;
@@ -79,29 +92,14 @@ namespace snemo {
       /// Return angle measurement
       double get_angle() const;
 
-      /// Check minimal energy validity
-      bool has_minimal_energy() const;
-
-      /// Set minimal energy
-      void set_minimal_energy(double);
-
       /// Return minimal energy
-      double get_minimal_energy() const;
-
-      /// Check maximal energy validity
-      bool has_maximal_energy() const;
-
-      /// Set maximal energy
-      void set_maximal_energy(double);
+      double get_minimal_energy();
 
       /// Return maximal energy
-      double get_maximal_energy() const;
-
-      /// Check total energy validity
-      bool has_total_energy() const;
+      double get_maximal_energy();
 
       /// Return total energy
-      double get_total_energy() const;
+      double get_total_energy();
 
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,
@@ -111,11 +109,19 @@ namespace snemo {
 
     private:
 
-      TOF_measurement _tof_;                              //!< Time-Of-Flight meas.
-      delta_vertices_measurement _delta_vertices_source_; //!< Delta vertices on source foil
-      angle_measurement _angle_;                          //!< Angle meas.
-      double _electron_minimal_energy_;                   //!< Minimal energy of the electron
-      double _electron_maximal_energy_;                   //!< Maximal energy of the electron
+      /// Internal method to extract energy informations
+      void _compute_energies_();
+
+    private:
+
+      TOF_measurement _tof_;                                              //!< Time-Of-Flight meas.
+      delta_vertices_measurement _delta_vertices_source_;                 //!< Delta vertices on source foil
+      angle_measurement _angle_;                                          //!< Angle meas.
+      particle_track_data::particle_collection_type _electron_particles_; //!< Electron particles
+
+      // Internal work space (not serialized)
+      double _minimal_energy_; //!< Minimal energy of the electron
+      double _maximal_energy_; //!< Maximal energy of the electron
 
       DATATOOLS_SERIALIZATION_DECLARATION();
 

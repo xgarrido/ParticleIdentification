@@ -22,14 +22,34 @@ namespace snemo {
     topology_2e_pattern::topology_2e_pattern()
       : base_topology_pattern(topology_2e_pattern::pattern_id())
     {
-      datatools::invalidate(_electron_minimal_energy_);
-      datatools::invalidate(_electron_maximal_energy_);
+      datatools::plus_infinity(_minimal_energy_);
+      datatools::minus_infinity(_maximal_energy_);
       return;
     }
 
     topology_2e_pattern::~topology_2e_pattern()
     {
       return;
+    }
+
+    bool topology_2e_pattern::is_valid() const
+    {
+      return has_electron_particles() && _electron_particles_.size() == 2;
+    }
+
+    bool topology_2e_pattern::has_electron_particles() const
+    {
+      return !_electron_particles_.empty();
+    }
+
+    void topology_2e_pattern::add_electron_particle(const particle_track::handle_type & handle_)
+    {
+      _electron_particles_.push_back(handle_);
+    }
+
+    const particle_track_data::particle_collection_type & topology_2e_pattern::get_electron_particles() const
+    {
+      return _electron_particles_;
     }
 
     bool topology_2e_pattern::has_internal_probability() const
@@ -114,47 +134,49 @@ namespace snemo {
       return _angle_.get_angle();
     }
 
-    bool topology_2e_pattern::has_minimal_energy() const
+    double topology_2e_pattern::get_minimal_energy()
     {
-      return datatools::is_valid(_electron_minimal_energy_);
+      if (datatools::is_plus_infinity(_minimal_energy_)) {
+        _compute_energies_();
+      }
+      return _minimal_energy_;
     }
 
-    void topology_2e_pattern::set_minimal_energy(double energy_)
+    double topology_2e_pattern::get_maximal_energy()
     {
-      _electron_minimal_energy_ = energy_;
-      return;
+      if (datatools::is_minus_infinity(_maximal_energy_)) {
+        _compute_energies_();
+      }
+      return _maximal_energy_;
     }
 
-    double topology_2e_pattern::get_minimal_energy() const
-    {
-      return _electron_minimal_energy_;
-    }
-
-    bool topology_2e_pattern::has_maximal_energy() const
-    {
-      return datatools::is_valid(_electron_maximal_energy_);
-    }
-
-    void topology_2e_pattern::set_maximal_energy(double energy_)
-    {
-      _electron_maximal_energy_ = energy_;
-      return;
-    }
-
-    double topology_2e_pattern::get_maximal_energy() const
-    {
-      return _electron_maximal_energy_;
-    }
-
-    bool topology_2e_pattern::has_total_energy() const
-    {
-      return has_maximal_energy() && has_minimal_energy();
-    }
-
-    double topology_2e_pattern::get_total_energy() const
+    double topology_2e_pattern::get_total_energy()
     {
       return get_maximal_energy() + get_minimal_energy();
     }
+
+    void topology_2e_pattern::_compute_energies_()
+    {
+      DT_THROW_IF(! has_electron_particles(), std::logic_error, "Missing electron particles !");
+      for (snemo::datamodel::particle_track_data::particle_collection_type::const_iterator
+             i = get_electron_particles().begin();
+           i != get_electron_particles().end(); ++i) {
+        const snemo::datamodel::particle_track & a_electron = i->get();
+        double energy = 0.0;
+        if (! a_electron.has_associated_calorimeter_hits()) continue;
+        const snemo::datamodel::calibrated_calorimeter_hit::collection_type & the_calos
+          = a_electron.get_associated_calorimeter_hits();
+        for (snemo::datamodel::calibrated_calorimeter_hit::collection_type::const_iterator
+               icalo = the_calos.begin(); icalo != the_calos.end(); ++icalo) {
+          const snemo::datamodel::calibrated_calorimeter_hit & a_calo = icalo->get();
+          energy += a_calo.get_energy();
+        }
+        _minimal_energy_ = std::min(energy, _minimal_energy_);
+        _maximal_energy_ = std::min(energy, _maximal_energy_);
+      }
+      return;
+    }
+
 
     void topology_2e_pattern::tree_dump(std::ostream      & out_,
                                         const std::string & title_,
@@ -211,31 +233,14 @@ namespace snemo {
       out_ << std::endl;
 
       out_ << indent << datatools::i_tree_dumpable::tag
-           << "Minimal energy : ";
-      if (has_minimal_energy()) {
-        out_ << get_minimal_energy()/CLHEP::keV << " keV";
+           << "Electron particles : ";
+      if (has_electron_particles()) {
+        out_ << std::endl;
+        for (size_t i = 0; i < get_electron_particles().size(); ++i)
+          get_electron_particles()[i].get().tree_dump(out_, title_, indent_, inherit_);
       } else {
-        out_ << "No value";
+        out_ << "<none>" << std::endl;
       }
-      out_ << std::endl;
-
-      out_ << indent << datatools::i_tree_dumpable::tag
-           << "Maximal energy : ";
-      if (has_maximal_energy()) {
-        out_ << get_maximal_energy()/CLHEP::keV << " keV";
-      } else {
-        out_ << "No value";
-      }
-      out_ << std::endl;
-
-      out_ << indent << datatools::i_tree_dumpable::inherit_tag(inherit_)
-           << "Total energy : ";
-      if (has_minimal_energy() && has_maximal_energy()) {
-        out_ << get_total_energy()/CLHEP::keV << " keV";
-      } else {
-        out_ << "No value";
-      }
-      out_ << std::endl;
 
       return;
     }

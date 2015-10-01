@@ -307,52 +307,12 @@ namespace snemo {
       if (_AMD_) _AMD_->process(pt1, pt2, angle);
       if (datatools::is_valid(angle)) t2ep->set_angle(angle);
 
-      {
-        // Extract electron energies
-        snemo::datamodel::particle_track_data::particle_collection_type electron_tracks;
-        const size_t nelectrons
-          = snemo::datamodel::pid_utils::fetch_particles(ptd_, electron_tracks,
-                                                         snemo::datamodel::pid_utils::electron_label());
-        DT_THROW_IF(nelectrons != 2, std::logic_error, "Number of electrons different from 2 !");
-
-        // Store geom_id to avoid double inclusion of energy deposited
-        std::set<geomtools::geom_id> gids;
-        double min_energy;
-        double max_energy;
-        datatools::plus_infinity(min_energy);
-        datatools::minus_infinity(max_energy);
-        for (snemo::datamodel::particle_track_data::particle_collection_type::const_iterator
-               iparticle = the_particles.begin(); iparticle != the_particles.end();
-             ++iparticle) {
-          const snemo::datamodel::particle_track & a_particle = iparticle->get();
-          if (! a_particle.has_associated_calorimeter_hits()) {
-            DT_LOG_DEBUG(get_logging_priority(),
-                         "Particle track is not associated to any calorimeter block !");
-            continue;
-          }
-          const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
-            the_calorimeters = a_particle.get_associated_calorimeter_hits();
-          if (the_calorimeters.size() > 2) {
-            DT_LOG_DEBUG(get_logging_priority(),
-                         "The particle is associated to more than 2 calorimeters !");
-            continue;
-          }
-
-          for (snemo::datamodel::calibrated_calorimeter_hit::collection_type::const_iterator
-                 icalo = the_calorimeters.begin(); icalo != the_calorimeters.end(); ++icalo) {
-            const snemo::datamodel::calibrated_calorimeter_hit & a_calo = icalo->get();
-            const geomtools::geom_id & gid = a_calo.get_geom_id();
-            if (gids.find(gid) != gids.end()) continue;
-            gids.insert(gid);
-            min_energy = std::min(a_calo.get_energy(), min_energy);
-            max_energy = std::max(a_calo.get_energy(), max_energy);
-          }
-        }
-        if (! datatools::is_plus_infinity(min_energy)) {
-          t2ep->set_minimal_energy(min_energy);
-        }
-        if (! datatools::is_minus_infinity(max_energy)) {
-          t2ep->set_maximal_energy(max_energy);
+      for (snemo::datamodel::particle_track_data::particle_collection_type::const_iterator
+             iparticle = the_particles.begin(); iparticle != the_particles.end();
+           ++iparticle) {
+        const snemo::datamodel::particle_track & a_particle = iparticle->get();
+        if (snemo::datamodel::pid_utils::particle_is_electron(a_particle)) {
+          t2ep->add_electron_particle(*iparticle);
         }
       }
 
@@ -615,59 +575,18 @@ namespace snemo {
       if (_AMD_) _AMD_->process(pt1, pt2, angle);
       if (datatools::is_valid(angle)) t1e1ap->set_angle(angle);
 
-      {
-        // Extract alpha track physical quantities i.e. time delay and length
-        snemo::datamodel::particle_track_data::particle_collection_type alpha_tracks;
-        const size_t nalphas
-          = snemo::datamodel::pid_utils::fetch_particles(ptd_,
-                                                         alpha_tracks,
-                                                         snemo::datamodel::pid_utils::alpha_label());
-        DT_THROW_IF(nalphas != 1, std::logic_error, "More than 1 alpha particle !");
-        const snemo::datamodel::particle_track & alpha_track = alpha_tracks.front().get();
-
-        double alpha_delayed_time = datatools::invalid_real();
-        double alpha_track_length = datatools::invalid_real();
-        if (alpha_track.has_trajectory()) {
-          const snemo::datamodel::tracker_trajectory & a_trajectory = alpha_track.get_trajectory();
-          const snemo::datamodel::base_trajectory_pattern & a_track_pattern = a_trajectory.get_pattern();
-          alpha_track_length = a_track_pattern.get_shape().get_length();
-          // Get alpha time delay from trajectory auxiliairies
-          const datatools::properties & aux = a_trajectory.get_auxiliaries();
-          if (aux.has_key("t0")) {
-            alpha_delayed_time = aux.fetch_real("t0");
-          }
+      for (snemo::datamodel::particle_track_data::particle_collection_type::const_iterator
+             iparticle = the_particles.begin(); iparticle != the_particles.end();
+           ++iparticle) {
+        const snemo::datamodel::particle_track & a_particle = iparticle->get();
+        if (snemo::datamodel::pid_utils::particle_is_alpha(a_particle)) {
+          DT_THROW_IF(t1e1ap->has_alpha_particle(), std::logic_error, "More than 1 alpha particle !");
+          t1e1ap->set_alpha_particle(*iparticle);
         }
-        if (datatools::is_valid(alpha_delayed_time)) t1e1ap->set_alpha_delayed_time(alpha_delayed_time);
-        if (datatools::is_valid(alpha_track_length)) t1e1ap->set_alpha_track_length(alpha_track_length);
-      }
-
-      {
-        // Extract electron track physical quantities i.e. track length & energy
-        snemo::datamodel::particle_track_data::particle_collection_type electron_tracks;
-        const size_t nelectrons
-          = snemo::datamodel::pid_utils::fetch_particles(ptd_,
-                                                         electron_tracks,
-                                                         snemo::datamodel::pid_utils::electron_label());
-        DT_THROW_IF(nelectrons != 1, std::logic_error, "More than 1 electron particle !");
-        const snemo::datamodel::particle_track & electron_track = electron_tracks.front().get();
-
-        double electron_track_length = datatools::invalid_real();
-        if (electron_track.has_trajectory()) {
-          const snemo::datamodel::tracker_trajectory & a_trajectory = electron_track.get_trajectory();
-          const snemo::datamodel::base_trajectory_pattern & a_track_pattern = a_trajectory.get_pattern();
-          electron_track_length = a_track_pattern.get_shape().get_length();
+        if (snemo::datamodel::pid_utils::particle_is_electron(a_particle)) {
+          DT_THROW_IF(t1e1ap->has_electron_particle(), std::logic_error, "More than 1 electron particle !");
+          t1e1ap->set_electron_particle(*iparticle);
         }
-        if (datatools::is_valid(electron_track_length)) t1e1ap->set_electron_track_length(electron_track_length);
-
-        double electron_energy = datatools::invalid_real();
-        if (electron_track.has_associated_calorimeter_hits()) {
-          const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
-            calos = electron_track.get_associated_calorimeter_hits();
-          if (calos.size() == 1) {
-            electron_energy = calos.front().get().get_energy();
-          }
-        }
-        if (datatools::is_valid(electron_energy)) t1e1ap->set_electron_energy(electron_energy);
       }
 
       return;
