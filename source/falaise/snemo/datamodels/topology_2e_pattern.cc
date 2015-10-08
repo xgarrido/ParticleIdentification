@@ -172,7 +172,7 @@ namespace snemo {
           energy += a_calo.get_energy();
         }
         _minimal_energy_ = std::min(energy, _minimal_energy_);
-        _maximal_energy_ = std::min(energy, _maximal_energy_);
+        _maximal_energy_ = std::max(energy, _maximal_energy_);
       }
       return;
     }
