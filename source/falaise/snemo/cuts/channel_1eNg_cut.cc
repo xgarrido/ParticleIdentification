@@ -313,8 +313,8 @@ namespace snemo {
             }
           }
           // std::cout << "------------------"  << std::endl;
-          std::cout << "        "<< i+1 <<"/" << tof_collection.size() << " gamma" << std::endl;
-          std::cout << "    int "<< _prob_int_min_ <<" < " << pint <<" < " << _prob_int_max_ << std::endl;
+          // std::cout << "        "<< i+1 <<"/" << tof_collection.size() << " gamma" << std::endl;
+          // std::cout << "    int "<< _prob_int_min_ <<" < " << pint <<" < " << _prob_int_max_ << std::endl;
         }
       }
 
@@ -337,23 +337,28 @@ namespace snemo {
         snemo::datamodel::topology_1eNg_pattern::TOF_collection_type tof_collection = a_1eNg_pattern.get_TOF_collection();
 
         for(unsigned int i=0; i<tof_collection.size(); i++) {
-          double pext = tof_collection.at(i).get_external_probabilities().front();
-          if (datatools::is_valid(_prob_ext_min_)) {
-            if (pext < _prob_ext_min_) {
-              DT_LOG_DEBUG(get_logging_priority(),
-                           "External probability (" << pext << ") lower than " << _prob_ext_min_);
-              check_range_external_probability = false;
+          for(unsigned int j=0; j<tof_collection.at(i).get_external_probabilities().size(); j++) {
+            double pext = tof_collection.at(i).get_external_probabilities().at(j);
+            if (datatools::is_valid(_prob_ext_min_)) {
+              if (pext < _prob_ext_min_) {
+                DT_LOG_DEBUG(get_logging_priority(),
+                             "External probability (" << pext << ") lower than " << _prob_ext_min_);
+                check_range_external_probability = false;
+                // std::cout << "  !!!!!!  " << pext << " lower than " << _prob_ext_min_ <<std::endl;
+              }
+            }
+            if (datatools::is_valid(_prob_ext_max_)) {
+              if (pext > _prob_ext_max_) {
+                DT_LOG_DEBUG(get_logging_priority(),
+                             "External probability (" << pext << ") greater than " << _prob_ext_max_);
+                check_range_external_probability = false;
+                // std::cout << "  !!!!!!  " << pext << " greater than " << _prob_ext_max_ <<std::endl;
+              }
+              // std::cout << "        "<< i+1 <<"/" << tof_collection.size() << " gamma" << std::endl;
+              // std::cout << "        "<< j+1 <<"/" << tof_collection.at(i).get_external_probabilities().size() << " calo" << std::endl;
+              // std::cout << "    ext "<< _prob_ext_min_ <<" < " << pext <<" < " << _prob_ext_max_ << std::endl;
             }
           }
-          if (datatools::is_valid(_prob_ext_max_)) {
-            if (pext > _prob_ext_max_) {
-              DT_LOG_DEBUG(get_logging_priority(),
-                           "External probability (" << pext << ") greater than " << _prob_ext_max_);
-              check_range_external_probability = false;
-            }
-          }
-          std::cout << "        "<< i+1 <<"/" << tof_collection.size() << " gamma" << std::endl;
-          std::cout << "    ext "<< _prob_ext_min_ <<" < " << pext <<" < " << _prob_ext_max_ << std::endl;
         }
       }
 
