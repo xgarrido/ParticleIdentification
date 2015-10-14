@@ -39,8 +39,10 @@ namespace snemo {
       /// Check if topology is valid
       bool is_valid() const;
 
-      // Register the electrons in the dictionary
-      virtual void build_particle_tracks_dictionary(const snemo::datamodel::particle_track_data & ptd_,
+      virtual void build_particle_tracks_dictionary(const snemo::datamodel::particle_track_data::particle_collection_type & the_particles_,
+                                      snemo::datamodel::base_topology_pattern::measurement_particle_tracks_type & particle_tracks_dict_);
+
+      virtual void build_measurement_dictionary(const snemo::datamodel::particle_track_data::particle_collection_type & the_particles_,
                                       snemo::datamodel::base_topology_pattern::measurement_particle_tracks_type & particle_tracks_dict_);
 
       /// Smart print

@@ -285,64 +285,14 @@ namespace snemo {
 
       const snemo::datamodel::particle_track_data::particle_collection_type & the_particles
         = ptd_.get_particles();
-      const snemo::datamodel::particle_track & pt1 = the_particles.front().get();
-      const snemo::datamodel::particle_track & pt2 = the_particles.back().get();
 
-      snemo::datamodel::base_topology_pattern::measurement_particle_tracks_type & particle_tracks_dict = t2ep->grab_particle_tracks_dictionary();
+      snemo::datamodel::base_topology_pattern::particle_tracks_dict_type & particle_tracks_dict = t2ep->grab_particle_tracks_dictionary();
 
-      t2ep->build_particle_tracks_dictionary(ptd_,particle_tracks_dict);
-      // change pt1 and pt2 with pt from dictionary
+      t2ep->build_particle_tracks_dictionary(the_particles, particle_tracks_dict);
 
       snemo::datamodel::base_topology_pattern::measurement_dict_type & meas_dict = t2ep->grab_measurement_dictionary();
 
-      {
-        snemo::datamodel::TOF_measurement tof_dummy;
-        std::ostringstream key_tof;
-        key_tof << "tof_e1_e2";
-        meas_dict[key_tof.str()] = tof_dummy;
-
-        snemo::datamodel::delta_vertices_measurement delta_vertices_sources_dummy;
-        std::ostringstream key_delta_vertices_source;
-        key_delta_vertices_source << "delta_vertices_source_e1_e2";
-        meas_dict[key_delta_vertices_source.str()] = delta_vertices_source_dummy;
-
-        snemo::datamodel::angle_measurement angle_dummy;
-        std::ostringstream key_angle;
-        key_angle << "angle_e1_e2";
-        meas_dict[key_angle.str()] = angle_dummy;
-
-       snemo::datamodel::energy_measurement energy_e1_dummy;
-       std::ostringstream key_energy_e1;
-       key_energy_e1 << "energy_e1";
-       meas_dict[key_energy_e1.str()] = energy_e1_dummy;
-
-       snemo::datamodel::energy_measurement energy_e2_dummy;
-       std::ostringstream key_energy_e2;
-       key_energy_e2 << "energy_e2";
-       meas_dict[key_energy_e2.str()] = energy_e2_dummy;
-      }
-
-      snemo::datamodel::TOF_measurement & a_tof = meas_dict["tof_e1_g1"];
-      if (_TOFD_) _TOFD_->process(pt1, pt2,
-                                  a_tof.grab_internal_probabilities(),
-                                  a_tof.grab_external_probabilities());
-
-      snemo::datamodel::delta_vertices_measurement & delta_vertices_source = meas_dict["delta_vertices_source_e1_e2"];
-      if (_DVD_) _DVD_->process(pt1, pt2,
-                                delta_vertices_source.grab_delta_vertices_y(),
-                                delta_vertices_source.grab_delta_vertices_z());
-
-      snemo::datamodel::angle_measurement & an_angle = meas_dict["angle_e1_e2"];
-      if (_AMD_) _AMD_->process(pt1, pt2,
-                                an_angle.grab_angle());
-
-      snemo::datamodel::energy_measurement & energy_e1 = meas_dict["energy_e1"];
-      if (_EMD_) _EMD_->process(pt1,
-                                energy_e1.grab_energy());
-
-      snemo::datamodel::energy_measurement & energy_e2 = meas_dict["energy_e2"];
-      if (_EMD_) _EMD_->process(pt2,
-                                energy_e2.grab_energy());
+      t2ep->build_measurement_dictionary(particle_tracks_dictionary, meas_dict);
 
       return;
     }
@@ -411,7 +361,7 @@ namespace snemo {
       const snemo::datamodel::particle_track & pt1 = the_particles.front().get();
       const snemo::datamodel::particle_track & pt2 = the_particles.back().get();
 
-      snemo::datamodel::base_topology_pattern::measurement_particle_tracks_type & particle_tracks_dict = t2eNgp->grab_particle_tracks_dictionary();
+      snemo::datamodel::base_topology_pattern::particle_tracks_dict_type & particle_tracks_dict = t2eNgp->grab_particle_tracks_dictionary();
 
       t2eNgp->build_particle_tracks_dictionary(ptd_,particle_tracks_dict);
       // change pt1 and pt2 with pt from dictionary
