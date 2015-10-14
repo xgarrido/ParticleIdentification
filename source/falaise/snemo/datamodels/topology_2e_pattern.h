@@ -38,78 +38,11 @@ namespace snemo {
       /// Check if topology is valid
       bool is_valid() const;
 
-      /// Check if there are electrons
-      bool has_electron_particles() const;
-
-      /// Add electron to the particle list
-      void add_electron_particle(const particle_track::handle_type & handle_);
-
-      /// Return list of electron particles
-      const particle_track_data::particle_collection_type & get_electron_particles() const;
-
-      /// Check internal probability validity
-      bool has_internal_probability() const;
-
-      /// Set internal probability
-      void set_internal_probability(double);
-
-      /// Return internal probability
-      double get_internal_probability() const;
-
-      /// Check internal probability validity
-      bool has_external_probability() const;
-
-      /// Set external probability
-      void set_external_probability(double);
-
-      /// Return external probability
-      double get_external_probability() const;
-
-      /// Check delta vertices y validity
-      bool has_delta_vertices_y() const;
-
-      /// Set delta vertices y
-      void set_delta_vertices_y(double);
-
-      /// Return delta vertices y
-      double get_delta_vertices_y() const;
-
-      /// Check delta vertices z validity
-      bool has_delta_vertices_z() const;
-
-      /// Set delta vertices z
-      void set_delta_vertices_z(double);
-
-      /// Return delta vertices z
-      double get_delta_vertices_z() const;
-
-      /// Check angle validity
-      bool has_angle() const;
-
-      /// Set angle value
-      void set_angle(double);
-
-      /// Return angle measurement
-      double get_angle() const;
-
-      /// Return minimal energy
-      double get_minimal_energy();
-
-      /// Return maximal energy
-      double get_maximal_energy();
-
-      /// Return total energy
-      double get_total_energy();
-
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,
                              const std::string & title_  = "",
                              const std::string & indent_ = "",
                              bool inherit_               = false) const;
-
-    private:
-      particle_track::handle_type _e1_;
-      particle_track::handle_type _e2_;
 
       DATATOOLS_SERIALIZATION_DECLARATION();
 
