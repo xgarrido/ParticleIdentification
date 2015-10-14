@@ -22,8 +22,6 @@ namespace snemo {
     topology_2e_pattern::topology_2e_pattern()
       : base_topology_pattern(topology_2e_pattern::pattern_id())
     {
-      datatools::plus_infinity(_minimal_energy_);
-      datatools::minus_infinity(_maximal_energy_);
       return;
     }
 
@@ -34,7 +32,31 @@ namespace snemo {
 
     bool topology_2e_pattern::is_valid() const
     {
-      return has_electron_particles() && _electron_particles_.size() == 2;
+      return _e1_.has_track_id() && _e2_.has_track_id();
+    }
+
+    virtual void topology_2e_pattern::build_particle_tracks_dictionary() const
+    {
+      tracks_["e1"] = _e1_;
+      tracks_["e2"] = _e2_;
+      return;
+    }
+
+    virtual void topology_2e_pattern::build_measurement_dictionary() const
+    {
+      if (_tof_2e_.is_valid()) {
+        meas_dict_["tof_2e"] = &_tof_2e_;
+      }
+      if (_delta_vertices_source_2e_.is_valid()) {
+        meas_dict_["delta_vertices_source_2e"] = &_delta_vertices_source_2e_;
+      }
+      if (_angle_2e_.is_valid()) {
+        meas_dict_["angle_2e"] = &_angle_2e_;
+      }
+      if (_energy_2e_.is_valid()) {
+        meas_dict_["energy_2e"] = &_energy_2e_;
+      }
+      return;
     }
 
     bool topology_2e_pattern::has_electron_particles() const
@@ -133,50 +155,6 @@ namespace snemo {
     {
       return _angle_.get_angle();
     }
-
-    double topology_2e_pattern::get_minimal_energy()
-    {
-      if (datatools::is_plus_infinity(_minimal_energy_)) {
-        _compute_energies_();
-      }
-      return _minimal_energy_;
-    }
-
-    double topology_2e_pattern::get_maximal_energy()
-    {
-      if (datatools::is_minus_infinity(_maximal_energy_)) {
-        _compute_energies_();
-      }
-      return _maximal_energy_;
-    }
-
-    double topology_2e_pattern::get_total_energy()
-    {
-      return get_maximal_energy() + get_minimal_energy();
-    }
-
-    void topology_2e_pattern::_compute_energies_()
-    {
-      DT_THROW_IF(! has_electron_particles(), std::logic_error, "Missing electron particles !");
-      for (snemo::datamodel::particle_track_data::particle_collection_type::const_iterator
-             i = get_electron_particles().begin();
-           i != get_electron_particles().end(); ++i) {
-        const snemo::datamodel::particle_track & a_electron = i->get();
-        double energy = 0.0;
-        if (! a_electron.has_associated_calorimeter_hits()) continue;
-        const snemo::datamodel::calibrated_calorimeter_hit::collection_type & the_calos
-          = a_electron.get_associated_calorimeter_hits();
-        for (snemo::datamodel::calibrated_calorimeter_hit::collection_type::const_iterator
-               icalo = the_calos.begin(); icalo != the_calos.end(); ++icalo) {
-          const snemo::datamodel::calibrated_calorimeter_hit & a_calo = icalo->get();
-          energy += a_calo.get_energy();
-        }
-        _minimal_energy_ = std::min(energy, _minimal_energy_);
-        _maximal_energy_ = std::max(energy, _maximal_energy_);
-      }
-      return;
-    }
-
 
     void topology_2e_pattern::tree_dump(std::ostream      & out_,
                                         const std::string & title_,

@@ -17,6 +17,9 @@
 #include <bayeux/datatools/i_serializable.h>
 #include <bayeux/datatools/i_tree_dump.h>
 
+#include <falaise/snemo/datamodels/particle_track.h>
+#include <base_topology_measurement.h>
+
 namespace snemo {
 
   namespace datamodel {
@@ -27,11 +30,34 @@ namespace snemo {
     {
     public:
 
+      typedef std::map<std::string,  particle_track::handle_type> particle_tracks_dict_type;
+
+      typedef datatools::handle<base_measurement> handle_measurement;
+
+      typedef std::map<std::string, handle_measurement> measurement_dict_type;
+
+      virtual std::string pattern_id() const = 0;
+
+      virtual void build_particle_tracks_dictionary() const = 0;
+
+      virtual void build_measurement_dictionary() const = 0;
+
+      particle_tracks_dict_type & grab_particle_tracks_dictionary() {
+        return _tracks_;
+      }
+
+      measurement_dict_type & grab_measurement_dictionary() {
+        return _meas_;
+      }
       /// Check if a valid pattern ID exists
       bool has_pattern_id() const;
 
       /// Return the pattern ID
       const std::string & get_pattern_id() const;
+
+      virtual void build_particle_tracks_dictionary(std::map<std::string, particle_track::handle_type> & tracks_) const = 0;
+
+      virtual void build_measurement_dictionary(std::map<std::string, const base_topology_measurement *> & meas_) const = 0;
 
       /// Constructor
       base_topology_pattern(const std::string & pattern_id_ = "");
@@ -53,6 +79,8 @@ namespace snemo {
     private:
 
       std::string _pattern_id_; //!< The pattern identifier
+      particle_tracks_dict_type _tracks_;
+      measurement_dict_type _meas_;
 
       DATATOOLS_SERIALIZATION_DECLARATION();
 

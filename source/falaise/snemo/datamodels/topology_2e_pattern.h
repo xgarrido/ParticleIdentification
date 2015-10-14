@@ -108,20 +108,8 @@ namespace snemo {
                              bool inherit_               = false) const;
 
     private:
-
-      /// Internal method to extract energy informations
-      void _compute_energies_();
-
-    private:
-
-      TOF_measurement _tof_;                                              //!< Time-Of-Flight meas.
-      delta_vertices_measurement _delta_vertices_source_;                 //!< Delta vertices on source foil
-      angle_measurement _angle_;                                          //!< Angle meas.
-      particle_track_data::particle_collection_type _electron_particles_; //!< Electron particles
-
-      // Internal work space (not serialized)
-      double _minimal_energy_; //!< Minimal energy of the electron
-      double _maximal_energy_; //!< Maximal energy of the electron
+      particle_track::handle_type _e1_;
+      particle_track::handle_type _e2_;
 
       DATATOOLS_SERIALIZATION_DECLARATION();
 

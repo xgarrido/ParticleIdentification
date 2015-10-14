@@ -159,6 +159,37 @@ namespace snemo {
 
       DATATOOLS_SERIALIZATION_DECLARATION();
     };
+
+    /// \brief The Energy measurement
+    class energy_measurement : DATATOOLS_SERIALIZABLE_CLASS,
+                              public i_particle_pairing
+    {
+    public:
+
+      /// Constructor
+      energy_measurement();
+
+      /// Destructor
+      ~energy_measurement();
+
+      /// Check energy validity
+      bool has_energy() const;
+
+      /// Set energy value
+      void set_energy(double energy_);
+
+      /// Get a non-mutable reference to energy
+      const double & get_energy() const;
+
+      /// Get a mutable reference to energy
+      double & grab_energy();
+
+    private:
+
+      double _energy_;
+
+      DATATOOLS_SERIALIZATION_DECLARATION();
+    };
   }
 }
 
