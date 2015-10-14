@@ -13,6 +13,7 @@
 #include <string>
 
 // This project:
+#include <falaise/snemo/datamodels/pid_utils.h>
 #include <falaise/snemo/datamodels/base_topology_pattern.h>
 #include <falaise/snemo/datamodels/topology_measurement.h>
 #include <falaise/snemo/datamodels/particle_track_data.h>
@@ -37,6 +38,10 @@ namespace snemo {
 
       /// Check if topology is valid
       bool is_valid() const;
+
+      // Register the electrons in the dictionary
+      virtual void build_particle_tracks_dictionary(const snemo::datamodel::particle_track_data & ptd_,
+                                      snemo::datamodel::base_topology_pattern::measurement_particle_tracks_type & particle_tracks_dict_);
 
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,

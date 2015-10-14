@@ -30,6 +30,18 @@ namespace snemo {
       return;
     }
 
+    virtual void topology_2e_pattern::build_particle_tracks_dictionary(const snemo::datamodel::particle_track_data & ptd_,       snemo::datamodel::base_topology_pattern::measurement_particle_tracks_type & particle_tracks_dict_)
+    {
+      snemo::datamodel::particle_track_data::particle_collection_type electron_tracks;
+
+      DT_THROW_IF(snemo::datamodel::pid_utils::fetch_particles(ptd_, electron_tracks,
+                                                               snemo::datamodel::pid_utils::electron_label()) != 2, std::logic_error, "Number of electrons different from 2 !");
+
+      particle_tracks_dict_["e1"] = *(electron_tracks.front().get());
+      particle_tracks_dict_["e2"] = *(electron_tracks.back().get());
+
+      return;
+    }
     void topology_2e_pattern::tree_dump(std::ostream      & out_,
                                         const std::string & title_,
                                         const std::string & indent_,
