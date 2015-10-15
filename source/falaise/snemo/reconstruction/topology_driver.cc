@@ -290,9 +290,44 @@ namespace snemo {
 
       t2ep->build_particle_tracks_dictionary(the_particles, particle_tracks_dict);
 
+      const snemo::datamodel::particle_track & e1 = particle_tracks_dict_["e1"];
+      const snemo::datamodel::particle_track & e2 = particle_tracks_dict_["e2"];
+
       snemo::datamodel::base_topology_pattern::measurement_dict_type & meas_dict = t2ep->grab_measurement_dictionary();
 
-      t2ep->build_measurement_dictionary(particle_tracks_dictionary, meas_dict);
+      {
+        snemo::datamodel::TOF_measurement * ptr_tof = new snemo::datamodel::TOF_measurement;
+        meas_dict["tof_e1_e2"].reset(ptr_tof);
+        if (_TOFD_) _TOFD_->process(e1, e2,
+                                    ptr_tof->grab_internal_probabilities(),
+                                    ptr_tof->grab_external_probabilities());
+      }
+
+      {
+        snemo::datamodel::delta_vertices_measurement * ptr_delta_vertices_source = new snemo::datamodel::delta_vertices_measurement;
+        meas_dict["delta_vertices_source_e1_e2"].reset(ptr_delta_vertices_source);
+        if (_DVD_) _DVD_->process(e1, e2,
+                                  ptr_delta_vertices_source->grab_internal_probabilities(),
+                                  ptr_delta_vertices_source->grab_external_probabilities());
+      }
+
+      {
+        snemo::datamodel::angle_measurement * ptr_angle = new snemo::datamodel::angle_measurement;
+        meas_dict["angle_e1_e2"].reset(ptr_angle);
+        if (_AMD_) _AMD_->process(e1, e2, ptr_angle->grab_angle());
+      }
+
+      {
+        snemo::datamodel::energy_measurement * ptr_energy = new snemo::datamodel::energy_measurement;
+        meas_dict["energy_e1"].reset(ptr_energy);
+        if (_EMD_) _EMD_->process(e1, ptr_energy->grab_energy());
+      }
+
+      {
+        snemo::datamodel::energy_measurement * ptr_energy = new snemo::datamodel::energy_measurement;
+        meas_dict["energy_e2"].reset(ptr_energy);
+        if (_EMD_) _EMD_->process(e2, ptr_energy->grab_energy());
+      }
 
       return;
     }
@@ -358,13 +393,12 @@ namespace snemo {
       const snemo::datamodel::particle_track_data::particle_collection_type & the_particles
         = ptd_.get_particles();
 
-      const snemo::datamodel::particle_track & pt1 = the_particles.front().get();
-      const snemo::datamodel::particle_track & pt2 = the_particles.back().get();
-
       snemo::datamodel::base_topology_pattern::particle_tracks_dict_type & particle_tracks_dict = t2eNgp->grab_particle_tracks_dictionary();
 
-      t2eNgp->build_particle_tracks_dictionary(ptd_,particle_tracks_dict);
-      // change pt1 and pt2 with pt from dictionary
+      t2eNgp->build_particle_tracks_dictionary(the_particles, particle_tracks_dict);
+
+      const snemo::datamodel::particle_track & e1 = particle_tracks_dict_["e1"];
+      const snemo::datamodel::particle_track & e2 = particle_tracks_dict_["e2"];
 
       snemo::datamodel::base_topology_pattern::measurement_dict_type & meas_dict = t2ep->grab_measurement_dictionary();
 
