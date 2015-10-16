@@ -54,7 +54,7 @@ list(APPEND FalaiseParticleIdentificationPlugin_HEADERS
   # # source/falaise/snemo/datamodels/topology_1e1p_pattern.ipp
   source/falaise/snemo/datamodels/base_topology_measurement.h
   # source/falaise/snemo/datamodels/topology_measurement.ipp
-  # source/falaise/snemo/datamodels/pid_utils.h
+  source/falaise/snemo/datamodels/pid_utils.h
   )
 
 # - Sources:
@@ -84,7 +84,7 @@ list(APPEND FalaiseParticleIdentificationPlugin_SOURCES
   # # source/falaise/snemo/datamodels/topology_1e1a_pattern.cc
   # # source/falaise/snemo/datamodels/topology_1e1p_pattern.cc
   source/falaise/snemo/datamodels/base_topology_measurement.cc
-  # source/falaise/snemo/datamodels/pid_utils.cc
+  source/falaise/snemo/datamodels/pid_utils.cc
   )
 
 ###########################################################################################

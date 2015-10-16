@@ -16,13 +16,13 @@
 
 // This project:
 #include <falaise/snemo/reconstruction/topology_driver.h>
+#include <falaise/snemo/datamodels/base_topology_pattern.h>
 
 namespace snemo {
 
   // Forward declaration
   namespace datamodel {
     class particle_track_data;
-    class base_topology_pattern;
   }
 
   namespace reconstruction {
@@ -36,7 +36,7 @@ namespace snemo {
       void set_measurement_drivers(measurement_drivers &);
 
       ///
-      virtual datatools::handle<snemo::datamodel::base_topology_pattern> create_pattern() = 0;
+      virtual snemo::datamodel::base_topology_pattern::handle_type create_pattern() = 0;
 
       ///
       virtual void build(const snemo::datamodel::particle_track_data & source_,

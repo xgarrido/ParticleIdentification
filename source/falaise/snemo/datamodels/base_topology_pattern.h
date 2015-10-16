@@ -31,6 +31,8 @@ namespace snemo {
     {
     public:
 
+      typedef datatools::handle<snemo::datamodel::base_topology_pattern> handle_type;
+
       ///
       typedef std::map<std::string, particle_track::handle_type> particle_tracks_dict_type;
 

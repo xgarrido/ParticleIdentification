@@ -8,21 +8,16 @@
 #include <bayeux/cuts/cut_manager.h>
 
 // This project:
+#include <falaise/snemo/datamodels/pid_utils.h>
 #include <falaise/snemo/datamodels/particle_track_data.h>
 #include <falaise/snemo/datamodels/topology_data.h>
-#include <falaise/snemo/datamodels/pid_utils.h>
+#include <falaise/snemo/datamodels/base_topology_pattern.h>
 
-// #include <falaise/snemo/datamodels/topology_1e_pattern.h>
-// #include <falaise/snemo/datamodels/topology_2e_pattern.h>
-// #include <falaise/snemo/datamodels/topology_1e1p_pattern.h>
-// #include <falaise/snemo/datamodels/topology_1eNg_pattern.h>
-// #include <falaise/snemo/datamodels/topology_2eNg_pattern.h>
-// #include <falaise/snemo/datamodels/topology_1e1a_pattern.h>
+#include <falaise/snemo/reconstruction/tof_driver.h>
+#include <falaise/snemo/reconstruction/delta_vertices_driver.h>
+#include <falaise/snemo/reconstruction/angle_measurement_driver.h>
 
-#include <snemo/datamodels/pid_utils.h>
-#include <snemo/reconstruction/tof_driver.h>
-#include <snemo/reconstruction/delta_vertices_driver.h>
-#include <snemo/reconstruction/angle_measurement_driver.h>
+#include <falaise/snemo/reconstruction/base_topology_builder.h>
 
 namespace snemo {
 
@@ -82,7 +77,8 @@ namespace snemo {
       datatools::logger::priority lp = datatools::logger::extract_logging_configuration(setup_);
       DT_THROW_IF(lp == datatools::logger::PRIO_UNDEFINED, std::logic_error,
                   "Invalid logging priority level for geometry manager !");
-      set_logging_priority(lp);
+      // set_logging_priority(lp);
+      set_logging_priority(datatools::logger::PRIO_TRACE);
 
       // Drivers :
       DT_THROW_IF(! setup_.has_key("drivers"), std::logic_error, "Missing 'drivers' key !");
@@ -159,8 +155,26 @@ namespace snemo {
     {
       DT_LOG_TRACE(get_logging_priority(), "Entering...");
 
-      // const std::string a_classification = topology_driver::_build_classification_(ptd_);
-      // DT_LOG_TRACE(get_logging_priority(), "Event classification : " << a_classification);
+      const std::string a_classification = topology_driver::_build_classification_(ptd_);
+      DT_LOG_TRACE(get_logging_priority(), "Event classification : " << a_classification);
+
+      // regex machinery...
+      std::string builder_class_id = "snemo::reconstruction::topology_2e_builder"; //get_builder_class_id_from_classification(a_classification);
+
+      const base_topology_builder::factory_register_type & FB = DATATOOLS_FACTORY_GET_SYSTEM_REGISTER(base_topology_builder);
+      FB.tree_dump();
+      DT_THROW_IF(! FB.has(builder_class_id), std::logic_error,
+                  "Topology builder class id '" << builder_class_id << "' is not available from the system builder factory register !");
+      const base_topology_builder::factory_register_type::factory_type & the_factory
+        = FB.get(builder_class_id);
+      snemo::reconstruction::base_topology_builder * new_builder = the_factory();
+      snemo::datamodel::base_topology_pattern::handle_type new_pattern = new_builder->create_pattern();
+      if (get_logging_priority() >= datatools::logger::PRIO_TRACE) {
+        DT_LOG_TRACE(get_logging_priority(), "New pattern: ");
+        new_pattern.get().tree_dump(std::clog, "", "[trace]: ");
+      }
+
+      new_builder->build(ptd_, new_pattern.grab());
 
       // if (a_classification == "1e") {
       //   DT_LOG_NOTICE(get_logging_priority(), "Fill '1e' topology");
