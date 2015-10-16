@@ -14,8 +14,12 @@
 #include <bayeux/datatools/factory_macros.h>
 #include <bayeux/datatools/handle.h>
 
+// This project:
+#include <falaise/snemo/reconstruction/topology_driver.h>
+
 namespace snemo {
 
+  // Forward declaration
   namespace datamodel {
     class particle_track_data;
     class base_topology_pattern;
@@ -28,10 +32,11 @@ namespace snemo {
     {
     public:
 
-    //   void set_measurement_driver(measurement_driver_col_type &);
+      ///
+      void set_measurement_drivers(measurement_drivers &);
 
-      // ///
-      // virtual datatools::handle<snemo::datamodel::base_topology_pattern> create_pattern() = 0;
+      ///
+      virtual datatools::handle<snemo::datamodel::base_topology_pattern> create_pattern() = 0;
 
       ///
       virtual void build(const snemo::datamodel::particle_track_data & source_,
@@ -39,8 +44,7 @@ namespace snemo {
 
     private:
 
-    //  // working external driver:
-    //  measurement_driver_col_type * _drivers_;
+      measurement_drivers * _drivers_;
 
      // Factory stuff :
      DATATOOLS_FACTORY_SYSTEM_REGISTER_INTERFACE(base_topology_builder);

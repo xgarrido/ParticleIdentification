@@ -95,22 +95,22 @@ namespace snemo {
 
         if (a_driver_name == snemo::reconstruction::tof_driver::get_id()) {
           // Initialize TOF Driver
-          _TOFD_.reset(new snemo::reconstruction::tof_driver);
+          _drivers_.TOFD.reset(new snemo::reconstruction::tof_driver);
           datatools::properties TOFD_config;
           setup_.export_and_rename_starting_with(TOFD_config, std::string(a_driver_name + "."), "");
-          _TOFD_->initialize(TOFD_config);
+          _drivers_.TOFD->initialize(TOFD_config);
         } else if (a_driver_name == snemo::reconstruction::delta_vertices_driver::get_id()) {
           // Initialize Delta Vertices Driver
-          _DVD_.reset(new snemo::reconstruction::delta_vertices_driver);
+          _drivers_.DVD.reset(new snemo::reconstruction::delta_vertices_driver);
           datatools::properties DVD_config;
           setup_.export_and_rename_starting_with(DVD_config, std::string(a_driver_name + "."), "");
-          _DVD_->initialize(DVD_config);
+          _drivers_.DVD->initialize(DVD_config);
         } else if (a_driver_name == snemo::reconstruction::angle_measurement_driver::get_id()) {
           // Initialize Delta Vertices Driver
-          _AMD_.reset(new snemo::reconstruction::angle_measurement_driver);
+          _drivers_.AMD.reset(new snemo::reconstruction::angle_measurement_driver);
           datatools::properties AMD_config;
           setup_.export_and_rename_starting_with(AMD_config, std::string(a_driver_name + "."), "");
-          _AMD_->initialize(AMD_config);
+          _drivers_.AMD->initialize(AMD_config);
         } else {
           DT_THROW_IF(true, std::logic_error, "Driver '" << a_driver_name << "' does not exist !");
         }
@@ -147,9 +147,9 @@ namespace snemo {
     void topology_driver::_set_defaults()
     {
       _logging_priority_ = datatools::logger::PRIO_WARNING;
-      _TOFD_.reset(0);
-      _DVD_.reset(0);
-      _AMD_.reset(0);
+      _drivers_.TOFD.reset(0);
+      _drivers_.DVD.reset(0);
+      _drivers_.AMD.reset(0);
 
       return;
     }

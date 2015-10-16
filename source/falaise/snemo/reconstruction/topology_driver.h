@@ -31,6 +31,7 @@
 #ifndef FALAISE_TOPOLOGY_PLUGIN_SNEMO_RECONSTRUCTION_TOPOLOGY_DRIVER_H
 #define FALAISE_TOPOLOGY_PLUGIN_SNEMO_RECONSTRUCTION_TOPOLOGY_DRIVER_H 1
 
+// Third party:
 // - Boost:
 #include <boost/scoped_ptr.hpp>
 
@@ -48,11 +49,18 @@ namespace snemo {
 
   namespace reconstruction {
 
+    // Forward declaration
     class tof_driver;
     class delta_vertices_driver;
     class angle_measurement_driver;
 
-    /// Driver for the topology algorithm
+    struct measurement_drivers {
+      boost::scoped_ptr<snemo::reconstruction::tof_driver> TOFD;
+      boost::scoped_ptr<snemo::reconstruction::delta_vertices_driver> DVD;
+      boost::scoped_ptr<snemo::reconstruction::angle_measurement_driver> AMD;
+    };
+
+    /// \brief Driver for the topology algorithm
     class topology_driver
     {
     public:
@@ -133,10 +141,7 @@ namespace snemo {
 
       bool _initialized_;                             //!< Initialize flag
       datatools::logger::priority _logging_priority_; //!< Logging priority
-
-      boost::scoped_ptr< ::snemo::reconstruction::tof_driver> _TOFD_; //!< Handle to the embedded TOF computation algorithm with dynamic memory auto-deletion
-      boost::scoped_ptr< ::snemo::reconstruction::delta_vertices_driver> _DVD_; //!< Handle to the embedded delta vertices algorithm with dynamic memory auto-deletion
-      boost::scoped_ptr< ::snemo::reconstruction::angle_measurement_driver> _AMD_; //!< Handle to the embedded angle measurement algorithm with dynamic memory auto-deletion
+      measurement_drivers _drivers_;                  //!< Measurement drivers such as TOF...
     };
 
   }  // end of namespace reconstruction
