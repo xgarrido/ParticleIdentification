@@ -12,12 +12,12 @@
 #include <falaise/snemo/datamodels/topology_data.h>
 #include <falaise/snemo/datamodels/pid_utils.h>
 
-#include <falaise/snemo/datamodels/topology_1e_pattern.h>
+// #include <falaise/snemo/datamodels/topology_1e_pattern.h>
 #include <falaise/snemo/datamodels/topology_2e_pattern.h>
-#include <falaise/snemo/datamodels/topology_1e1p_pattern.h>
-#include <falaise/snemo/datamodels/topology_1eNg_pattern.h>
+// #include <falaise/snemo/datamodels/topology_1e1p_pattern.h>
+// #include <falaise/snemo/datamodels/topology_1eNg_pattern.h>
 #include <falaise/snemo/datamodels/topology_2eNg_pattern.h>
-#include <falaise/snemo/datamodels/topology_1e1a_pattern.h>
+// #include <falaise/snemo/datamodels/topology_1e1a_pattern.h>
 
 #include <snemo/datamodels/pid_utils.h>
 #include <snemo/reconstruction/tof_driver.h>
@@ -168,7 +168,10 @@ namespace snemo {
       }
       else if (a_classification == "2e") {
         DT_LOG_NOTICE(get_logging_priority(), "Fill '2e' topology");
-        this->_fill_2e_topology_(ptd_, td_);
+        snemo::datamodel::topology_data::handle_pattern h_pattern;
+        h_pattern.reset(new snemo::datamodel::topology_2e_pattern);
+        td_.set_pattern_handle(h_pattern);
+        this->_fill_2e_topology_(ptd_, h_pattern->get());
       }
       else if (a_classification == "1e1p") {
         DT_LOG_NOTICE(get_logging_priority(), "Fill '1e1p' topology");
@@ -238,42 +241,42 @@ namespace snemo {
     void topology_driver::_fill_1e_topology_(const snemo::datamodel::particle_track_data & ptd_,
                                              snemo::datamodel::topology_data & td_)
     {
-      snemo::datamodel::topology_data::handle_pattern h_pattern;
-      snemo::datamodel::topology_1e_pattern * t1ep = new snemo::datamodel::topology_1e_pattern;
-      h_pattern.reset(t1ep);
-      td_.set_pattern_handle(h_pattern);
+      // snemo::datamodel::topology_data::handle_pattern h_pattern;
+      // snemo::datamodel::topology_1e_pattern * t1ep = new snemo::datamodel::topology_1e_pattern;
+      // h_pattern.reset(t1ep);
+      // td_.set_pattern_handle(h_pattern);
 
-      const snemo::datamodel::particle_track_data::particle_collection_type & the_particles
-        = ptd_.get_particles();
-      const snemo::datamodel::particle_track & pt = the_particles.front().get();
+      // const snemo::datamodel::particle_track_data::particle_collection_type & the_particles
+      //   = ptd_.get_particles();
+      // const snemo::datamodel::particle_track & pt = the_particles.front().get();
 
-      double angle = datatools::invalid_real();
-      if (_AMD_) _AMD_->process(pt, angle);
-      if (datatools::is_valid(angle)) t1ep->set_angle(angle);
+      // double angle = datatools::invalid_real();
+      // if (_AMD_) _AMD_->process(pt, angle);
+      // if (datatools::is_valid(angle)) t1ep->set_angle(angle);
 
-      {
-        // Extract electron track physical quantities i.e. track length & energy
-        snemo::datamodel::particle_track_data::particle_collection_type electron_tracks;
-        const size_t nelectrons
-          = snemo::datamodel::pid_utils::fetch_particles(ptd_,
-                                                         electron_tracks,
-                                                         snemo::datamodel::pid_utils::electron_label());
-        DT_THROW_IF(nelectrons != 1, std::logic_error, "Number of electrons different from 1 !");
+      // {
+      //   // Extract electron track physical quantities i.e. track length & energy
+      //   snemo::datamodel::particle_track_data::particle_collection_type electron_tracks;
+      //   const size_t nelectrons
+      //     = snemo::datamodel::pid_utils::fetch_particles(ptd_,
+      //                                                    electron_tracks,
+      //                                                    snemo::datamodel::pid_utils::electron_label());
+      //   DT_THROW_IF(nelectrons != 1, std::logic_error, "Number of electrons different from 1 !");
 
-        const snemo::datamodel::particle_track & electron_track = electron_tracks.front().get();
+      //   const snemo::datamodel::particle_track & electron_track = electron_tracks.front().get();
 
-        double electron_energy = datatools::invalid_real();
-        if (electron_track.has_associated_calorimeter_hits()) {
-          const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
-            calos = electron_track.get_associated_calorimeter_hits();
-          if (calos.size() == 1) {
-            electron_energy = calos.front().get().get_energy();
-          }
-        }
+      //   double electron_energy = datatools::invalid_real();
+      //   if (electron_track.has_associated_calorimeter_hits()) {
+      //     const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
+      //       calos = electron_track.get_associated_calorimeter_hits();
+      //     if (calos.size() == 1) {
+      //       electron_energy = calos.front().get().get_energy();
+      //     }
+      //   }
 
-        if (datatools::is_valid(electron_energy))
-          t1ep->set_electron_energy(electron_energy);
-      }
+      //   if (datatools::is_valid(electron_energy))
+      //     t1ep->set_electron_energy(electron_energy);
+      // }
 
       return;
     }
@@ -344,6 +347,7 @@ namespace snemo {
 
       // h_pattern->build_particle_tracks_dictionary(the_particles, particle_tracks_dict); // already called in 2e
 
+
       _fill_2e_topology_(ptd_, h_pattern_->get());
 
       //could be a get instead of a grab
@@ -412,31 +416,31 @@ namespace snemo {
     void topology_driver::_fill_1e1p_topology_(const snemo::datamodel::particle_track_data & ptd_,
                                                snemo::datamodel::topology_data & td_)
     {
-      snemo::datamodel::topology_data::handle_pattern h_pattern;
-      snemo::datamodel::topology_1e1p_pattern * t1e1pp = new snemo::datamodel::topology_1e1p_pattern;
-      h_pattern.reset(t1e1pp);
-      td_.set_pattern_handle(h_pattern);
+      // snemo::datamodel::topology_data::handle_pattern h_pattern;
+      // snemo::datamodel::topology_1e1p_pattern * t1e1pp = new snemo::datamodel::topology_1e1p_pattern;
+      // h_pattern.reset(t1e1pp);
+      // td_.set_pattern_handle(h_pattern);
 
-      const snemo::datamodel::particle_track_data::particle_collection_type & the_particles
-        = ptd_.get_particles();
-      const snemo::datamodel::particle_track & pt1 = the_particles.front().get();
-      const snemo::datamodel::particle_track & pt2 = the_particles.back().get();
+      // const snemo::datamodel::particle_track_data::particle_collection_type & the_particles
+      //   = ptd_.get_particles();
+      // const snemo::datamodel::particle_track & pt1 = the_particles.front().get();
+      // const snemo::datamodel::particle_track & pt2 = the_particles.back().get();
 
-      double proba_int = datatools::invalid_real();
-      double proba_ext = datatools::invalid_real();
-      if (_TOFD_) _TOFD_->process(pt1, pt2, proba_int, proba_ext);
-      if (datatools::is_valid(proba_int)) t1e1pp->set_internal_probability(proba_int);
-      if (datatools::is_valid(proba_ext)) t1e1pp->set_external_probability(proba_ext);
+      // double proba_int = datatools::invalid_real();
+      // double proba_ext = datatools::invalid_real();
+      // if (_TOFD_) _TOFD_->process(pt1, pt2, proba_int, proba_ext);
+      // if (datatools::is_valid(proba_int)) t1e1pp->set_internal_probability(proba_int);
+      // if (datatools::is_valid(proba_ext)) t1e1pp->set_external_probability(proba_ext);
 
-      double delta_vertices_y = datatools::invalid_real();
-      double delta_vertices_z = datatools::invalid_real();
-      if (_DVD_) _DVD_->process(pt1, pt2, delta_vertices_y, delta_vertices_z);
-      if (datatools::is_valid(delta_vertices_y)) t1e1pp->set_delta_vertices_y(delta_vertices_y);
-      if (datatools::is_valid(delta_vertices_z)) t1e1pp->set_delta_vertices_z(delta_vertices_z);
+      // double delta_vertices_y = datatools::invalid_real();
+      // double delta_vertices_z = datatools::invalid_real();
+      // if (_DVD_) _DVD_->process(pt1, pt2, delta_vertices_y, delta_vertices_z);
+      // if (datatools::is_valid(delta_vertices_y)) t1e1pp->set_delta_vertices_y(delta_vertices_y);
+      // if (datatools::is_valid(delta_vertices_z)) t1e1pp->set_delta_vertices_z(delta_vertices_z);
 
-      double angle = datatools::invalid_real();
-      if (_AMD_) _AMD_->process(pt1, pt2, angle);
-      if (datatools::is_valid(angle)) t1e1pp->set_angle(angle);
+      // double angle = datatools::invalid_real();
+      // if (_AMD_) _AMD_->process(pt1, pt2, angle);
+      // if (datatools::is_valid(angle)) t1e1pp->set_angle(angle);
 
       return;
     }
@@ -444,139 +448,139 @@ namespace snemo {
     void topology_driver::_fill_1eNg_topology_(const snemo::datamodel::particle_track_data & ptd_,
                                                snemo::datamodel::topology_data & td_)
     {
-      snemo::datamodel::topology_data::handle_pattern h_pattern;
-      snemo::datamodel::topology_1eNg_pattern * t1eNgp = new snemo::datamodel::topology_1eNg_pattern;
-      h_pattern.reset(t1eNgp);
-      td_.set_pattern_handle(h_pattern);
+      // snemo::datamodel::topology_data::handle_pattern h_pattern;
+      // snemo::datamodel::topology_1eNg_pattern * t1eNgp = new snemo::datamodel::topology_1eNg_pattern;
+      // h_pattern.reset(t1eNgp);
+      // td_.set_pattern_handle(h_pattern);
 
-      const datatools::properties & aux = ptd_.get_auxiliaries();
-      DT_THROW_IF(! aux.has_key(snemo::datamodel::pid_utils::gamma_label()),
-                  std::logic_error, "No gammas have been found in this event !");
-      t1eNgp->set_number_of_gammas(aux.fetch_integer(snemo::datamodel::pid_utils::gamma_label()));
+      // const datatools::properties & aux = ptd_.get_auxiliaries();
+      // DT_THROW_IF(! aux.has_key(snemo::datamodel::pid_utils::gamma_label()),
+      //             std::logic_error, "No gammas have been found in this event !");
+      // t1eNgp->set_number_of_gammas(aux.fetch_integer(snemo::datamodel::pid_utils::gamma_label()));
 
-      const snemo::datamodel::particle_track_data::particle_collection_type & the_particles
-        = ptd_.get_particles();
+      // const snemo::datamodel::particle_track_data::particle_collection_type & the_particles
+      //   = ptd_.get_particles();
 
-      for (snemo::datamodel::particle_track_data::particle_collection_type::const_iterator
-             i_particle = the_particles.begin();
-           i_particle != boost::prior(the_particles.end()); ++i_particle) {
-        for (snemo::datamodel::particle_track_data::particle_collection_type::const_iterator
-               j_particle = boost::next(i_particle);
-             j_particle != the_particles.end(); ++j_particle) {
+      // for (snemo::datamodel::particle_track_data::particle_collection_type::const_iterator
+      //        i_particle = the_particles.begin();
+      //      i_particle != boost::prior(the_particles.end()); ++i_particle) {
+      //   for (snemo::datamodel::particle_track_data::particle_collection_type::const_iterator
+      //          j_particle = boost::next(i_particle);
+      //        j_particle != the_particles.end(); ++j_particle) {
 
-          if(snemo::datamodel::pid_utils::particle_is_gamma(i_particle->get()) &&
-             snemo::datamodel::pid_utils::particle_is_gamma(j_particle->get()))
-            continue;
+      //     if(snemo::datamodel::pid_utils::particle_is_gamma(i_particle->get()) &&
+      //        snemo::datamodel::pid_utils::particle_is_gamma(j_particle->get()))
+      //       continue;
 
-          snemo::datamodel::topology_1eNg_pattern::TOF_collection_type & tofs
-            = t1eNgp->grab_TOF_collection();
-          {
-            snemo::datamodel::TOF_measurement dummy;
-            tofs.push_back(dummy);
-          }
-          snemo::datamodel::TOF_measurement & a_tof = tofs.back();
-          a_tof.set_particle_tracks(*i_particle, *j_particle);
-          if (_TOFD_) _TOFD_->process(i_particle->get(), j_particle->get(),
-                                      a_tof.grab_internal_probabilities(),
-                                      a_tof.grab_external_probabilities());
+      //     snemo::datamodel::topology_1eNg_pattern::TOF_collection_type & tofs
+      //       = t1eNgp->grab_TOF_collection();
+      //     {
+      //       snemo::datamodel::TOF_measurement dummy;
+      //       tofs.push_back(dummy);
+      //     }
+      //     snemo::datamodel::TOF_measurement & a_tof = tofs.back();
+      //     a_tof.set_particle_tracks(*i_particle, *j_particle);
+      //     if (_TOFD_) _TOFD_->process(i_particle->get(), j_particle->get(),
+      //                                 a_tof.grab_internal_probabilities(),
+      //                                 a_tof.grab_external_probabilities());
 
-          snemo::datamodel::topology_1eNg_pattern::angle_collection_type & angles
-            = t1eNgp->grab_angle_collection();
-          {
-            snemo::datamodel::angle_measurement dummy;
-            angles.push_back(dummy);
-          }
-          snemo::datamodel::angle_measurement & an_angle = angles.back();
-          an_angle.set_particle_tracks(*i_particle, *j_particle);
-          if (_AMD_) _AMD_->process(i_particle->get(), j_particle->get(),
-                                    an_angle.grab_angle());
-        }
-      }
-
-      {
-        // Extract electron energies
-        snemo::datamodel::particle_track_data::particle_collection_type electron_tracks;
-        const size_t nelectrons
-          = snemo::datamodel::pid_utils::fetch_particles(ptd_, electron_tracks,
-                                                         snemo::datamodel::pid_utils::electron_label());
-        DT_THROW_IF(nelectrons != 1, std::logic_error, "Number of electrons different from 1 !");
-
-        // Store geom_id to avoid double inclusion of energy deposited
-        double electron_energy;
-        datatools::minus_infinity(electron_energy);
-
-        const snemo::datamodel::particle_track & the_electron = electron_tracks.front().get();
-        if (! the_electron.has_associated_calorimeter_hits())
-          DT_LOG_DEBUG(get_logging_priority(),
-                       "Particle track is not associated to any calorimeter block !");
-
-        const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
-          the_calorimeters = the_electron.get_associated_calorimeter_hits();
-        if (the_calorimeters.size() > 2)
-          DT_LOG_DEBUG(get_logging_priority(),
-                       "The particle is associated to more than 2 calorimeters !");
-
-        // const snemo::datamodel::calibrated_calorimeter_hit & a_calo = the_calorimeters.front();
-        electron_energy = the_calorimeters.front().get().get_energy();
-        if (the_calorimeters.size() == 1 && ! datatools::is_minus_infinity(electron_energy))
-          t1eNgp->set_electron_energy(electron_energy);
-
-        // Extract gammas energies
-        snemo::datamodel::particle_track_data::particle_collection_type gamma_tracks;
-        const int ngammas = snemo::datamodel::pid_utils::fetch_particles(ptd_, gamma_tracks,
-                                                                         snemo::datamodel::pid_utils::gamma_label());
-        DT_THROW_IF(ngammas == 0 , std::logic_error, "No gammas in 1eNg topology !");
-
-        std::vector<double> gamma_energies;
-        for (snemo::datamodel::particle_track_data::particle_collection_type::const_iterator
-               iparticle = gamma_tracks.begin(); iparticle != gamma_tracks.end();
-             ++iparticle) {
-          const snemo::datamodel::particle_track & a_gamma = iparticle->get();
-          if (! a_gamma.has_associated_calorimeter_hits()) {
-            DT_LOG_DEBUG(get_logging_priority(),
-                         "A gamma has no associated calorimeter block !");
-            continue;
-          }
-          const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
-            the_calorimeters = a_gamma.get_associated_calorimeter_hits();
-
-          double a_gamma_energy = 0;
-          for (snemo::datamodel::calibrated_calorimeter_hit::collection_type::const_iterator
-                 icalo = the_calorimeters.begin(); icalo != the_calorimeters.end(); ++icalo) {
-            const snemo::datamodel::calibrated_calorimeter_hit & a_calo = icalo->get();
-            a_gamma_energy += a_calo.get_energy();
-          }
-          gamma_energies.push_back(a_gamma_energy);
-        }
-
-        // For now only up to three gammas is supported
-        if(ngammas == 1)
-          t1eNgp->set_gamma_max_energy(gamma_energies.back());
-        if(ngammas == 2) {
-          t1eNgp->set_gamma_max_energy(std::max(gamma_energies[0],gamma_energies[1]));
-          t1eNgp->set_gamma_min_energy(std::min(gamma_energies[0],gamma_energies[1]));
-        }
-        if(ngammas == 3) {
-          t1eNgp->set_gamma_max_energy(std::max(std::max(gamma_energies[0],gamma_energies[1]),gamma_energies[2]));
-          t1eNgp->set_gamma_mid_energy(std::max(std::min(gamma_energies[0],gamma_energies[1]),std::min(gamma_energies[1],gamma_energies[2])));
-          t1eNgp->set_gamma_min_energy(std::min(std::min(gamma_energies[0],gamma_energies[1]),gamma_energies[2]));
-        }
-
-      }
-
-      // std::cout << "Number of gammas : " << t1eNgp->get_number_of_gammas() << std::endl;
-      // if(t1eNgp->get_number_of_gammas() == 1) {
-      //   std::cout << "Emax : " << t1eNgp->get_gamma_max_energy() << std::endl;
+      //     snemo::datamodel::topology_1eNg_pattern::angle_collection_type & angles
+      //       = t1eNgp->grab_angle_collection();
+      //     {
+      //       snemo::datamodel::angle_measurement dummy;
+      //       angles.push_back(dummy);
+      //     }
+      //     snemo::datamodel::angle_measurement & an_angle = angles.back();
+      //     an_angle.set_particle_tracks(*i_particle, *j_particle);
+      //     if (_AMD_) _AMD_->process(i_particle->get(), j_particle->get(),
+      //                               an_angle.grab_angle());
+      //   }
       // }
-      // if(t1eNgp->get_number_of_gammas() == 2) {
-      //   std::cout << "Emax : " << t1eNgp->get_gamma_max_energy() << std::endl;
-      //   std::cout << "Emin : " << t1eNgp->get_gamma_min_energy() << std::endl;
+
+      // {
+      //   // Extract electron energies
+      //   snemo::datamodel::particle_track_data::particle_collection_type electron_tracks;
+      //   const size_t nelectrons
+      //     = snemo::datamodel::pid_utils::fetch_particles(ptd_, electron_tracks,
+      //                                                    snemo::datamodel::pid_utils::electron_label());
+      //   DT_THROW_IF(nelectrons != 1, std::logic_error, "Number of electrons different from 1 !");
+
+      //   // Store geom_id to avoid double inclusion of energy deposited
+      //   double electron_energy;
+      //   datatools::minus_infinity(electron_energy);
+
+      //   const snemo::datamodel::particle_track & the_electron = electron_tracks.front().get();
+      //   if (! the_electron.has_associated_calorimeter_hits())
+      //     DT_LOG_DEBUG(get_logging_priority(),
+      //                  "Particle track is not associated to any calorimeter block !");
+
+      //   const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
+      //     the_calorimeters = the_electron.get_associated_calorimeter_hits();
+      //   if (the_calorimeters.size() > 2)
+      //     DT_LOG_DEBUG(get_logging_priority(),
+      //                  "The particle is associated to more than 2 calorimeters !");
+
+      //   // const snemo::datamodel::calibrated_calorimeter_hit & a_calo = the_calorimeters.front();
+      //   electron_energy = the_calorimeters.front().get().get_energy();
+      //   if (the_calorimeters.size() == 1 && ! datatools::is_minus_infinity(electron_energy))
+      //     t1eNgp->set_electron_energy(electron_energy);
+
+      //   // Extract gammas energies
+      //   snemo::datamodel::particle_track_data::particle_collection_type gamma_tracks;
+      //   const int ngammas = snemo::datamodel::pid_utils::fetch_particles(ptd_, gamma_tracks,
+      //                                                                    snemo::datamodel::pid_utils::gamma_label());
+      //   DT_THROW_IF(ngammas == 0 , std::logic_error, "No gammas in 1eNg topology !");
+
+      //   std::vector<double> gamma_energies;
+      //   for (snemo::datamodel::particle_track_data::particle_collection_type::const_iterator
+      //          iparticle = gamma_tracks.begin(); iparticle != gamma_tracks.end();
+      //        ++iparticle) {
+      //     const snemo::datamodel::particle_track & a_gamma = iparticle->get();
+      //     if (! a_gamma.has_associated_calorimeter_hits()) {
+      //       DT_LOG_DEBUG(get_logging_priority(),
+      //                    "A gamma has no associated calorimeter block !");
+      //       continue;
+      //     }
+      //     const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
+      //       the_calorimeters = a_gamma.get_associated_calorimeter_hits();
+
+      //     double a_gamma_energy = 0;
+      //     for (snemo::datamodel::calibrated_calorimeter_hit::collection_type::const_iterator
+      //            icalo = the_calorimeters.begin(); icalo != the_calorimeters.end(); ++icalo) {
+      //       const snemo::datamodel::calibrated_calorimeter_hit & a_calo = icalo->get();
+      //       a_gamma_energy += a_calo.get_energy();
+      //     }
+      //     gamma_energies.push_back(a_gamma_energy);
+      //   }
+
+      //   // For now only up to three gammas is supported
+      //   if(ngammas == 1)
+      //     t1eNgp->set_gamma_max_energy(gamma_energies.back());
+      //   if(ngammas == 2) {
+      //     t1eNgp->set_gamma_max_energy(std::max(gamma_energies[0],gamma_energies[1]));
+      //     t1eNgp->set_gamma_min_energy(std::min(gamma_energies[0],gamma_energies[1]));
+      //   }
+      //   if(ngammas == 3) {
+      //     t1eNgp->set_gamma_max_energy(std::max(std::max(gamma_energies[0],gamma_energies[1]),gamma_energies[2]));
+      //     t1eNgp->set_gamma_mid_energy(std::max(std::min(gamma_energies[0],gamma_energies[1]),std::min(gamma_energies[1],gamma_energies[2])));
+      //     t1eNgp->set_gamma_min_energy(std::min(std::min(gamma_energies[0],gamma_energies[1]),gamma_energies[2]));
+      //   }
+
       // }
-      // if(t1eNgp->get_number_of_gammas() == 3) {
-      //   std::cout << "Emax : " << t1eNgp->get_gamma_max_energy() << std::endl;
-      //   std::cout << "Emid : " << t1eNgp->get_gamma_mid_energy() << std::endl;
-      //   std::cout << "Emin : " << t1eNgp->get_gamma_min_energy() << std::endl;
-      // }
+
+      // // std::cout << "Number of gammas : " << t1eNgp->get_number_of_gammas() << std::endl;
+      // // if(t1eNgp->get_number_of_gammas() == 1) {
+      // //   std::cout << "Emax : " << t1eNgp->get_gamma_max_energy() << std::endl;
+      // // }
+      // // if(t1eNgp->get_number_of_gammas() == 2) {
+      // //   std::cout << "Emax : " << t1eNgp->get_gamma_max_energy() << std::endl;
+      // //   std::cout << "Emin : " << t1eNgp->get_gamma_min_energy() << std::endl;
+      // // }
+      // // if(t1eNgp->get_number_of_gammas() == 3) {
+      // //   std::cout << "Emax : " << t1eNgp->get_gamma_max_energy() << std::endl;
+      // //   std::cout << "Emid : " << t1eNgp->get_gamma_mid_energy() << std::endl;
+      // //   std::cout << "Emin : " << t1eNgp->get_gamma_min_energy() << std::endl;
+      // // }
 
         return;
     }
@@ -646,39 +650,39 @@ namespace snemo {
     void topology_driver::_fill_1e1a_topology_(const snemo::datamodel::particle_track_data & ptd_,
                                                snemo::datamodel::topology_data & td_)
     {
-      snemo::datamodel::topology_data::handle_pattern h_pattern;
-      snemo::datamodel::topology_1e1a_pattern * t1e1ap = new snemo::datamodel::topology_1e1a_pattern;
-      h_pattern.reset(t1e1ap);
-      td_.set_pattern_handle(h_pattern);
+      // snemo::datamodel::topology_data::handle_pattern h_pattern;
+      // snemo::datamodel::topology_1e1a_pattern * t1e1ap = new snemo::datamodel::topology_1e1a_pattern;
+      // h_pattern.reset(t1e1ap);
+      // td_.set_pattern_handle(h_pattern);
 
-      const snemo::datamodel::particle_track_data::particle_collection_type & the_particles
-        = ptd_.get_particles();
-      const snemo::datamodel::particle_track & pt1 = the_particles.front().get();
-      const snemo::datamodel::particle_track & pt2 = the_particles.back().get();
+      // const snemo::datamodel::particle_track_data::particle_collection_type & the_particles
+      //   = ptd_.get_particles();
+      // const snemo::datamodel::particle_track & pt1 = the_particles.front().get();
+      // const snemo::datamodel::particle_track & pt2 = the_particles.back().get();
 
-      double delta_vertices_y = datatools::invalid_real();
-      double delta_vertices_z = datatools::invalid_real();
-      if (_DVD_) _DVD_->process(pt1, pt2, delta_vertices_y, delta_vertices_z);
-      if (datatools::is_valid(delta_vertices_y)) t1e1ap->set_delta_vertices_y(delta_vertices_y);
-      if (datatools::is_valid(delta_vertices_z)) t1e1ap->set_delta_vertices_z(delta_vertices_z);
+      // double delta_vertices_y = datatools::invalid_real();
+      // double delta_vertices_z = datatools::invalid_real();
+      // if (_DVD_) _DVD_->process(pt1, pt2, delta_vertices_y, delta_vertices_z);
+      // if (datatools::is_valid(delta_vertices_y)) t1e1ap->set_delta_vertices_y(delta_vertices_y);
+      // if (datatools::is_valid(delta_vertices_z)) t1e1ap->set_delta_vertices_z(delta_vertices_z);
 
-      double angle = datatools::invalid_real();
-      if (_AMD_) _AMD_->process(pt1, pt2, angle);
-      if (datatools::is_valid(angle)) t1e1ap->set_angle(angle);
+      // double angle = datatools::invalid_real();
+      // if (_AMD_) _AMD_->process(pt1, pt2, angle);
+      // if (datatools::is_valid(angle)) t1e1ap->set_angle(angle);
 
-      for (snemo::datamodel::particle_track_data::particle_collection_type::const_iterator
-             iparticle = the_particles.begin(); iparticle != the_particles.end();
-           ++iparticle) {
-        const snemo::datamodel::particle_track & a_particle = iparticle->get();
-        if (snemo::datamodel::pid_utils::particle_is_alpha(a_particle)) {
-          DT_THROW_IF(t1e1ap->has_alpha_particle(), std::logic_error, "More than 1 alpha particle !");
-          t1e1ap->set_alpha_particle(*iparticle);
-        }
-        if (snemo::datamodel::pid_utils::particle_is_electron(a_particle)) {
-          DT_THROW_IF(t1e1ap->has_electron_particle(), std::logic_error, "More than 1 electron particle !");
-          t1e1ap->set_electron_particle(*iparticle);
-        }
-      }
+      // for (snemo::datamodel::particle_track_data::particle_collection_type::const_iterator
+      //        iparticle = the_particles.begin(); iparticle != the_particles.end();
+      //      ++iparticle) {
+      //   const snemo::datamodel::particle_track & a_particle = iparticle->get();
+      //   if (snemo::datamodel::pid_utils::particle_is_alpha(a_particle)) {
+      //     DT_THROW_IF(t1e1ap->has_alpha_particle(), std::logic_error, "More than 1 alpha particle !");
+      //     t1e1ap->set_alpha_particle(*iparticle);
+      //   }
+      //   if (snemo::datamodel::pid_utils::particle_is_electron(a_particle)) {
+      //     DT_THROW_IF(t1e1ap->has_electron_particle(), std::logic_error, "More than 1 electron particle !");
+      //     t1e1ap->set_electron_particle(*iparticle);
+      //   }
+      // }
 
       return;
     }

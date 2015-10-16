@@ -26,7 +26,7 @@ namespace snemo {
     public:
 
       /// Return pattern identifier of the pattern
-      static const std::string & pattern_id();
+      const std::string & pattern_id();
 
       /// Constructor
       topology_2eNg_pattern();

@@ -18,7 +18,7 @@
 #include <bayeux/datatools/i_tree_dump.h>
 
 #include <falaise/snemo/datamodels/particle_track.h>
-#include <base_topology_measurement.h>
+#include <falaise/snemo/datamodels/base_topology_measurement.h>
 
 namespace snemo {
 
@@ -32,7 +32,7 @@ namespace snemo {
 
       typedef std::map<std::string,  particle_track::handle_type> particle_tracks_dict_type;
 
-      typedef datatools::handle<base_measurement> handle_measurement;
+      typedef datatools::handle<base_topology_measurement> handle_measurement;
 
       typedef std::map<std::string, handle_measurement> measurement_dict_type;
 

@@ -28,7 +28,7 @@ namespace snemo {
     public:
 
       /// Return pattern identifier of the pattern
-      static const std::string & pattern_id();
+      const std::string & pattern_id();
 
       /// Constructor
       topology_2e_pattern();
@@ -39,11 +39,11 @@ namespace snemo {
       /// Check if topology is valid
       bool is_valid() const;
 
-      virtual void build_particle_tracks_dictionary(const snemo::datamodel::particle_track_data::particle_collection_type & the_particles_,
-                                      snemo::datamodel::base_topology_pattern::measurement_particle_tracks_type & particle_tracks_dict_);
+      // virtual void build_particle_tracks_dictionary(const snemo::datamodel::particle_track_data::particle_collection_type & the_particles_,
+      //                                 snemo::datamodel::base_topology_pattern::measurement_particle_tracks_type & particle_tracks_dict_);
 
-      virtual void build_measurement_dictionary(const snemo::datamodel::particle_track_data::particle_collection_type & the_particles_,
-                                      snemo::datamodel::base_topology_pattern::measurement_particle_tracks_type & particle_tracks_dict_);
+      // virtual void build_measurement_dictionary(const snemo::datamodel::particle_track_data::particle_collection_type & the_particles_,
+      //                                 snemo::datamodel::base_topology_pattern::measurement_particle_tracks_type & particle_tracks_dict_);
 
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,

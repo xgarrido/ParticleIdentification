@@ -37,6 +37,8 @@
 // - Bayeux/datatools:
 #include <datatools/logger.h>
 
+#include <falaise/snemo/datamodels/topology_data.h>
+
 namespace snemo {
 
   namespace datamodel {
