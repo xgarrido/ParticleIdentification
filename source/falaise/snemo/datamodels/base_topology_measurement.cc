@@ -12,20 +12,8 @@ namespace snemo {
     DATATOOLS_SERIALIZATION_SERIAL_TAG_IMPLEMENTATION(base_topology_measurement,
                                                       "snemo::datamodel::base_topology_measurement")
 
-    virtual void base_topology_measurement::register_particle_track_id(const std::string & id_)
+    base_topology_measurement::base_topology_measurement()
     {
-      _particle_track_ids_.push_back(id_);
-      return;
-    }
-
-    virtual const std::vector<std::string> & base_topology_measurement::particle_track_ids() const
-    {
-      return _particle_track_ids_;
-    }
-
-    base_topology_measurement::base_topology_measurement(const std::string & id_)
-    {
-      register_particle_track_id(id_);
       return;
     }
 
@@ -46,15 +34,6 @@ namespace snemo {
       if (! title_.empty()) {
         out_ << indent << title_ << std::endl;
       }
-
-      out_ << indent << datatools::i_tree_dumpable::tag
-           << "Pattern ID : ";
-      if(! has_pattern_id()) {
-        out_ << "<none>";
-      } else {
-        out_ << "'" << get_pattern_id() << "'";
-      }
-      out_ << std::endl;
       return;
     }
 

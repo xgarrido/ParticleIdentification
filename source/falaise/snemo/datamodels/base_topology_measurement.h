@@ -23,16 +23,12 @@ namespace snemo {
 
     /// \brief The base class of reconstructed topology
     class base_topology_measurement : DATATOOLS_SERIALIZABLE_CLASS,
-                                  public datatools::i_tree_dumpable
+                                      public datatools::i_tree_dumpable
     {
     public:
 
-      virtual void register_particle_track_id(const std::string & id_);
-
-      virtual const std::vector<std::string> & get_particle_tracks_ids() const;
-
       /// Constructor
-      base_topology_measurement(const std::string & id_ = "");
+      base_topology_measurement();
 
       /// Destructor
       virtual ~base_topology_measurement();
@@ -44,8 +40,6 @@ namespace snemo {
                              bool inherit_               = false) const;
 
     private:
-
-      std::vector<std::string> _particle_tracks_ids_;
 
       DATATOOLS_SERIALIZATION_DECLARATION();
 

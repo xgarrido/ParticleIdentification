@@ -17,6 +17,7 @@
 #include <bayeux/datatools/i_serializable.h>
 #include <bayeux/datatools/i_tree_dump.h>
 
+// This project:
 #include <falaise/snemo/datamodels/particle_track.h>
 #include <falaise/snemo/datamodels/base_topology_measurement.h>
 
@@ -30,7 +31,8 @@ namespace snemo {
     {
     public:
 
-      typedef std::map<std::string,  particle_track::handle_type> particle_tracks_dict_type;
+      ///
+      typedef std::map<std::string, particle_track::handle_type> particle_tracks_dict_type;
 
       typedef datatools::handle<base_topology_measurement> handle_measurement;
 
@@ -38,29 +40,16 @@ namespace snemo {
 
       virtual std::string pattern_id() const = 0;
 
-      virtual void build_particle_tracks_dictionary() const = 0;
+      particle_tracks_dict_type & grab_particle_tracks_dictionary();
 
-      virtual void build_measurement_dictionary() const = 0;
+      const particle_tracks_dict_type & get_particle_tracks_dictionary() const;
 
-      particle_tracks_dict_type & grab_particle_tracks_dictionary() {
-        return _tracks_;
-      }
+      measurement_dict_type & grab_measurement_dictionary();
 
-      measurement_dict_type & grab_measurement_dictionary() {
-        return _meas_;
-      }
-      /// Check if a valid pattern ID exists
-      bool has_pattern_id() const;
-
-      /// Return the pattern ID
-      const std::string & get_pattern_id() const;
-
-      virtual void build_particle_tracks_dictionary(std::map<std::string, particle_track::handle_type> & tracks_) const = 0;
-
-      virtual void build_measurement_dictionary(std::map<std::string, const base_topology_measurement *> & meas_) const = 0;
+      const measurement_dict_type & get_measurement_dictionary() const;
 
       /// Constructor
-      base_topology_pattern(const std::string & pattern_id_ = "");
+      base_topology_pattern();
 
       /// Destructor
       virtual ~base_topology_pattern();
@@ -71,14 +60,8 @@ namespace snemo {
                              const std::string & indent_ = "",
                              bool inherit_               = false) const;
 
-    protected:
-
-      /// Set the pattern ID
-      void _set_pattern_id(const std::string & pattern_id_);
-
     private:
 
-      std::string _pattern_id_; //!< The pattern identifier
       particle_tracks_dict_type _tracks_;
       measurement_dict_type _meas_;
 

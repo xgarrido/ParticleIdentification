@@ -26,33 +26,35 @@ list(APPEND FalaiseParticleIdentificationPlugin_HEADERS
   source/falaise/snemo/reconstruction/tof_driver.h
   source/falaise/snemo/reconstruction/delta_vertices_driver.h
   source/falaise/snemo/reconstruction/angle_measurement_driver.h
-  source/falaise/snemo/cuts/topology_data_cut.h
-  # source/falaise/snemo/cuts/channel_2e_cut.h
-  # source/falaise/snemo/cuts/channel_1e1p_cut.h
-  # source/falaise/snemo/cuts/channel_1eNg_cut.h
-  # source/falaise/snemo/cuts/channel_2eNg_cut.h
-  source/falaise/snemo/cuts/pid_cut.h
+  source/falaise/snemo/reconstruction/base_topology_builder.h
+  source/falaise/snemo/reconstruction/topology_2e_builder.h
+  # source/falaise/snemo/cuts/topology_data_cut.h
+  # # source/falaise/snemo/cuts/channel_2e_cut.h
+  # # source/falaise/snemo/cuts/channel_1e1p_cut.h
+  # # source/falaise/snemo/cuts/channel_1eNg_cut.h
+  # # source/falaise/snemo/cuts/channel_2eNg_cut.h
+  # source/falaise/snemo/cuts/pid_cut.h
   source/falaise/snemo/datamodels/topology_data.h
-  source/falaise/snemo/datamodels/topology_data.ipp
-  source/falaise/snemo/datamodels/the_serializable_bis.h
-  source/falaise/snemo/datamodels/the_serializable_bis.ipp
+  # source/falaise/snemo/datamodels/topology_data.ipp
+  # source/falaise/snemo/datamodels/the_serializable_bis.h
+  # source/falaise/snemo/datamodels/the_serializable_bis.ipp
   source/falaise/snemo/datamodels/base_topology_pattern.h
-  source/falaise/snemo/datamodels/base_topology_pattern.ipp
-  # source/falaise/snemo/datamodels/topology_1e_pattern.h
-  # source/falaise/snemo/datamodels/topology_1e_pattern.ipp
-  source/falaise/snemo/datamodels/topology_2e_pattern.h
-  source/falaise/snemo/datamodels/topology_2e_pattern.ipp
-  # source/falaise/snemo/datamodels/topology_1eNg_pattern.h
-  # source/falaise/snemo/datamodels/topology_1eNg_pattern.ipp
-  source/falaise/snemo/datamodels/topology_2eNg_pattern.h
-  source/falaise/snemo/datamodels/topology_2eNg_pattern.ipp
-  # source/falaise/snemo/datamodels/topology_1e1a_pattern.h
-  # source/falaise/snemo/datamodels/topology_1e1a_pattern.ipp
-  # source/falaise/snemo/datamodels/topology_1e1p_pattern.h
-  # source/falaise/snemo/datamodels/topology_1e1p_pattern.ipp
-  source/falaise/snemo/datamodels/topology_measurement.h
-  source/falaise/snemo/datamodels/topology_measurement.ipp
-  source/falaise/snemo/datamodels/pid_utils.h
+  # source/falaise/snemo/datamodels/base_topology_pattern.ipp
+  # # source/falaise/snemo/datamodels/topology_1e_pattern.h
+  # # source/falaise/snemo/datamodels/topology_1e_pattern.ipp
+  # source/falaise/snemo/datamodels/topology_2e_pattern.h
+  # source/falaise/snemo/datamodels/topology_2e_pattern.ipp
+  # # source/falaise/snemo/datamodels/topology_1eNg_pattern.h
+  # # source/falaise/snemo/datamodels/topology_1eNg_pattern.ipp
+  # source/falaise/snemo/datamodels/topology_2eNg_pattern.h
+  # source/falaise/snemo/datamodels/topology_2eNg_pattern.ipp
+  # # source/falaise/snemo/datamodels/topology_1e1a_pattern.h
+  # # source/falaise/snemo/datamodels/topology_1e1a_pattern.ipp
+  # # source/falaise/snemo/datamodels/topology_1e1p_pattern.h
+  # # source/falaise/snemo/datamodels/topology_1e1p_pattern.ipp
+  source/falaise/snemo/datamodels/base_topology_measurement.h
+  # source/falaise/snemo/datamodels/topology_measurement.ipp
+  # source/falaise/snemo/datamodels/pid_utils.h
   )
 
 # - Sources:
@@ -64,23 +66,25 @@ list(APPEND FalaiseParticleIdentificationPlugin_SOURCES
   source/falaise/snemo/reconstruction/tof_driver.cc
   source/falaise/snemo/reconstruction/delta_vertices_driver.cc
   source/falaise/snemo/reconstruction/angle_measurement_driver.cc
-  source/falaise/snemo/cuts/topology_data_cut.cc
-  # source/falaise/snemo/cuts/channel_2e_cut.cc
-  # source/falaise/snemo/cuts/channel_1e1p_cut.cc
-  # source/falaise/snemo/cuts/channel_1eNg_cut.cc
-  # source/falaise/snemo/cuts/channel_2eNg_cut.cc
-  source/falaise/snemo/cuts/pid_cut.cc
+  source/falaise/snemo/reconstruction/base_topology_builder.cc
+  source/falaise/snemo/reconstruction/topology_2e_builder.cc
+  # source/falaise/snemo/cuts/topology_data_cut.cc
+  # # source/falaise/snemo/cuts/channel_2e_cut.cc
+  # # source/falaise/snemo/cuts/channel_1e1p_cut.cc
+  # # source/falaise/snemo/cuts/channel_1eNg_cut.cc
+  # # source/falaise/snemo/cuts/channel_2eNg_cut.cc
+  # source/falaise/snemo/cuts/pid_cut.cc
   source/falaise/snemo/datamodels/topology_data.cc
-  source/falaise/snemo/datamodels/the_serializable_bis.cc
+  # source/falaise/snemo/datamodels/the_serializable_bis.cc
   source/falaise/snemo/datamodels/base_topology_pattern.cc
-  # source/falaise/snemo/datamodels/topology_1e_pattern.cc
-  source/falaise/snemo/datamodels/topology_2e_pattern.cc
-  # source/falaise/snemo/datamodels/topology_1eNg_pattern.cc
-  source/falaise/snemo/datamodels/topology_2eNg_pattern.cc
-  # source/falaise/snemo/datamodels/topology_1e1a_pattern.cc
-  # source/falaise/snemo/datamodels/topology_1e1p_pattern.cc
-  source/falaise/snemo/datamodels/topology_measurement.cc
-  source/falaise/snemo/datamodels/pid_utils.cc
+  # # source/falaise/snemo/datamodels/topology_1e_pattern.cc
+  # source/falaise/snemo/datamodels/topology_2e_pattern.cc
+  # # source/falaise/snemo/datamodels/topology_1eNg_pattern.cc
+  # source/falaise/snemo/datamodels/topology_2eNg_pattern.cc
+  # # source/falaise/snemo/datamodels/topology_1e1a_pattern.cc
+  # # source/falaise/snemo/datamodels/topology_1e1p_pattern.cc
+  source/falaise/snemo/datamodels/base_topology_measurement.cc
+  # source/falaise/snemo/datamodels/pid_utils.cc
   )
 
 ###########################################################################################

@@ -13,10 +13,10 @@
 #include <falaise/snemo/datamodels/pid_utils.h>
 
 // #include <falaise/snemo/datamodels/topology_1e_pattern.h>
-#include <falaise/snemo/datamodels/topology_2e_pattern.h>
+// #include <falaise/snemo/datamodels/topology_2e_pattern.h>
 // #include <falaise/snemo/datamodels/topology_1e1p_pattern.h>
 // #include <falaise/snemo/datamodels/topology_1eNg_pattern.h>
-#include <falaise/snemo/datamodels/topology_2eNg_pattern.h>
+// #include <falaise/snemo/datamodels/topology_2eNg_pattern.h>
 // #include <falaise/snemo/datamodels/topology_1e1a_pattern.h>
 
 #include <snemo/datamodels/pid_utils.h>
@@ -159,56 +159,56 @@ namespace snemo {
     {
       DT_LOG_TRACE(get_logging_priority(), "Entering...");
 
-      const std::string a_classification = topology_driver::_build_classification_(ptd_);
-      DT_LOG_TRACE(get_logging_priority(), "Event classification : " << a_classification);
+      // const std::string a_classification = topology_driver::_build_classification_(ptd_);
+      // DT_LOG_TRACE(get_logging_priority(), "Event classification : " << a_classification);
 
-      if (a_classification == "1e") {
-        DT_LOG_NOTICE(get_logging_priority(), "Fill '1e' topology");
-        this->_fill_1e_topology_(ptd_, td_);
-      }
-      else if (a_classification == "2e") {
-        DT_LOG_NOTICE(get_logging_priority(), "Fill '2e' topology");
-        snemo::datamodel::topology_data::handle_pattern h_pattern;
-        h_pattern.reset(new snemo::datamodel::topology_2e_pattern);
-        td_.set_pattern_handle(h_pattern);
-        this->_fill_2e_topology_(ptd_, h_pattern->get());
-      }
-      else if (a_classification == "1e1p") {
-        DT_LOG_NOTICE(get_logging_priority(), "Fill '1e1p' topology");
-        this->_fill_1e1p_topology_(ptd_, td_);
-      }
-      else if (a_classification == "1e1g" ||
-               a_classification == "1e2g" ||
-               a_classification == "1e3g" ||
-               a_classification == "1e4g" ||
-               a_classification == "1e5g") {
-        DT_LOG_NOTICE(get_logging_priority(), "Fill '1eNg' topology");
-        this->_fill_1eNg_topology_(ptd_, td_);
-      }
-      else if (a_classification == "2e1g" ||
-               a_classification == "2e2g" ||
-               a_classification == "2e3g" ||
-               a_classification == "2e4g" ||
-               a_classification == "2e5g") {
-        DT_LOG_NOTICE(get_logging_priority(), "Fill '2eNg' topology");
-        snemo::datamodel::topology_data::handle_pattern h_pattern;
-        h_pattern.reset(new snemo::datamodel::topology_2eNg_pattern);
-        td_.set_pattern_handle(h_pattern);
-        this->_fill_2eNg_topology_(ptd_, h_pattern->get());
-      }
-      else if (a_classification == "1e1a") {
-        DT_LOG_NOTICE(get_logging_priority(), "Fill '1e1a' topology");
-        this->_fill_1e1a_topology_(ptd_, td_);
-      }
-      else {
-        // DT_LOG_WARNING(get_logging_priority(),
-        //                "Event classification '" << a_classification << "' unsupported !");
-      }
+      // if (a_classification == "1e") {
+      //   DT_LOG_NOTICE(get_logging_priority(), "Fill '1e' topology");
+      //   this->_fill_1e_topology_(ptd_, td_);
+      // }
+      // else if (a_classification == "2e") {
+      //   DT_LOG_NOTICE(get_logging_priority(), "Fill '2e' topology");
+      //   snemo::datamodel::topology_data::handle_pattern h_pattern;
+      //   h_pattern.reset(new snemo::datamodel::topology_2e_pattern);
+      //   td_.set_pattern_handle(h_pattern);
+      //   this->_fill_2e_topology_(ptd_, h_pattern->get());
+      // }
+      // else if (a_classification == "1e1p") {
+      //   DT_LOG_NOTICE(get_logging_priority(), "Fill '1e1p' topology");
+      //   this->_fill_1e1p_topology_(ptd_, td_);
+      // }
+      // else if (a_classification == "1e1g" ||
+      //          a_classification == "1e2g" ||
+      //          a_classification == "1e3g" ||
+      //          a_classification == "1e4g" ||
+      //          a_classification == "1e5g") {
+      //   DT_LOG_NOTICE(get_logging_priority(), "Fill '1eNg' topology");
+      //   this->_fill_1eNg_topology_(ptd_, td_);
+      // }
+      // else if (a_classification == "2e1g" ||
+      //          a_classification == "2e2g" ||
+      //          a_classification == "2e3g" ||
+      //          a_classification == "2e4g" ||
+      //          a_classification == "2e5g") {
+      //   DT_LOG_NOTICE(get_logging_priority(), "Fill '2eNg' topology");
+      //   snemo::datamodel::topology_data::handle_pattern h_pattern;
+      //   h_pattern.reset(new snemo::datamodel::topology_2eNg_pattern);
+      //   td_.set_pattern_handle(h_pattern);
+      //   this->_fill_2eNg_topology_(ptd_, h_pattern->get());
+      // }
+      // else if (a_classification == "1e1a") {
+      //   DT_LOG_NOTICE(get_logging_priority(), "Fill '1e1a' topology");
+      //   this->_fill_1e1a_topology_(ptd_, td_);
+      // }
+      // else {
+      //   // DT_LOG_WARNING(get_logging_priority(),
+      //   //                "Event classification '" << a_classification << "' unsupported !");
+      // }
 
-      if (get_logging_priority() >= datatools::logger::PRIO_DEBUG) {
-        DT_LOG_DEBUG(get_logging_priority(), "Topology data dump :");
-        td_.tree_dump();
-      }
+      // if (get_logging_priority() >= datatools::logger::PRIO_DEBUG) {
+      //   DT_LOG_DEBUG(get_logging_priority(), "Topology data dump :");
+      //   td_.tree_dump();
+      // }
 
       DT_LOG_TRACE(get_logging_priority(), "Exiting.");
       return 0;
@@ -284,51 +284,51 @@ namespace snemo {
     void topology_driver::_fill_2e_topology_(const snemo::datamodel::particle_track_data & ptd_,
                                              snemo::datamodel::topology_data::handle_pattern & h_pattern_)
     {
-      const snemo::datamodel::particle_track_data::particle_collection_type & the_particles
-        = ptd_.get_particles();
+      // const snemo::datamodel::particle_track_data::particle_collection_type & the_particles
+      //   = ptd_.get_particles();
 
-      snemo::datamodel::base_topology_pattern::particle_tracks_dict_type & particle_tracks_dict = h_pattern_->grab_particle_tracks_dictionary();
+      // snemo::datamodel::base_topology_pattern::particle_tracks_dict_type & particle_tracks_dict = h_pattern_->grab_particle_tracks_dictionary();
 
-      h_pattern->build_particle_tracks_dictionary(the_particles, particle_tracks_dict);
+      // h_pattern->build_particle_tracks_dictionary(the_particles, particle_tracks_dict);
 
-      const snemo::datamodel::particle_track & e1 = particle_tracks_dict_["e1"];
-      const snemo::datamodel::particle_track & e2 = particle_tracks_dict_["e2"];
+      // const snemo::datamodel::particle_track & e1 = particle_tracks_dict_["e1"];
+      // const snemo::datamodel::particle_track & e2 = particle_tracks_dict_["e2"];
 
-      snemo::datamodel::base_topology_pattern::measurement_dict_type & meas_dict = h_pattern_->grab_measurement_dictionary();
+      // snemo::datamodel::base_topology_pattern::measurement_dict_type & meas_dict = h_pattern_->grab_measurement_dictionary();
 
-      {
-        snemo::datamodel::TOF_measurement * ptr_tof = new snemo::datamodel::TOF_measurement;
-        meas_dict["tof_e1_e2"].reset(ptr_tof);
-        if (_TOFD_) _TOFD_->process(e1, e2,
-                                    ptr_tof->grab_internal_probabilities(),
-                                    ptr_tof->grab_external_probabilities());
-      }
+      // {
+      //   snemo::datamodel::TOF_measurement * ptr_tof = new snemo::datamodel::TOF_measurement;
+      //   meas_dict["tof_e1_e2"].reset(ptr_tof);
+      //   if (_TOFD_) _TOFD_->process(e1, e2,
+      //                               ptr_tof->grab_internal_probabilities(),
+      //                               ptr_tof->grab_external_probabilities());
+      // }
 
-      {
-        snemo::datamodel::delta_vertices_measurement * ptr_delta_vertices_source = new snemo::datamodel::delta_vertices_measurement;
-        meas_dict["delta_vertices_source_e1_e2"].reset(ptr_delta_vertices_source);
-        if (_DVD_) _DVD_->process(e1, e2,
-                                  ptr_delta_vertices_source->grab_internal_probabilities(),
-                                  ptr_delta_vertices_source->grab_external_probabilities());
-      }
+      // {
+      //   snemo::datamodel::delta_vertices_measurement * ptr_delta_vertices_source = new snemo::datamodel::delta_vertices_measurement;
+      //   meas_dict["delta_vertices_source_e1_e2"].reset(ptr_delta_vertices_source);
+      //   if (_DVD_) _DVD_->process(e1, e2,
+      //                             ptr_delta_vertices_source->grab_internal_probabilities(),
+      //                             ptr_delta_vertices_source->grab_external_probabilities());
+      // }
 
-      {
-        snemo::datamodel::angle_measurement * ptr_angle = new snemo::datamodel::angle_measurement;
-        meas_dict["angle_e1_e2"].reset(ptr_angle);
-        if (_AMD_) _AMD_->process(e1, e2, ptr_angle->grab_angle());
-      }
+      // {
+      //   snemo::datamodel::angle_measurement * ptr_angle = new snemo::datamodel::angle_measurement;
+      //   meas_dict["angle_e1_e2"].reset(ptr_angle);
+      //   if (_AMD_) _AMD_->process(e1, e2, ptr_angle->grab_angle());
+      // }
 
-      {
-        snemo::datamodel::energy_measurement * ptr_energy = new snemo::datamodel::energy_measurement;
-        meas_dict["energy_e1"].reset(ptr_energy);
-        if (_EMD_) _EMD_->process(e1, ptr_energy->grab_energy());
-      }
+      // {
+      //   snemo::datamodel::energy_measurement * ptr_energy = new snemo::datamodel::energy_measurement;
+      //   meas_dict["energy_e1"].reset(ptr_energy);
+      //   if (_EMD_) _EMD_->process(e1, ptr_energy->grab_energy());
+      // }
 
-      {
-        snemo::datamodel::energy_measurement * ptr_energy = new snemo::datamodel::energy_measurement;
-        meas_dict["energy_e2"].reset(ptr_energy);
-        if (_EMD_) _EMD_->process(e2, ptr_energy->grab_energy());
-      }
+      // {
+      //   snemo::datamodel::energy_measurement * ptr_energy = new snemo::datamodel::energy_measurement;
+      //   meas_dict["energy_e2"].reset(ptr_energy);
+      //   if (_EMD_) _EMD_->process(e2, ptr_energy->grab_energy());
+      // }
 
       return;
     }
@@ -336,80 +336,80 @@ namespace snemo {
     void topology_driver::_fill_2eNg_topology_(const snemo::datamodel::particle_track_data & ptd_,
                                                snemo::datamodel::topology_data::handle_pattern & h_pattern_)
     {
-      const datatools::properties & aux = ptd_.get_auxiliaries();
-      DT_THROW_IF(! aux.has_key(snemo::datamodel::pid_utils::gamma_label()),
-                  std::logic_error, "No gammas have been found in this event !");
-      h_pattern_->set_number_of_gammas(aux.fetch_integer(snemo::datamodel::pid_utils::gamma_label()));
+      // const datatools::properties & aux = ptd_.get_auxiliaries();
+      // DT_THROW_IF(! aux.has_key(snemo::datamodel::pid_utils::gamma_label()),
+      //             std::logic_error, "No gammas have been found in this event !");
+      // h_pattern_->set_number_of_gammas(aux.fetch_integer(snemo::datamodel::pid_utils::gamma_label()));
 
-      const snemo::datamodel::particle_track_data::particle_collection_type & the_particles
-        = ptd_.get_particles();
-
-
-      // h_pattern->build_particle_tracks_dictionary(the_particles, particle_tracks_dict); // already called in 2e
+      // const snemo::datamodel::particle_track_data::particle_collection_type & the_particles
+      //   = ptd_.get_particles();
 
 
-      _fill_2e_topology_(ptd_, h_pattern_->get());
+      // // h_pattern->build_particle_tracks_dictionary(the_particles, particle_tracks_dict); // already called in 2e
 
-      //could be a get instead of a grab
-      snemo::datamodel::base_topology_pattern::particle_tracks_dict_type & particle_tracks_dict = h_pattern_->grab_particle_tracks_dictionary();
 
-      const snemo::datamodel::particle_track & e1 = particle_tracks_dict_["e1"];
-      const snemo::datamodel::particle_track & e2 = particle_tracks_dict_["e2"];
+      // _fill_2e_topology_(ptd_, h_pattern_->get());
 
-      snemo::datamodel::base_topology_pattern::measurement_dict_type & meas_dict = t2ep->grab_measurement_dictionary();
+      // //could be a get instead of a grab
+      // snemo::datamodel::base_topology_pattern::particle_tracks_dict_type & particle_tracks_dict = h_pattern_->grab_particle_tracks_dictionary();
 
-      for (size_t i_gamma = 1; i_gamma <= h_pattern_->get_number_of_gammas();++i_gamma) {
-        std::ostringstream key;
-        key << "g" << i_gamma;
-        const snemo::datamodel::particle_track & gamma = particle_tracks_dict_[key];
+      // const snemo::datamodel::particle_track & e1 = particle_tracks_dict_["e1"];
+      // const snemo::datamodel::particle_track & e2 = particle_tracks_dict_["e2"];
 
-        {
-          snemo::datamodel::TOF_measurement * ptr_tof = new snemo::datamodel::TOF_measurement;
-          std::ostringstream key_meas;
-          key_meas << "tof_e1_" << key;
-          meas_dict[key_meas].reset(ptr_tof);
-          if (_TOFD_) _TOFD_->process(e1, gamma,
-                                      ptr_tof->grab_internal_probabilities(),
-                                      ptr_tof->grab_external_probabilities());
-        }
+      // snemo::datamodel::base_topology_pattern::measurement_dict_type & meas_dict = t2ep->grab_measurement_dictionary();
 
-        {
-          snemo::datamodel::TOF_measurement * ptr_tof = new snemo::datamodel::TOF_measurement;
-          std::ostringstream key_meas;
-          key_meas << "tof_e2_" << key;
-          meas_dict[key_meas].reset(ptr_tof);
-          if (_TOFD_) _TOFD_->process(e2, gamma,
-                                      ptr_tof->grab_internal_probabilities(),
-                                      ptr_tof->grab_external_probabilities());
-        }
+      // for (size_t i_gamma = 1; i_gamma <= h_pattern_->get_number_of_gammas();++i_gamma) {
+      //   std::ostringstream key;
+      //   key << "g" << i_gamma;
+      //   const snemo::datamodel::particle_track & gamma = particle_tracks_dict_[key];
 
-        {
-          snemo::datamodel::angle_measurement * ptr_angle = new snemo::datamodel::angle_measurement;
-          std::ostringstream key_meas;
-          key_meas << "angle_e1_" << key;
-          meas_dict[key_meas].reset(ptr_angle);
-          if (_AMD_) _AMD_->process(e1, gamma,
-                                    ptr_angle->grab_angle());
-        }
+      //   {
+      //     snemo::datamodel::TOF_measurement * ptr_tof = new snemo::datamodel::TOF_measurement;
+      //     std::ostringstream key_meas;
+      //     key_meas << "tof_e1_" << key;
+      //     meas_dict[key_meas].reset(ptr_tof);
+      //     if (_TOFD_) _TOFD_->process(e1, gamma,
+      //                                 ptr_tof->grab_internal_probabilities(),
+      //                                 ptr_tof->grab_external_probabilities());
+      //   }
 
-        {
-          snemo::datamodel::angle_measurement * ptr_angle = new snemo::datamodel::angle_measurement;
-          std::ostringstream key_meas;
-          key_meas << "angle_e2_" << key;
-          meas_dict[key_meas].reset(ptr_angle);
-          if (_AMD_) _AMD_->process(e2, gamma,
-                                    ptr_angle->grab_angle());
-        }
+      //   {
+      //     snemo::datamodel::TOF_measurement * ptr_tof = new snemo::datamodel::TOF_measurement;
+      //     std::ostringstream key_meas;
+      //     key_meas << "tof_e2_" << key;
+      //     meas_dict[key_meas].reset(ptr_tof);
+      //     if (_TOFD_) _TOFD_->process(e2, gamma,
+      //                                 ptr_tof->grab_internal_probabilities(),
+      //                                 ptr_tof->grab_external_probabilities());
+      //   }
 
-        {
-          snemo::datamodel::energy_measurement * ptr_energy = new snemo::datamodel::energy_measurement;
-          std::ostringstream key_meas;
-          key_meas << "energy_" << key;
-          meas_dict["energy_"].reset(ptr_energy);
-          if (_EMD_) _EMD_->process(gamma, ptr_energy->grab_energy());
-        }
+      //   {
+      //     snemo::datamodel::angle_measurement * ptr_angle = new snemo::datamodel::angle_measurement;
+      //     std::ostringstream key_meas;
+      //     key_meas << "angle_e1_" << key;
+      //     meas_dict[key_meas].reset(ptr_angle);
+      //     if (_AMD_) _AMD_->process(e1, gamma,
+      //                               ptr_angle->grab_angle());
+      //   }
 
-      }
+      //   {
+      //     snemo::datamodel::angle_measurement * ptr_angle = new snemo::datamodel::angle_measurement;
+      //     std::ostringstream key_meas;
+      //     key_meas << "angle_e2_" << key;
+      //     meas_dict[key_meas].reset(ptr_angle);
+      //     if (_AMD_) _AMD_->process(e2, gamma,
+      //                               ptr_angle->grab_angle());
+      //   }
+
+      //   {
+      //     snemo::datamodel::energy_measurement * ptr_energy = new snemo::datamodel::energy_measurement;
+      //     std::ostringstream key_meas;
+      //     key_meas << "energy_" << key;
+      //     meas_dict["energy_"].reset(ptr_energy);
+      //     if (_EMD_) _EMD_->process(gamma, ptr_energy->grab_energy());
+      //   }
+
+      // }
       return;
     }
 
