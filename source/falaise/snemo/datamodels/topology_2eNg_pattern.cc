@@ -42,24 +42,6 @@ namespace snemo {
       return _number_of_gammas_;
     }
 
-    virtual void topology_2eNg_pattern::build_particle_tracks_dictionary(const snemo::datamodel::particle_track_data & ptd_,       snemo::datamodel::base_topology_pattern::measurement_particle_tracks_type & particle_tracks_dict_)
-    {
-      topology_2e_pattern::build_particle_tracks_dictionary(ptd_,particle_tracks_dictionary_);
-
-      snemo::datamodel::particle_track_data::particle_collection_type gamma_tracks;
-
-      snemo::datamodel::pid_utils::fetch_particles(ptd_, gamma_tracks,
-                                                   snemo::datamodel::pid_utils::gamma_label());
-
-      for(auto i_gamma = the_gammas_begin(), i_gamma != gamma_tracks.end(), ++i_gamma) {
-        std::ostringstream key;
-        key << "g" << std::distance(i_gamma, i_gamma.begin()+1);
-        particle_tracks_dict_[key] = i_gamma->get;
-      }
-
-      return;
-    }
-
     void topology_2eNg_pattern::tree_dump(std::ostream      & out_,
                                           const std::string & title_,
                                           const std::string & indent_,

@@ -109,7 +109,7 @@ namespace snemo {
 
       /// Fill 2 electrons topology event
       void _fill_2e_topology_(const snemo::datamodel::particle_track_data & ptd_,
-                              snemo::datamodel::topology_data & td_);
+                              snemo::datamodel::topology_data::handle_pattern & h_pattern_);
 
       /// Fill 1 electron 1 positron topology event
       void _fill_1e1p_topology_(const snemo::datamodel::particle_track_data & ptd_,
@@ -121,7 +121,7 @@ namespace snemo {
 
       /// Fill 2 electrons N gamma topology event
       void _fill_2eNg_topology_(const snemo::datamodel::particle_track_data & ptd_,
-                                snemo::datamodel::topology_data & td_);
+                                snemo::datamodel::topology_data::handle_pattern & h_pattern_);
 
       /// Fill 1 electrons 1 alpha topology event
       void _fill_1e1a_topology_(const snemo::datamodel::particle_track_data & ptd_,

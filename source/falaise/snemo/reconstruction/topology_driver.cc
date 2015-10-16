@@ -188,7 +188,10 @@ namespace snemo {
                a_classification == "2e4g" ||
                a_classification == "2e5g") {
         DT_LOG_NOTICE(get_logging_priority(), "Fill '2eNg' topology");
-        this->_fill_2eNg_topology_(ptd_, td_);
+        snemo::datamodel::topology_data::handle_pattern h_pattern;
+        h_pattern.reset(new snemo::datamodel::topology_2eNg_pattern);
+        td_.set_pattern_handle(h_pattern);
+        this->_fill_2eNg_topology_(ptd_, h_pattern->get());
       }
       else if (a_classification == "1e1a") {
         DT_LOG_NOTICE(get_logging_priority(), "Fill '1e1a' topology");
@@ -276,24 +279,19 @@ namespace snemo {
     }
 
     void topology_driver::_fill_2e_topology_(const snemo::datamodel::particle_track_data & ptd_,
-                                             snemo::datamodel::topology_data & td_)
+                                             snemo::datamodel::topology_data::handle_pattern & h_pattern_)
     {
-      snemo::datamodel::topology_data::handle_pattern h_pattern;
-      snemo::datamodel::topology_2e_pattern * t2ep = new snemo::datamodel::topology_2e_pattern;
-      h_pattern.reset(t2ep);
-      td_.set_pattern_handle(h_pattern);
-
       const snemo::datamodel::particle_track_data::particle_collection_type & the_particles
         = ptd_.get_particles();
 
-      snemo::datamodel::base_topology_pattern::particle_tracks_dict_type & particle_tracks_dict = t2ep->grab_particle_tracks_dictionary();
+      snemo::datamodel::base_topology_pattern::particle_tracks_dict_type & particle_tracks_dict = h_pattern_->grab_particle_tracks_dictionary();
 
-      t2ep->build_particle_tracks_dictionary(the_particles, particle_tracks_dict);
+      h_pattern->build_particle_tracks_dictionary(the_particles, particle_tracks_dict);
 
       const snemo::datamodel::particle_track & e1 = particle_tracks_dict_["e1"];
       const snemo::datamodel::particle_track & e2 = particle_tracks_dict_["e2"];
 
-      snemo::datamodel::base_topology_pattern::measurement_dict_type & meas_dict = t2ep->grab_measurement_dictionary();
+      snemo::datamodel::base_topology_pattern::measurement_dict_type & meas_dict = h_pattern_->grab_measurement_dictionary();
 
       {
         snemo::datamodel::TOF_measurement * ptr_tof = new snemo::datamodel::TOF_measurement;
@@ -332,168 +330,82 @@ namespace snemo {
       return;
     }
 
-    // void topology_driver::_fill_2e_topology_(const snemo::datamodel::particle_track_data & ptd_,
-    //                                          snemo::datamodel::topology_data & td_)
-    // {
-    //   snemo::datamodel::topology_data::handle_pattern h_pattern;
-    //   snemo::datamodel::topology_2e_pattern * t2ep = new snemo::datamodel::topology_2e_pattern;
-    //   h_pattern.reset(t2ep);
-    //   td_.set_pattern_handle(h_pattern);
-
-    //   const snemo::datamodel::particle_track_data::particle_collection_type & the_particles
-    //     = ptd_.get_particles();
-    //   const snemo::datamodel::particle_track & pt1 = the_particles.front().get();
-    //   const snemo::datamodel::particle_track & pt2 = the_particles.back().get();
-
-    //   // TOF measurements :
-    //   double proba_int = datatools::invalid_real();
-    //   double proba_ext = datatools::invalid_real();
-    //   if (_TOFD_) _TOFD_->process(pt1, pt2, proba_int, proba_ext);
-    //   if (datatools::is_valid(proba_int)) t2ep->set_internal_probability(proba_int);
-    //   if (datatools::is_valid(proba_ext)) t2ep->set_external_probability(proba_ext);
-
-    //   // Delta vertices measurements :
-    //   double delta_vertices_y = datatools::invalid_real();
-    //   double delta_vertices_z = datatools::invalid_real();
-    //   if (_DVD_) _DVD_->process(pt1, pt2, delta_vertices_y, delta_vertices_z);
-    //   if (datatools::is_valid(delta_vertices_y)) t2ep->set_delta_vertices_y(delta_vertices_y);
-    //   if (datatools::is_valid(delta_vertices_z)) t2ep->set_delta_vertices_z(delta_vertices_z);
-
-    //   // Angular measurement :
-    //   double angle = datatools::invalid_real();
-    //   if (_AMD_) _AMD_->process(pt1, pt2, angle);
-    //   if (datatools::is_valid(angle)) t2ep->set_angle(angle);
-
-    //   for (snemo::datamodel::particle_track_data::particle_collection_type::const_iterator
-    //          iparticle = the_particles.begin(); iparticle != the_particles.end();
-    //        ++iparticle) {
-    //     const snemo::datamodel::particle_track & a_particle = iparticle->get();
-    //     if (snemo::datamodel::pid_utils::particle_is_electron(a_particle)) {
-    //       t2ep->add_electron_particle(*iparticle);
-    //     }
-    //   }
-
-    //   return;
-    // }
-
-
     void topology_driver::_fill_2eNg_topology_(const snemo::datamodel::particle_track_data & ptd_,
-                                               snemo::datamodel::topology_data & td_)
+                                               snemo::datamodel::topology_data::handle_pattern & h_pattern_)
     {
-      snemo::datamodel::topology_data::handle_pattern h_pattern;
-      snemo::datamodel::topology_2eNg_pattern * t2eNgp = new snemo::datamodel::topology_2eNg_pattern;
-      h_pattern.reset(t2eNgp);
-      td_.set_pattern_handle(h_pattern);
-
       const datatools::properties & aux = ptd_.get_auxiliaries();
       DT_THROW_IF(! aux.has_key(snemo::datamodel::pid_utils::gamma_label()),
                   std::logic_error, "No gammas have been found in this event !");
-      t2eNgp->set_number_of_gammas(aux.fetch_integer(snemo::datamodel::pid_utils::gamma_label()));
+      h_pattern_->set_number_of_gammas(aux.fetch_integer(snemo::datamodel::pid_utils::gamma_label()));
 
       const snemo::datamodel::particle_track_data::particle_collection_type & the_particles
         = ptd_.get_particles();
 
-      snemo::datamodel::base_topology_pattern::particle_tracks_dict_type & particle_tracks_dict = t2eNgp->grab_particle_tracks_dictionary();
 
-      t2eNgp->build_particle_tracks_dictionary(the_particles, particle_tracks_dict);
+      // h_pattern->build_particle_tracks_dictionary(the_particles, particle_tracks_dict); // already called in 2e
+
+      _fill_2e_topology_(ptd_, h_pattern_->get());
+
+      //could be a get instead of a grab
+      snemo::datamodel::base_topology_pattern::particle_tracks_dict_type & particle_tracks_dict = h_pattern_->grab_particle_tracks_dictionary();
 
       const snemo::datamodel::particle_track & e1 = particle_tracks_dict_["e1"];
       const snemo::datamodel::particle_track & e2 = particle_tracks_dict_["e2"];
 
       snemo::datamodel::base_topology_pattern::measurement_dict_type & meas_dict = t2ep->grab_measurement_dictionary();
 
-      {
-        snemo::datamodel::TOF_measurement tof_dummy;
-        std::ostringstream key_tof;
-        key_tof << "tof_e1_e2";
-        meas_dict[key_tof.str()] = tof_dummy;
+      for (size_t i_gamma = 1; i_gamma <= h_pattern_->get_number_of_gammas();++i_gamma) {
+        std::ostringstream key;
+        key << "g" << i_gamma;
+        const snemo::datamodel::particle_track & gamma = particle_tracks_dict_[key];
 
-        snemo::datamodel::delta_vertices_measurement delta_vertices_sources_dummy;
-        std::ostringstream key_delta_vertices_source;
-        key_delta_vertices_source << "delta_vertices_source_e1_e2";
-        meas_dict[key_delta_vertices_source.str()] = delta_vertices_source_dummy;
-
-        snemo::datamodel::angle_measurement angle_dummy;
-        std::ostringstream key_angle;
-        key_angle << "angle_e1_e2";
-        meas_dict[key_angle.str()] = angle_dummy;
-
-       snemo::datamodel::energy_measurement energy_e1_dummy;
-       std::ostringstream key_energy_e1;
-       key_energy_e1 << "energy_e1";
-       meas_dict[key_energy_e1.str()] = energy_e1_dummy;
-
-       snemo::datamodel::energy_measurement energy_e2_dummy;
-       std::ostringstream key_energy_e2;
-       key_energy_e2 << "energy_e2";
-       meas_dict[key_energy_e2.str()] = energy_e2_dummy;
-      }
-
-      snemo::datamodel::TOF_measurement & a_tof = meas_dict["tof_e1_g1"];
-      if (_TOFD_) _TOFD_->process(pt1, pt2,
-                                  a_tof.grab_internal_probabilities(),
-                                  a_tof.grab_external_probabilities());
-
-      snemo::datamodel::delta_vertices_measurement & delta_vertices_source = meas_dict["delta_vertices_source_e1_e2"];
-      if (_DVD_) _DVD_->process(pt1, pt2,
-                                delta_vertices_source.grab_delta_vertices_y(),
-                                delta_vertices_source.grab_delta_vertices_z());
-
-      snemo::datamodel::angle_measurement & an_angle = meas_dict["angle_e1_e2"];
-      if (_AMD_) _AMD_->process(pt1, pt2,
-                                an_angle.grab_angle());
-
-      snemo::datamodel::energy_measurement & energy_e1 = meas_dict["energy_e1"];
-      if (_EMD_) _EMD_->process(pt1,
-                                energy_e1.grab_energy());
-
-      snemo::datamodel::energy_measurement & energy_e2 = meas_dict["energy_e2"];
-      if (_EMD_) _EMD_->process(pt2,
-                                energy_e2.grab_energy());
-
-      for (snemo::datamodel::particle_track_data::particle_collection_type::const_iterator
-             i_particle = the_particles.begin();
-           i_particle != boost::prior(the_particles.end()); ++i_particle) {
-        for (snemo::datamodel::particle_track_data::particle_collection_type::const_iterator
-               j_particle = boost::next(i_particle);
-             j_particle != the_particles.end(); ++j_particle) {
-
-          snemo::datamodel::topology_2eNg_pattern::TOF_collection_type & tofs
-            = t2eNgp->grab_TOF_collection();
-          {
-            snemo::datamodel::TOF_measurement dummy;
-            tofs.push_back(dummy);
-          }
-          snemo::datamodel::TOF_measurement & a_tof = tofs.back();
-          a_tof.set_particle_tracks(*i_particle, *j_particle);
-          if (_TOFD_) _TOFD_->process(i_particle->get(), j_particle->get(),
-                                      a_tof.grab_internal_probabilities(),
-                                      a_tof.grab_external_probabilities());
-
-
-          // a_delta_vertices.set_particle_tracks(*i_particle, *j_particle);
-          double delta_vertices_y = datatools::invalid_real();
-          double delta_vertices_z = datatools::invalid_real();
-          if (_DVD_) _DVD_->process(i_particle->get(), j_particle->get(),
-                                    delta_vertices_y, delta_vertices_z);
-          if(datatools::is_valid(delta_vertices_y) && datatools::is_valid(delta_vertices_z)){
-            t2eNgp->set_delta_vertices_y(delta_vertices_y);
-            t2eNgp->set_delta_vertices_z(delta_vertices_z);
-          }
-
-          snemo::datamodel::topology_2eNg_pattern::angle_collection_type & angles
-            = t2eNgp->grab_angle_collection();
-          {
-            snemo::datamodel::angle_measurement dummy;
-            angles.push_back(dummy);
-          }
-          snemo::datamodel::angle_measurement & an_angle = angles.back();
-          an_angle.set_particle_tracks(*i_particle, *j_particle);
-          if (_AMD_) _AMD_->process(i_particle->get(), j_particle->get(),
-                                    an_angle.grab_angle());
+        {
+          snemo::datamodel::TOF_measurement * ptr_tof = new snemo::datamodel::TOF_measurement;
+          std::ostringstream key_meas;
+          key_meas << "tof_e1_" << key;
+          meas_dict[key_meas].reset(ptr_tof);
+          if (_TOFD_) _TOFD_->process(e1, gamma,
+                                      ptr_tof->grab_internal_probabilities(),
+                                      ptr_tof->grab_external_probabilities());
         }
-      }
 
+        {
+          snemo::datamodel::TOF_measurement * ptr_tof = new snemo::datamodel::TOF_measurement;
+          std::ostringstream key_meas;
+          key_meas << "tof_e2_" << key;
+          meas_dict[key_meas].reset(ptr_tof);
+          if (_TOFD_) _TOFD_->process(e2, gamma,
+                                      ptr_tof->grab_internal_probabilities(),
+                                      ptr_tof->grab_external_probabilities());
+        }
+
+        {
+          snemo::datamodel::angle_measurement * ptr_angle = new snemo::datamodel::angle_measurement;
+          std::ostringstream key_meas;
+          key_meas << "angle_e1_" << key;
+          meas_dict[key_meas].reset(ptr_angle);
+          if (_AMD_) _AMD_->process(e1, gamma,
+                                    ptr_angle->grab_angle());
+        }
+
+        {
+          snemo::datamodel::angle_measurement * ptr_angle = new snemo::datamodel::angle_measurement;
+          std::ostringstream key_meas;
+          key_meas << "angle_e2_" << key;
+          meas_dict[key_meas].reset(ptr_angle);
+          if (_AMD_) _AMD_->process(e2, gamma,
+                                    ptr_angle->grab_angle());
+        }
+
+        {
+          snemo::datamodel::energy_measurement * ptr_energy = new snemo::datamodel::energy_measurement;
+          std::ostringstream key_meas;
+          key_meas << "energy_" << key;
+          meas_dict["energy_"].reset(ptr_energy);
+          if (_EMD_) _EMD_->process(gamma, ptr_energy->grab_energy());
+        }
+
+      }
       return;
     }
 
@@ -649,6 +561,7 @@ namespace snemo {
           t1eNgp->set_gamma_mid_energy(std::max(std::min(gamma_energies[0],gamma_energies[1]),std::min(gamma_energies[1],gamma_energies[2])));
           t1eNgp->set_gamma_min_energy(std::min(std::min(gamma_energies[0],gamma_energies[1]),gamma_energies[2]));
         }
+
       }
 
       // std::cout << "Number of gammas : " << t1eNgp->get_number_of_gammas() << std::endl;
