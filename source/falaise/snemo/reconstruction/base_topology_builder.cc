@@ -4,6 +4,10 @@
 // Ourselves:
 #include <falaise/snemo/reconstruction/base_topology_builder.h>
 
+// - Falaise:
+#include <falaise/snemo/datamodels/particle_track_data.h>
+#include <falaise/snemo/datamodels/pid_utils.h>
+
 namespace snemo {
 
   namespace reconstruction {
@@ -11,55 +15,72 @@ namespace snemo {
     DATATOOLS_FACTORY_SYSTEM_REGISTER_IMPLEMENTATION(base_topology_builder,
                                                      "snemo::reconstruction::base_topology_builder/__system__");
 
-    const measurement_drivers & base_topology_builder::get_measurement_drivers() const {
-      return *_drivers_;
+    bool base_topology_builder::has_measurement_drivers() const
+    {
+      return _drivers != 0;
+    }
+
+    void base_topology_builder::set_measurement_drivers(const measurement_drivers & drivers_)
+    {
+      _drivers = &drivers_;
+      return;
+    }
+
+    const measurement_drivers & base_topology_builder::get_measurement_drivers() const
+    {
+      return *_drivers;
+    }
+
+    base_topology_builder::base_topology_builder()
+    {
+      _drivers = 0;
+      return;
+    }
+
+    base_topology_builder::~base_topology_builder()
+    {
+      return;
     }
 
     void base_topology_builder::build(const snemo::datamodel::particle_track_data & source_,
-                                      snemo::datamodel::base_topology_pattern & pattern_) {
-      _build_particle_tracks_dictionary(source_, pattern_.grab_particle_tracks_dictionary());
-
+                                      snemo::datamodel::base_topology_pattern & pattern_)
+    {
+      DT_THROW_IF(! has_measurement_drivers(), std::logic_error, "Missing measurement drivers !");
+      this->_build_particle_tracks_dictionary(source_, pattern_.grab_particle_tracks_dictionary());
       build_measurement_dictionary(source_, pattern_);
     }
 
     void base_topology_builder::_build_particle_tracks_dictionary(const snemo::datamodel::particle_track_data & ptd_,
-                                                                  snemo::datamodel::base_topology_pattern::particle_tracks_dict_type & tracks_) {
-
-      const snemo::datamodel::particle_track_data::particle_collection_type & the_particles
-        = ptd_.get_particles();
-
+                                                                  snemo::datamodel::base_topology_pattern::particle_tracks_dict_type & tracks_)
+    {
       size_t n_electrons = 0;
       size_t n_positrons = 0;
-      size_t n_alphas = 0;
-      size_t n_gammas = 0;
-
-      // for (auto i_particle = the_particles) {
+      size_t n_alphas    = 0;
+      size_t n_gammas    = 0;
+      const snemo::datamodel::particle_track_data::particle_collection_type & the_particles
+        = ptd_.get_particles();
       for (snemo::datamodel::particle_track_data::particle_collection_type::const_iterator
              i_particle = the_particles.begin();
            i_particle != the_particles.end(); ++i_particle) {
+        const snemo::datamodel::particle_track & a_particle = i_particle->get();
         std::ostringstream key;
-        if(snemo::datamodel::pid_utils::particle_is_electron(i_particle->get())) {
-          n_electrons++;
-          key << "e" << n_electrons;
+        if (snemo::datamodel::pid_utils::particle_is_electron(a_particle)) {
+          key << "e" << ++n_electrons;
         }
-        else if(snemo::datamodel::pid_utils::particle_is_positron(i_particle->get())) {
-          n_positrons++;
-          key << "p" << n_positrons;
+        else if (snemo::datamodel::pid_utils::particle_is_positron(a_particle)) {
+          key << "p" << ++n_positrons;
         }
-        else if(snemo::datamodel::pid_utils::particle_is_alpha(i_particle->get())) {
-          n_alphas++;
-          key << "a" << n_alphas;
+        else if (snemo::datamodel::pid_utils::particle_is_alpha(a_particle)) {
+          key << "a" << ++n_alphas;
         }
-        else if(snemo::datamodel::pid_utils::particle_is_gamma(i_particle->get())) {
-          n_gammas++;
-          key << "g" << n_gammas;
+        else if (snemo::datamodel::pid_utils::particle_is_gamma(a_particle)) {
+          key << "g" << ++n_gammas;
         }
-        else
+        else {
           continue; // no undefined particles for now
-
+        }
         tracks_[key.str()] = *i_particle;
       }
-
       return;
     }
 

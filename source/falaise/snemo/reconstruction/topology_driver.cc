@@ -147,10 +147,6 @@ namespace snemo {
       return status;
     }
 
-    measurement_drivers & topology_driver::grab_measurement_drivers() {
-      return _drivers_;
-    }
-
     void topology_driver::_set_defaults()
     {
       _logging_priority_ = datatools::logger::PRIO_WARNING;
@@ -179,7 +175,6 @@ namespace snemo {
       }
 
       const base_topology_builder::factory_register_type & FB = DATATOOLS_FACTORY_GET_SYSTEM_REGISTER(base_topology_builder);
-      FB.tree_dump();
       DT_THROW_IF(! FB.has(builder_class_id), std::logic_error,
                   "Topology builder class id '" << builder_class_id << "' is not available from the system builder factory register !");
       const base_topology_builder::factory_register_type::factory_type & the_factory
@@ -191,8 +186,7 @@ namespace snemo {
         new_pattern.get().tree_dump(std::clog, "", "[trace]: ");
       }
 
-      new_builder->set_measurement_drivers(topology_driver::grab_measurement_drivers());
-
+      new_builder->set_measurement_drivers(_drivers_);
       new_builder->build(ptd_, new_pattern.grab());
 
       DT_LOG_TRACE(get_logging_priority(), "Exiting.");

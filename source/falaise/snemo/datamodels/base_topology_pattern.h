@@ -34,7 +34,7 @@ namespace snemo {
       typedef datatools::handle<snemo::datamodel::base_topology_pattern> handle_type;
 
       ///
-      typedef std::map<std::string, particle_track::handle_type> particle_tracks_dict_type;
+      typedef std::map<std::string, snemo::datamodel::particle_track::handle_type> particle_tracks_dict_type;
 
       typedef datatools::handle<base_topology_measurement> handle_measurement;
 
@@ -42,9 +42,14 @@ namespace snemo {
 
       virtual std::string pattern_id() const = 0;
 
+
       particle_tracks_dict_type & grab_particle_tracks_dictionary();
 
       const particle_tracks_dict_type & get_particle_tracks_dictionary() const;
+
+      bool has_particle_track(const std::string & key_) const;
+
+      const snemo::datamodel::particle_track & get_particle_track(const std::string & key_) const;
 
       measurement_dict_type & grab_measurement_dictionary();
 

@@ -38,8 +38,6 @@
 // - Bayeux/datatools:
 #include <datatools/logger.h>
 
-#include <falaise/snemo/datamodels/topology_data.h>
-
 namespace snemo {
 
   namespace datamodel {
@@ -93,9 +91,6 @@ namespace snemo {
 
       /// Reset the clusterizer
       virtual void reset();
-
-      /// Grab the drivers
-      measurement_drivers & grab_measurement_drivers();
 
       /// Main tracker trajectory driver
       int process(const snemo::datamodel::particle_track_data & ptd_,

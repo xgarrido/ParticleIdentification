@@ -17,12 +17,6 @@
 // This project:
 #include <falaise/snemo/reconstruction/topology_driver.h>
 #include <falaise/snemo/datamodels/base_topology_pattern.h>
-#include <falaise/snemo/datamodels/particle_track_data.h>
-#include <falaise/snemo/datamodels/pid_utils.h>
-#include <falaise/snemo/datamodels/TOF_measurement.h>
-#include <falaise/snemo/datamodels/delta_vertices_measurement.h>
-#include <falaise/snemo/datamodels/angle_measurement.h>
-#include <falaise/snemo/datamodels/energy_measurement.h>
 
 namespace snemo {
 
@@ -38,10 +32,13 @@ namespace snemo {
     {
     public:
 
-      ///
-      void set_measurement_drivers(measurement_drivers &);
+      /// Check if measurement drivers are available
+      bool has_measurement_drivers() const;
 
-      ///
+      /// Set the measurement drivers
+      void set_measurement_drivers(const measurement_drivers &);
+
+      /// Get a non-mutable reference to measurement drivers
       const measurement_drivers & get_measurement_drivers() const;
 
       ///
@@ -54,14 +51,20 @@ namespace snemo {
       virtual void build_measurement_dictionary(const snemo::datamodel::particle_track_data & source_,
                                                 snemo::datamodel::base_topology_pattern & pattern_) = 0;
 
+      /// Constructor
+      base_topology_builder();
+
+      /// Destructor
+      ~base_topology_builder();
+
     protected:
 
       void _build_particle_tracks_dictionary(const snemo::datamodel::particle_track_data & source_,
                                              snemo::datamodel::base_topology_pattern::particle_tracks_dict_type & tracks_);
 
-    private:
+    protected:
 
-      measurement_drivers * _drivers_;
+      const measurement_drivers * _drivers;//!< Measurement drivers
 
       // Factory stuff :
       DATATOOLS_FACTORY_SYSTEM_REGISTER_INTERFACE(base_topology_builder);

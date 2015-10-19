@@ -3,7 +3,11 @@
 
 // Ourselves:
 #include <falaise/snemo/reconstruction/topology_1e_builder.h>
+#include <falaise/snemo/reconstruction/angle_measurement_driver.h>
+#include <falaise/snemo/reconstruction/energy_driver.h>
 #include <falaise/snemo/datamodels/topology_1e_pattern.h>
+#include <falaise/snemo/datamodels/angle_measurement.h>
+#include <falaise/snemo/datamodels/energy_measurement.h>
 
 namespace snemo {
 
@@ -19,24 +23,28 @@ namespace snemo {
       return h;
     }
 
-    void topology_1e_builder::build_measurement_dictionary(const snemo::datamodel::particle_track_data & ptd_,snemo::datamodel::base_topology_pattern & pattern_) {
+    void topology_1e_builder::build_measurement_dictionary(const snemo::datamodel::particle_track_data & ptd_,
+                                                           snemo::datamodel::base_topology_pattern & pattern_)
+    {
+      const std::string e1_label = "e1";
+      DT_THROW_IF(! pattern_.has_particle_track(e1_label), std::logic_error,
+                  "No particle with label '" << e1_label << "' has been stored !");
+      const snemo::datamodel::particle_track & e1 = pattern_.get_particle_track(e1_label);
 
-      snemo::datamodel::base_topology_pattern::measurement_dict_type & meas_ = pattern_.grab_measurement_dictionary();
-
-      snemo::datamodel::base_topology_pattern::particle_tracks_dict_type & particle_tracks_dict = pattern_.grab_particle_tracks_dictionary();
-
-      const snemo::datamodel::particle_track & e1 = particle_tracks_dict["e1"].get();
-
+      snemo::datamodel::base_topology_pattern::measurement_dict_type & meas
+        = pattern_.grab_measurement_dictionary();
+      const snemo::reconstruction::measurement_drivers & drivers
+        = base_topology_builder::get_measurement_drivers();
       {
         snemo::datamodel::angle_measurement * ptr_angle = new snemo::datamodel::angle_measurement;
-        meas_["angle_e1"].reset(ptr_angle);
-        if (get_measurement_drivers().AMD) get_measurement_drivers().AMD->process(e1, ptr_angle->grab_angle());
+        meas["angle_" + e1_label].reset(ptr_angle);
+        if (drivers.AMD) drivers.AMD->process(e1, ptr_angle->grab_angle());
       }
 
       {
         snemo::datamodel::energy_measurement * ptr_energy = new snemo::datamodel::energy_measurement;
-        meas_["energy_e1"].reset(ptr_energy);
-        if (get_measurement_drivers().EMD) get_measurement_drivers().EMD->process(e1, ptr_energy->grab_energy());
+        meas["energy_" + e1_label].reset(ptr_energy);
+        if (drivers.EMD) drivers.EMD->process(e1, ptr_energy->grab_energy());
       }
 
       return;

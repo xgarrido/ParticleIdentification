@@ -10,14 +10,7 @@
 #define FALAISE_SNEMO_DATAMODEL_TOPOLOGY_1E1A_BUILDER_H 1
 
 // This project:
-#include <falaise/snemo/reconstruction/base_topology_builder.h>
 #include <falaise/snemo/reconstruction/topology_1e_builder.h>
-#include <falaise/snemo/reconstruction/tof_driver.h>
-#include <falaise/snemo/reconstruction/delta_vertices_driver.h>
-#include <falaise/snemo/reconstruction/angle_measurement_driver.h>
-#include <falaise/snemo/reconstruction/energy_driver.h>
-#include <falaise/snemo/datamodels/base_topology_pattern.h>
-#include <falaise/snemo/datamodels/base_topology_measurement.h>
 
 namespace snemo {
 

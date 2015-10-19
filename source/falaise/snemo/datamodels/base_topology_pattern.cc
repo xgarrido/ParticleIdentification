@@ -32,6 +32,16 @@ namespace snemo {
       return _tracks_;
     }
 
+    bool base_topology_pattern::has_particle_track(const std::string & key_) const
+    {
+      return _tracks_.find(key_) != _tracks_.end();
+    }
+
+    const snemo::datamodel::particle_track & base_topology_pattern::get_particle_track(const std::string & key_) const
+    {
+      return _tracks_.at(key_).get();
+    }
+
     snemo::datamodel::base_topology_pattern::measurement_dict_type & base_topology_pattern::grab_measurement_dictionary()
     {
       return _meas_;
@@ -41,42 +51,6 @@ namespace snemo {
     {
       return _meas_;
     }
-
-    // virtual void base_topology_pattern::build_particle_tracks_dictionary(const snemo::datamodel::particle_track_data::particle_collection_type & the_particles_,
-    //                                                                    snemo::datamodel::base_topology_pattern::particle_tracks_dict_type & particle_tracks_dict_)
-    // {
-    //   size_t n_electrons = 0;
-    //   size_t n_positrons = 0;
-    //   size_t n_alphas = 0;
-    //   size_t n_gammas = 0;
-
-    //   for (auto i_particle = the_particles_.begin(); i_particle != the_particles_.end(); ++i_particle) {
-    //     std::ostringstream key;
-    //     if(snemo::datamodel::pid_utils::particle_is_electron(i_particle->get())) {
-    //       n_electrons++;
-    //       key << "e" << n_electrons;
-    //     }
-    //     else if(snemo::datamodel::pid_utils::particle_is_positron(i_particle->get())) {
-    //       n_positrons++;
-    //       key << "p" << n_positrons;
-    //     }
-    //     else if(snemo::datamodel::pid_utils::particle_is_alpha(i_particle->get())) {
-    //       n_alphas++;
-    //       key << "a" << n_alphas;
-    //     }
-    //     else if(snemo::datamodel::pid_utils::particle_is_gammas(i_particle->get())) {
-    //       n_gammas++;
-    //       key << "g" << n_gammas;
-    //     }
-    //     else
-    //       continue; // no undefined particles for now
-
-    //     particle_tracks_dict_[key] = the_particles_->get();
-    //   }
-
-    //   return;
-    // }
-
 
     void base_topology_pattern::tree_dump(std::ostream      & out_,
                                           const std::string & title_,
