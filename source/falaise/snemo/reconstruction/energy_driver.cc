@@ -113,7 +113,7 @@ namespace snemo {
           energy_ += a_calo.get_energy();
         }
       } else {
-        DT_LOG_DEBUG(logging, "Particle track is not associated to any calorimeter block !");
+        DT_LOG_DEBUG(get_logging_priority(), "Particle track is not associated to any calorimeter block !");
       }
 
       DT_LOG_DEBUG(get_logging_priority(), "Particle energy = " << energy_/CLHEP::MeV << " MeV");

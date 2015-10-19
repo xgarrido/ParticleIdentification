@@ -17,6 +17,8 @@
 // This project:
 #include <falaise/snemo/reconstruction/topology_driver.h>
 #include <falaise/snemo/datamodels/base_topology_pattern.h>
+#include <falaise/snemo/datamodels/particle_track_data.h>
+#include <falaise/snemo/datamodels/pid_utils.h>
 
 namespace snemo {
 
@@ -36,18 +38,29 @@ namespace snemo {
       void set_measurement_drivers(measurement_drivers &);
 
       ///
+      const measurement_drivers & get_measurement_drivers() const;
+
+      ///
       virtual snemo::datamodel::base_topology_pattern::handle_type create_pattern() = 0;
 
       ///
       virtual void build(const snemo::datamodel::particle_track_data & source_,
-                         snemo::datamodel::base_topology_pattern & target_) = 0;
+                 snemo::datamodel::base_topology_pattern & target_);
+
+      virtual void build_measurement_dictionary(const snemo::datamodel::particle_track_data & source_,
+                                                snemo::datamodel::base_topology_pattern::measurement_dict_type & meas_) = 0;
+
+    protected:
+
+      void _build_particle_tracks_dictionary(const snemo::datamodel::particle_track_data & source_,
+                                             snemo::datamodel::base_topology_pattern::particle_tracks_dict_type & tracks_);
 
     private:
 
       measurement_drivers * _drivers_;
 
-     // Factory stuff :
-     DATATOOLS_FACTORY_SYSTEM_REGISTER_INTERFACE(base_topology_builder);
+      // Factory stuff :
+      DATATOOLS_FACTORY_SYSTEM_REGISTER_INTERFACE(base_topology_builder);
 
     };
   }

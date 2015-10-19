@@ -14,7 +14,7 @@
 
 // This project:
 #include <falaise/snemo/datamodels/base_topology_pattern.h>
-#include <falaise/snemo/datamodels/topology_measurement.h>
+#include <falaise/snemo/datamodels/base_topology_measurement.h>
 
 namespace snemo {
 

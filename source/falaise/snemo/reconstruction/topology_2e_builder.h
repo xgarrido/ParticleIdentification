@@ -11,6 +11,12 @@
 
 // This project:
 #include <falaise/snemo/reconstruction/base_topology_builder.h>
+#include <falaise/snemo/reconstruction/tof_driver.h>
+#include <falaise/snemo/reconstruction/delta_vertices_driver.h>
+#include <falaise/snemo/reconstruction/angle_measurement_driver.h>
+#include <falaise/snemo/reconstruction/energy_driver.h>
+#include <falaise/snemo/datamodels/base_topology_pattern.h>
+#include <falaise/snemo/datamodels/base_topology_measurement.h>
 
 namespace snemo {
 
@@ -24,9 +30,12 @@ namespace snemo {
       ///
       virtual snemo::datamodel::base_topology_pattern::handle_type create_pattern();
 
-      ///
-      virtual void build(const snemo::datamodel::particle_track_data & source_,
-                         snemo::datamodel::base_topology_pattern & target_);
+      // ///
+      // virtual void build(const snemo::datamodel::particle_track_data & source_,
+      //                    snemo::datamodel::base_topology_pattern & target_);
+
+      virtual void build_measurement_dictionary(const snemo::datamodel::particle_track_data & source_,
+                                                snemo::datamodel::base_topology_pattern::measurement_dict_type & meas_);
 
     private:
 

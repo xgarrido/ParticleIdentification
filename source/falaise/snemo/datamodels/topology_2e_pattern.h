@@ -10,6 +10,7 @@
 #define FALAISE_SNEMO_DATAMODEL_TOPOLOGY_2E_PATTERN_H 1
 
 // This project:
+#include <falaise/snemo/datamodels/particle_track_data.h>
 #include <falaise/snemo/datamodels/base_topology_pattern.h>
 
 namespace snemo {
@@ -29,6 +30,8 @@ namespace snemo {
 
       /// Destructor
       virtual ~topology_2e_pattern();
+
+      // virtual void build(const snemo::datamodel::particle_track_data & ptd_, base_topology_pattern & topology_pattern_);
 
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,

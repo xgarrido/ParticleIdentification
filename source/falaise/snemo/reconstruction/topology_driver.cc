@@ -16,6 +16,7 @@
 #include <falaise/snemo/reconstruction/tof_driver.h>
 #include <falaise/snemo/reconstruction/delta_vertices_driver.h>
 #include <falaise/snemo/reconstruction/angle_measurement_driver.h>
+#include <falaise/snemo/reconstruction/energy_driver.h>
 
 #include <falaise/snemo/reconstruction/base_topology_builder.h>
 
@@ -107,6 +108,12 @@ namespace snemo {
           datatools::properties AMD_config;
           setup_.export_and_rename_starting_with(AMD_config, std::string(a_driver_name + "."), "");
           _drivers_.AMD->initialize(AMD_config);
+        } else if (a_driver_name == snemo::reconstruction::energy_driver::get_id()) {
+          // Initialize Energy Driver
+          _drivers_.EMD.reset(new snemo::reconstruction::energy_driver);
+          datatools::properties EMD_config;
+          setup_.export_and_rename_starting_with(EMD_config, std::string(a_driver_name + "."), "");
+          _drivers_.EMD->initialize(EMD_config);
         } else {
           DT_THROW_IF(true, std::logic_error, "Driver '" << a_driver_name << "' does not exist !");
         }

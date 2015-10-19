@@ -20,13 +20,68 @@ namespace snemo {
     }
 
 
-    ///
-    void topology_2e_builder::build(const snemo::datamodel::particle_track_data & source_,
-                                    snemo::datamodel::base_topology_pattern & target_)
-    {
+    // ///
+    // void topology_2e_builder::build(const snemo::datamodel::particle_track_data & source_,
+    //                                 snemo::datamodel::base_topology_pattern & target_)
+    // {
+    //   return;
+    // }
+
+
+    void topology_2e_builder::build_measurement_dictionary(const snemo::datamodel::particle_track_data & ptd_, snemo::datamodel::base_topology_pattern::measurement_dict_type & meas_) {
+
+      const snemo::datamodel::particle_track_data::particle_collection_type & the_particles
+        = ptd_.get_particles();
+
+      // snemo::datamodel::base_topology_pattern::particle_tracks_dict_type & particle_tracks_dict = topology_pattern_.grab_particle_tracks_dictionary();
+
+      // topology_pattern_.build_particle_tracks_dictionary(the_particles, particle_tracks_dict);
+
+      // const snemo::datamodel::particle_track & e1 = particle_tracks_dict_["e1"];
+      // const snemo::datamodel::particle_track & e2 = particle_tracks_dict_["e2"];
+
+      // snemo::datamodel::base_topology_pattern::measurement_dict_type & meas_ = topology_pattern_.grab_measurement_dictionary();
+
+      const snemo::datamodel::particle_track & e1 = the_particles.front().get();
+      const snemo::datamodel::particle_track & e2 = the_particles.back().get();;
+
+      {
+        snemo::datamodel::TOF_measurement * ptr_tof = new snemo::datamodel::TOF_measurement;
+
+        meas_["tof_e1_e2"].reset(ptr_tof);
+        if (get_measurement_drivers().TOFD) get_measurement_drivers().TOFD->process(e1, e2,
+                                    ptr_tof->grab_internal_probabilities(),
+                                    ptr_tof->grab_external_probabilities());
+      }
+
+      {
+        snemo::datamodel::delta_vertices_measurement * ptr_delta_vertices_source = new snemo::datamodel::delta_vertices_measurement;
+        meas_["delta_vertices_source_e1_e2"].reset(ptr_delta_vertices_source);
+        if (get_measurement_drivers().DVD) get_measurement_drivers().DVD->process(e1, e2,
+                                                                                  ptr_delta_vertices_source->grab_delta_vertices_y(),
+                                                                                  ptr_delta_vertices_source->grab_delta_vertices_z());
+      }
+
+      {
+        snemo::datamodel::angle_measurement * ptr_angle = new snemo::datamodel::angle_measurement;
+        meas_["angle_e1_e2"].reset(ptr_angle);
+        if (get_measurement_drivers().AMD) get_measurement_drivers().AMD->process(e1, e2, ptr_angle->grab_angle());
+      }
+
+      {
+        snemo::datamodel::energy_measurement * ptr_energy = new snemo::datamodel::energy_measurement;
+        meas_["energy_e1"].reset(ptr_energy);
+        if (get_measurement_drivers().EMD) get_measurement_drivers().EMD->process(e1, ptr_energy->grab_energy());
+      }
+
+      {
+        snemo::datamodel::energy_measurement * ptr_energy = new snemo::datamodel::energy_measurement;
+        meas_["energy_e2"].reset(ptr_energy);
+        if (get_measurement_drivers().EMD) get_measurement_drivers().EMD->process(e2, ptr_energy->grab_energy());
+      }
+
       return;
     }
-
 
   } // end of namespace reconstruction
 

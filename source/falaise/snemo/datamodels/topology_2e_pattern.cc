@@ -3,6 +3,7 @@
 
 // Ourselves:
 #include <falaise/snemo/datamodels/topology_2e_pattern.h>
+#include <falaise/snemo/datamodels/particle_track.h>
 
 namespace snemo {
 
