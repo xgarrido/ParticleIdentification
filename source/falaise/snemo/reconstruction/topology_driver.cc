@@ -147,6 +147,10 @@ namespace snemo {
       return status;
     }
 
+    measurement_drivers & topology_driver::grab_measurement_drivers() {
+      return _drivers_;
+    }
+
     void topology_driver::_set_defaults()
     {
       _logging_priority_ = datatools::logger::PRIO_WARNING;
@@ -181,6 +185,8 @@ namespace snemo {
         DT_LOG_TRACE(get_logging_priority(), "New pattern: ");
         new_pattern.get().tree_dump(std::clog, "", "[trace]: ");
       }
+
+      new_builder->set_measurement_drivers(topology_driver::grab_measurement_drivers());
 
       new_builder->build(ptd_, new_pattern.grab());
 

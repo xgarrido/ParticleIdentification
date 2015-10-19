@@ -94,6 +94,9 @@ namespace snemo {
       /// Reset the clusterizer
       virtual void reset();
 
+      /// Grab the drivers
+      measurement_drivers & grab_measurement_drivers();
+
       /// Main tracker trajectory driver
       int process(const snemo::datamodel::particle_track_data & ptd_,
                   snemo::datamodel::topology_data & td_);
