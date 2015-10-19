@@ -118,30 +118,6 @@ namespace snemo {
 
       std::string _get_builder_class_id_from_classification (const std::string & a_classification);
 
-      /// Fill 1 electron topology event
-      void _fill_1e_topology_(const snemo::datamodel::particle_track_data & ptd_,
-                              snemo::datamodel::topology_data & td_);
-
-      /// Fill 2 electrons topology event
-      void _fill_2e_topology_(const snemo::datamodel::particle_track_data & ptd_,
-                              snemo::datamodel::topology_data::handle_pattern & h_pattern_);
-
-      /// Fill 1 electron 1 positron topology event
-      void _fill_1e1p_topology_(const snemo::datamodel::particle_track_data & ptd_,
-                                snemo::datamodel::topology_data & td_);
-
-      /// Fill 1 electron 1 gamma topology event
-      void _fill_1eNg_topology_(const snemo::datamodel::particle_track_data & ptd_,
-                                snemo::datamodel::topology_data & td_);
-
-      /// Fill 2 electrons N gamma topology event
-      void _fill_2eNg_topology_(const snemo::datamodel::particle_track_data & ptd_,
-                                snemo::datamodel::topology_data::handle_pattern & h_pattern_);
-
-      /// Fill 1 electrons 1 alpha topology event
-      void _fill_1e1a_topology_(const snemo::datamodel::particle_track_data & ptd_,
-                                snemo::datamodel::topology_data & td_);
-
     private:
 
       bool _initialized_;                             //!< Initialize flag
