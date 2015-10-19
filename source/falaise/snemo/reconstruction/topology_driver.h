@@ -101,6 +101,7 @@ namespace snemo {
       /// OCD support:
       static void init_ocd(datatools::object_configuration_description & ocd_);
 
+
     protected:
 
       /// Set default values to class members
@@ -114,6 +115,8 @@ namespace snemo {
 
       /// Build event classification label
       static std::string _build_classification_(const snemo::datamodel::particle_track_data & ptd_);
+
+      std::string _get_builder_class_id_from_classification (const std::string & a_classification);
 
       /// Fill 1 electron topology event
       void _fill_1e_topology_(const snemo::datamodel::particle_track_data & ptd_,

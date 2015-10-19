@@ -153,6 +153,7 @@ namespace snemo {
       _drivers_.TOFD.reset(0);
       _drivers_.DVD.reset(0);
       _drivers_.AMD.reset(0);
+      _drivers_.EMD.reset(0);
 
       return;
     }
@@ -166,7 +167,7 @@ namespace snemo {
       DT_LOG_TRACE(get_logging_priority(), "Event classification : " << a_classification);
 
       // regex machinery...
-      std::string builder_class_id = "snemo::reconstruction::topology_2e_builder"; //get_builder_class_id_from_classification(a_classification);
+      std::string builder_class_id = topology_driver::_get_builder_class_id_from_classification(a_classification);
 
       const base_topology_builder::factory_register_type & FB = DATATOOLS_FACTORY_GET_SYSTEM_REGISTER(base_topology_builder);
       FB.tree_dump();
@@ -257,6 +258,12 @@ namespace snemo {
         classification << aux.fetch_integer(key) << "X";
       }
       return classification.str();
+    }
+
+    std::string topology_driver::_get_builder_class_id_from_classification (const std::string & a_classification) {
+      //tmp function, use regex ?
+      if(a_classification == "2e")
+        return "snemo::reconstruction::topology_2e_builder";
     }
 
     void topology_driver::_fill_1e_topology_(const snemo::datamodel::particle_track_data & ptd_,

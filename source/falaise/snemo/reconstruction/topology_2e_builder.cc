@@ -19,15 +19,6 @@ namespace snemo {
       return h;
     }
 
-
-    // ///
-    // void topology_2e_builder::build(const snemo::datamodel::particle_track_data & source_,
-    //                                 snemo::datamodel::base_topology_pattern & target_)
-    // {
-    //   return;
-    // }
-
-
     void topology_2e_builder::build_measurement_dictionary(const snemo::datamodel::particle_track_data & ptd_, snemo::datamodel::base_topology_pattern::measurement_dict_type & meas_) {
 
       const snemo::datamodel::particle_track_data::particle_collection_type & the_particles

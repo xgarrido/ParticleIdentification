@@ -26,7 +26,7 @@ namespace snemo {
     public:
 
       /// Return pattern identifier of the pattern
-      static const std::string & pattern_id();
+      virtual std::string pattern_id() const;
 
       /// Constructor
       topology_1e_pattern();
@@ -34,23 +34,23 @@ namespace snemo {
       /// Destructor
       virtual ~topology_1e_pattern();
 
-      /// Check angle validity
-      bool has_angle() const;
+      // /// Check angle validity
+      // bool has_angle() const;
 
-      /// Set angle
-      void set_angle(double);
+      // /// Set angle
+      // void set_angle(double);
 
-      /// Return internal probability
-      double get_angle() const;
+      // /// Return internal probability
+      // double get_angle() const;
 
-      /// Check electron energy validity
-      bool has_electron_energy() const;
+      // /// Check electron energy validity
+      // bool has_electron_energy() const;
 
-      /// Set electron energy
-      void set_electron_energy(double);
+      // /// Set electron energy
+      // void set_electron_energy(double);
 
-      /// Get electron energy
-      double get_electron_energy() const;
+      // /// Get electron energy
+      // double get_electron_energy() const;
 
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,
@@ -60,8 +60,8 @@ namespace snemo {
 
     private:
 
-      angle_measurement _angle_;
-      double _electron_energy_;                    //!< Energy of electron particle
+      // angle_measurement _angle_;
+      // double _electron_energy_;                    //!< Energy of electron particle
 
       DATATOOLS_SERIALIZATION_DECLARATION();
 
