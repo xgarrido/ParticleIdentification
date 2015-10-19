@@ -16,10 +16,10 @@ namespace snemo {
     }
 
     void base_topology_builder::build(const snemo::datamodel::particle_track_data & source_,
-                                      snemo::datamodel::base_topology_pattern & target_) {
-      _build_particle_tracks_dictionary(source_, target_.grab_particle_tracks_dictionary());
+                                      snemo::datamodel::base_topology_pattern & pattern_) {
+      _build_particle_tracks_dictionary(source_, pattern_.grab_particle_tracks_dictionary());
 
-      build_measurement_dictionary(source_, target_.grab_measurement_dictionary());
+      build_measurement_dictionary(source_, pattern_);
     }
 
     void base_topology_builder::_build_particle_tracks_dictionary(const snemo::datamodel::particle_track_data & ptd_,

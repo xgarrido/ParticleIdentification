@@ -24,13 +24,7 @@ namespace snemo {
     void topology_1eNg_pattern::serialize(Archive & ar, const unsigned int /* version */)
     {
       ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(base_topology_pattern);
-      ar & boost::serialization::make_nvp("number_of_gammas", _number_of_gammas_);
-      ar & boost::serialization::make_nvp("tofs", _tofs_);
-      ar & boost::serialization::make_nvp("angles", _angles_);
-      ar & boost::serialization::make_nvp("electron_energy", _electron_energy_);
-      ar & boost::serialization::make_nvp("gamma_max_energy", _gamma_max_energy_);
-      ar & boost::serialization::make_nvp("gamma_mid_energy", _gamma_mid_energy_);
-      ar & boost::serialization::make_nvp("gamma_min_energy", _gamma_min_energy_);
+      // ar & boost::serialization::make_nvp("number_of_gammas", _number_of_gammas_);
       return;
     }
 

@@ -26,7 +26,7 @@ namespace snemo {
     public:
 
       /// Return pattern identifier of the pattern
-      static const std::string & pattern_id();
+      virtual std::string pattern_id() const;
 
       /// Constructor
       topology_1e1p_pattern();
@@ -87,9 +87,6 @@ namespace snemo {
 
     private:
 
-      TOF_measurement _tof_;
-      delta_vertices_measurement _DeltaV_;
-      angle_measurement _angle_;
       DATATOOLS_SERIALIZATION_DECLARATION();
 
     };

@@ -19,12 +19,13 @@ namespace snemo {
       return h;
     }
 
-    void topology_1e_builder::build_measurement_dictionary(const snemo::datamodel::particle_track_data & ptd_, snemo::datamodel::base_topology_pattern::measurement_dict_type & meas_) {
+    void topology_1e_builder::build_measurement_dictionary(const snemo::datamodel::particle_track_data & ptd_,snemo::datamodel::base_topology_pattern & pattern_) {
 
-      const snemo::datamodel::particle_track_data::particle_collection_type & the_particles
-        = ptd_.get_particles();
+      snemo::datamodel::base_topology_pattern::measurement_dict_type & meas_ = pattern_.grab_measurement_dictionary();
 
-      const snemo::datamodel::particle_track & e1 = the_particles.front().get();
+      snemo::datamodel::base_topology_pattern::particle_tracks_dict_type & particle_tracks_dict = pattern_.grab_particle_tracks_dictionary();
+
+      const snemo::datamodel::particle_track & e1 = particle_tracks_dict["e1"].get();
 
       {
         snemo::datamodel::angle_measurement * ptr_angle = new snemo::datamodel::angle_measurement;

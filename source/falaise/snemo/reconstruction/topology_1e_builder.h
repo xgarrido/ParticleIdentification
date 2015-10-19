@@ -31,7 +31,7 @@ namespace snemo {
       virtual snemo::datamodel::base_topology_pattern::handle_type create_pattern();
 
       virtual void build_measurement_dictionary(const snemo::datamodel::particle_track_data & source_,
-                                                snemo::datamodel::base_topology_pattern::measurement_dict_type & meas_);
+                                                snemo::datamodel::base_topology_pattern & pattern_);
 
     private:
 

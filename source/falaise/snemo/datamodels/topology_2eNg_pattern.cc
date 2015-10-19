@@ -12,17 +12,16 @@ namespace snemo {
     DATATOOLS_SERIALIZATION_SERIAL_TAG_IMPLEMENTATION(topology_2eNg_pattern,
                                                       "snemo::datamodel::topology_2eNg_pattern")
 
-    // static
-    const std::string & topology_2eNg_pattern::pattern_id()
+    std::string topology_2eNg_pattern::pattern_id() const
     {
-      static const std::string _id("2eNg");
-      return _id;
+      const std::string id("2eNg");
+      return id;
     }
 
     topology_2eNg_pattern::topology_2eNg_pattern()
-      : base_topology_pattern(topology_2eNg_pattern::pattern_id())
+      : topology_2e_pattern()
     {
-      _number_of_gammas_ = 0;
+      // _number_of_gammas_ = 0;
       return;
     }
 
@@ -31,21 +30,21 @@ namespace snemo {
       return;
     }
 
-    void topology_2eNg_pattern::set_number_of_gammas(const size_t ngammas_)
-    {
-      _number_of_gammas_ = ngammas_;
-      return;
-    }
+    // void topology_2eNg_pattern::set_number_of_gammas(const size_t ngammas_)
+    // {
+    //   _number_of_gammas_ = ngammas_;
+    //   return;
+    // }
 
-    size_t topology_2eNg_pattern::get_number_of_gammas() const
-    {
-      return _number_of_gammas_;
-    }
+    // size_t topology_2eNg_pattern::get_number_of_gammas() const
+    // {
+    //   return _number_of_gammas_;
+    // }
 
     void topology_2eNg_pattern::tree_dump(std::ostream      & out_,
                                           const std::string & title_,
                                           const std::string & indent_,
-                                          bool inherit_) const
+                                          bool /*inherit_*/) const
     {
       std::string indent;
       if (! indent_.empty()) indent = indent_;

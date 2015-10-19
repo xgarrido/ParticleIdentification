@@ -19,6 +19,10 @@
 #include <falaise/snemo/datamodels/base_topology_pattern.h>
 #include <falaise/snemo/datamodels/particle_track_data.h>
 #include <falaise/snemo/datamodels/pid_utils.h>
+#include <falaise/snemo/datamodels/TOF_measurement.h>
+#include <falaise/snemo/datamodels/delta_vertices_measurement.h>
+#include <falaise/snemo/datamodels/angle_measurement.h>
+#include <falaise/snemo/datamodels/energy_measurement.h>
 
 namespace snemo {
 
@@ -45,10 +49,10 @@ namespace snemo {
 
       ///
       virtual void build(const snemo::datamodel::particle_track_data & source_,
-                 snemo::datamodel::base_topology_pattern & target_);
+                         snemo::datamodel::base_topology_pattern & pattern_);
 
       virtual void build_measurement_dictionary(const snemo::datamodel::particle_track_data & source_,
-                                                snemo::datamodel::base_topology_pattern::measurement_dict_type & meas_) = 0;
+                                                snemo::datamodel::base_topology_pattern & pattern_) = 0;
 
     protected:
 

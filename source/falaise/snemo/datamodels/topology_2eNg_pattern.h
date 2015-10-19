@@ -14,6 +14,7 @@
 
 // This project:
 #include <falaise/snemo/datamodels/base_topology_pattern.h>
+#include <falaise/snemo/datamodels/topology_2e_pattern.h>
 #include <falaise/snemo/datamodels/base_topology_measurement.h>
 
 namespace snemo {
@@ -21,12 +22,12 @@ namespace snemo {
   namespace datamodel {
 
     /// \brief The 2 election - N gammas class of reconstructed topology
-    class topology_2eNg_pattern : public base_topology_pattern
+    class topology_2eNg_pattern : public topology_2e_pattern
     {
     public:
 
       /// Return pattern identifier of the pattern
-      const std::string & pattern_id();
+      virtual std::string pattern_id() const;
 
       /// Constructor
       topology_2eNg_pattern();
@@ -34,11 +35,11 @@ namespace snemo {
       /// Destructor
       virtual ~topology_2eNg_pattern();
 
-      /// Set number of gammas
-      void set_number_of_gammas(const size_t ngammas_);
+      // /// Set number of gammas
+      // void set_number_of_gammas(const size_t ngammas_);
 
-      /// Return internal probability
-      size_t get_number_of_gammas() const;
+      // /// Return internal probability
+      // size_t get_number_of_gammas() const;
 
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,
@@ -48,7 +49,7 @@ namespace snemo {
 
     private:
 
-      size_t _number_of_gammas_;
+      // size_t _number_of_gammas_;
 
       DATATOOLS_SERIALIZATION_DECLARATION();
 

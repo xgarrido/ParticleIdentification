@@ -24,7 +24,6 @@ namespace snemo {
     void topology_1e_pattern::serialize(Archive & ar_, const unsigned int /* version */)
     {
       ar_ & BOOST_SERIALIZATION_BASE_OBJECT_NVP(base_topology_pattern);
-      ar_ & boost::serialization::make_nvp("angle", _angle_);
       return;
     }
 

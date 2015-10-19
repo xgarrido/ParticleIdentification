@@ -19,30 +19,22 @@ namespace snemo {
       return h;
     }
 
-    void topology_2e_builder::build_measurement_dictionary(const snemo::datamodel::particle_track_data & ptd_, snemo::datamodel::base_topology_pattern::measurement_dict_type & meas_) {
+    void topology_2e_builder::build_measurement_dictionary(const snemo::datamodel::particle_track_data & ptd_, snemo::datamodel::base_topology_pattern & pattern_) {
 
-      const snemo::datamodel::particle_track_data::particle_collection_type & the_particles
-        = ptd_.get_particles();
+      snemo::datamodel::base_topology_pattern::measurement_dict_type & meas_ = pattern_.grab_measurement_dictionary();
 
-      // snemo::datamodel::base_topology_pattern::particle_tracks_dict_type & particle_tracks_dict = topology_pattern_.grab_particle_tracks_dictionary();
+      snemo::datamodel::base_topology_pattern::particle_tracks_dict_type & particle_tracks_dict = pattern_.grab_particle_tracks_dictionary();
 
-      // topology_pattern_.build_particle_tracks_dictionary(the_particles, particle_tracks_dict);
-
-      // const snemo::datamodel::particle_track & e1 = particle_tracks_dict_["e1"];
-      // const snemo::datamodel::particle_track & e2 = particle_tracks_dict_["e2"];
-
-      // snemo::datamodel::base_topology_pattern::measurement_dict_type & meas_ = topology_pattern_.grab_measurement_dictionary();
-
-      const snemo::datamodel::particle_track & e1 = the_particles.front().get();
-      const snemo::datamodel::particle_track & e2 = the_particles.back().get();;
+      const snemo::datamodel::particle_track & e1 = particle_tracks_dict["e1"].get();
+      const snemo::datamodel::particle_track & e2 = particle_tracks_dict["e2"].get();
 
       {
         snemo::datamodel::TOF_measurement * ptr_tof = new snemo::datamodel::TOF_measurement;
 
         meas_["tof_e1_e2"].reset(ptr_tof);
         if (get_measurement_drivers().TOFD) get_measurement_drivers().TOFD->process(e1, e2,
-                                    ptr_tof->grab_internal_probabilities(),
-                                    ptr_tof->grab_external_probabilities());
+                                                                                    ptr_tof->grab_internal_probabilities(),
+                                                                                    ptr_tof->grab_external_probabilities());
       }
 
       {

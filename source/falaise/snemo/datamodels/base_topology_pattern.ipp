@@ -24,7 +24,6 @@ namespace snemo {
     void base_topology_pattern::serialize(Archive & ar, const unsigned int /* version */)
     {
       ar & DATATOOLS_SERIALIZATION_I_SERIALIZABLE_BASE_OBJECT_NVP;
-      ar & boost::serialization::make_nvp("pattern_id", _pattern_id_);
       ar & boost::serialization::make_nvp("particle_tracks_dictionary", _tracks_);
       ar & boost::serialization::make_nvp("measurement_dictionary", _meas_);
       return;

@@ -27,7 +27,7 @@ namespace snemo {
     public:
 
       /// Return pattern identifier of the pattern
-      static const std::string & pattern_id();
+      virtual std::string pattern_id() const;
 
       /// Constructor
       topology_1e1a_pattern();
@@ -35,71 +35,71 @@ namespace snemo {
       /// Destructor
       virtual ~topology_1e1a_pattern();
 
-      /// Check if topology is valid
-      bool is_valid() const;
+      // /// Check if topology is valid
+      // bool is_valid() const;
 
-      /// Check if the electron particle is present
-      bool has_electron_particle() const;
+      // /// Check if the electron particle is present
+      // bool has_electron_particle() const;
 
-      /// Detach the electron particle
-      void detach_electron_particle();
+      // /// Detach the electron particle
+      // void detach_electron_particle();
 
-      /// Attach a electron particle by handle
-      void set_electron_particle(const particle_track::handle_type & handle_);
+      // /// Attach a electron particle by handle
+      // void set_electron_particle(const particle_track::handle_type & handle_);
 
-      /// Return a non mutable reference on the electron particle
-      const particle_track & get_electron_particle() const;
+      // /// Return a non mutable reference on the electron particle
+      // const particle_track & get_electron_particle() const;
 
-      /// Check if the alpha particle is present
-      bool has_alpha_particle() const;
+      // /// Check if the alpha particle is present
+      // bool has_alpha_particle() const;
 
-      /// Detach the alpha particle
-      void detach_alpha_particle();
+      // /// Detach the alpha particle
+      // void detach_alpha_particle();
 
-      /// Attach a alpha particle by handle
-      void set_alpha_particle(const particle_track::handle_type & handle_);
+      // /// Attach a alpha particle by handle
+      // void set_alpha_particle(const particle_track::handle_type & handle_);
 
-      /// Return a non mutable reference on the alpha particle
-      const particle_track & get_alpha_particle() const;
+      // /// Return a non mutable reference on the alpha particle
+      // const particle_track & get_alpha_particle() const;
 
-      /// Check delta vertices y validity
-      bool has_delta_vertices_y() const;
+      // /// Check delta vertices y validity
+      // bool has_delta_vertices_y() const;
 
-      /// Set delta vertices y
-      void set_delta_vertices_y(double);
+      // /// Set delta vertices y
+      // void set_delta_vertices_y(double);
 
-      /// Return delta vertices y
-      double get_delta_vertices_y() const;
+      // /// Return delta vertices y
+      // double get_delta_vertices_y() const;
 
-      /// Check delta vertices z validity
-      bool has_delta_vertices_z() const;
+      // /// Check delta vertices z validity
+      // bool has_delta_vertices_z() const;
 
-      /// Set delta vertices z
-      void set_delta_vertices_z(double);
+      // /// Set delta vertices z
+      // void set_delta_vertices_z(double);
 
-      /// Return delta vertices z
-      double get_delta_vertices_z() const;
+      // /// Return delta vertices z
+      // double get_delta_vertices_z() const;
 
-      /// Check angle validity
-      bool has_angle() const;
+      // /// Check angle validity
+      // bool has_angle() const;
 
-      /// Set angle
-      void set_angle(double);
+      // /// Set angle
+      // void set_angle(double);
 
-      /// Return angle measurement
-      double get_angle() const;
+      // /// Return angle measurement
+      // double get_angle() const;
 
-      /// Get alpha delayed time
-      double get_alpha_delayed_time() const;
+      // /// Get alpha delayed time
+      // double get_alpha_delayed_time() const;
 
-      /// Get alpha track length
-      double get_alpha_track_length() const;
+      // /// Get alpha track length
+      // double get_alpha_track_length() const;
 
-      /// Get electron track length
-      double get_electron_track_length() const;
+      // /// Get electron track length
+      // double get_electron_track_length() const;
 
-      /// Get electron energy
-      double get_electron_energy() const;
+      // /// Get electron energy
+      // double get_electron_energy() const;
 
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,
@@ -108,11 +108,6 @@ namespace snemo {
                              bool inherit_               = false) const;
 
     private:
-
-      delta_vertices_measurement _delta_vertices_;     //!< Delta vertices meas.
-      angle_measurement _angle_;                       //!< Angle meas.
-      particle_track::handle_type _electron_particle_; //!< Electron particle handle
-      particle_track::handle_type _alpha_particle_;    //!< Alpha particle handle
 
       DATATOOLS_SERIALIZATION_DECLARATION();
 
