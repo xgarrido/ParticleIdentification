@@ -34,14 +34,14 @@ namespace snemo {
       /// Destructor
       virtual ~topology_1e_pattern();
 
-      // /// Check angle validity
-      // bool has_angle() const;
+      /// Check angle validity
+      bool has_angle() const;
 
       // /// Set angle
       // void set_angle(double);
 
-      // /// Return internal probability
-      // double get_angle() const;
+      /// Return internal probability
+      double get_angle() const;
 
       // /// Check electron energy validity
       // bool has_electron_energy() const;

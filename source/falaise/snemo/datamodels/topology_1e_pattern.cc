@@ -29,10 +29,10 @@ namespace snemo {
       return;
     }
 
-    // bool topology_1e_pattern::has_angle() const
-    // {
-    //   return _angle_.has_angle();
-    // }
+    bool topology_1e_pattern::has_angle() const
+    {
+      return (base_topology_pattern::get_measurement_dictionary().find("angle_e1") != base_topology_pattern::get_measurement_dictionary().end());
+    }
 
     // void topology_1e_pattern::set_angle(double angle_)
     // {
@@ -40,11 +40,11 @@ namespace snemo {
     //   return;
     // }
 
-    // double topology_1e_pattern::get_angle() const
-    // {
-    //   DT_THROW_IF(! has_angle(), std::logic_error, "No angle stored !");
-    //   return _angle_.get_angle();
-    // }
+    double topology_1e_pattern::get_angle() const
+    {
+      DT_THROW_IF(! has_angle(), std::logic_error, "No angle stored !");
+      return base_topology_pattern::get_measurement_dictionary().at("angle_e1");
+    }
 
     // bool topology_1e_pattern::has_electron_energy() const
     // {
