@@ -3,7 +3,7 @@
 
 // Ourselves:
 #include <falaise/snemo/reconstruction/topology_1e1a_builder.h>
-#include <falaise/snemo/reconstruction/angle_measurement_driver.h>
+#include <falaise/snemo/reconstruction/angle_driver.h>
 #include <falaise/snemo/reconstruction/delta_vertices_driver.h>
 #include <falaise/snemo/datamodels/topology_1e1a_pattern.h>
 #include <falaise/snemo/datamodels/angle_measurement.h>

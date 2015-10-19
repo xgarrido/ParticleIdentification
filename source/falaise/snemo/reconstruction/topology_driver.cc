@@ -15,7 +15,7 @@
 
 #include <falaise/snemo/reconstruction/tof_driver.h>
 #include <falaise/snemo/reconstruction/delta_vertices_driver.h>
-#include <falaise/snemo/reconstruction/angle_measurement_driver.h>
+#include <falaise/snemo/reconstruction/angle_driver.h>
 #include <falaise/snemo/reconstruction/energy_driver.h>
 
 #include <falaise/snemo/reconstruction/base_topology_builder.h>
@@ -102,9 +102,9 @@ namespace snemo {
           datatools::properties DVD_config;
           setup_.export_and_rename_starting_with(DVD_config, std::string(a_driver_name + "."), "");
           _drivers_.DVD->initialize(DVD_config);
-        } else if (a_driver_name == snemo::reconstruction::angle_measurement_driver::get_id()) {
+        } else if (a_driver_name == snemo::reconstruction::angle_driver::get_id()) {
           // Initialize Delta Vertices Driver
-          _drivers_.AMD.reset(new snemo::reconstruction::angle_measurement_driver);
+          _drivers_.AMD.reset(new snemo::reconstruction::angle_driver);
           datatools::properties AMD_config;
           setup_.export_and_rename_starting_with(AMD_config, std::string(a_driver_name + "."), "");
           _drivers_.AMD->initialize(AMD_config);
@@ -252,7 +252,7 @@ namespace snemo {
       // Invoke specific OCD support from the driver class:
       ::snemo::reconstruction::tof_driver::init_ocd(ocd_);
       ::snemo::reconstruction::delta_vertices_driver::init_ocd(ocd_);
-      ::snemo::reconstruction::angle_measurement_driver::init_ocd(ocd_);
+      ::snemo::reconstruction::angle_driver::init_ocd(ocd_);
 
       return;
     }

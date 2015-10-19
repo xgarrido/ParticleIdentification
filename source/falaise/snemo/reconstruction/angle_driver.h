@@ -1,4 +1,4 @@
-/** \file falaise/snemo/reconstruction/angle_measurement_driver.h
+/** \file falaise/snemo/reconstruction/angle_driver.h
  * Author(s)     : Steven Calvez <calvez@lal.in2p3.fr>
  * Creation date : 2015-04-01
  * Last modified : 2015-04-01
@@ -28,8 +28,8 @@
  *
  */
 
-#ifndef FALAISE_ANGLE_MEASUREMENT_PLUGIN_SNEMO_RECONSTRUCTION_ANGLE_MEASUREMENT_DRIVER_H
-#define FALAISE_ANGLE_MEASUREMENT_PLUGIN_SNEMO_RECONSTRUCTION_ANGLE_MEASUREMENT_DRIVER_H 1
+#ifndef FALAISE_ANGLE_MEASUREMENT_PLUGIN_SNEMO_RECONSTRUCTION_ANGLE_DRIVER_H
+#define FALAISE_ANGLE_MEASUREMENT_PLUGIN_SNEMO_RECONSTRUCTION_ANGLE_DRIVER_H 1
 
 // Standard library:
 #include <string>
@@ -49,7 +49,7 @@ namespace snemo {
   namespace reconstruction {
 
     /// Driver for the angle measurement algorithms
-    class angle_measurement_driver
+    class angle_driver
     {
     public:
 
@@ -63,10 +63,10 @@ namespace snemo {
       datatools::logger::priority get_logging_priority() const;
 
       /// Constructor
-      angle_measurement_driver();
+      angle_driver();
 
       /// Destructor
-      ~angle_measurement_driver();
+      ~angle_driver();
 
       /// Main process for single prticle track measurement
       void process(const snemo::datamodel::particle_track & pt_,
@@ -123,9 +123,9 @@ namespace snemo {
 
 // Declare the OCD interface of the module
 #include <datatools/ocd_macros.h>
-DOCD_CLASS_DECLARATION(snemo::reconstruction::angle_measurement_driver)
+DOCD_CLASS_DECLARATION(snemo::reconstruction::angle_driver)
 
-#endif // FALAISE_ANGLE_MEASUREMENT_PLUGIN_SNEMO_RECONSTRUCTION_ANGLE_MEASUREMENT_DRIVER_H
+#endif // FALAISE_ANGLE_MEASUREMENT_PLUGIN_SNEMO_RECONSTRUCTION_ANGLE_DRIVER_H
 
 /*
 ** Local Variables: --

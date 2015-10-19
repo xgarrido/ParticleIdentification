@@ -1,7 +1,7 @@
-/// \file falaise/snemo/reconstruction/angle_measurement_driver.cc
+/// \file falaise/snemo/reconstruction/angle_driver.cc
 
 // Ourselves:
-#include <snemo/reconstruction/angle_measurement_driver.h>
+#include <snemo/reconstruction/angle_driver.h>
 
 // Standard library:
 #include <stdexcept>
@@ -23,43 +23,43 @@ namespace snemo {
 
   namespace reconstruction {
 
-    const std::string & angle_measurement_driver::get_id()
+    const std::string & angle_driver::get_id()
     {
       static const std::string _id("AMD");
       return _id;
     }
 
-    bool angle_measurement_driver::is_initialized() const
+    bool angle_driver::is_initialized() const
     {
       return _initialized_;
     }
 
-    void angle_measurement_driver::_set_initialized(bool i_)
+    void angle_driver::_set_initialized(bool i_)
     {
       _initialized_ = i_;
       return;
     }
 
-    void angle_measurement_driver::set_logging_priority(const datatools::logger::priority priority_)
+    void angle_driver::set_logging_priority(const datatools::logger::priority priority_)
     {
       _logging_priority_ = priority_;
       return;
     }
 
-    datatools::logger::priority angle_measurement_driver::get_logging_priority() const
+    datatools::logger::priority angle_driver::get_logging_priority() const
     {
       return _logging_priority_;
     }
 
     // Constructor
-    angle_measurement_driver::angle_measurement_driver()
+    angle_driver::angle_driver()
     {
       _set_defaults();
       return;
     }
 
     // Destructor
-    angle_measurement_driver::~angle_measurement_driver()
+    angle_driver::~angle_driver()
     {
       if (is_initialized()) {
         reset();
@@ -67,7 +67,7 @@ namespace snemo {
       return;
     }
 
-    void angle_measurement_driver::_set_defaults()
+    void angle_driver::_set_defaults()
     {
 
       _initialized_ = false;
@@ -76,7 +76,7 @@ namespace snemo {
     }
 
     // Initialization :
-    void angle_measurement_driver::initialize(const datatools::properties  & setup_)
+    void angle_driver::initialize(const datatools::properties  & setup_)
     {
       DT_THROW_IF(is_initialized(), std::logic_error,
                   "Driver '" << get_id() << "' is already initialized !");
@@ -91,32 +91,32 @@ namespace snemo {
       return;
     }
 
-    void angle_measurement_driver::reset()
+    void angle_driver::reset()
     {
       _set_defaults();
       _set_initialized(false);
       return;
     }
 
-    void angle_measurement_driver::process(const snemo::datamodel::particle_track & pt_,
-                                           double & angle_)
+    void angle_driver::process(const snemo::datamodel::particle_track & pt_,
+                               double & angle_)
     {
       DT_THROW_IF(! is_initialized(), std::logic_error, "Driver '" << get_id() << "' is already initialized !");
       this->_process_algo(pt_, angle_);
       return;
     }
 
-    void angle_measurement_driver::process(const snemo::datamodel::particle_track & pt1_,
-                                           const snemo::datamodel::particle_track & pt2_,
-                                           double & angle_)
+    void angle_driver::process(const snemo::datamodel::particle_track & pt1_,
+                               const snemo::datamodel::particle_track & pt2_,
+                               double & angle_)
     {
       DT_THROW_IF(! is_initialized(), std::logic_error, "Driver '" << get_id() << "' is already initialized !");
       this->_process_algo(pt1_, pt2_, angle_);
       return;
     }
 
-    void angle_measurement_driver::_process_algo(const snemo::datamodel::particle_track & pt_,
-                                                 double & angle_)
+    void angle_driver::_process_algo(const snemo::datamodel::particle_track & pt_,
+                                     double & angle_)
     {
       DT_LOG_TRACE(get_logging_priority(), "Entering...");
 
@@ -141,9 +141,9 @@ namespace snemo {
       return;
     }
 
-    void angle_measurement_driver::_process_algo(const snemo::datamodel::particle_track & pt1_,
-                                                 const snemo::datamodel::particle_track & pt2_,
-                                                 double & angle_)
+    void angle_driver::_process_algo(const snemo::datamodel::particle_track & pt1_,
+                                     const snemo::datamodel::particle_track & pt2_,
+                                     double & angle_)
     {
       DT_LOG_TRACE(get_logging_priority(), "Entering...");
 
@@ -170,8 +170,8 @@ namespace snemo {
       return;
     }
 
-    void angle_measurement_driver::_get_direction(const snemo::datamodel::particle_track & pt_,
-                                                  geomtools::vector_3d & direction_)
+    void angle_driver::_get_direction(const snemo::datamodel::particle_track & pt_,
+                                      geomtools::vector_3d & direction_)
     {
       // Invalidate direction
       geomtools::invalidate(direction_);
@@ -222,7 +222,7 @@ namespace snemo {
     }
 
     // static
-    void angle_measurement_driver::init_ocd(datatools::object_configuration_description & ocd_)
+    void angle_driver::init_ocd(datatools::object_configuration_description & ocd_)
     {
       // Prefix "AMD" stands for "Angle Measurement Driver" :
       datatools::logger::declare_ocd_logging_configuration(ocd_, "fatal", "AMD.");
@@ -234,9 +234,9 @@ namespace snemo {
 
   /* OCD support */
 #include <datatools/object_configuration_description.h>
-DOCD_CLASS_IMPLEMENT_LOAD_BEGIN(snemo::reconstruction::angle_measurement_driver, ocd_)
+DOCD_CLASS_IMPLEMENT_LOAD_BEGIN(snemo::reconstruction::angle_driver, ocd_)
 {
-  ocd_.set_class_name("snemo::reconstruction::angle_measurement_driver");
+  ocd_.set_class_name("snemo::reconstruction::angle_driver");
   ocd_.set_class_description("A driver class for the angle measurement algorithm");
   ocd_.set_class_library("Falaise_ParticleIdentification");
   ocd_.set_class_documentation("The driver determine angle between particle tracks");
@@ -245,5 +245,5 @@ DOCD_CLASS_IMPLEMENT_LOAD_BEGIN(snemo::reconstruction::angle_measurement_driver,
   return;
 }
 DOCD_CLASS_IMPLEMENT_LOAD_END() // Closing macro for implementation
-DOCD_CLASS_SYSTEM_REGISTRATION(snemo::reconstruction::angle_measurement_driver,
-                               "snemo::reconstruction::angle_measurement_driver")
+DOCD_CLASS_SYSTEM_REGISTRATION(snemo::reconstruction::angle_driver,
+                               "snemo::reconstruction::angle_driver")
