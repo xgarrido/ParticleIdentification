@@ -3,9 +3,6 @@
 
 // Ourselves:
 #include <falaise/snemo/datamodels/topology_1e_pattern.h>
-#include <falaise/snemo/datamodels/energy_measurement.h>
-#include <falaise/snemo/datamodels/tof_measurement.h>
-#include <falaise/snemo/datamodels/angle_measurement.h>
 
 namespace snemo {
 
@@ -39,7 +36,7 @@ namespace snemo {
 
     double topology_1e_pattern::get_electron_angle() const
     {
-      DT_THROW_IF(! has_electron_angle(), std::logic_error, "No angle measurement stored !");
+      DT_THROW_IF(! has_electron_angle(), std::logic_error, "No electron angle measurement stored !");
       return dynamic_cast<const snemo::datamodel::angle_measurement&> (get_measurement("angle_e1")).get_angle();
     }
 
@@ -50,7 +47,7 @@ namespace snemo {
 
     double topology_1e_pattern::get_electron_energy() const
     {
-      DT_THROW_IF(! has_electron_energy(), std::logic_error, "No energy measurement stored !");
+      DT_THROW_IF(! has_electron_energy(), std::logic_error, "No electron energy measurement stored !");
       return dynamic_cast<const snemo::datamodel::energy_measurement&> (get_measurement("energy_e1")).get_energy();
     }
 

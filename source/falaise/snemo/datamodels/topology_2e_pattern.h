@@ -12,6 +12,9 @@
 // This project:
 #include <falaise/snemo/datamodels/particle_track_data.h>
 #include <falaise/snemo/datamodels/base_topology_pattern.h>
+#include <falaise/snemo/datamodels/energy_measurement.h>
+#include <falaise/snemo/datamodels/tof_measurement.h>
+#include <falaise/snemo/datamodels/angle_measurement.h>
 
 namespace snemo {
 

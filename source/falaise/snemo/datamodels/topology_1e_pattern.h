@@ -15,13 +15,16 @@
 // This project:
 #include <falaise/snemo/datamodels/base_topology_pattern.h>
 #include <falaise/snemo/datamodels/base_topology_measurement.h>
+#include <falaise/snemo/datamodels/energy_measurement.h>
+#include <falaise/snemo/datamodels/tof_measurement.h>
+#include <falaise/snemo/datamodels/angle_measurement.h>
 
 namespace snemo {
 
   namespace datamodel {
 
-    // Forward declaration
-    class angle_measurement;
+    // // Forward declaration
+    // class angle_measurement;
 
     /// \brief The 1e class of reconstructed topology
     class topology_1e_pattern : public base_topology_pattern

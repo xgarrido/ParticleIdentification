@@ -15,13 +15,14 @@
 // This project:
 #include <falaise/snemo/datamodels/base_topology_pattern.h>
 #include <falaise/snemo/datamodels/base_topology_measurement.h>
+#include <falaise/snemo/datamodels/topology_1e_pattern.h>
 
 namespace snemo {
 
   namespace datamodel {
 
     /// \brief The 1e1p class of reconstructed topology
-    class topology_1e1p_pattern : public base_topology_pattern
+    class topology_1e1p_pattern : public topology_1e_pattern
     {
     public:
 
@@ -34,50 +35,35 @@ namespace snemo {
       /// Destructor
       virtual ~topology_1e1p_pattern();
 
-      /// Check internal probability validity
-      bool has_internal_probability() const;
+      /// Check positron energy validity
+      bool has_positron_energy() const;
 
-      /// Set internal probability
-      void set_internal_probability(double);
+      /// Get positron energy
+      double get_positron_energy() const;
 
-      /// Return internal probability
-      double get_internal_probability() const;
+      /// Check angle measurement availability
+      bool has_positron_angle() const;
 
-      /// Check internal probability validity
-      bool has_external_probability() const;
+      /// Return positron angle
+      double get_positron_angle() const;
 
-      /// Set external probability
-      void set_external_probability(double);
+      /// Check angle measurement availability
+      bool has_electron_positron_angle() const;
 
-      /// Return external probability
-      double get_external_probability() const;
+      /// Return electron-positron angle
+      double get_electron_positron_angle() const;
 
-      /// Check delta vertices y validity
-      bool has_delta_vertices_y() const;
+      /// Check electron-positron TOF internal probability validity
+      bool has_electron_positron_internal_probability() const;
 
-      /// Set delta vertices y
-      void set_delta_vertices_y(double);
+      /// Get electron-positron TOF internal probability
+      double get_electron_positron_internal_probability() const;
 
-      /// Return delta vertices y
-      double get_delta_vertices_y() const;
+      /// Check electron-positron TOF external probability validity
+      bool has_electron_positron_external_probability() const;
 
-      /// Check delta vertices z validity
-      bool has_delta_vertices_z() const;
-
-      /// Set delta vertices z
-      void set_delta_vertices_z(double);
-
-      /// Return delta vertices z
-      double get_delta_vertices_z() const;
-
-      /// Check angle validity
-      bool has_angle() const;
-
-      /// Set angle
-      void set_angle(double);
-
-      /// Return internal probability
-      double get_angle() const;
+      /// Get electron-positron TOF external probability
+      double get_electron_positron_external_probability() const;
 
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,

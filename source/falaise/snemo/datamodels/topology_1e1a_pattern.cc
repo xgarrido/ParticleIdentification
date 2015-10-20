@@ -19,7 +19,7 @@ namespace snemo {
     }
 
     topology_1e1a_pattern::topology_1e1a_pattern()
-      : base_topology_pattern()
+      : topology_1e_pattern()
     {
       return;
     }
@@ -29,90 +29,29 @@ namespace snemo {
       return;
     }
 
-    // bool topology_1e1a_pattern::is_valid() const
-    // {
-    //   return has_electron_particle() && has_alpha_particle();
-    // }
+    bool topology_1e1a_pattern::has_alpha_angle() const
+    {
+      return has_measurement("angle_a1");
+    }
 
-    // bool topology_1e1a_pattern::has_electron_particle() const
-    // {
-    //   return _electron_particle_.has_data();
-    // }
+    double topology_1e1a_pattern::get_alpha_angle() const
+    {
+      DT_THROW_IF(! has_alpha_angle(), std::logic_error, "No alpha angle measurement stored !");
+      return dynamic_cast<const snemo::datamodel::angle_measurement&> (get_measurement("angle_a1")).get_angle();
+    }
 
-    // void topology_1e1a_pattern::set_electron_particle(const particle_track::handle_type & handle_)
-    // {
-    //   _electron_particle_ = handle_;
-    //   return;
-    // }
+    bool topology_1e1a_pattern::has_electron_alpha_angle() const
+    {
+      return has_measurement("angle_e1_a1");
+    }
 
-    // const particle_track & topology_1e1a_pattern::get_electron_particle() const
-    // {
-    //   return _electron_particle_.get();
-    // }
+    double topology_1e1a_pattern::get_electron_alpha_angle() const
+    {
+      DT_THROW_IF(! has_electron_alpha_angle(), std::logic_error, "No electron-alpha angle measurement stored !");
+      return dynamic_cast<const snemo::datamodel::angle_measurement&> (get_measurement("angle_e1_a1")).get_angle();
+    }
 
-    // bool topology_1e1a_pattern::has_alpha_particle() const
-    // {
-    //   return _alpha_particle_.has_data();
-    // }
-
-    // void topology_1e1a_pattern::set_alpha_particle(const particle_track::handle_type & handle_)
-    // {
-    //   _alpha_particle_ = handle_;
-    //   return;
-    // }
-
-    // const particle_track & topology_1e1a_pattern::get_alpha_particle() const
-    // {
-    //   return _alpha_particle_.get();
-    // }
-
-    // bool topology_1e1a_pattern::has_delta_vertices_y() const
-    // {
-    //   return _delta_vertices_.has_delta_vertices_y();
-    // }
-
-    // void topology_1e1a_pattern::set_delta_vertices_y(double deltaV_y_)
-    // {
-    //   _delta_vertices_.set_delta_vertices_y(deltaV_y_);
-    //   return;
-    // }
-
-    // double topology_1e1a_pattern::get_delta_vertices_y() const
-    // {
-    //   return _delta_vertices_.get_delta_vertices_y();
-    // }
-
-    // bool topology_1e1a_pattern::has_delta_vertices_z() const
-    // {
-    //   return _delta_vertices_.has_delta_vertices_z();
-    // }
-
-    // void topology_1e1a_pattern::set_delta_vertices_z(double deltaV_z_)
-    // {
-    //   _delta_vertices_.set_delta_vertices_z(deltaV_z_);
-    //   return;
-    // }
-
-    // double topology_1e1a_pattern::get_delta_vertices_z() const
-    // {
-    //   return _delta_vertices_.get_delta_vertices_z();
-    // }
-
-    // bool topology_1e1a_pattern::has_angle() const
-    // {
-    //   return _angle_.has_angle();
-    // }
-
-    // void topology_1e1a_pattern::set_angle(double angle_)
-    // {
-    //   _angle_.set_angle(angle_);
-    //   return;
-    // }
-
-    // double topology_1e1a_pattern::get_angle() const
-    // {
-    //   return _angle_.get_angle();
-    // }
+    // delta_vertices
 
     // double topology_1e1a_pattern::get_alpha_delayed_time() const
     // {
@@ -156,22 +95,6 @@ namespace snemo {
     //     }
     //   }
     //   return length;
-    // }
-
-    // double topology_1e1a_pattern::get_electron_energy() const
-    // {
-    //   double energy = datatools::invalid_real();
-    //   if (has_electron_particle()) {
-    //     const snemo::datamodel::particle_track & the_electron = get_electron_particle();
-    //     if (the_electron.has_associated_calorimeter_hits()) {
-    //       const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
-    //         calos = the_electron.get_associated_calorimeter_hits();
-    //       if (calos.size() == 1) {
-    //         energy = calos.front().get().get_energy();
-    //       }
-    //     }
-    //   }
-    //   return energy;
     // }
 
     void topology_1e1a_pattern::tree_dump(std::ostream      & out_,

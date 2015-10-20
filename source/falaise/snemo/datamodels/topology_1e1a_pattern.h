@@ -16,13 +16,14 @@
 #include <falaise/snemo/datamodels/base_topology_pattern.h>
 #include <falaise/snemo/datamodels/particle_track.h>
 #include <falaise/snemo/datamodels/base_topology_measurement.h>
+#include <falaise/snemo/datamodels/topology_1e_pattern.h>
 
 namespace snemo {
 
   namespace datamodel {
 
     /// \brief The 1 electron - 1 alpha class of reconstructed topology
-    class topology_1e1a_pattern : public base_topology_pattern
+    class topology_1e1a_pattern : public topology_1e_pattern
     {
     public:
 
@@ -35,32 +36,17 @@ namespace snemo {
       /// Destructor
       virtual ~topology_1e1a_pattern();
 
-      // /// Check delta vertices y validity
-      // bool has_delta_vertices_y() const;
+      /// Check angle measurement availability
+      bool has_alpha_angle() const;
 
-      // /// Set delta vertices y
-      // void set_delta_vertices_y(double);
+      /// Return alpha angle
+      double get_alpha_angle() const;
 
-      // /// Return delta vertices y
-      // double get_delta_vertices_y() const;
+      /// Check angle measurement availability
+      bool has_electron_alpha_angle() const;
 
-      // /// Check delta vertices z validity
-      // bool has_delta_vertices_z() const;
-
-      // /// Set delta vertices z
-      // void set_delta_vertices_z(double);
-
-      // /// Return delta vertices z
-      // double get_delta_vertices_z() const;
-
-      // /// Check angle validity
-      // bool has_angle() const;
-
-      // /// Set angle
-      // void set_angle(double);
-
-      // /// Return angle measurement
-      // double get_angle() const;
+      /// Return electron-alpha angle
+      double get_electron_alpha_angle() const;
 
       // /// Get alpha delayed time
       // double get_alpha_delayed_time() const;
@@ -70,9 +56,6 @@ namespace snemo {
 
       // /// Get electron track length
       // double get_electron_track_length() const;
-
-      // /// Get electron energy
-      // double get_electron_energy() const;
 
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,
