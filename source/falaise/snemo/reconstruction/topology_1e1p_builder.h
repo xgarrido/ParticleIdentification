@@ -10,14 +10,7 @@
 #define FALAISE_SNEMO_DATAMODEL_TOPOLOGY_1E1P_BUILDER_H 1
 
 // This project:
-#include <falaise/snemo/reconstruction/base_topology_builder.h>
 #include <falaise/snemo/reconstruction/topology_1e_builder.h>
-#include <falaise/snemo/reconstruction/tof_driver.h>
-#include <falaise/snemo/reconstruction/delta_vertices_driver.h>
-#include <falaise/snemo/reconstruction/angle_driver.h>
-#include <falaise/snemo/reconstruction/energy_driver.h>
-#include <falaise/snemo/datamodels/base_topology_pattern.h>
-#include <falaise/snemo/datamodels/base_topology_measurement.h>
 
 namespace snemo {
 
@@ -26,13 +19,12 @@ namespace snemo {
     /// \brief The base class to build '1e1p' topology pattern
     class topology_1e1p_builder : public topology_1e_builder
     {
-    public:
+    protected:
 
       ///
-      virtual snemo::datamodel::base_topology_pattern::handle_type create_pattern();
+      virtual snemo::datamodel::base_topology_pattern::handle_type _create_pattern();
 
-      virtual void build_measurement_dictionary(const snemo::datamodel::particle_track_data & source_,
-                                                snemo::datamodel::base_topology_pattern & pattern_);
+      virtual void _build_measurement_dictionary(snemo::datamodel::base_topology_pattern & pattern_);
 
     private:
 

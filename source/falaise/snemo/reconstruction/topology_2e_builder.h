@@ -22,10 +22,9 @@ namespace snemo {
     public:
 
       ///
-      virtual snemo::datamodel::base_topology_pattern::handle_type create_pattern();
+      virtual snemo::datamodel::base_topology_pattern::handle_type _create_pattern();
 
-      virtual void build_measurement_dictionary(const snemo::datamodel::particle_track_data & source_,
-                                                snemo::datamodel::base_topology_pattern & pattern_);
+      virtual void _build_measurement_dictionary(snemo::datamodel::base_topology_pattern & pattern_);
 
     private:
 

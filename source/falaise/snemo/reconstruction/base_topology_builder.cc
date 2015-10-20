@@ -42,12 +42,17 @@ namespace snemo {
       return;
     }
 
+    snemo::datamodel::base_topology_pattern::handle_type base_topology_builder::create_pattern()
+    {
+      return _create_pattern();
+    }
+
     void base_topology_builder::build(const snemo::datamodel::particle_track_data & source_,
                                       snemo::datamodel::base_topology_pattern & pattern_)
     {
       DT_THROW_IF(! has_measurement_drivers(), std::logic_error, "Missing measurement drivers !");
       this->_build_particle_tracks_dictionary(source_, pattern_.grab_particle_tracks_dictionary());
-      build_measurement_dictionary(source_, pattern_);
+      _build_measurement_dictionary(pattern_);
     }
 
     void base_topology_builder::_build_particle_tracks_dictionary(const snemo::datamodel::particle_track_data & ptd_,

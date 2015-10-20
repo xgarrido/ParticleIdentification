@@ -17,14 +17,13 @@ namespace snemo {
     FL_SNEMO_RECONSTRUCTION_TOPOLOGY_BUILDER_REGISTRATION_IMPLEMENT(topology_1e_builder,
                                                                     "snemo::reconstruction::topology_1e_builder");
 
-    snemo::datamodel::base_topology_pattern::handle_type topology_1e_builder::create_pattern()
+    snemo::datamodel::base_topology_pattern::handle_type topology_1e_builder::_create_pattern()
     {
       snemo::datamodel::base_topology_pattern::handle_type h(new snemo::datamodel::topology_1e_pattern);
       return h;
     }
 
-    void topology_1e_builder::build_measurement_dictionary(const snemo::datamodel::particle_track_data & ptd_,
-                                                           snemo::datamodel::base_topology_pattern & pattern_)
+    void topology_1e_builder::_build_measurement_dictionary(snemo::datamodel::base_topology_pattern & pattern_)
     {
       const std::string e1_label = "e1";
       DT_THROW_IF(! pattern_.has_particle_track(e1_label), std::logic_error,

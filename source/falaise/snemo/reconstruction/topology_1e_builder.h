@@ -19,13 +19,12 @@ namespace snemo {
     /// \brief The base class to build '1e' topology pattern
     class topology_1e_builder : public base_topology_builder
     {
-    public:
+    protected:
 
       ///
-      virtual snemo::datamodel::base_topology_pattern::handle_type create_pattern();
+      virtual snemo::datamodel::base_topology_pattern::handle_type _create_pattern();
 
-      virtual void build_measurement_dictionary(const snemo::datamodel::particle_track_data & source_,
-                                                snemo::datamodel::base_topology_pattern & pattern_);
+      virtual void _build_measurement_dictionary(snemo::datamodel::base_topology_pattern & pattern_);
 
     private:
 

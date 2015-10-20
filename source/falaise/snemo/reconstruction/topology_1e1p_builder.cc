@@ -3,7 +3,15 @@
 
 // Ourselves:
 #include <falaise/snemo/reconstruction/topology_1e1p_builder.h>
+#include <falaise/snemo/reconstruction/angle_driver.h>
+#include <falaise/snemo/reconstruction/energy_driver.h>
+#include <falaise/snemo/reconstruction/tof_driver.h>
+#include <falaise/snemo/reconstruction/delta_vertices_driver.h>
 #include <falaise/snemo/datamodels/topology_1e1p_pattern.h>
+#include <falaise/snemo/datamodels/angle_measurement.h>
+#include <falaise/snemo/datamodels/energy_measurement.h>
+#include <falaise/snemo/datamodels/tof_measurement.h>
+#include <falaise/snemo/datamodels/delta_vertices_measurement.h>
 
 namespace snemo {
 
@@ -13,56 +21,62 @@ namespace snemo {
     FL_SNEMO_RECONSTRUCTION_TOPOLOGY_BUILDER_REGISTRATION_IMPLEMENT(topology_1e1p_builder,
                                                                     "snemo::reconstruction::topology_1e1p_builder");
 
-    snemo::datamodel::base_topology_pattern::handle_type topology_1e1p_builder::create_pattern()
+    snemo::datamodel::base_topology_pattern::handle_type topology_1e1p_builder::_create_pattern()
     {
       snemo::datamodel::base_topology_pattern::handle_type h(new snemo::datamodel::topology_1e1p_pattern);
       return h;
     }
 
-    void topology_1e1p_builder::build_measurement_dictionary(const snemo::datamodel::particle_track_data & ptd_,snemo::datamodel::base_topology_pattern & pattern_) {
+    void topology_1e1p_builder::_build_measurement_dictionary(snemo::datamodel::base_topology_pattern & pattern_)
+    {
+      snemo::reconstruction::topology_1e_builder::build_measurement_dictionary(pattern_);
 
-      snemo::datamodel::base_topology_pattern::measurement_dict_type & meas_ = pattern_.grab_measurement_dictionary();
+      const std::string e1_label = "e1";
+      DT_THROW_IF(! pattern_.has_particle_track(e1_label), std::logic_error,
+                  "No particle with label '" << e1_label << "' has been stored !");
+      const snemo::datamodel::particle_track & e1 = pattern_.get_particle_track(e1_label);
 
-      snemo::datamodel::base_topology_pattern::particle_tracks_dict_type & particle_tracks_dict = pattern_.grab_particle_tracks_dictionary();
+      const std::string p1_label = "p1";
+      DT_THROW_IF(! pattern_.has_particle_track(p1_label), std::logic_error,
+                  "No particle with label '" << p1_label << "' has been stored !");
+      const snemo::datamodel::particle_track & p1 = pattern_.get_particle_track(p1_label);
 
-      const snemo::datamodel::particle_track & e1 = particle_tracks_dict["e1"].get();
-      const snemo::datamodel::particle_track & p1 = particle_tracks_dict["p1"].get();
-
-      snemo::reconstruction::topology_1e_builder::build_measurement_dictionary(ptd_,pattern_)
-
+      snemo::datamodel::base_topology_pattern::measurement_dict_type & meas
+        = pattern_.grab_measurement_dictionary();
+      const snemo::reconstruction::measurement_drivers & drivers
+        = base_topology_builder::get_measurement_drivers();
       {
         snemo::datamodel::angle_measurement * ptr_angle = new snemo::datamodel::angle_measurement;
-        meas_["angle_p1"].reset(ptr_angle);
-        if (get_measurement_drivers().AMD) get_measurement_drivers().AMD->process(p1, ptr_angle->grab_angle());
+        meas["angle_" + p1_label].reset(ptr_angle);
+        if (drivers.AMD) drivers.AMD->process(p1, ptr_angle->grab_angle());
       }
 
       {
         snemo::datamodel::energy_measurement * ptr_energy = new snemo::datamodel::energy_measurement;
-        meas_["energy_p1"].reset(ptr_energy);
-        if (get_measurement_drivers().EMD) get_measurement_drivers().EMD->process(p1, ptr_energy->grab_energy());
+        meas["energy_" + p1_label].reset(ptr_energy);
+        if (drivers.EMD) drivers.EMD->process(p1, ptr_energy->grab_energy());
       }
 
       {
         snemo::datamodel::tof_measurement * ptr_tof = new snemo::datamodel::tof_measurement;
-
-        meas_["tof_e1_p1"].reset(ptr_tof);
-        if (get_measurement_drivers().TOFD) get_measurement_drivers().TOFD->process(e1, p1,
-                                    ptr_tof->grab_internal_probabilities(),
-                                    ptr_tof->grab_external_probabilities());
+        meas["tof_" + e1_label + "_" + p1_label].reset(ptr_tof);
+        if (drivers.TOFD) drivers.TOFD->process(e1, p1,
+                                                ptr_tof->grab_internal_probabilities(),
+                                                ptr_tof->grab_external_probabilities());
       }
 
       {
         snemo::datamodel::delta_vertices_measurement * ptr_delta_vertices_source = new snemo::datamodel::delta_vertices_measurement;
-        meas_["delta_vertices_source_e1_p1"].reset(ptr_delta_vertices_source);
-        if (get_measurement_drivers().DVD) get_measurement_drivers().DVD->process(e1, p1,
-                                                                                  ptr_delta_vertices_source->grab_delta_vertices_y(),
-                                                                                  ptr_delta_vertices_source->grab_delta_vertices_z());
+        meas["delta_vertices_source_" + e1_label + "_" + p1_label].reset(ptr_delta_vertices_source);
+        if (drivers.DVD) drivers.DVD->process(e1, p1,
+                                              ptr_delta_vertices_source->grab_delta_vertices_y(),
+                                              ptr_delta_vertices_source->grab_delta_vertices_z());
       }
 
       {
         snemo::datamodel::angle_measurement * ptr_angle = new snemo::datamodel::angle_measurement;
-        meas_["angle_e1_p1"].reset(ptr_angle);
-        if (get_measurement_drivers().AMD) get_measurement_drivers().AMD->process(e1, p1, ptr_angle->grab_angle());
+        meas["angle_" + e1_label + "_" + p1_label].reset(ptr_angle);
+        if (drivers.AMD) drivers.AMD->process(e1, p1, ptr_angle->grab_angle());
       }
 
       return;
