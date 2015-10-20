@@ -3,6 +3,9 @@
 // Ourselves:
 #include <snemo/reconstruction/topology_driver.h>
 
+// Standard library
+#include <regex>
+
 // Third party:
 // - Bayeux/cuts:
 #include <bayeux/cuts/cut_manager.h>
@@ -163,11 +166,8 @@ namespace snemo {
     {
       DT_LOG_TRACE(get_logging_priority(), "Entering...");
 
-      const std::string a_classification = topology_driver::_build_classification_(ptd_);
-      DT_LOG_TRACE(get_logging_priority(), "Event classification : " << a_classification);
-
       // regex machinery...
-      std::string builder_class_id = topology_driver::_get_builder_class_id_from_classification(a_classification);
+      std::string builder_class_id = topology_driver::_get_builder_class_id_(ptd_);
 
       if(builder_class_id == "X") {
         DT_LOG_WARNING(get_logging_priority(), "Topology not supported for the measurements ");
@@ -193,7 +193,7 @@ namespace snemo {
       return 0;
     }
 
-    std::string topology_driver::_build_classification_(const snemo::datamodel::particle_track_data & ptd_)
+    std::string topology_driver::_get_builder_class_id_(const snemo::datamodel::particle_track_data & ptd_) const
     {
       const datatools::properties & aux = ptd_.get_auxiliaries();
       std::ostringstream classification;
@@ -214,33 +214,27 @@ namespace snemo {
       if (aux.has_key(key = snemo::datamodel::pid_utils::undefined_label())) {
         classification << aux.fetch_integer(key) << "X";
       }
-      return classification.str();
-    }
+      const std::string a_classification = classification.str();
+      DT_LOG_TRACE(get_logging_priority(), "Event classification : " << a_classification);
 
-    std::string topology_driver::_get_builder_class_id_from_classification (const std::string & a_classification) {
-      //tmp function, use regex ?
-      if (a_classification == "1e")
-        return "snemo::reconstruction::topology_1e_builder";
-      else if (a_classification == "1e1a")
-        return "snemo::reconstruction::topology_1e1a_builder";
-      else if (a_classification == "1e1p")
-        return "snemo::reconstruction::topology_1e1p_builder";
-      else if (a_classification == "1e1g" ||
-               a_classification == "1e2g" ||
-               a_classification == "1e3g" ||
-               a_classification == "1e4g" ||
-               a_classification == "1e5g")
-        return "snemo::reconstruction::topology_1eNg_builder";
-      else if (a_classification == "2e")
-        return "snemo::reconstruction::topology_2e_builder";
-      else if (a_classification == "2e1g" ||
-               a_classification == "2e2g" ||
-               a_classification == "2e3g" ||
-               a_classification == "2e4g" ||
-               a_classification == "2e5g")
-        return "snemo::reconstruction::topology_2eNg_builder";
-      else
-        return "X";
+      std::string a_class_id = "X";
+      if (a_classification == "1e") {
+        a_class_id = "snemo::reconstruction::topology_1e_builder";
+      } else if (a_classification == "1e1a") {
+        a_class_id = "snemo::reconstruction::topology_1e1a_builder";
+      } else if (a_classification == "1e1p") {
+        a_class_id = "snemo::reconstruction::topology_1e1p_builder";
+      } else if (std::regex_match(a_classification, std::regex("1e.*g"))) {
+        a_class_id = "snemo::reconstruction::topology_1eNg_builder";
+      } else if (a_classification == "2e") {
+        a_class_id = "snemo::reconstruction::topology_2e_builder";
+      } else if (std::regex_match(a_classification, std::regex("2e.*g"))) {
+        a_class_id = "snemo::reconstruction::topology_2eNg_builder";
+      } else {
+        DT_LOG_WARNING(get_logging_priority(), "Non supported classification '" << a_classification << "' !");
+      }
+      DT_LOG_TRACE(get_logging_priority(), "Builder class id : " << a_class_id);
+      return a_class_id;
     }
 
     // static

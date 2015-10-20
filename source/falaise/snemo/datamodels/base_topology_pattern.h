@@ -51,6 +51,10 @@ namespace snemo {
 
       const snemo::datamodel::particle_track & get_particle_track(const std::string & key_) const;
 
+      // bool has_measurement(const std::string & key_) const;
+
+      // const snemo::datamodel::base_topology_measurement & get_measurment(const std::string & key_) const;
+
       measurement_dict_type & grab_measurement_dictionary();
 
       const measurement_dict_type & get_measurement_dictionary() const;
