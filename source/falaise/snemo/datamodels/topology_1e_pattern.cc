@@ -3,6 +3,8 @@
 
 // Ourselves:
 #include <falaise/snemo/datamodels/topology_1e_pattern.h>
+#include <falaise/snemo/datamodels/energy_measurement.h>
+#include <falaise/snemo/datamodels/tof_measurement.h>
 #include <falaise/snemo/datamodels/angle_measurement.h>
 
 namespace snemo {
@@ -30,38 +32,27 @@ namespace snemo {
       return;
     }
 
-    bool topology_1e_pattern::has_angle_measurement() const
+    bool topology_1e_pattern::has_electron_angle() const
     {
       return has_measurement("angle_e1");
     }
 
-    // void topology_1e_pattern::set_angle(double angle_)
-    // {
-    //   _angle_.set_angle(angle_);
-    //   return;
-    // }
-
-    const snemo::datamodel::angle_measurement & topology_1e_pattern::get_angle_measurement() const
+    double topology_1e_pattern::get_electron_angle() const
     {
-      DT_THROW_IF(! has_angle_measurement(), std::logic_error, "No angle measurement stored !");
-      return dynamic_cast<const snemo::datamodel::angle_measurement&> (get_measurement("angle_e1"));
+      DT_THROW_IF(! has_electron_angle(), std::logic_error, "No angle measurement stored !");
+      return dynamic_cast<const snemo::datamodel::angle_measurement&> (get_measurement("angle_e1")).get_angle();
     }
 
-    // bool topology_1e_pattern::has_electron_energy() const
-    // {
-    //   return datatools::is_valid(_electron_energy_);
-    // }
+    bool topology_1e_pattern::has_electron_energy() const
+    {
+      return has_measurement("energy_e1");
+    }
 
-    // void topology_1e_pattern::set_electron_energy(double energy_)
-    // {
-    //   _electron_energy_ = energy_;
-    //   return;
-    // }
-
-    // double topology_1e_pattern::get_electron_energy() const
-    // {
-    //   return _electron_energy_;
-    // }
+    double topology_1e_pattern::get_electron_energy() const
+    {
+      DT_THROW_IF(! has_electron_energy(), std::logic_error, "No energy measurement stored !");
+      return dynamic_cast<const snemo::datamodel::energy_measurement&> (get_measurement("energy_e1")).get_energy();
+    }
 
     void topology_1e_pattern::tree_dump(std::ostream      & out_,
                                         const std::string & title_,

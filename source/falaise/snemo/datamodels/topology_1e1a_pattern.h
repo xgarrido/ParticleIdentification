@@ -35,33 +35,6 @@ namespace snemo {
       /// Destructor
       virtual ~topology_1e1a_pattern();
 
-      // /// Check if topology is valid
-      // bool is_valid() const;
-
-      // /// Check if the electron particle is present
-      // bool has_electron_particle() const;
-
-      // /// Detach the electron particle
-      // void detach_electron_particle();
-
-      // /// Attach a electron particle by handle
-      // void set_electron_particle(const particle_track::handle_type & handle_);
-
-      // /// Return a non mutable reference on the electron particle
-      // const particle_track & get_electron_particle() const;
-
-      // /// Check if the alpha particle is present
-      // bool has_alpha_particle() const;
-
-      // /// Detach the alpha particle
-      // void detach_alpha_particle();
-
-      // /// Attach a alpha particle by handle
-      // void set_alpha_particle(const particle_track::handle_type & handle_);
-
-      // /// Return a non mutable reference on the alpha particle
-      // const particle_track & get_alpha_particle() const;
-
       // /// Check delta vertices y validity
       // bool has_delta_vertices_y() const;
 

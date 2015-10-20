@@ -31,7 +31,41 @@ namespace snemo {
       /// Destructor
       virtual ~topology_2e_pattern();
 
-      // virtual void build(const snemo::datamodel::particle_track_data & ptd_, base_topology_pattern & topology_pattern_);
+      /// Check electron minimal energy validity
+      bool has_electron_minimal_energy() const;
+
+      /// Get electron minimal energy
+      double get_electron_minimal_energy() const;
+
+      /// Check electron maximal energy validity
+      bool has_electron_maximal_energy() const;
+
+      /// Get electron maximal energy
+      double get_electron_maximal_energy() const;
+
+      /// Get electrons energy sum
+      double get_electrons_energy_sum() const;
+
+      /// Get electrons energy difference
+      double get_electrons_energy_difference() const;
+
+      /// Check electrons TOF internal probability validity
+      bool has_electrons_internal_probability() const;
+
+      /// Get electrons TOF internal probability
+      double get_electrons_internal_probability() const;
+
+      /// Check electrons TOF external probability validity
+      bool has_electrons_external_probability() const;
+
+      /// Get electrons TOF external probability
+      double get_electrons_external_probability() const;
+
+      /// Check angle between electrons validity
+      bool has_electrons_angle() const;
+
+      /// Get angle between electrons
+      double get_electrons_angle() const;
 
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,

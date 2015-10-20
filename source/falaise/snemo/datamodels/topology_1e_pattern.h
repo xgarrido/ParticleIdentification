@@ -38,22 +38,16 @@ namespace snemo {
       virtual ~topology_1e_pattern();
 
       /// Check angle measurement availability
-      bool has_angle_measurement() const;
+      bool has_electron_angle() const;
 
-      // /// Set angle
-      // void set_angle(double);
+      /// Return electron angle
+      double get_electron_angle() const;
 
-      /// Return angle measurement
-      const snemo::datamodel::angle_measurement & get_angle_measurement() const;
+      /// Check electron energy validity
+      bool has_electron_energy() const;
 
-      // /// Check electron energy validity
-      // bool has_electron_energy() const;
-
-      // /// Set electron energy
-      // void set_electron_energy(double);
-
-      // /// Get electron energy
-      // double get_electron_energy() const;
+      /// Return electron energy
+      double get_electron_energy() const;
 
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,
@@ -62,9 +56,6 @@ namespace snemo {
                              bool inherit_               = false) const;
 
     private:
-
-      // angle_measurement _angle_;
-      // double _electron_energy_;                    //!< Energy of electron particle
 
       DATATOOLS_SERIALIZATION_DECLARATION();
 
