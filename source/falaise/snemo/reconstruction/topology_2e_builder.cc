@@ -8,7 +8,7 @@
 #include <falaise/snemo/reconstruction/angle_driver.h>
 #include <falaise/snemo/reconstruction/energy_driver.h>
 #include <falaise/snemo/datamodels/topology_2e_pattern.h>
-#include <falaise/snemo/datamodels/TOF_measurement.h>
+#include <falaise/snemo/datamodels/tof_measurement.h>
 #include <falaise/snemo/datamodels/delta_vertices_measurement.h>
 #include <falaise/snemo/datamodels/angle_measurement.h>
 #include <falaise/snemo/datamodels/energy_measurement.h>
@@ -45,7 +45,7 @@ namespace snemo {
       const snemo::reconstruction::measurement_drivers & drivers
         = base_topology_builder::get_measurement_drivers();
       {
-        snemo::datamodel::TOF_measurement * ptr_tof = new snemo::datamodel::TOF_measurement;
+        snemo::datamodel::tof_measurement * ptr_tof = new snemo::datamodel::tof_measurement;
         meas["tof_" + e1_label + "_" + e2_label].reset(ptr_tof);
         if (drivers.TOFD) drivers.TOFD->process(e1, e2,
                                                 ptr_tof->grab_internal_probabilities(),

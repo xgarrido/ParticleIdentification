@@ -27,7 +27,7 @@ namespace snemo {
     public:
 
       // /// Typedef for TOF dictionnary
-      // typedef std::vector<TOF_measurement> TOF_collection_type;
+      // typedef std::vector<tof_measurement> tof_collection_type;
 
       // /// Typedef for TOF dictionnary
       // typedef std::vector<angle_measurement> angle_collection_type;

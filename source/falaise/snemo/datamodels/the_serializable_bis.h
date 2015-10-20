@@ -14,8 +14,8 @@
  * snemo::datamodel::topology_measurement *
  ******************************************/
 // #include <falaise/snemo/datamodels/topology_measurement.ipp>
-// DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snemo::datamodel::TOF_measurement)
-// BOOST_CLASS_EXPORT_IMPLEMENT(snemo::datamodel::TOF_measurement)
+// DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snemo::datamodel::tof_measurement)
+// BOOST_CLASS_EXPORT_IMPLEMENT(snemo::datamodel::tof_measurement)
 
 
 /**************************************

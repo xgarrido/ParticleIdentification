@@ -17,7 +17,7 @@
 #include <bayeux/datatools/i_serializable.h>
 #include <bayeux/datatools/i_tree_dump.h>
 
-// #include <falaise/snemo/datamodels/TOF_measurement.h>
+// #include <falaise/snemo/datamodels/tof_measurement.h>
 // #include <falaise/snemo/datamodels/delta_vertices_measurement.h>
 // #include <falaise/snemo/datamodels/angle_measurement.h>
 // #include <falaise/snemo/datamodels/energy_measurement.h>

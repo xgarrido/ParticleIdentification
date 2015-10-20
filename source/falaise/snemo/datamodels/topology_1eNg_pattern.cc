@@ -173,7 +173,7 @@ namespace snemo {
     //     return 0;
     // }
 
-    // // bool topology_1eNg_pattern::has_TOF_measurement() const
+    // // bool topology_1eNg_pattern::has_tof_measurement() const
     // // {
     // //   return has_internal_probability() && has_external_probability();
     // // }

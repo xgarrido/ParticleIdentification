@@ -1,22 +1,15 @@
-/// \file falaise/snemo/datamodels/TOF_measurement.h
-/* Author(s) :    François Mauger <mauger@lpccaen.in2p3.fr>
- * Creation date: 2012-03-19
- * Last modified: 2014-01-27
+/// \file falaise/snemo/datamodels/tof_measurement.h
+/* Author(s) :    Steven Calvez <calvez@lal.in2p3.fr>
+ * Creation date: 2014-01-27
+ * Last modified: 2015-10-20
  *
- * Description: The base class of topology measurement
+ * Description: The Time-Of-Flight measurement
  */
 
 #ifndef FALAISE_SNEMO_DATAMODEL_TOF_MEASUREMENT_H
 #define FALAISE_SNEMO_DATAMODEL_TOF_MEASUREMENT_H 1
 
-// Standard library:
-#include <string>
-
-// Third party:
-// - Bayeux/datatools:
-#include <bayeux/datatools/i_serializable.h>
-#include <bayeux/datatools/i_tree_dump.h>
-
+// This project:
 #include <falaise/snemo/datamodels/base_topology_measurement.h>
 
 namespace snemo {
@@ -24,7 +17,7 @@ namespace snemo {
   namespace datamodel {
 
     /// \brief The Time Of Flight measurement
-    class TOF_measurement : public base_topology_measurement {
+    class tof_measurement : public base_topology_measurement {
 
     public:
 
@@ -32,10 +25,10 @@ namespace snemo {
       typedef std::vector<double> probability_type;
 
       /// Constructor
-      TOF_measurement();
+      tof_measurement();
 
       /// Destructor
-      ~TOF_measurement();
+      ~tof_measurement();
 
       /// Get a non-mutable reference to internal probabilities
       const probability_type & get_internal_probabilities() const;

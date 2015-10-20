@@ -41,7 +41,7 @@ namespace snemo {
         const snemo::datamodel::particle_track & gamma = particle_tracks_dict_[key];
 
         {
-          snemo::datamodel::TOF_measurement * ptr_tof = new snemo::datamodel::TOF_measurement;
+          snemo::datamodel::tof_measurement * ptr_tof = new snemo::datamodel::tof_measurement;
           std::ostringstream key_meas;
           key_meas << "tof_e1_" << key;
           meas_dict[key_meas].reset(ptr_tof);
