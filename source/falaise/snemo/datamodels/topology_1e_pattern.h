@@ -20,6 +20,9 @@ namespace snemo {
 
   namespace datamodel {
 
+    // Forward declaration
+    class angle_measurement;
+
     /// \brief The 1e class of reconstructed topology
     class topology_1e_pattern : public base_topology_pattern
     {
@@ -34,14 +37,14 @@ namespace snemo {
       /// Destructor
       virtual ~topology_1e_pattern();
 
-      /// Check angle validity
-      bool has_angle() const;
+      /// Check angle measurement availability
+      bool has_angle_measurement() const;
 
       // /// Set angle
       // void set_angle(double);
 
-      /// Return internal probability
-      double get_angle() const;
+      /// Return angle measurement
+      const snemo::datamodel::angle_measurement & get_angle_measurement() const;
 
       // /// Check electron energy validity
       // bool has_electron_energy() const;

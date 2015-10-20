@@ -31,32 +31,43 @@ namespace snemo {
     {
     public:
 
+      /// Typedef to particle track dictionary
+      typedef std::map<std::string, snemo::datamodel::particle_track::handle_type> particle_track_dict_type;
+
+      /// Typedef to base topology pattern handle
       typedef datatools::handle<snemo::datamodel::base_topology_pattern> handle_type;
 
-      ///
-      typedef std::map<std::string, snemo::datamodel::particle_track::handle_type> particle_tracks_dict_type;
-
+      /// Typedef to measurement handle
       typedef datatools::handle<base_topology_measurement> handle_measurement;
 
+      /// Typedef to measurement dictionary
       typedef std::map<std::string, handle_measurement> measurement_dict_type;
 
+      /// Return topology pattern id
       virtual std::string pattern_id() const = 0;
 
+      /// Get a mutable reference to particle track dictionary
+      particle_track_dict_type & grab_particle_track_dictionary();
 
-      particle_tracks_dict_type & grab_particle_tracks_dictionary();
+      /// Get a non-mutable reference to particle track dictionary
+      const particle_track_dict_type & get_particle_track_dictionary() const;
 
-      const particle_tracks_dict_type & get_particle_tracks_dictionary() const;
+      /// Check if a particle track exists
+      bool has_particle_track(const std::string &) const;
 
-      bool has_particle_track(const std::string & key_) const;
+      /// Get a given particle track
+      const snemo::datamodel::particle_track & get_particle_track(const std::string &) const;
 
-      const snemo::datamodel::particle_track & get_particle_track(const std::string & key_) const;
+      /// Check if a measurement is available
+      bool has_measurement(const std::string &) const;
 
-      // bool has_measurement(const std::string & key_) const;
+      /// Get a given measurement
+      const snemo::datamodel::base_topology_measurement & get_measurement(const std::string &) const;
 
-      // const snemo::datamodel::base_topology_measurement & get_measurment(const std::string & key_) const;
-
+      /// Get a mutable reference to measurement dictionary
       measurement_dict_type & grab_measurement_dictionary();
 
+      /// Get a non-mutable reference to measurement dictionary
       const measurement_dict_type & get_measurement_dictionary() const;
 
       /// Constructor
@@ -73,7 +84,7 @@ namespace snemo {
 
     private:
 
-      particle_tracks_dict_type _tracks_;
+      particle_track_dict_type _tracks_;
       measurement_dict_type _meas_;
 
       DATATOOLS_SERIALIZATION_DECLARATION();

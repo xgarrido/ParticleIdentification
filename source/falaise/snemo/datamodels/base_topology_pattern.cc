@@ -22,12 +22,12 @@ namespace snemo {
       return;
     }
 
-    snemo::datamodel::base_topology_pattern::particle_tracks_dict_type & base_topology_pattern::grab_particle_tracks_dictionary()
+    snemo::datamodel::base_topology_pattern::particle_track_dict_type & base_topology_pattern::grab_particle_track_dictionary()
     {
       return _tracks_;
     }
 
-    const snemo::datamodel::base_topology_pattern::particle_tracks_dict_type & base_topology_pattern::get_particle_tracks_dictionary() const
+    const snemo::datamodel::base_topology_pattern::particle_track_dict_type & base_topology_pattern::get_particle_track_dictionary() const
     {
       return _tracks_;
     }
@@ -40,6 +40,16 @@ namespace snemo {
     const snemo::datamodel::particle_track & base_topology_pattern::get_particle_track(const std::string & key_) const
     {
       return _tracks_.at(key_).get();
+    }
+
+    bool base_topology_pattern::has_measurement(const std::string & key_) const
+    {
+      return _meas_.find(key_) != _meas_.end();
+    }
+
+    const snemo::datamodel::base_topology_measurement & base_topology_pattern::get_measurement(const std::string & key_) const
+    {
+      return _meas_.at(key_).get();
     }
 
     snemo::datamodel::base_topology_pattern::measurement_dict_type & base_topology_pattern::grab_measurement_dictionary()

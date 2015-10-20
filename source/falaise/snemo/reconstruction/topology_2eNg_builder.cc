@@ -42,7 +42,7 @@ namespace snemo {
       // Either this way
       // for (size_t i_gamma = 1; i_gamma <= h_pattern_->get_number_of_gammas();++i_gamma) {
       // Or this way but less evolutive
-      for (size_t i_gamma = 1; i_gamma <= pattern_.get_particle_tracks_dictionary().size()-2; ++i_gamma) {
+      for (size_t i_gamma = 1; i_gamma <= pattern_.get_particle_track_dictionary().size()-2; ++i_gamma) {
         std::ostringstream oss;
         oss << "g" << i_gamma;
 

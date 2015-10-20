@@ -51,12 +51,12 @@ namespace snemo {
                                       snemo::datamodel::base_topology_pattern & pattern_)
     {
       DT_THROW_IF(! has_measurement_drivers(), std::logic_error, "Missing measurement drivers !");
-      this->_build_particle_tracks_dictionary(source_, pattern_.grab_particle_tracks_dictionary());
+      this->_build_particle_tracks_dictionary(source_, pattern_.grab_particle_track_dictionary());
       _build_measurement_dictionary(pattern_);
     }
 
     void base_topology_builder::_build_particle_tracks_dictionary(const snemo::datamodel::particle_track_data & ptd_,
-                                                                  snemo::datamodel::base_topology_pattern::particle_tracks_dict_type & tracks_)
+                                                                  snemo::datamodel::base_topology_pattern::particle_track_dict_type & tracks_)
     {
       size_t n_electrons = 0;
       size_t n_positrons = 0;

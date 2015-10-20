@@ -3,6 +3,7 @@
 
 // Ourselves:
 #include <falaise/snemo/datamodels/topology_1e_pattern.h>
+#include <falaise/snemo/datamodels/angle_measurement.h>
 
 namespace snemo {
 
@@ -29,9 +30,9 @@ namespace snemo {
       return;
     }
 
-    bool topology_1e_pattern::has_angle() const
+    bool topology_1e_pattern::has_angle_measurement() const
     {
-      return (base_topology_pattern::get_measurement_dictionary().find("angle_e1") != base_topology_pattern::get_measurement_dictionary().end());
+      return has_measurement("angle_e1");
     }
 
     // void topology_1e_pattern::set_angle(double angle_)
@@ -40,10 +41,10 @@ namespace snemo {
     //   return;
     // }
 
-    double topology_1e_pattern::get_angle() const
+    const snemo::datamodel::angle_measurement & topology_1e_pattern::get_angle_measurement() const
     {
-      DT_THROW_IF(! has_angle(), std::logic_error, "No angle stored !");
-      return base_topology_pattern::get_measurement_dictionary().at("angle_e1");
+      DT_THROW_IF(! has_angle_measurement(), std::logic_error, "No angle measurement stored !");
+      return dynamic_cast<const snemo::datamodel::angle_measurement&> (get_measurement("angle_e1"));
     }
 
     // bool topology_1e_pattern::has_electron_energy() const

@@ -23,7 +23,7 @@ namespace snemo {
       return;
     }
 
-    bool angle_measurement::has_angle() const
+    bool angle_measurement::is_valid() const
     {
       return datatools::is_valid(_angle_);
     }

@@ -35,7 +35,7 @@ namespace snemo {
       ~angle_measurement();
 
       /// Check angle validity
-      bool has_angle() const;
+      bool is_valid() const;
 
       /// Set angle value
       void set_angle(double angle_);
