@@ -81,8 +81,7 @@ namespace snemo {
       datatools::logger::priority lp = datatools::logger::extract_logging_configuration(setup_);
       DT_THROW_IF(lp == datatools::logger::PRIO_UNDEFINED, std::logic_error,
                   "Invalid logging priority level for geometry manager !");
-      // set_logging_priority(lp);
-      set_logging_priority(datatools::logger::PRIO_TRACE);
+      set_logging_priority(lp);
 
       // Drivers :
       DT_THROW_IF(! setup_.has_key("drivers"), std::logic_error, "Missing 'drivers' key !");
@@ -173,9 +172,11 @@ namespace snemo {
         return 0;
       }
 
-      const base_topology_builder::factory_register_type & FB = DATATOOLS_FACTORY_GET_SYSTEM_REGISTER(base_topology_builder);
+      const base_topology_builder::factory_register_type & FB
+        = DATATOOLS_FACTORY_GET_SYSTEM_REGISTER(base_topology_builder);
       DT_THROW_IF(! FB.has(builder_class_id), std::logic_error,
-                  "Topology builder class id '" << builder_class_id << "' is not available from the system builder factory register !");
+                  "Topology builder class id '" << builder_class_id << "' "
+                  << "is not available from the system builder factory register !");
       const base_topology_builder::factory_register_type::factory_type & the_factory
         = FB.get(builder_class_id);
       snemo::reconstruction::base_topology_builder * new_builder = the_factory();
