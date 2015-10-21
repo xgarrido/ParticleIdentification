@@ -7,6 +7,10 @@
 #include <stdexcept>
 #include <sstream>
 
+// Third party:
+//- GSL:
+#include <gsl/gsl_cdf.h>
+
 // This project:
 #include <falaise/snemo/datamodels/pid_utils.h>
 #include <falaise/snemo/datamodels/particle_track.h>
@@ -91,74 +95,117 @@ namespace snemo {
 
     void delta_vertices_driver::process(const snemo::datamodel::particle_track & pt1_,
                                         const snemo::datamodel::particle_track & pt2_,
-                                        double & delta_vertices_y, double & delta_vertices_z)
+                                       double & probability_)
     {
       DT_THROW_IF(! is_initialized(), std::logic_error, "Driver '" << get_id() << "' is already initialized !");
-      this->_process_algo(pt1_, pt2_, delta_vertices_y, delta_vertices_z);
+      this->_process_algo(pt1_, pt2_, probability_);
       return;
     }
 
     void delta_vertices_driver::_process_algo(const snemo::datamodel::particle_track & pt1_,
                                               const snemo::datamodel::particle_track & pt2_,
-                                              double & delta_vertices_y_,
-                                              double & delta_vertices_z_)
+                                              double & probability_)
     {
       DT_LOG_TRACE(get_logging_priority(), "Entering...");
-      // Invalidate results
-      datatools::invalidate(delta_vertices_y_);
-      datatools::invalidate(delta_vertices_z_);
 
-      if (snemo::datamodel::pid_utils::particle_is_gamma(pt1_) &&
+      // Invalidate results
+      // set to +infinity later...
+      // probability_.invalidate();
+
+      if (snemo::datamodel::pid_utils::particle_is_gamma(pt1_) ||
           snemo::datamodel::pid_utils::particle_is_gamma(pt2_)) {
         DT_LOG_WARNING(get_logging_priority(),
                        "Delta vertices cannot be computed if one particle is a gamma!");
         return;
       }
 
-      geomtools::vector_3d v1;
-      geomtools::invalidate(v1);
+      // // geomtools::vector_3d v1;
+      // geomtools::blur_spot v1;
+      // geomtools::invalidate(v1);
+      // const snemo::datamodel::particle_track::vertex_collection_type & the_vertices_1
+      //   = pt1_.get_vertices();
+      // for (snemo::datamodel::particle_track::vertex_collection_type::const_iterator
+      //        ivertex = the_vertices_1.begin();
+      //      ivertex != the_vertices_1.end(); ++ivertex) {
+      //   const geomtools::blur_spot & a_vertex = ivertex->get();
+      //   if (! snemo::datamodel::particle_track::vertex_is_on_source_foil(a_vertex)) {
+      //     DT_LOG_DEBUG(get_logging_priority(),
+      //                  "Vertex " << a_vertex.get_position() << " is not on the source foil !");
+      //     continue;
+      //   }
+      //   v1 = a_vertex.get_position();
+      //   break;
+      // }
+
+      // geomtools::vector_3d v2;
+      // geomtools::invalidate(v2);
+      // const snemo::datamodel::particle_track::vertex_collection_type & the_vertices_2
+      //   = pt2_.get_vertices();
+      // for (snemo::datamodel::particle_track::vertex_collection_type::const_iterator
+      //        ivertex = the_vertices_2.begin();
+      //      ivertex != the_vertices_2.end(); ++ivertex) {
+      //   const geomtools::blur_spot & a_vertex = ivertex->get();
+      //   if (! snemo::datamodel::particle_track::vertex_is_on_source_foil(a_vertex)) {
+      //     DT_LOG_DEBUG(get_logging_priority(),
+      //                  "Vertex " << a_vertex.get_position() << " is not on the source foil !");
+      //     continue;
+      //   }
+      //   v2 = a_vertex.get_position();
+      //   break;
+      // }
+
+      // if (geomtools::is_valid(v1) && geomtools::is_valid(v2)) {
+      //   delta_vertices_.set_blur_dimension(3);
+      //   delta_vertices_.set_position((v1+v2)/2.);
+      //   delta_vertices_.set_errors();
+      // }
+
+      probability_ = 1;
+
       const snemo::datamodel::particle_track::vertex_collection_type & the_vertices_1
         = pt1_.get_vertices();
-      for (snemo::datamodel::particle_track::vertex_collection_type::const_iterator
-             ivertex = the_vertices_1.begin();
-           ivertex != the_vertices_1.end(); ++ivertex) {
-        const geomtools::blur_spot & a_vertex = ivertex->get();
-        if (! snemo::datamodel::particle_track::vertex_is_on_source_foil(a_vertex)) {
-          DT_LOG_DEBUG(get_logging_priority(),
-                       "Vertex " << a_vertex.get_position() << " is not on the source foil !");
-          continue;
-        }
-        v1 = a_vertex.get_position();
-        break;
-      }
-
-      geomtools::vector_3d v2;
-      geomtools::invalidate(v2);
       const snemo::datamodel::particle_track::vertex_collection_type & the_vertices_2
         = pt2_.get_vertices();
       for (snemo::datamodel::particle_track::vertex_collection_type::const_iterator
-             ivertex = the_vertices_2.begin();
-           ivertex != the_vertices_2.end(); ++ivertex) {
-        const geomtools::blur_spot & a_vertex = ivertex->get();
-        if (! snemo::datamodel::particle_track::vertex_is_on_source_foil(a_vertex)) {
-          DT_LOG_DEBUG(get_logging_priority(),
-                       "Vertex " << a_vertex.get_position() << " is not on the source foil !");
-          continue;
+             ivertex_1 = the_vertices_1.begin();
+           ivertex_1 != the_vertices_1.end(); ++ivertex_1) {
+
+        // const geomtools::blur_spot & a_vertex_1 = ivertex_1->get();
+
+        for (snemo::datamodel::particle_track::vertex_collection_type::const_iterator
+               ivertex_2 = the_vertices_2.begin();
+             ivertex_2 != the_vertices_2.end(); ++ivertex_2) {
+
+          // const geomtools::blur_spot & a_vertex_2 = ivertex_2->get();
+          double tmp_proba = _get_probability(ivertex_1->get(),
+                                          ivertex_2->get());
+          if(tmp_proba < probability_)
+            probability_ = tmp_proba;
         }
-        v2 = a_vertex.get_position();
-        break;
       }
-
-      if (geomtools::is_valid(v1) && geomtools::is_valid(v2)) {
-        delta_vertices_y_ = v1.y() - v2.y();
-        delta_vertices_z_ = v1.z() - v2.z();
-      }
-
-      DT_LOG_DEBUG(get_logging_priority(), "Delta vertex y = " << delta_vertices_y_/CLHEP::mm << " mm");
-      DT_LOG_DEBUG(get_logging_priority(), "Delta vertex z = " << delta_vertices_z_/CLHEP::mm << " mm");
 
       DT_LOG_TRACE(get_logging_priority(), "Exiting...");
       return;
+    }
+
+    double _get_probability(geomtools::blur_spot & vertex_1_,
+                            geomtools::blur_spot & vertex_2_)
+    {
+      double sigma_x_1 = vertex_1_.get_x_error();
+      double sigma_y_1 = vertex_1_.get_y_error();
+      double sigma_z_1 = vertex_1_.get_z_error();
+      double sigma_1 = sigma_x_1*sigma_x_1+ sigma_y_1*sigma_y_1+sigma_z_1*sigma_z_1;
+
+      double sigma_x_2 = vertex_2_.get_x_error();
+      double sigma_y_2 = vertex_2_.get_y_error();
+      double sigma_z_2 = vertex_2_.get_z_error();
+      double sigma_2 = sigma_x_2*sigma_x_2+ sigma_y_2*sigma_y_2+sigma_z_2*sigma_z_2;
+
+      geomtools::vector_3d v_barycenter = (vertex_1_.get_position()/(sigma_1) +
+                                           vertex_2_.get_position()/(sigma_2))/(1/sigma_1+1/sigma_2);
+      double chi_2 = ((v_barycenter-vertex_1_.get_position())*(v_barycenter-vertex_1_.get_position()) +
+                      (v_barycenter-vertex_2_.get_position())*(v_barycenter-vertex_2_.get_position()))/(sigma_1 + sigma_2);
+      return gsl_cdf_chisq_Q(chi_2, 1);
     }
 
     // static

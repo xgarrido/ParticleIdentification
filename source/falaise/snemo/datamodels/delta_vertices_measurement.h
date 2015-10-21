@@ -12,11 +12,12 @@
 // Standard library:
 #include <string>
 
-// Third party:
-// - Bayeux/datatools:
-#include <bayeux/datatools/i_serializable.h>
-#include <bayeux/datatools/i_tree_dump.h>
+// This project
 #include <falaise/snemo/datamodels/base_topology_measurement.h>
+
+namespace geomtools {
+  class blur_spot;
+}
 
 namespace snemo {
 
@@ -33,34 +34,30 @@ namespace snemo {
       /// Destructor
       ~delta_vertices_measurement();
 
-      /// Check y-delta vertices
-      bool has_delta_vertices_y() const;
+      /// Check delta vertices blurspot validity
+      bool is_valid() const;
 
-      /// Set y-delta vertices
-      void set_delta_vertices_y(double delta_);
+      // /// Set delta vertices blurspot value
+      // void set_delta_vertices(geomtools::blur_spot & delta_vertices_);
 
-      /// Get a non-mutable reference to delta vertices y
-      const double & get_delta_vertices_y() const;
+      // /// Get a non-mutable reference to delta vertices blurspot
+      // const geomtools::blur_spot & get_delta_vertices() const;
 
-      /// Get a mutable reference to delta vertices y
-      double & grab_delta_vertices_y();
+      // /// Get a mutable reference to delta vertices blurspot
+      // geomtools::blur_spot & grab_delta_vertices();
 
-      /// Check z-delta vertices
-      bool has_delta_vertices_z() const;
+      /// Get a non-mutable reference to delta vertices blurspot
+      const double & get_probability() const;
 
-      /// Set z-delta vertices
-      void set_delta_vertices_z(double delta_);
+      /// Get a mutable reference to delta vertices blurspot
+      double & grab_probability();
 
-      /// Get a non-mutable reference to delta vertices z
-      const double & get_delta_vertices_z() const;
-
-      /// Get a mutable reference to delta vertices z
-      double & grab_delta_vertices_z();
 
     private:
 
-      double _delta_vertices_y_;
-      double _delta_vertices_z_;
+      // geomtools::blur_spot & _delta_vertices_;
+
+      double _probability_;
 
       DATATOOLS_SERIALIZATION_DECLARATION();
     };

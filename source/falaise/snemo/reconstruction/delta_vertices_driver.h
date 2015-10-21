@@ -38,6 +38,10 @@
 // - Bayeux/datatools:
 #include <datatools/logger.h>
 
+namespace geomtools {
+  class blur_spot;
+}
+
 namespace snemo {
 
   namespace datamodel {
@@ -69,7 +73,7 @@ namespace snemo {
       /// Main process
       void process(const snemo::datamodel::particle_track & pt1_,
                    const snemo::datamodel::particle_track & pt2_,
-                   double & delta_vertices_y, double & _delta_vertices_z);
+                   double & probability_);
 
       /// Check if theclusterizer is initialized
       bool is_initialized() const;
@@ -91,7 +95,11 @@ namespace snemo {
       /// Special method to process and generate particle track data
       void _process_algo(const snemo::datamodel::particle_track & pt1_,
                          const snemo::datamodel::particle_track & pt2_,
-                         double & delta_vertices_y, double & _delta_vertices_z);
+                         double & probability_);
+
+      /// Retrieve the probability of a common vertices hypothesis
+      double _get_probability(const geomtools::blur_spot & vertex_1_,
+                              const geomtools::blur_spot & vertex_2_);
 
       /// Give default values to specific class members.
       void _set_defaults();

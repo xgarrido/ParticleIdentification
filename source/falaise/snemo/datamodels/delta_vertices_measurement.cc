@@ -4,6 +4,9 @@
 // Ourselves:
 #include <falaise/snemo/datamodels/delta_vertices_measurement.h>
 
+// - Bayeux/geomtools:
+#include <geomtools/blur_spot.h>
+
 namespace snemo {
 
   namespace datamodel {
@@ -14,9 +17,8 @@ namespace snemo {
 
     delta_vertices_measurement::delta_vertices_measurement()
     {
-      datatools::invalidate(_delta_vertices_y_);
-      datatools::invalidate(_delta_vertices_z_);
-      return;
+      // _probability_.invalidate()
+        return;
     }
 
     delta_vertices_measurement::~delta_vertices_measurement()
@@ -24,46 +26,35 @@ namespace snemo {
       return;
     }
 
-    bool delta_vertices_measurement::has_delta_vertices_y() const
+    bool delta_vertices_measurement::is_valid() const
     {
-      return datatools::is_valid(_delta_vertices_y_);
+      return datatools::is_valid(_probability_);
     }
 
-    void delta_vertices_measurement::set_delta_vertices_y(double delta_)
+    // void delta_vertices_measurement::set_delta_vertices(geomtools::blur_spot & delta_vertices_)
+    // {
+    //   _delta_vertices_ = delta_vertices_;
+    //   return;
+    // }
+
+    // const geomtools::blur_spot & delta_vertices_measurement::get_delta_vertices() const
+    // {
+    //   return _delta_vertices_;
+    // }
+
+    // geomtools::blur_spot & delta_vertices_measurement::grab_delta_vertices()
+    // {
+    //   return _delta_vertices_;
+    // }
+
+    const double & delta_vertices_measurement::get_probability() const
     {
-      _delta_vertices_y_ = delta_;
-      return;
+      return _probability_;
     }
 
-    const double & delta_vertices_measurement::get_delta_vertices_y() const
+    double & delta_vertices_measurement::grab_probability()
     {
-      return _delta_vertices_y_;
-    }
-
-    double & delta_vertices_measurement::grab_delta_vertices_y()
-    {
-      return _delta_vertices_y_;
-    }
-
-    bool delta_vertices_measurement::has_delta_vertices_z() const
-    {
-      return datatools::is_valid(_delta_vertices_z_);
-    }
-
-    void delta_vertices_measurement::set_delta_vertices_z(double delta_)
-    {
-      _delta_vertices_z_ = delta_;
-      return;
-    }
-
-    const double & delta_vertices_measurement::get_delta_vertices_z() const
-    {
-      return _delta_vertices_z_;
-    }
-
-    double & delta_vertices_measurement::grab_delta_vertices_z()
-    {
-      return _delta_vertices_z_;
+      return _probability_;
     }
 
   } // end of namespace datamodel

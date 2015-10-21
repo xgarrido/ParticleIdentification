@@ -51,12 +51,19 @@ namespace snemo {
                                                 ptr_tof->grab_external_probabilities());
       }
 
+      // {
+      //   snemo::datamodel::delta_vertices_measurement * ptr_delta_vertices_source = new snemo::datamodel::delta_vertices_measurement;
+      //   meas["delta_vertices_source_" + e1_label + "_" + e2_label].reset(ptr_delta_vertices_source);
+      //   if (drivers.DVD) drivers.DVD->process(e1, e2,
+      //                                         ptr_delta_vertices_source->grab_delta_vertices_y(),
+      //                                         ptr_delta_vertices_source->grab_delta_vertices_z());
+      // }
+
       {
         snemo::datamodel::delta_vertices_measurement * ptr_delta_vertices_source = new snemo::datamodel::delta_vertices_measurement;
         meas["delta_vertices_source_" + e1_label + "_" + e2_label].reset(ptr_delta_vertices_source);
         if (drivers.DVD) drivers.DVD->process(e1, e2,
-                                              ptr_delta_vertices_source->grab_delta_vertices_y(),
-                                              ptr_delta_vertices_source->grab_delta_vertices_z());
+                                              ptr_delta_vertices_source->grab_probability());
       }
 
       {
