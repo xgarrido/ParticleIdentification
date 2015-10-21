@@ -167,9 +167,8 @@ namespace snemo {
       DT_LOG_TRACE(get_logging_priority(), "Entering...");
 
       // regex machinery...
-      std::string builder_class_id = topology_driver::_get_builder_class_id_(ptd_);
-
-      if(builder_class_id == "X") {
+      const std::string builder_class_id = topology_driver::_get_builder_class_id_(ptd_);
+      if (builder_class_id.empty()) {
         DT_LOG_WARNING(get_logging_priority(), "Topology not supported for the measurements ");
         return 0;
       }
@@ -217,7 +216,7 @@ namespace snemo {
       const std::string a_classification = classification.str();
       DT_LOG_TRACE(get_logging_priority(), "Event classification : " << a_classification);
 
-      std::string a_class_id = "X";
+      std::string a_class_id;
       if (a_classification == "1e") {
         a_class_id = "snemo::reconstruction::topology_1e_builder";
       } else if (a_classification == "1e1a") {
