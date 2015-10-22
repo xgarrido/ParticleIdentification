@@ -179,21 +179,16 @@ namespace snemo {
           const geomtools::blur_spot & a_vertex_2 = ivertex_2->get();
 
           if(!(snemo::datamodel::particle_track::vertex_is_on_source_foil(a_vertex_1) &&
-               snemo::datamodel::particle_track::vertex_is_on_source_foil(a_vertex_2))) {
+               snemo::datamodel::particle_track::vertex_is_on_source_foil(a_vertex_2)) ||
+             !(snemo::datamodel::particle_track::vertex_is_on_main_calorimeter(a_vertex_1) &&
+               snemo::datamodel::particle_track::vertex_is_on_main_calorimeter(a_vertex_2)) ||
+             !(snemo::datamodel::particle_track::vertex_is_on_x_calorimeter(a_vertex_1) &&
+               snemo::datamodel::particle_track::vertex_is_on_x_calorimeter(a_vertex_2)) ||
+             !(snemo::datamodel::particle_track::vertex_is_on_gamma_veto(a_vertex_1) &&
+               snemo::datamodel::particle_track::vertex_is_on_gamma_veto(a_vertex_2))
+             ) {
             continue;
           }
-
-          // if(!(snemo::datamodel::particle_track::vertex_is_on_source_foil(a_vertex_1) &&
-          //      snemo::datamodel::particle_track::vertex_is_on_source_foil(a_vertex_2)) ||
-          //    !(snemo::datamodel::particle_track::vertex_is_on_main_calorimeter(a_vertex_1) &&
-          //      snemo::datamodel::particle_track::vertex_is_on_main_calorimeter(a_vertex_2)) ||
-          //    !(snemo::datamodel::particle_track::vertex_is_on_x_calorimeter(a_vertex_1) &&
-          //      snemo::datamodel::particle_track::vertex_is_on_x_calorimeter(a_vertex_2)) ||
-          //    !(snemo::datamodel::particle_track::vertex_is_on_gamma_veto(a_vertex_1) &&
-          //      snemo::datamodel::particle_track::vertex_is_on_gamma_veto(a_vertex_2))
-          //    ) {
-          //   continue;
-          // }
 
           double tmp_proba = _get_probability(a_vertex_1, a_vertex_2);
           if(tmp_proba < probability_)
@@ -208,29 +203,21 @@ namespace snemo {
     double delta_vertices_driver::_get_probability(const geomtools::blur_spot & vertex_1_,
                             const geomtools::blur_spot & vertex_2_)
     {
-      std::cout << "---------------" << std::endl;
-
       double sigma_x_1 = vertex_1_.get_x_error();
       double sigma_y_1 = vertex_1_.get_y_error();
       double sigma_z_1 = vertex_1_.get_z_error();
       double sigma_1 = sigma_x_1*sigma_x_1+ sigma_y_1*sigma_y_1+sigma_z_1*sigma_z_1;
-      std::cout << "sigma_1 " << sigma_1 << std::endl;
 
       double sigma_x_2 = vertex_2_.get_x_error();
       double sigma_y_2 = vertex_2_.get_y_error();
       double sigma_z_2 = vertex_2_.get_z_error();
       double sigma_2 = sigma_x_2*sigma_x_2+ sigma_y_2*sigma_y_2+sigma_z_2*sigma_z_2;
-      std::cout << "sigma_2 " << sigma_2 << std::endl;
 
       geomtools::vector_3d v_barycenter = (vertex_1_.get_position()/(sigma_1) +
                                            vertex_2_.get_position()/(sigma_2))/(1/sigma_1+1/sigma_2);
       double chi_2 = ((v_barycenter-vertex_1_.get_position())*(v_barycenter-vertex_1_.get_position()) +
                       (v_barycenter-vertex_2_.get_position())*(v_barycenter-vertex_2_.get_position()))/(sigma_1 + sigma_2);
 
-
-      std::cout << "chi2 common vertex " << chi_2 << std::endl;
-        std::cout << "proba common vertex " << gsl_cdf_chisq_Q(chi_2, 1) << std::endl;
-      std::cout << "---------------" << std::endl;
       return gsl_cdf_chisq_Q(chi_2, 1);
     }
 

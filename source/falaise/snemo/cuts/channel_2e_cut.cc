@@ -32,10 +32,8 @@ namespace snemo {
       datatools::invalidate(_prob_int_max_);
       datatools::invalidate(_prob_ext_min_);
       datatools::invalidate(_prob_ext_max_);
-      datatools::invalidate(_delta_vertices_y_min_);
-      datatools::invalidate(_delta_vertices_y_max_);
-      datatools::invalidate(_delta_vertices_z_min_);
-      datatools::invalidate(_delta_vertices_z_max_);
+      datatools::invalidate(_vertices_probability_min_);
+      datatools::invalidate(_vertices_probability_max_);
       datatools::invalidate(_angle_min_);
       datatools::invalidate(_angle_max_);
       return;
@@ -66,24 +64,14 @@ namespace snemo {
       return _mode_ & MODE_RANGE_EXTERNAL_PROBABILITY;
     }
 
-    bool channel_2e_cut::is_mode_has_delta_vertices_y() const
+    bool channel_2e_cut::is_mode_has_vertices_probability() const
     {
-      return _mode_ & MODE_HAS_DELTA_VERTICES_Y;
+      return _mode_ & MODE_HAS_VERTICES_PROBABILITY;
     }
 
-    bool channel_2e_cut::is_mode_range_delta_vertices_y() const
+    bool channel_2e_cut::is_mode_range_vertices_probability() const
     {
-      return _mode_ & MODE_RANGE_DELTA_VERTICES_Y;
-    }
-
-    bool channel_2e_cut::is_mode_has_delta_vertices_z() const
-    {
-      return _mode_ & MODE_HAS_DELTA_VERTICES_Z;
-    }
-
-    bool channel_2e_cut::is_mode_range_delta_vertices_z() const
-    {
-      return _mode_ & MODE_RANGE_DELTA_VERTICES_Z;
+      return _mode_ & MODE_RANGE_VERTICES_PROBABILITY;
     }
 
     bool channel_2e_cut::is_mode_has_angle() const
@@ -142,17 +130,11 @@ namespace snemo {
       if (configuration_.has_flag("mode.range_external_probability")) {
         _mode_ |= MODE_RANGE_EXTERNAL_PROBABILITY;
       }
-      if (configuration_.has_flag("mode.has_delta_vertices_y")) {
-        _mode_ |= MODE_HAS_DELTA_VERTICES_Y;
+      if (configuration_.has_flag("mode.has_vertices_probability")) {
+        _mode_ |= MODE_HAS_VERTICES_PROBABILITY;
       }
-      if (configuration_.has_flag("mode.has_delta_vertices_z")) {
-        _mode_ |= MODE_HAS_DELTA_VERTICES_Z;
-      }
-      if (configuration_.has_flag("mode.range_delta_vertices_y")) {
-        _mode_ |= MODE_RANGE_DELTA_VERTICES_Y;
-      }
-      if (configuration_.has_flag("mode.range_delta_vertices_z")) {
-        _mode_ |= MODE_RANGE_DELTA_VERTICES_Z;
+      if (configuration_.has_flag("mode.range_vertices_probability")) {
+        _mode_ |= MODE_RANGE_VERTICES_PROBABILITY;
       }
       if (configuration_.has_flag("mode.has_angle")) {
         _mode_ |= MODE_HAS_ANGLE;
@@ -229,53 +211,28 @@ namespace snemo {
         }
       }
 
-      if (is_mode_range_delta_vertices_y()) {
-        DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_DELTA_VERTICES_Y mode...");
+      if (is_mode_range_vertices_probability()) {
+        DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_VERTICES_PROBABILITY mode...");
         size_t count = 0;
-        if (configuration_.has_key("range_delta_vertices_y.min")) {
-          double delta_y_min = configuration_.fetch_real("range_delta_vertices_y.min");
-          // DT_THROW_IF(delta_y_min < 0.0, std::range_error,
-          //             "Invalid minimal delta vertices y (" << delta_y_min << ") !");
-          _delta_vertices_y_min_ = delta_y_min;
+        if (configuration_.has_key("range_vertices_probability.min")) {
+          double vertices_probability_min = configuration_.fetch_real("range_vertices_probability.min");
+          DT_THROW_IF(vertices_probability_min < 0.0 || vertices_probability_min > 1, std::range_error,
+                      "Invalid minimal vertices probability (" << vertices_probability_min << ") !");
+          _vertices_probability_min_ = vertices_probability_min;
           count++;
         }
-        if (configuration_.has_key("range_external_probablity.max")) {
-          double delta_y_max = configuration_.fetch_real("range_delta_vertices_y.max");
-          // DT_THROW_IF(delta_y_max < 0.0, std::range_error,
-          //             "Invalid maximal delta vertices y (" << delta_y_max << ") !");
-          _delta_vertices_y_max_ = delta_y_max;
+        if (configuration_.has_key("range_vertices_probablity.max")) {
+          double vertices_probability_max = configuration_.fetch_real("range_vertices_probability.max");
+          DT_THROW_IF(vertices_probability_max < 0.0 || vertices_probability_max > 1, std::range_error,
+                      "Invalid maximal vertices probability (" << vertices_probability_max << ") !");
+          _vertices_probability_y_max_ = vertices_probability_max;
           count++;
         }
         DT_THROW_IF(count == 0, std::logic_error,
-                    "Missing 'range_delta_y_vertices.min' or 'range_delta_y_vertices.max' property !");
+                    "Missing 'range_vertices_probability.min' or 'range_vertices_probability.max' property !");
         if (count == 2) {// && _delta_vertices_y_min_ >= 0 && _delta_vertices_y_max_ >= 0) {
-          DT_THROW_IF(_delta_vertices_y_min_ > _delta_vertices_y_max_, std::logic_error,
-                      "Invalid 'range_delta_y_vertices.min' > 'range_delta_y_vertices.max' values !");
-        }
-      }
-
-      if (is_mode_range_delta_vertices_z()) {
-        DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_DELTA_VERTICES_Z mode...");
-        size_t count = 0;
-        if (configuration_.has_key("range_delta_vertices_z.min")) {
-          double delta_z_min = configuration_.fetch_real("range_delta_vertices_z.min");
-          // DT_THROW_IF(delta_z_min < 0.0, std::range_error,
-          //             "Invalid minimal delta vertices z (" << delta_z_min << ") !");
-          _delta_vertices_z_min_ = delta_z_min;
-          count++;
-        }
-        if (configuration_.has_key("range_external_probablity.max")) {
-          double delta_z_max = configuration_.fetch_real("range_delta_vertices_z.max");
-          // DT_THROW_IF(delta_z_max < 0.0, std::range_error,
-          //             "Invalid maximal delta vertices z (" << delta_z_max << ") !");
-          _delta_vertices_z_max_ = delta_z_max;
-          count++;
-        }
-        DT_THROW_IF(count == 0, std::logic_error,
-                    "Missing 'range_delta_z_vertices.min' or 'range_delta_z_vertices.max' property !");
-        if (count == 2) {// && _delta_vertices_z_min_ >= 0 && _delta_vertices_z_max_ >= 0) {
-          DT_THROW_IF(_delta_vertices_z_min_ > _delta_vertices_z_max_, std::logic_error,
-                      "Invalid 'range_delta_z_vertices.min' > 'range_delta_z_vertices.max' values !");
+          DT_THROW_IF(_vertices_probability__min_ > _vertices_probability_max_, std::logic_error,
+                      "Invalid 'range_vertices_probability.min' > 'range_vertices_probability.max' values !");
         }
       }
 
@@ -333,10 +290,11 @@ namespace snemo {
         return cuts::SELECTION_INAPPLICABLE;
       }
       const snemo::datamodel::base_topology_pattern & a_pattern = TD.get_pattern();
-      const std::string & a_pattern_id = a_pattern.get_pattern_id();
-      if (a_pattern_id != snemo::datamodel::topology_2e_pattern::pattern_id()) {
+      const std::string & a_pattern_id = a_pattern.pattern_id();
+      // bizarre
+      if (a_pattern_id != "2e") {
         DT_LOG_DEBUG(get_logging_priority(), "This cut is only applicable to '"
-                     << snemo::datamodel::topology_2e_pattern::pattern_id() << "' topology !");
+                     << "2e" << "' topology !");
         return cuts::SELECTION_INAPPLICABLE;
       }
       const snemo::datamodel::topology_2e_pattern & a_2e_pattern
@@ -345,7 +303,7 @@ namespace snemo {
       // Check if event has internal probability
       bool check_has_internal_probability = true;
       if (is_mode_has_internal_probability()) {
-        if (! a_2e_pattern.has_internal_probability()) {
+        if (! a_2e_pattern.has_electrons_internal_probability()) {
           check_has_internal_probability = false;
         }
       }
@@ -353,11 +311,11 @@ namespace snemo {
       // Check if event has correct internal probability
       bool check_range_internal_probability = true;
       if (is_mode_range_internal_probability()) {
-        if (! a_2e_pattern.has_internal_probability()) {
+        if (! a_2e_pattern.has_electrons_internal_probability()) {
           DT_LOG_DEBUG(get_logging_priority(), "Missing internal probability !");
           return cuts::SELECTION_INAPPLICABLE;
         }
-        const double pint = a_2e_pattern.get_internal_probability();
+        const double pint = a_2e_pattern.get_electrons_internal_probability();
         if (datatools::is_valid(_prob_int_min_)) {
           if (pint < _prob_int_min_) {
             DT_LOG_DEBUG(get_logging_priority(),
@@ -377,7 +335,7 @@ namespace snemo {
       // Check if event has external probability
       bool check_has_external_probability = true;
       if (is_mode_has_external_probability()) {
-        if (! a_2e_pattern.has_external_probability()) {
+        if (! a_2e_pattern.has_electrons_external_probability()) {
           check_has_external_probability = false;
         }
       }
@@ -385,11 +343,11 @@ namespace snemo {
       // Check if event has correct external probability
       bool check_range_external_probability = true;
       if (is_mode_range_external_probability()) {
-        if (! a_2e_pattern.has_external_probability()) {
+        if (! a_2e_pattern.has_electrons_external_probability()) {
           DT_LOG_DEBUG(get_logging_priority(), "Missing external probability !");
           return cuts::SELECTION_INAPPLICABLE;
         }
-        const double pext = a_2e_pattern.get_external_probability();
+        const double pext = a_2e_pattern.get_electrons_external_probability();
         if (datatools::is_valid(_prob_ext_min_)) {
           if (pext < _prob_ext_min_) check_range_external_probability = false;
         }
@@ -398,27 +356,60 @@ namespace snemo {
         }
       }
 
-      // Check if event has delta vertices y
-      bool check_has_delta_vertices_y = true;
-      if (is_mode_has_delta_vertices_y()) {
-        if (! a_2e_pattern.has_delta_vertices_y()) {
-          check_has_delta_vertices_y = false;
+
+      // Check if event has common vertices probability
+      bool check_has_vertices_probability = true;
+      if (is_mode_has_vertices_probability()) {
+        if (! a_2e_pattern.has_vertices_probability()) {
+          check_has_vertices_probability = false;
         }
       }
 
-      // Check if event has required delta vertices y
-      bool check_range_delta_vertices_y = true;
-      if (is_mode_range_delta_vertices_y()) {
-        if (! a_2e_pattern.has_delta_vertices_y()) {
-          DT_LOG_DEBUG(get_logging_priority(), "Missing delta vertices y !");
+      // Check if event has required common vertices probability
+      bool check_range_vertices_probability = true;
+      if (is_mode_range_vertices_probability()) {
+        if (! a_2e_pattern.has_vertices_probability()) {
+          DT_LOG_DEBUG(get_logging_priority(), "Missing common vertices probability !");
           return cuts::SELECTION_INAPPLICABLE;
         }
-        const double delta_vertices_y = a_2e_pattern.get_delta_vertices_y();
-        if (datatools::is_valid(_delta_vertices_y_min_)) {
-          if (delta_vertices_y < _delta_vertices_y_min_) {
+        const double vertices_probability = a_2e_pattern.get_vertices_probability();
+        if (datatools::is_valid(_vertices_probability_min_)) {
+          if (vertices_probability < _vertices_probability_min_) {
             DT_LOG_DEBUG(get_logging_priority(),
-                         "Delta vertices y (" << delta_vertices_y << ") lower than " << _delta_vertices_y_min_);
-            check_range_delta_vertices_y = false;
+                         "Common vertices probability (" << vertices_probability << ") lower than " << _vertices_probability_min_);
+            check_range_vertices_probability = false;
+          }
+        }
+        if (datatools::is_valid(_vertices_probability_max_)) {
+          if (vertices_probability > _vertices_probability_max_) {
+            DT_LOG_DEBUG(get_logging_priority(),
+                         "Vertices probability (" << vertices_probability << ") greater than " << _vertices_probability_max_);
+            check_range_vertices_probability = false;
+          }
+        }
+      }
+
+      // Check if event vertices probability
+      bool check_has_vertices_probability = true;
+      if (is_mode_vertices_probability()) {
+        if (! a_2e_pattern.has_vertices_probability()) {
+          check_has_vertices_probability = false;
+        }
+      }
+
+      // Check if event has required vertices probability
+      bool check_range_vertices_probability = true;
+      if (is_mode_range_vertices_probability()) {
+        if (! a_2e_pattern.has_vertices_probability()) {
+          DT_LOG_DEBUG(get_logging_priority(), "Missing vertices probability !");
+          return cuts::SELECTION_INAPPLICABLE;
+        }
+        const double vertices_probability = a_2e_pattern.get_vertices_probability();
+        if (datatools::is_valid(_vertices_probability_min_)) {
+          if (vertices_probability < _vertices_probability_min_) {
+            DT_LOG_DEBUG(get_logging_priority(),
+                         "Vertices probability (" << vertices_probability << ") lower than " << _vertices_probability_min_);
+            check_range_vertices_probability = false;
           }
         }
         if (datatools::is_valid(_delta_vertices_y_max_)) {
@@ -426,38 +417,6 @@ namespace snemo {
             DT_LOG_DEBUG(get_logging_priority(),
                          "Delta vertices y (" << delta_vertices_y << ") greater than " << _delta_vertices_y_max_);
             check_range_delta_vertices_y = false;
-          }
-        }
-      }
-
-      // Check if event has delta vertices z
-      bool check_has_delta_vertices_z = true;
-      if (is_mode_has_delta_vertices_z()) {
-        if (! a_2e_pattern.has_delta_vertices_z()) {
-          check_has_delta_vertices_z = false;
-        }
-      }
-
-      // Check if event has required delta vertices
-      bool check_range_delta_vertices_z = true;
-      if (is_mode_range_delta_vertices_z()) {
-        if (! a_2e_pattern.has_delta_vertices_z()) {
-          DT_LOG_DEBUG(get_logging_priority(), "Missing delta vertices z !");
-          return cuts::SELECTION_INAPPLICABLE;
-        }
-        const double delta_vertices_z = a_2e_pattern.get_delta_vertices_z();
-        if (datatools::is_valid(_delta_vertices_z_min_)) {
-          if (delta_vertices_z < _delta_vertices_z_min_) {
-            DT_LOG_DEBUG(get_logging_priority(),
-                         "Delta vertices z (" << delta_vertices_z << ") lower than " << _delta_vertices_z_min_);
-            check_range_delta_vertices_z = false;
-          }
-        }
-        if (datatools::is_valid(_delta_vertices_z_max_)) {
-          if (delta_vertices_z > _delta_vertices_z_max_) {
-            DT_LOG_DEBUG(get_logging_priority(),
-                         "Delta vertices z (" << delta_vertices_z << ") greater than " << _delta_vertices_z_max_);
-            check_range_delta_vertices_z = false;
           }
         }
       }
@@ -499,10 +458,8 @@ namespace snemo {
           check_has_external_probability &&
           check_range_internal_probability &&
           check_range_external_probability &&
-          check_has_delta_vertices_y &&
-          check_has_delta_vertices_z &&
-          check_range_delta_vertices_y &&
-          check_range_delta_vertices_z &&
+          check_has_vertices_probability &&
+          check_range_vertices_probability &&
           check_has_angle &&
           check_range_angle) {
         DT_LOG_DEBUG(get_logging_priority(), "Event rejected by channel 2e cut!");

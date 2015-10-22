@@ -28,7 +28,11 @@ namespace snemo {
 
     bool delta_vertices_measurement::is_valid() const
     {
-      return datatools::is_valid(_probability_);
+      //not sure
+      return ((_vertices_probability_.first == "source" ||
+               _vertices_probability_.first == "calorimeter" ||
+               _vertices_probability_.first =="tracker") &&
+              datatools::is_valid(_vertices_probability_.second));
     }
 
     // void delta_vertices_measurement::set_delta_vertices(geomtools::blur_spot & delta_vertices_)
@@ -49,12 +53,22 @@ namespace snemo {
 
     const double & delta_vertices_measurement::get_probability() const
     {
-      return _probability_;
+      return _vertices_probability_.second;
     }
 
     double & delta_vertices_measurement::grab_probability()
     {
-      return _probability_;
+      return _vertices_probability_.second;
+    }
+
+    const std::string & delta_vertices_measurement::get_vertices_location() const
+    {
+      return _vertices_probability_.first;
+    }
+
+    std::string & delta_vertices_measurement::grab_vertices_location()
+    {
+      return _vertices_probability_.first;
     }
 
   } // end of namespace datamodel

@@ -28,6 +28,8 @@ namespace snemo {
 
     public:
 
+      typedef std::pair<std::string, double> pair_common_vertices_probability;
+
       /// Constructor
       delta_vertices_measurement();
 
@@ -52,12 +54,17 @@ namespace snemo {
       /// Get a mutable reference to delta vertices blurspot
       double & grab_probability();
 
+      const std::string & get_vertices_location() const;
+
+      std::string & grab_vertices_location();
 
     private:
 
       // geomtools::blur_spot & _delta_vertices_;
 
-      double _probability_;
+      // double _probability_;
+
+      pair_common_vertices_probability _vertices_probability_;
 
       DATATOOLS_SERIALIZATION_DECLARATION();
     };
