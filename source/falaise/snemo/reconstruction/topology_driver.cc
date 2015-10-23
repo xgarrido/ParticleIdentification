@@ -218,18 +218,20 @@ namespace snemo {
       DT_LOG_TRACE(get_logging_priority(), "Event classification : " << a_classification);
 
       std::string a_class_id;
-      if (a_classification == "1e") {
-        a_class_id = "snemo::reconstruction::topology_1e_builder";
-      } else if (a_classification == "1e1a") {
-        a_class_id = "snemo::reconstruction::topology_1e1a_builder";
-      } else if (a_classification == "1e1p") {
-        a_class_id = "snemo::reconstruction::topology_1e1p_builder";
-      } else if (std::regex_match(a_classification, std::regex("1e.*g"))) {
-        a_class_id = "snemo::reconstruction::topology_1eNg_builder";
-      } else if (a_classification == "2e") {
+      // if (a_classification == "1e") {
+      //   a_class_id = "snemo::reconstruction::topology_1e_builder";
+      // } else if (a_classification == "1e1a") {
+      //   a_class_id = "snemo::reconstruction::topology_1e1a_builder";
+      // } else if (a_classification == "1e1p") {
+      //   a_class_id = "snemo::reconstruction::topology_1e1p_builder";
+      // } else if (std::regex_match(a_classification, std::regex("1e.*g"))) {
+      //   a_class_id = "snemo::reconstruction::topology_1eNg_builder";
+      // } else if (a_classification == "2e") {
+      //   a_class_id = "snemo::reconstruction::topology_2e_builder";
+      // } else if (std::regex_match(a_classification, std::regex("2e.*g"))) {
+      //   a_class_id = "snemo::reconstruction::topology_2eNg_builder";
+      if (a_classification == "2e") {
         a_class_id = "snemo::reconstruction::topology_2e_builder";
-      } else if (std::regex_match(a_classification, std::regex("2e.*g"))) {
-        a_class_id = "snemo::reconstruction::topology_2eNg_builder";
       } else {
         DT_LOG_WARNING(get_logging_priority(), "Non supported classification '" << a_classification << "' !");
       }

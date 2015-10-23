@@ -55,7 +55,10 @@ namespace snemo {
         snemo::datamodel::delta_vertices_measurement * ptr_delta_vertices_measurement = new snemo::datamodel::delta_vertices_measurement;
         meas["vertices_probability_" + e1_label + "_" + e2_label].reset(ptr_delta_vertices_measurement);
         if (drivers.DVD) drivers.DVD->process(e1, e2,
+                                              ptr_delta_vertices_measurement->grab_vertices_location(),
                                               ptr_delta_vertices_measurement->grab_probability());
+        // std::cout << "Vertices location : " << ptr_delta_vertices_measurement->grab_probability() << std::endl;
+        // std::cout << "Vertices probability : " << ptr_delta_vertices_measurement->grab_probability() << std::endl;
       }
 
       {

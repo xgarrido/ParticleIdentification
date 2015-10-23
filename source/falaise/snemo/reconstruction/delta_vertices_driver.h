@@ -73,6 +73,7 @@ namespace snemo {
       /// Main process
       void process(const snemo::datamodel::particle_track & pt1_,
                    const snemo::datamodel::particle_track & pt2_,
+                   std::string & location_,
                    double & probability_);
 
       /// Check if theclusterizer is initialized
@@ -95,6 +96,7 @@ namespace snemo {
       /// Special method to process and generate particle track data
       void _process_algo(const snemo::datamodel::particle_track & pt1_,
                          const snemo::datamodel::particle_track & pt2_,
+                         std::string & location_,
                          double & probability_);
 
       /// Retrieve the probability of a common vertices hypothesis

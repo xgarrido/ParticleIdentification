@@ -252,9 +252,9 @@ namespace snemo {
         size_t count = 0;
         if (configuration_.has_key("range_vertices_probability.location")) {
           std::string vertices_probability_location = configuration_.fetch_string("range_vertices_probability.location");
-          DT_THROW_IF(vertices_probability_location != "source" ||
-                      vertices_probability_location != "calorimeter" ||
-                      vertices_probability_location != "tracker", std::logic_error,
+          DT_THROW_IF(!(vertices_probability_location == "source" ||
+                      vertices_probability_location == "calorimeter" ||
+                        vertices_probability_location == "tracker"), std::logic_error,
                       "Invalid common vertices location (" << vertices_probability_location << ") !");
           _vertices_probability_location_ = vertices_probability_location;
         }
@@ -595,7 +595,6 @@ namespace snemo {
           }
         }
       }
-
 
       cut_returned = cuts::SELECTION_REJECTED;
       if (check_has_internal_probability &&
