@@ -36,6 +36,10 @@ namespace snemo {
       datatools::invalidate(_vertices_probability_max_);
       datatools::invalidate(_angle_min_);
       datatools::invalidate(_angle_max_);
+      datatools::invalidate(_minimal_energy_min_);
+      datatools::invalidate(_minimal_energy_max_);
+      datatools::invalidate(_maximal_energy_min_);
+      datatools::invalidate(_maximal_energy_max_);
       return;
     }
 
@@ -82,6 +86,26 @@ namespace snemo {
     bool channel_2e_cut::is_mode_range_angle() const
     {
       return _mode_ & MODE_RANGE_ANGLE;
+    }
+
+    bool channel_2e_cut::is_mode_has_minimal_energy() const
+    {
+      return _mode_ & MODE_HAS_MINIMAL_ENERGY;
+    }
+
+    bool channel_2e_cut::is_mode_range_minimal_energy() const
+    {
+      return _mode_ & MODE_RANGE_MINIMAL_ENERGY;
+    }
+
+    bool channel_2e_cut::is_mode_has_maximal_energy() const
+    {
+      return _mode_ & MODE_HAS_MAXIMAL_ENERGY;
+    }
+
+    bool channel_2e_cut::is_mode_range_maximal_energy() const
+    {
+      return _mode_ & MODE_RANGE_MAXIMAL_ENERGY;
     }
 
     channel_2e_cut::channel_2e_cut(datatools::logger::priority logger_priority_)
@@ -141,6 +165,18 @@ namespace snemo {
       }
       if (configuration_.has_flag("mode.range_angle")) {
         _mode_ |= MODE_RANGE_ANGLE;
+      }
+      if (configuration_.has_flag("mode.has_minimal_energy")) {
+        _mode_ |= MODE_HAS_MINIMAL_ENERGY;
+      }
+      if (configuration_.has_flag("mode.range_minimal_energy")) {
+        _mode_ |= MODE_RANGE_MINIMAL_ENERGY;
+      }
+      if (configuration_.has_flag("mode.has_maximal_energy")) {
+        _mode_ |= MODE_HAS_MAXIMAL_ENERGY;
+      }
+      if (configuration_.has_flag("mode.range_maximal_energy")) {
+        _mode_ |= MODE_RANGE_MAXIMAL_ENERGY;
       }
       DT_THROW_IF(_mode_ == MODE_UNDEFINED, std::logic_error,
                   "Missing at least a 'mode.XXX' property !");
@@ -214,6 +250,14 @@ namespace snemo {
       if (is_mode_range_vertices_probability()) {
         DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_VERTICES_PROBABILITY mode...");
         size_t count = 0;
+        if (configuration_.has_key("range_vertices_probability.location")) {
+          std::string vertices_probability_location = configuration_.fetch_string("range_vertices_probability.location");
+          DT_THROW_IF(vertices_probability_location != "source" ||
+                      vertices_probability_location != "calorimeter" ||
+                      vertices_probability_location != "tracker", std::logic_error,
+                      "Invalid common vertices location (" << vertices_probability_location << ") !");
+          _vertices_probability_location_ = vertices_probability_location;
+        }
         if (configuration_.has_key("range_vertices_probability.min")) {
           double vertices_probability_min = configuration_.fetch_real("range_vertices_probability.min");
           DT_THROW_IF(vertices_probability_min < 0.0 || vertices_probability_min > 1, std::range_error,
@@ -225,13 +269,13 @@ namespace snemo {
           double vertices_probability_max = configuration_.fetch_real("range_vertices_probability.max");
           DT_THROW_IF(vertices_probability_max < 0.0 || vertices_probability_max > 1, std::range_error,
                       "Invalid maximal vertices probability (" << vertices_probability_max << ") !");
-          _vertices_probability_y_max_ = vertices_probability_max;
+          _vertices_probability_max_ = vertices_probability_max;
           count++;
         }
         DT_THROW_IF(count == 0, std::logic_error,
                     "Missing 'range_vertices_probability.min' or 'range_vertices_probability.max' property !");
         if (count == 2) {// && _delta_vertices_y_min_ >= 0 && _delta_vertices_y_max_ >= 0) {
-          DT_THROW_IF(_vertices_probability__min_ > _vertices_probability_max_, std::logic_error,
+          DT_THROW_IF(_vertices_probability_min_ > _vertices_probability_max_, std::logic_error,
                       "Invalid 'range_vertices_probability.min' > 'range_vertices_probability.max' values !");
         }
       }
@@ -264,6 +308,68 @@ namespace snemo {
         if (count == 2 && _angle_min_ >= 0 && _angle_max_ >= 0) {
           DT_THROW_IF(_angle_min_ > _angle_max_, std::logic_error,
                       "Invalid 'range_angle.min' > 'range_angle.max' values !");
+        }
+      }
+
+      if (is_mode_range_minimal_energy()) {
+        DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_MINIMAL_ENERGY mode...");
+        size_t count = 0;
+        if (configuration_.has_key("range_minimal_energy.min")) {
+          double minimal_energy_min = configuration_.fetch_real("range_minimal_energy.min");
+          if (! configuration_.has_explicit_unit("range_minimal_energy.min")) {
+            minimal_energy_min *= CLHEP::MeV;
+          }
+          DT_THROW_IF(minimal_energy_min < 0.0*CLHEP::MeV, std::range_error,
+                      "Invalid minimal minimal_energy (" << minimal_energy_min << ") !");
+          _minimal_energy_min_ = minimal_energy_min;
+          count++;
+        }
+        if (configuration_.has_key("range_minimal_energy.max")) {
+          double minimal_energy_max = configuration_.fetch_real("range_minimal_energy.max");
+          if (! configuration_.has_explicit_unit("range_minimal_energy.max")) {
+            minimal_energy_max *= CLHEP::degree;
+          }
+          DT_THROW_IF(minimal_energy_max < 0.0*CLHEP::degree, std::range_error,
+                      "Invalid maximal minimal_energy (" << minimal_energy_max << ") !");
+          _minimal_energy_max_ = minimal_energy_max;
+          count++;
+        }
+        DT_THROW_IF(count == 0, std::logic_error,
+                    "Missing 'range_minimal_energy.min' or 'range_minimal_energy.max' property !");
+        if (count == 2 && _minimal_energy_min_ >= 0 && _minimal_energy_max_ >= 0) {
+          DT_THROW_IF(_minimal_energy_min_ > _minimal_energy_max_, std::logic_error,
+                      "Invalid 'range_minimal_energy.min' > 'range_minimal_energy.max' values !");
+        }
+      }
+
+      if (is_mode_range_maximal_energy()) {
+        DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_MAXIMAL_ENERGY mode...");
+        size_t count = 0;
+        if (configuration_.has_key("range_maximal_energy.min")) {
+          double maximal_energy_min = configuration_.fetch_real("range_maximal_energy.min");
+          if (! configuration_.has_explicit_unit("range_maximal_energy.min")) {
+            maximal_energy_min *= CLHEP::MeV;
+          }
+          DT_THROW_IF(maximal_energy_min < 0.0*CLHEP::MeV, std::range_error,
+                      "Invalid minimal maximal_energy (" << maximal_energy_min << ") !");
+          _maximal_energy_min_ = maximal_energy_min;
+          count++;
+        }
+        if (configuration_.has_key("range_maximal_energy.max")) {
+          double maximal_energy_max = configuration_.fetch_real("range_maximal_energy.max");
+          if (! configuration_.has_explicit_unit("range_maximal_energy.max")) {
+            maximal_energy_max *= CLHEP::degree;
+          }
+          DT_THROW_IF(maximal_energy_max < 0.0*CLHEP::degree, std::range_error,
+                      "Invalid maximal maximal_energy (" << maximal_energy_max << ") !");
+          _maximal_energy_max_ = maximal_energy_max;
+          count++;
+        }
+        DT_THROW_IF(count == 0, std::logic_error,
+                    "Missing 'range_maximal_energy.min' or 'range_maximal_energy.max' property !");
+        if (count == 2 && _maximal_energy_min_ >= 0 && _maximal_energy_max_ >= 0) {
+          DT_THROW_IF(_maximal_energy_min_ > _maximal_energy_max_, std::logic_error,
+                      "Invalid 'range_maximal_energy.min' > 'range_maximal_energy.max' values !");
         }
       }
 
@@ -356,11 +462,10 @@ namespace snemo {
         }
       }
 
-
       // Check if event has common vertices probability
       bool check_has_vertices_probability = true;
       if (is_mode_has_vertices_probability()) {
-        if (! a_2e_pattern.has_vertices_probability()) {
+        if (! a_2e_pattern.has_electrons_vertices_probability()) {
           check_has_vertices_probability = false;
         }
       }
@@ -368,11 +473,17 @@ namespace snemo {
       // Check if event has required common vertices probability
       bool check_range_vertices_probability = true;
       if (is_mode_range_vertices_probability()) {
-        if (! a_2e_pattern.has_vertices_probability()) {
+        if (! a_2e_pattern.has_electrons_vertices_probability()) {
           DT_LOG_DEBUG(get_logging_priority(), "Missing common vertices probability !");
           return cuts::SELECTION_INAPPLICABLE;
         }
-        const double vertices_probability = a_2e_pattern.get_vertices_probability();
+        const std::string vertices_probability_location = a_2e_pattern.get_electrons_vertices_location();
+        if (vertices_probability_location < _vertices_probability_location_) {
+          DT_LOG_DEBUG(get_logging_priority(),
+                       "Common vertices location (" << vertices_probability_location << ") different than " << _vertices_probability_location_);
+          check_range_vertices_probability = false;
+        }
+        const double vertices_probability = a_2e_pattern.get_electrons_vertices_probability();
         if (datatools::is_valid(_vertices_probability_min_)) {
           if (vertices_probability < _vertices_probability_min_) {
             DT_LOG_DEBUG(get_logging_priority(),
@@ -389,42 +500,10 @@ namespace snemo {
         }
       }
 
-      // Check if event vertices probability
-      bool check_has_vertices_probability = true;
-      if (is_mode_vertices_probability()) {
-        if (! a_2e_pattern.has_vertices_probability()) {
-          check_has_vertices_probability = false;
-        }
-      }
-
-      // Check if event has required vertices probability
-      bool check_range_vertices_probability = true;
-      if (is_mode_range_vertices_probability()) {
-        if (! a_2e_pattern.has_vertices_probability()) {
-          DT_LOG_DEBUG(get_logging_priority(), "Missing vertices probability !");
-          return cuts::SELECTION_INAPPLICABLE;
-        }
-        const double vertices_probability = a_2e_pattern.get_vertices_probability();
-        if (datatools::is_valid(_vertices_probability_min_)) {
-          if (vertices_probability < _vertices_probability_min_) {
-            DT_LOG_DEBUG(get_logging_priority(),
-                         "Vertices probability (" << vertices_probability << ") lower than " << _vertices_probability_min_);
-            check_range_vertices_probability = false;
-          }
-        }
-        if (datatools::is_valid(_delta_vertices_y_max_)) {
-          if (delta_vertices_y > _delta_vertices_y_max_) {
-            DT_LOG_DEBUG(get_logging_priority(),
-                         "Delta vertices y (" << delta_vertices_y << ") greater than " << _delta_vertices_y_max_);
-            check_range_delta_vertices_y = false;
-          }
-        }
-      }
-
       // Check if event has angle
       bool check_has_angle = true;
       if (is_mode_has_angle()) {
-        if (! a_2e_pattern.has_angle()) {
+        if (! a_2e_pattern.has_electrons_angle()) {
             check_has_angle = false;
         }
       }
@@ -432,11 +511,11 @@ namespace snemo {
       // Check if event has required angle
       bool check_range_angle = true;
       if (is_mode_range_angle()) {
-        if (! a_2e_pattern.has_angle()) {
+        if (! a_2e_pattern.has_electrons_angle()) {
           DT_LOG_DEBUG(get_logging_priority(), "Missing angle !");
           return cuts::SELECTION_INAPPLICABLE;
         }
-        const double angle = a_2e_pattern.get_angle();
+        const double angle = a_2e_pattern.get_electrons_angle();
         if (datatools::is_valid(_angle_min_)) {
           if (angle < _angle_min_) {
             DT_LOG_DEBUG(get_logging_priority(),
@@ -453,6 +532,71 @@ namespace snemo {
         }
       }
 
+      // Check if event has minimal energy
+      bool check_has_minimal_energy = true;
+      if (is_mode_has_minimal_energy()) {
+        if (! a_2e_pattern.has_electron_minimal_energy()) {
+            check_has_minimal_energy = false;
+        }
+      }
+
+      // Check if event has required electron minimal energy
+      bool check_range_minimal_energy = true;
+      if (is_mode_range_minimal_energy()) {
+        if (! a_2e_pattern.has_electron_minimal_energy()) {
+          DT_LOG_DEBUG(get_logging_priority(), "Missing minimal energy !");
+          return cuts::SELECTION_INAPPLICABLE;
+        }
+        const double minimal_energy = a_2e_pattern.get_electron_minimal_energy();
+        if (datatools::is_valid(_minimal_energy_min_)) {
+          if ( minimal_energy < _minimal_energy_min_) {
+            DT_LOG_DEBUG(get_logging_priority(),
+                         "Minimal energy (" << minimal_energy << ") lower than " << _minimal_energy_min_);
+            check_range_minimal_energy = false;
+          }
+        }
+        if (datatools::is_valid(_minimal_energy_max_)) {
+          if (minimal_energy > _minimal_energy_max_) {
+            DT_LOG_DEBUG(get_logging_priority(),
+                         "Minimal energy (" << minimal_energy << ") greater than " << _minimal_energy_max_);
+            check_range_minimal_energy = false;
+          }
+        }
+      }
+
+      // Check if event has maximal energy
+      bool check_has_maximal_energy = true;
+      if (is_mode_has_maximal_energy()) {
+        if (! a_2e_pattern.has_electron_maximal_energy()) {
+            check_has_maximal_energy = false;
+        }
+      }
+
+      // Check if event has required electron maximal energy
+      bool check_range_maximal_energy = true;
+      if (is_mode_range_maximal_energy()) {
+        if (! a_2e_pattern.has_electron_maximal_energy()) {
+          DT_LOG_DEBUG(get_logging_priority(), "Missing maximal energy !");
+          return cuts::SELECTION_INAPPLICABLE;
+        }
+        const double maximal_energy = a_2e_pattern.get_electron_maximal_energy();
+        if (datatools::is_valid(_maximal_energy_min_)) {
+          if ( maximal_energy < _maximal_energy_min_) {
+            DT_LOG_DEBUG(get_logging_priority(),
+                         "Maximal energy (" << maximal_energy << ") lower than " << _maximal_energy_min_);
+            check_range_maximal_energy = false;
+          }
+        }
+        if (datatools::is_valid(_maximal_energy_max_)) {
+          if (maximal_energy > _maximal_energy_max_) {
+            DT_LOG_DEBUG(get_logging_priority(),
+                         "Maximal energy (" << maximal_energy << ") greater than " << _maximal_energy_max_);
+            check_range_maximal_energy = false;
+          }
+        }
+      }
+
+
       cut_returned = cuts::SELECTION_REJECTED;
       if (check_has_internal_probability &&
           check_has_external_probability &&
@@ -461,7 +605,11 @@ namespace snemo {
           check_has_vertices_probability &&
           check_range_vertices_probability &&
           check_has_angle &&
-          check_range_angle) {
+          check_range_angle &&
+          check_has_minimal_energy &&
+          check_range_minimal_energy &&
+          check_has_maximal_energy &&
+          check_range_maximal_energy) {
         DT_LOG_DEBUG(get_logging_priority(), "Event rejected by channel 2e cut!");
         cut_returned = cuts::SELECTION_ACCEPTED;
       }
