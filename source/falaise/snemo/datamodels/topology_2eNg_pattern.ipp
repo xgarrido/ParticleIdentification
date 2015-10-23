@@ -23,7 +23,7 @@ namespace snemo {
     template<class Archive>
     void topology_2eNg_pattern::serialize(Archive & ar, const unsigned int /* version */)
     {
-      ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(base_topology_pattern);
+      ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(topology_2e_pattern);
       // ar & boost::serialization::make_nvp("number_of_gammas", _number_of_gammas_);
       return;
     }

@@ -39,15 +39,6 @@ namespace snemo {
       /// Check delta vertices blurspot validity
       bool is_valid() const;
 
-      // /// Set delta vertices blurspot value
-      // void set_delta_vertices(geomtools::blur_spot & delta_vertices_);
-
-      // /// Get a non-mutable reference to delta vertices blurspot
-      // const geomtools::blur_spot & get_delta_vertices() const;
-
-      // /// Get a mutable reference to delta vertices blurspot
-      // geomtools::blur_spot & grab_delta_vertices();
-
       /// Get a non-mutable reference to delta vertices blurspot
       const double & get_probability() const;
 

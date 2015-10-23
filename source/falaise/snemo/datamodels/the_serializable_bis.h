@@ -23,6 +23,12 @@
  **************************************/
 
 #include <falaise/snemo/datamodels/base_topology_pattern.ipp>
+// DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snemo::datamodel::base_topology_pattern)
+// BOOST_CLASS_EXPORT_IMPLEMENT(snemo::datamodel::base_topology_pattern)
+
+#include <falaise/snemo/datamodels/base_topology_measurement.ipp>
+// DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snemo::datamodel::base_topology_measurement)
+// BOOST_CLASS_EXPORT_IMPLEMENT(snemo::datamodel::base_topology_measurement)
 
 #include <falaise/snemo/datamodels/topology_1e_pattern.ipp>
 DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snemo::datamodel::topology_1e_pattern)

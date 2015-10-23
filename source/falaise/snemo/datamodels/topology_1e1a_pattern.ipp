@@ -24,7 +24,7 @@ namespace snemo {
     template<class Archive>
     void topology_1e1a_pattern::serialize(Archive & ar, const unsigned int /* version */)
     {
-      ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(base_topology_pattern);
+      ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(topology_1e_pattern);
       return;
     }
 
