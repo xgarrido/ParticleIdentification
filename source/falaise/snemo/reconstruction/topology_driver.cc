@@ -181,6 +181,7 @@ namespace snemo {
         = FB.get(builder_class_id);
       snemo::reconstruction::base_topology_builder * new_builder = the_factory();
       snemo::datamodel::base_topology_pattern::handle_type new_pattern = new_builder->create_pattern();
+      td_.set_pattern_handle(new_pattern);
       if (get_logging_priority() >= datatools::logger::PRIO_TRACE) {
         DT_LOG_TRACE(get_logging_priority(), "New pattern: ");
         new_pattern.get().tree_dump(std::clog, "", "[trace]: ");
