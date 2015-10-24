@@ -62,10 +62,13 @@ list(APPEND FalaiseParticleIdentificationPlugin_HEADERS
   source/falaise/snemo/datamodels/topology_1e1p_pattern.h
   source/falaise/snemo/datamodels/topology_1e1p_pattern.ipp
   source/falaise/snemo/datamodels/base_topology_measurement.h
+  source/falaise/snemo/datamodels/base_topology_measurement.ipp
   source/falaise/snemo/datamodels/tof_measurement.h
   source/falaise/snemo/datamodels/delta_vertices_measurement.h
   source/falaise/snemo/datamodels/angle_measurement.h
+  source/falaise/snemo/datamodels/angle_measurement.ipp
   source/falaise/snemo/datamodels/energy_measurement.h
+  source/falaise/snemo/datamodels/energy_measurement.ipp
   source/falaise/snemo/datamodels/pid_utils.h
   )
 

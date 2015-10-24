@@ -21,9 +21,9 @@ namespace snemo {
 
     /// Serialization method
     template<class Archive>
-    void base_topology_measurement::serialize(Archive & ar, const unsigned int /* version */)
+    void base_topology_measurement::serialize(Archive & ar_, const unsigned int /* version_ */)
     {
-      ar & DATATOOLS_SERIALIZATION_I_SERIALIZABLE_BASE_OBJECT_NVP;
+      ar_ & DATATOOLS_SERIALIZATION_I_SERIALIZABLE_BASE_OBJECT_NVP;
       return;
     }
 

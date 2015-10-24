@@ -13,12 +13,7 @@
 #ifndef FALAISE_SNEMO_DATAMODELS_TOPOLOGY_DATA_H
 #define FALAISE_SNEMO_DATAMODELS_TOPOLOGY_DATA_H 1
 
-// Standard library:
-#include <vector>
-
 // Third party:
-// - Boost:
-#include <boost/serialization/access.hpp>
 // - Bayeux/datatools:
 #include <bayeux/datatools/i_serializable.h>
 #include <bayeux/datatools/i_tree_dump.h>
@@ -33,8 +28,7 @@ namespace snemo {
 
   namespace datamodel {
 
-    /// \brief SuperNEMO particle track model
-    //  To be done...
+    /// \brief SuperNEMO topology data model
     class topology_data : DATATOOLS_SERIALIZABLE_CLASS,
                           public datatools::i_tree_dumpable,
                           public datatools::i_clear

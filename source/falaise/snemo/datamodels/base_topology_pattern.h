@@ -84,8 +84,8 @@ namespace snemo {
 
     private:
 
-      particle_track_dict_type _tracks_;
-      measurement_dict_type _meas_;
+      particle_track_dict_type _tracks_; //!< Particle track dictionary
+      measurement_dict_type _meas_;      //!< Measurement dictionary
 
       DATATOOLS_SERIALIZATION_DECLARATION();
 

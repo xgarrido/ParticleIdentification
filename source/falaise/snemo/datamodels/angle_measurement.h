@@ -1,29 +1,22 @@
 /// \file falaise/snemo/datamodels/angle_measurement.h
-/* Author(s) :    François Mauger <mauger@lpccaen.in2p3.fr>
- * Creation date: 2012-03-19
- * Last modified: 2014-01-27
+/* Author(s) :    Steven Calvez <calvez@lal.in2p3.fr>
+ * Creation date: 2015-10-24
+ * Last modified: 2015-10-24
  *
- * Description: The base class of topology measurement
+ * Description: The class for angle measurement
  */
 
 #ifndef FALAISE_SNEMO_DATAMODEL_ANGLE_MEASUREMENT_H
 #define FALAISE_SNEMO_DATAMODEL_ANGLE_MEASUREMENT_H 1
 
-// Standard library:
-#include <string>
-
-// Third party:
-// - Bayeux/datatools:
-#include <bayeux/datatools/i_serializable.h>
-#include <bayeux/datatools/i_tree_dump.h>
-
+// This project:
 #include <falaise/snemo/datamodels/base_topology_measurement.h>
 
 namespace snemo {
 
   namespace datamodel {
 
-    /// \brief The Angle measurement
+    /// \brief The angle measurement
     class angle_measurement : public base_topology_measurement {
 
     public:
@@ -35,7 +28,7 @@ namespace snemo {
       ~angle_measurement();
 
       /// Check angle validity
-      bool is_valid() const;
+      bool has_angle() const;
 
       /// Set angle value
       void set_angle(double angle_);
@@ -48,7 +41,7 @@ namespace snemo {
 
     private:
 
-      double _angle_;
+      double _angle_; //!< The angle value
 
       DATATOOLS_SERIALIZATION_DECLARATION();
     };
@@ -56,6 +49,10 @@ namespace snemo {
   } // end of namespace datamodel
 
 } // end of namespace snemo
+
+#include <boost/serialization/export.hpp>
+BOOST_CLASS_EXPORT_KEY2(snemo::datamodel::angle_measurement,
+                        "snemo::datamodel::angle_measurement")
 
 #endif // FALAISE_SNEMO_DATAMODEL_ANGLE_MEASUREMENT_H
 
