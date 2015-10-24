@@ -3,6 +3,9 @@
 
 // Ourselves:
 #include <falaise/snemo/datamodels/topology_1e1p_pattern.h>
+#include <falaise/snemo/datamodels/energy_measurement.h>
+#include <falaise/snemo/datamodels/angle_measurement.h>
+#include <falaise/snemo/datamodels/tof_measurement.h>
 
 namespace snemo {
 
@@ -171,9 +174,9 @@ namespace snemo {
     // }
 
     void topology_1e1p_pattern::tree_dump(std::ostream      & out_,
-                                        const std::string & title_,
-                                        const std::string & indent_,
-                                        bool inherit_) const
+                                          const std::string & title_,
+                                          const std::string & indent_,
+                                          bool /*inherit_*/) const
     {
       std::string indent;
       if (! indent_.empty()) indent = indent_;

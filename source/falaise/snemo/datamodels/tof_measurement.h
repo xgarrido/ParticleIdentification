@@ -44,8 +44,8 @@ namespace snemo {
 
     private:
 
-      probability_type _internal_probabilities_;
-      probability_type _external_probabilities_;
+      probability_type _internal_probabilities_;//!< TOF internal probabilities
+      probability_type _external_probabilities_;//!< TOF external probabilities
 
       DATATOOLS_SERIALIZATION_DECLARATION();
     };
@@ -53,6 +53,9 @@ namespace snemo {
   } // end of namespace datamodel
 
 } // end of namespace snemo
+#include <boost/serialization/export.hpp>
+BOOST_CLASS_EXPORT_KEY2(snemo::datamodel::tof_measurement,
+                        "snemo::datamodel::tof_measurement")
 
 #endif // FALAISE_SNEMO_DATAMODEL_TOF_MEASUREMENT_H
 

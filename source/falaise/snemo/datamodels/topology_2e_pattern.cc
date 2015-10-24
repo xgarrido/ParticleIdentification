@@ -4,6 +4,10 @@
 // Ourselves:
 #include <falaise/snemo/datamodels/topology_2e_pattern.h>
 #include <falaise/snemo/datamodels/particle_track.h>
+#include <falaise/snemo/datamodels/energy_measurement.h>
+#include <falaise/snemo/datamodels/tof_measurement.h>
+#include <falaise/snemo/datamodels/angle_measurement.h>
+#include <falaise/snemo/datamodels/delta_vertices_measurement.h>
 
 namespace snemo {
 
@@ -66,7 +70,7 @@ namespace snemo {
     {
       //Only one energy check
       DT_THROW_IF(! has_electron_maximal_energy(), std::logic_error, "No electron energy measurement stored !");
-      return std::abs(get_electron_minimal_energy() - get_electron_maximal_energy());
+      return get_electron_maximal_energy() - get_electron_minimal_energy();
     }
 
     bool topology_2e_pattern::has_electrons_internal_probability() const

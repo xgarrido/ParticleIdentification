@@ -1,16 +1,13 @@
 /// \file falaise/snemo/datamodels/delta_vertices_measurement.h
-/* Author(s) :    François Mauger <mauger@lpccaen.in2p3.fr>
- * Creation date: 2012-03-19
- * Last modified: 2014-01-27
+/* Author(s) :    Steven Calvez <calvez@lal.in2p3.fr>
+ * Creation date: 2015-10-24
+ * Last modified: 2015-10-24
  *
- * Description: The base class of topology measurement
+ * Description: The class for delta vertices measurement
  */
 
 #ifndef FALAISE_SNEMO_DATAMODEL_DELTA_VERTICES_MEASUREMENT_H
 #define FALAISE_SNEMO_DATAMODEL_DELTA_VERTICES_MEASUREMENT_H 1
-
-// Standard library:
-#include <string>
 
 // This project
 #include <falaise/snemo/datamodels/base_topology_measurement.h>
@@ -63,6 +60,10 @@ namespace snemo {
   } // end of namespace datamodel
 
 } // end of namespace snemo
+
+#include <boost/serialization/export.hpp>
+BOOST_CLASS_EXPORT_KEY2(snemo::datamodel::delta_vertices_measurement,
+                        "snemo::datamodel::delta_vertices_measurement")
 
 #endif // FALAISE_SNEMO_DATAMODEL_DELTA_VERTICES_MEASUREMENT_H
 
