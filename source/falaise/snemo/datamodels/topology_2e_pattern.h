@@ -10,12 +10,7 @@
 #define FALAISE_SNEMO_DATAMODEL_TOPOLOGY_2E_PATTERN_H 1
 
 // This project:
-#include <falaise/snemo/datamodels/particle_track_data.h>
 #include <falaise/snemo/datamodels/base_topology_pattern.h>
-#include <falaise/snemo/datamodels/energy_measurement.h>
-#include <falaise/snemo/datamodels/tof_measurement.h>
-#include <falaise/snemo/datamodels/angle_measurement.h>
-#include <falaise/snemo/datamodels/delta_vertices_measurement.h>
 
 namespace snemo {
 
@@ -96,9 +91,9 @@ namespace snemo {
 
 } // end of namespace snemo
 
-#include <boost/serialization/export.hpp>
-BOOST_CLASS_EXPORT_KEY2(snemo::datamodel::topology_2e_pattern,
-                        "snemo::datamodel::topology_2e_pattern")
+// #include <boost/serialization/export.hpp>
+// BOOST_CLASS_EXPORT_KEY2(snemo::datamodel::topology_2e_pattern,
+//                         "snemo::datamodel::topology_2e_pattern")
 
 #endif // FALAISE_SNEMO_DATAMODEL_TOPOLOGY_2E_PATTERN_H
 

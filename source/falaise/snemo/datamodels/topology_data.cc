@@ -9,6 +9,7 @@ namespace snemo {
 
     bool topology_data::has_pattern() const
     {
+      // return (_pattern_.get().pattern_id() != "");
       return _pattern_.has_data();
     }
 

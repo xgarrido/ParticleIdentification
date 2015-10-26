@@ -4,6 +4,10 @@
 // Ourselves:
 #include <falaise/snemo/datamodels/topology_2e_pattern.h>
 #include <falaise/snemo/datamodels/particle_track.h>
+#include <falaise/snemo/datamodels/tof_measurement.h>
+#include <falaise/snemo/datamodels/delta_vertices_measurement.h>
+#include <falaise/snemo/datamodels/angle_measurement.h>
+#include <falaise/snemo/datamodels/energy_measurement.h>
 
 namespace snemo {
 
