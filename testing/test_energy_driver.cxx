@@ -20,8 +20,16 @@ int main()
     namespace srt = snemo::reconstruction;
 
     {
-      // Particle track :
+      // Fake particle track :
       snemo::datamodel::particle_track electron;
+      {
+        snemo::datamodel::calibrated_calorimeter_hit::collection_type & the_calos
+          = electron.grab_associated_calorimeter_hits();
+        the_calos.push_back(new snemo::datamodel::calibrated_calorimeter_hit);
+        snemo::datamodel::calibrated_calorimeter_hit & a_calo = the_calos.back().grab();
+        a_calo.set_energy(1000 * CLHEP::keV);
+      }
+      electron.tree_dump();
       snemo::reconstruction::energy_driver ED;
       datatools::properties ED_config;
       ED_config.store("logging.priority", "debug");
