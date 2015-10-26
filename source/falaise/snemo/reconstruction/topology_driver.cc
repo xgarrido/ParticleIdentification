@@ -156,7 +156,6 @@ namespace snemo {
       _drivers_.DVD.reset(0);
       _drivers_.AMD.reset(0);
       _drivers_.EMD.reset(0);
-
       return;
     }
 
@@ -249,6 +248,7 @@ namespace snemo {
       ::snemo::reconstruction::tof_driver::init_ocd(ocd_);
       ::snemo::reconstruction::delta_vertices_driver::init_ocd(ocd_);
       ::snemo::reconstruction::angle_driver::init_ocd(ocd_);
+      ::snemo::reconstruction::energy_driver::init_ocd(ocd_);
 
       return;
     }

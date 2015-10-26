@@ -98,7 +98,7 @@ namespace snemo {
     }
 
     void energy_driver::_process_algo(const snemo::datamodel::particle_track & pt_,
-                                              double & energy_)
+                                      double & energy_)
     {
       DT_LOG_TRACE(get_logging_priority(), "Entering...");
       // Invalidate results
