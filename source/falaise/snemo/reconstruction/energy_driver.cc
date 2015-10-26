@@ -101,7 +101,7 @@ namespace snemo {
                                       double & energy_)
     {
       DT_LOG_TRACE(get_logging_priority(), "Entering...");
-      // Invalidate results
+      // Invalidate result
       datatools::invalidate(energy_);
 
       if (pt_.has_associated_calorimeter_hits()) {
