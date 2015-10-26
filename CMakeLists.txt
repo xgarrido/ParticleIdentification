@@ -140,9 +140,10 @@ foreach(_hdrin ${FalaiseParticleIdentificationPlugin_HEADERS})
   configure_file(${_hdrin} ${Falaise_BUILDPRODUCT_DIR}/include/falaise/${_hdrout} @ONLY)
 endforeach()
 
-# # Test support:
-# option(FalaiseParticleIdentificationPlugin_ENABLE_TESTING "Build unit testing system for FalaiseParticleIdentification" ON)
-# if(FalaiseParticleIdentificationPlugin_ENABLE_TESTING)
-#   enable_testing()
-#   add_subdirectory(testing)
-# endif()
+# Test support:
+option(FalaiseParticleIdentificationPlugin_ENABLE_TESTING "Build unit testing system for FalaiseParticleIdentification" ON)
+if(FalaiseParticleIdentificationPlugin_ENABLE_TESTING)
+  enable_testing()
+  add_subdirectory(testing)
+
+endif()
