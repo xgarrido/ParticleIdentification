@@ -110,7 +110,7 @@ namespace snemo {
         for (snemo::datamodel::calibrated_calorimeter_hit::collection_type::const_iterator
                icalo = the_calos.begin(); icalo != the_calos.end(); ++icalo) {
           const snemo::datamodel::calibrated_calorimeter_hit & a_calo = icalo->get();
-          energy_ += a_calo.get_energy();
+          icalo == the_calos.begin() ? energy_ = a_calo.get_energy() : energy_ += a_calo.get_energy();
         }
       } else {
         DT_LOG_DEBUG(get_logging_priority(), "Particle track is not associated to any calorimeter block !");
