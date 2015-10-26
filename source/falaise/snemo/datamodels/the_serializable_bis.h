@@ -33,7 +33,6 @@ BOOST_CLASS_EXPORT_IMPLEMENT(snemo::datamodel::tof_measurement)
  **************************************/
 
 #include <falaise/snemo/datamodels/base_topology_pattern.ipp>
-
 #include <falaise/snemo/datamodels/topology_1e_pattern.ipp>
 DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snemo::datamodel::topology_1e_pattern)
 BOOST_CLASS_EXPORT_IMPLEMENT(snemo::datamodel::topology_1e_pattern)

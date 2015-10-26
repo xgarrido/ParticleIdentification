@@ -101,7 +101,7 @@ namespace snemo {
                                       double & energy_)
     {
       DT_LOG_TRACE(get_logging_priority(), "Entering...");
-      // Invalidate result
+      // Invalidate results
       datatools::invalidate(energy_);
 
       if (pt_.has_associated_calorimeter_hits()) {
@@ -110,7 +110,6 @@ namespace snemo {
         for (snemo::datamodel::calibrated_calorimeter_hit::collection_type::const_iterator
                icalo = the_calos.begin(); icalo != the_calos.end(); ++icalo) {
           const snemo::datamodel::calibrated_calorimeter_hit & a_calo = icalo->get();
-          DT_LOG_DEBUG(get_logging_priority(), "Current energy = " << a_calo.get_energy());
           energy_ += a_calo.get_energy();
         }
       } else {

@@ -88,7 +88,6 @@ namespace snemo {
                   "Missing at least a 'mode.XXX' property !");
 
       if (is_mode_pattern_id()) {
-        std::cout << "test mode pattern_id" << std::endl;
         DT_LOG_DEBUG(get_logging_priority(), "Using PATTERN_ID mode...");
         DT_THROW_IF(! configuration_.has_key("pattern_id.label"), std::logic_error,
                     "Missing 'pattern_id.label' !");
@@ -117,28 +116,21 @@ namespace snemo {
       bool check_has_pattern_id = true;
       if (is_mode_has_pattern_id()) {
         DT_LOG_DEBUG(get_logging_priority(), "Running HAS_PATTERN_ID mode...");
-        if (! TD.has_pattern()) {
-          check_has_pattern_id = false;
-          std::cout << "no pattern" << std::endl;
-        }
+        if (! TD.has_pattern()) check_has_pattern_id = false;
       }
 
       // Check if event has the correct pattern id
       bool check_pattern_id = true;
       if (is_mode_pattern_id()) {
-        std::cout << "is mode" << std::endl;
         DT_LOG_DEBUG(get_logging_priority(), "Running PATTERN_ID mode...");
         if (! TD.has_pattern()) {
           DT_LOG_DEBUG(get_logging_priority(), "The event does not have associated topology pattern !");
-          std::cout << "non applicable" << std::endl;
           return cuts::SELECTION_INAPPLICABLE;
           // return cuts::SELECTION_REJECTED;
         }
         const snemo::datamodel::base_topology_pattern & a_pattern = TD.get_pattern();
         const std::string & a_pattern_id = a_pattern.pattern_id();
         if (a_pattern_id != _pattern_id_label_) check_pattern_id = false;
-        std::cout << "a pattern id " << a_pattern_id << std::endl;
-
       }
 
       cut_returned = cuts::SELECTION_REJECTED;
