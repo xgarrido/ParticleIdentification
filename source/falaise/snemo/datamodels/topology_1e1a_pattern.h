@@ -70,9 +70,9 @@ namespace snemo {
 
 } // end of namespace snemo
 
-#include <boost/serialization/export.hpp>
-BOOST_CLASS_EXPORT_KEY2(snemo::datamodel::topology_1e1a_pattern,
-                        "snemo::datamodel::topology_1e1a_pattern")
+// #include <boost/serialization/export.hpp>
+// BOOST_CLASS_EXPORT_KEY2(snemo::datamodel::topology_1e1a_pattern,
+//                         "snemo::datamodel::topology_1e1a_pattern")
 
 #endif // FALAISE_SNEMO_DATAMODEL_TOPOLOGY_1E1A_PATTERN_H
 

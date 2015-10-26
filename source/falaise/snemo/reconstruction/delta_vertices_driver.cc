@@ -164,7 +164,7 @@ namespace snemo {
 
       probability_ = 0;
 
-      std::cout << "--BEGIN--" << std::endl;
+      // std::cout << "--BEGIN--" << std::endl;
 
       const snemo::datamodel::particle_track::vertex_collection_type & the_vertices_1
         = pt1_.get_vertices();
@@ -204,13 +204,13 @@ namespace snemo {
               location_ = "calorimeter";
             else
               location_ = "tracker";
-            std::cout << "---" << std::endl;
-            std::cout << "location-proba : " << location_ << " - " << probability_  << std::endl;
-            std::cout << "---" << std::endl;
+            // std::cout << "---" << std::endl;
+            // std::cout << "location-proba : " << location_ << " - " << probability_  << std::endl;
+            // std::cout << "---" << std::endl;
           }
         }
       }
-      std::cout << "----" << std::endl;
+      // std::cout << "----" << std::endl;
       DT_LOG_TRACE(get_logging_priority(), "Exiting...");
       return;
     }

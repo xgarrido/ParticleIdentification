@@ -49,6 +49,10 @@ namespace snemo {
 
 } // end of namespace snemo
 
+// #include <boost/serialization/export.hpp>
+// BOOST_CLASS_EXPORT_KEY2(snemo::datamodel::base_topology_measurement,
+//                         "snemo::datamodel::base_topology_measurement")
+
 #endif // FALAISE_SNEMO_DATAMODEL_BASE_TOPOLOGY_MEASUREMENT_H
 
 /*
