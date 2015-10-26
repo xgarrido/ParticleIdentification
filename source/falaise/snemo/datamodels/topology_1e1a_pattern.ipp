@@ -13,8 +13,7 @@
 #include <boost/serialization/nvp.hpp>
 
 // This project:
-#include <falaise/snemo/datamodels/base_topology_pattern.ipp>
-#include <falaise/snemo/datamodels/particle_track.ipp>
+#include <falaise/snemo/datamodels/topology_1e_pattern.ipp>
 
 namespace snemo {
 
@@ -22,9 +21,9 @@ namespace snemo {
 
     /// Serialization method
     template<class Archive>
-    void topology_1e1a_pattern::serialize(Archive & ar, const unsigned int /* version */)
+    void topology_1e1a_pattern::serialize(Archive & ar_, const unsigned int /* version_ */)
     {
-      ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(topology_1e_pattern);
+      ar_ & BOOST_SERIALIZATION_BASE_OBJECT_NVP(topology_1e_pattern);
       return;
     }
 

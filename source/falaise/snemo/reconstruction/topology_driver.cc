@@ -156,7 +156,6 @@ namespace snemo {
       _drivers_.DVD.reset(0);
       _drivers_.AMD.reset(0);
       _drivers_.EMD.reset(0);
-
       return;
     }
 
@@ -165,7 +164,7 @@ namespace snemo {
     {
       DT_LOG_TRACE(get_logging_priority(), "Entering...");
 
-      // regex machinery...
+      // Regex machinery...
       const std::string builder_class_id = topology_driver::_get_builder_class_id_(ptd_);
       if (builder_class_id.empty()) {
         DT_LOG_WARNING(get_logging_priority(), "Topology not supported for the measurements ");
@@ -180,15 +179,16 @@ namespace snemo {
       const base_topology_builder::factory_register_type::factory_type & the_factory
         = FB.get(builder_class_id);
       snemo::reconstruction::base_topology_builder * new_builder = the_factory();
-      snemo::datamodel::base_topology_pattern::handle_type new_pattern = new_builder->create_pattern();
-      td_.set_pattern_handle(new_pattern);
+      td_.set_pattern_handle(new_builder->create_pattern());
+
+      // Build new topology pattern
+      new_builder->set_measurement_drivers(_drivers_);
+      new_builder->build(ptd_, td_.grab_pattern());
+
       if (get_logging_priority() >= datatools::logger::PRIO_TRACE) {
         DT_LOG_TRACE(get_logging_priority(), "New pattern: ");
-        new_pattern.get().tree_dump(std::clog, "", "[trace]: ");
+        td_.get_pattern().tree_dump(std::clog, "", "[trace]: ");
       }
-
-      new_builder->set_measurement_drivers(_drivers_);
-      new_builder->build(ptd_, new_pattern.grab());
 
       DT_LOG_TRACE(get_logging_priority(), "Exiting.");
       return 0;
@@ -219,20 +219,18 @@ namespace snemo {
       DT_LOG_TRACE(get_logging_priority(), "Event classification : " << a_classification);
 
       std::string a_class_id;
-      // if (a_classification == "1e") {
-      //   a_class_id = "snemo::reconstruction::topology_1e_builder";
-      // } else if (a_classification == "1e1a") {
-      //   a_class_id = "snemo::reconstruction::topology_1e1a_builder";
-      // } else if (a_classification == "1e1p") {
-      //   a_class_id = "snemo::reconstruction::topology_1e1p_builder";
-      // } else if (std::regex_match(a_classification, std::regex("1e.*g"))) {
-      //   a_class_id = "snemo::reconstruction::topology_1eNg_builder";
-      // } else if (a_classification == "2e") {
-      //   a_class_id = "snemo::reconstruction::topology_2e_builder";
-      // } else if (std::regex_match(a_classification, std::regex("2e.*g"))) {
-      //   a_class_id = "snemo::reconstruction::topology_2eNg_builder";
-      if (a_classification == "2e") {
+      if (a_classification == "1e") {
+        a_class_id = "snemo::reconstruction::topology_1e_builder";
+      } else if (a_classification == "1e1a") {
+        a_class_id = "snemo::reconstruction::topology_1e1a_builder";
+      } else if (a_classification == "1e1p") {
+        a_class_id = "snemo::reconstruction::topology_1e1p_builder";
+      } else if (std::regex_match(a_classification, std::regex("1e.*g"))) {
+        a_class_id = "snemo::reconstruction::topology_1eNg_builder";
+      } else if (a_classification == "2e") {
         a_class_id = "snemo::reconstruction::topology_2e_builder";
+      } else if (std::regex_match(a_classification, std::regex("2e.*g"))) {
+        a_class_id = "snemo::reconstruction::topology_2eNg_builder";
       } else {
         DT_LOG_WARNING(get_logging_priority(), "Non supported classification '" << a_classification << "' !");
       }
@@ -250,6 +248,7 @@ namespace snemo {
       ::snemo::reconstruction::tof_driver::init_ocd(ocd_);
       ::snemo::reconstruction::delta_vertices_driver::init_ocd(ocd_);
       ::snemo::reconstruction::angle_driver::init_ocd(ocd_);
+      ::snemo::reconstruction::energy_driver::init_ocd(ocd_);
 
       return;
     }

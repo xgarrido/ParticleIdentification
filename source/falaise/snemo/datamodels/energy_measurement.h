@@ -1,29 +1,22 @@
 /// \file falaise/snemo/datamodels/energy_measurement.h
-/* Author(s) :    François Mauger <mauger@lpccaen.in2p3.fr>
- * Creation date: 2012-03-19
- * Last modified: 2014-01-27
+/* Author(s) :    Steven Calvez <calvez@lal.in2p3.fr>
+ * Creation date: 2015-10-24
+ * Last modified: 2015-10-24
  *
- * Description: The base class of topology measurement
+ * Description: The class for energy measurement
  */
 
 #ifndef FALAISE_SNEMO_DATAMODEL_ENERGY_MEASUREMENT_H
 #define FALAISE_SNEMO_DATAMODEL_ENERGY_MEASUREMENT_H 1
 
-// Standard library:
-#include <string>
-
-// Third party:
-// - Bayeux/datatools:
-#include <bayeux/datatools/i_serializable.h>
-#include <bayeux/datatools/i_tree_dump.h>
-
+// This project:
 #include <falaise/snemo/datamodels/base_topology_measurement.h>
 
 namespace snemo {
 
   namespace datamodel {
 
-    /// \brief The Energy measurement
+    /// \brief The energy measurement
     class energy_measurement : public base_topology_measurement {
     public:
 
@@ -47,7 +40,7 @@ namespace snemo {
 
     private:
 
-      double _energy_;
+      double _energy_; //!< The energy value
 
       DATATOOLS_SERIALIZATION_DECLARATION();
     };
@@ -55,6 +48,10 @@ namespace snemo {
   } // end of namespace datamodel
 
 } // end of namespace snemo
+
+#include <boost/serialization/export.hpp>
+BOOST_CLASS_EXPORT_KEY2(snemo::datamodel::energy_measurement,
+                        "snemo::datamodel::energy_measurement")
 
 #endif // FALAISE_SNEMO_DATAMODEL_ENERGY_MEASUREMENT_H
 

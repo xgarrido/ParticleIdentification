@@ -1,21 +1,16 @@
 /// \file falaise/snemo/datamodels/topology_1e1Ng_pattern.h
-/* Author(s) :    François Mauger <mauger@lpccaen.in2p3.fr>
- * Creation date: 2012-03-19
- * Last modified: 2014-01-27
+/* Author(s) :    Steven Calvez <calvez@lal.in2p3.fr>
+ * Creation date: 2015-10-24
+ * Last modified: 2015-10-24
  *
- * Description: The 1e1Ng class of trajectory patterns
+ * Description: The 1e1Ng class of trajectory pattern
  */
 
 #ifndef FALAISE_SNEMO_DATAMODEL_TOPOLOGY_1ENG_PATTERN_H
 #define FALAISE_SNEMO_DATAMODEL_TOPOLOGY_1ENG_PATTERN_H 1
 
-// Standard library:
-#include <string>
-
 // This project:
-#include <falaise/snemo/datamodels/base_topology_pattern.h>
 #include <falaise/snemo/datamodels/topology_1e_pattern.h>
-#include <falaise/snemo/datamodels/base_topology_measurement.h>
 
 namespace snemo {
 

@@ -6,7 +6,7 @@ cmake_minimum_required(VERSION 2.8)
 project(FalaiseParticleIdentificationPlugin)
 
 # Use C++11
-set(CMAKE_CXX_FLAGS "-std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 # Ensure our code can see the Falaise headers
 #include_directories(${Falaise_INCLUDE_DIRS})
@@ -62,10 +62,15 @@ list(APPEND FalaiseParticleIdentificationPlugin_HEADERS
   source/falaise/snemo/datamodels/topology_1e1p_pattern.ipp
   source/falaise/snemo/datamodels/base_topology_measurement.ipp
   source/falaise/snemo/datamodels/base_topology_measurement.h
+  source/falaise/snemo/datamodels/base_topology_measurement.ipp
   source/falaise/snemo/datamodels/tof_measurement.h
+  source/falaise/snemo/datamodels/tof_measurement.ipp
   source/falaise/snemo/datamodels/delta_vertices_measurement.h
+  source/falaise/snemo/datamodels/delta_vertices_measurement.ipp
   source/falaise/snemo/datamodels/angle_measurement.h
+  source/falaise/snemo/datamodels/angle_measurement.ipp
   source/falaise/snemo/datamodels/energy_measurement.h
+  source/falaise/snemo/datamodels/energy_measurement.ipp
   source/falaise/snemo/datamodels/pid_utils.h
   )
 
@@ -135,9 +140,10 @@ foreach(_hdrin ${FalaiseParticleIdentificationPlugin_HEADERS})
   configure_file(${_hdrin} ${Falaise_BUILDPRODUCT_DIR}/include/falaise/${_hdrout} @ONLY)
 endforeach()
 
-# # Test support:
-# option(FalaiseParticleIdentificationPlugin_ENABLE_TESTING "Build unit testing system for FalaiseParticleIdentification" ON)
-# if(FalaiseParticleIdentificationPlugin_ENABLE_TESTING)
-#   enable_testing()
-#   add_subdirectory(testing)
-# endif()
+# Test support:
+option(FalaiseParticleIdentificationPlugin_ENABLE_TESTING "Build unit testing system for FalaiseParticleIdentification" ON)
+if(FalaiseParticleIdentificationPlugin_ENABLE_TESTING)
+  enable_testing()
+  add_subdirectory(testing)
+
+endif()

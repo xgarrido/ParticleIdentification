@@ -3,6 +3,7 @@
 
 // Ourselves:
 #include <falaise/snemo/datamodels/topology_1e1a_pattern.h>
+#include <falaise/snemo/datamodels/angle_measurement.h>
 
 namespace snemo {
 

@@ -9,15 +9,8 @@
 #ifndef FALAISE_SNEMO_DATAMODEL_TOPOLOGY_1E_PATTERN_H
 #define FALAISE_SNEMO_DATAMODEL_TOPOLOGY_1E_PATTERN_H 1
 
-// Standard library:
-#include <string>
-
 // This project:
 #include <falaise/snemo/datamodels/base_topology_pattern.h>
-#include <falaise/snemo/datamodels/base_topology_measurement.h>
-#include <falaise/snemo/datamodels/energy_measurement.h>
-#include <falaise/snemo/datamodels/tof_measurement.h>
-#include <falaise/snemo/datamodels/angle_measurement.h>
 
 namespace snemo {
 

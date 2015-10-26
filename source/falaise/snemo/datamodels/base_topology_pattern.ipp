@@ -21,11 +21,11 @@ namespace snemo {
 
     /// Serialization method
     template<class Archive>
-    void base_topology_pattern::serialize(Archive & ar, const unsigned int /* version */)
+    void base_topology_pattern::serialize(Archive & ar_, const unsigned int /* version_ */)
     {
-      ar & DATATOOLS_SERIALIZATION_I_SERIALIZABLE_BASE_OBJECT_NVP;
-      ar & boost::serialization::make_nvp("particle_tracks_dictionary", _tracks_);
-      ar & boost::serialization::make_nvp("measurement_dictionary", _meas_);
+      ar_ & DATATOOLS_SERIALIZATION_I_SERIALIZABLE_BASE_OBJECT_NVP;
+      ar_ & boost::serialization::make_nvp("particle_tracks", _tracks_);
+      ar_ & boost::serialization::make_nvp("measurements", _meas_);
       return;
     }
 
