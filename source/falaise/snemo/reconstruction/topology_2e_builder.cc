@@ -12,6 +12,7 @@
 #include <falaise/snemo/datamodels/delta_vertices_measurement.h>
 #include <falaise/snemo/datamodels/angle_measurement.h>
 #include <falaise/snemo/datamodels/energy_measurement.h>
+#include <falaise/snemo/datamodels/base_topology_pattern.h>
 
 namespace snemo {
 
@@ -55,10 +56,10 @@ namespace snemo {
         snemo::datamodel::delta_vertices_measurement * ptr_delta_vertices_measurement = new snemo::datamodel::delta_vertices_measurement;
         meas["vertices_probability_" + e1_label + "_" + e2_label].reset(ptr_delta_vertices_measurement);
         if (drivers.DVD) drivers.DVD->process(e1, e2,
-                                              ptr_delta_vertices_measurement->grab_vertices_location(),
-                                              ptr_delta_vertices_measurement->grab_probability());
+                                              ptr_delta_vertices_measurement->grab_vertices_barycenter());
         // std::cout << "Vertices location : " << ptr_delta_vertices_measurement->grab_probability() << std::endl;
-        // std::cout << "Vertices probability : " << ptr_delta_vertices_measurement->grab_probability() << std::endl;
+        // std::cout << std::endl << "2e builder Vertices probability : " << ptr_delta_vertices_measurement->get_probability() << std::endl << std::endl;
+        // std::cout << std::endl << "2e builder Vertices probability : " << ptr_delta_vertices_measurement->grab_vertices_barycenter().get_auxiliaries().fetch_real("Probability") << std::endl << std::endl;
       }
 
       {

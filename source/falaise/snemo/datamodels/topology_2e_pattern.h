@@ -72,8 +72,8 @@ namespace snemo {
       /// Get common vertices between electrons
       double get_electrons_vertices_probability() const;
 
-      /// Get common vertices location between electrons
-      std::string get_electrons_vertices_location() const;
+      // /// Get common vertices location between electrons
+      // std::string get_electrons_vertices_location() const;
 
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,

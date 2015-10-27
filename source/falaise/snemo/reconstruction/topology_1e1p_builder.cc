@@ -65,13 +65,13 @@ namespace snemo {
                                                 ptr_tof->grab_external_probabilities());
       }
 
-      {
-        snemo::datamodel::delta_vertices_measurement * ptr_delta_vertices_source = new snemo::datamodel::delta_vertices_measurement;
-        meas["delta_vertices_source_" + e1_label + "_" + p1_label].reset(ptr_delta_vertices_source);
-        if (drivers.DVD) drivers.DVD->process(e1, p1,
-                                              ptr_delta_vertices_source->grab_vertices_location(),
-                                              ptr_delta_vertices_source->grab_probability());
-      }
+      // {
+      //   snemo::datamodel::delta_vertices_measurement * ptr_delta_vertices_source = new snemo::datamodel::delta_vertices_measurement;
+      //   meas["delta_vertices_source_" + e1_label + "_" + p1_label].reset(ptr_delta_vertices_source);
+      //   if (drivers.DVD) drivers.DVD->process(e1, p1,
+      //                                         ptr_delta_vertices_source->grab_vertices_location(),
+      //                                         ptr_delta_vertices_source->grab_probability());
+      // }
 
       {
         snemo::datamodel::angle_measurement * ptr_angle = new snemo::datamodel::angle_measurement;

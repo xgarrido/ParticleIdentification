@@ -11,10 +11,7 @@
 
 // This project
 #include <falaise/snemo/datamodels/base_topology_measurement.h>
-
-namespace geomtools {
-  class blur_spot;
-}
+#include <geomtools/blur_spot.h>
 
 namespace snemo {
 
@@ -39,20 +36,20 @@ namespace snemo {
       /// Get a non-mutable reference to delta vertices blurspot
       const double & get_probability() const;
 
-      /// Get a mutable reference to delta vertices blurspot
-      double & grab_probability();
+      // /// Get a mutable reference to delta vertices blurspot
+      // double & grab_probability();
 
-      const std::string & get_vertices_location() const;
+      // const std::string & get_vertices_location() const;
 
-      std::string & grab_vertices_location();
+      // std::string & grab_vertices_location();
+
+      const geomtools::blur_spot & get_vertices_barycenter() const;
+
+      geomtools::blur_spot & grab_vertices_barycenter();
 
     private:
 
-      // geomtools::blur_spot & _delta_vertices_;
-
-      // double _probability_;
-
-      pair_common_vertices_probability _vertices_probability_;
+      geomtools::blur_spot _vertices_barycenter_;
 
       DATATOOLS_SERIALIZATION_DECLARATION();
     };

@@ -17,8 +17,8 @@ namespace snemo {
 
     delta_vertices_measurement::delta_vertices_measurement()
     {
-      // _probability_.invalidate()
-        return;
+      _vertices_barycenter_.invalidate();
+      return;
     }
 
     delta_vertices_measurement::~delta_vertices_measurement()
@@ -28,48 +28,44 @@ namespace snemo {
 
     bool delta_vertices_measurement::is_valid() const
     {
-      //not sure
-      return ((_vertices_probability_.first == "source" ||
-               _vertices_probability_.first == "calorimeter" ||
-               _vertices_probability_.first =="tracker") &&
-              datatools::is_valid(_vertices_probability_.second));
+      //not sure, does it assume the existence of a blur_spot
+      // return  _vertices_barycenter_.get_auxiliaries().has_key("Probability");
+      return (geomtools::is_valid(_vertices_barycenter_.get_position()) &&
+              _vertices_barycenter_.get_auxiliaries().has_key("Probability"));
     }
-
-    // void delta_vertices_measurement::set_delta_vertices(geomtools::blur_spot & delta_vertices_)
-    // {
-    //   _delta_vertices_ = delta_vertices_;
-    //   return;
-    // }
-
-    // const geomtools::blur_spot & delta_vertices_measurement::get_delta_vertices() const
-    // {
-    //   return _delta_vertices_;
-    // }
-
-    // geomtools::blur_spot & delta_vertices_measurement::grab_delta_vertices()
-    // {
-    //   return _delta_vertices_;
-    // }
 
     const double & delta_vertices_measurement::get_probability() const
     {
-      return _vertices_probability_.second;
+      // if(!_vertices_barycenter_.get_auxiliaries().has_key("Probability"))
+      //   return 0;
+      std::cout << std::endl << "dv meas Vertices probability : " << _vertices_barycenter_.get_auxiliaries().fetch_real("Probability") << std::endl << std::endl;
+      return _vertices_barycenter_.get_auxiliaries().fetch_real("Probability");
     }
 
-    double & delta_vertices_measurement::grab_probability()
+    const geomtools::blur_spot & delta_vertices_measurement::get_vertices_barycenter() const
     {
-      return _vertices_probability_.second;
+      return _vertices_barycenter_;
     }
 
-    const std::string & delta_vertices_measurement::get_vertices_location() const
+    geomtools::blur_spot & delta_vertices_measurement::grab_vertices_barycenter()
     {
-      return _vertices_probability_.first;
+      return _vertices_barycenter_;
     }
 
-    std::string & delta_vertices_measurement::grab_vertices_location()
-    {
-      return _vertices_probability_.first;
-    }
+    // double & delta_vertices_measurement::grab_probability()
+    // {
+    //   return _vertices_barycenter_.grab_auxiliaries().fetch_real("Probability");
+    // }
+
+    // const std::string & delta_vertices_measurement::get_vertices_location() const
+    // {
+    //   return _vertices_probability_.first;
+    // }
+
+    // std::string & delta_vertices_measurement::grab_vertices_location()
+    // {
+    //   return _vertices_probability_.first;
+    // }
 
   } // end of namespace datamodel
 

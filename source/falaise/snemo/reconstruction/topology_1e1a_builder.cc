@@ -60,8 +60,7 @@ namespace snemo {
         //                                       ptr_delta_vertices_source->grab_delta_vertices_y(),
         //                                       ptr_delta_vertices_source->grab_delta_vertices_z());
         if (drivers.DVD) drivers.DVD->process(e1, a1,
-                                              ptr_delta_vertices_source->grab_vertices_location(),
-                                              ptr_delta_vertices_source->grab_probability());
+                                              ptr_delta_vertices_source->grab_vertices_barycenter());
       }
 
       return;

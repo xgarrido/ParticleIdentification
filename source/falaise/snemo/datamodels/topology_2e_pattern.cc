@@ -81,7 +81,7 @@ namespace snemo {
     double topology_2e_pattern::get_electrons_internal_probability() const
     {
       DT_THROW_IF(! has_electrons_internal_probability(), std::logic_error, "No electrons TOF measurement stored !");
-      dynamic_cast<const snemo::datamodel::tof_measurement&> (get_measurement("tof_e1_e2")).get_internal_probabilities().front();
+      return dynamic_cast<const snemo::datamodel::tof_measurement&> (get_measurement("tof_e1_e2")).get_internal_probabilities().front();
     }
 
     bool topology_2e_pattern::has_electrons_external_probability() const
@@ -92,7 +92,7 @@ namespace snemo {
     double topology_2e_pattern::get_electrons_external_probability() const
     {
       DT_THROW_IF(! has_electrons_external_probability(), std::logic_error, "No electrons TOF measurement stored !");
-      dynamic_cast<const snemo::datamodel::tof_measurement&> (get_measurement("tof_e1_e2")).get_external_probabilities().front();
+      return dynamic_cast<const snemo::datamodel::tof_measurement&> (get_measurement("tof_e1_e2")).get_external_probabilities().front();
     }
 
     bool topology_2e_pattern::has_electrons_angle() const
@@ -117,11 +117,11 @@ namespace snemo {
       return dynamic_cast<const snemo::datamodel::delta_vertices_measurement&> (get_measurement("vertices_probability_e1_e2")).get_probability();
     }
 
-    std::string topology_2e_pattern::get_electrons_vertices_location() const
-    {
-      DT_THROW_IF(! has_electrons_vertices_probability(), std::logic_error, "No common electrons vertices measurement stored !");
-      return dynamic_cast<const snemo::datamodel::delta_vertices_measurement&> (get_measurement("vertices_probability_e1_e2")).get_vertices_location();
-    }
+    // std::string topology_2e_pattern::get_electrons_vertices_location() const
+    // {
+    //   DT_THROW_IF(! has_electrons_vertices_probability(), std::logic_error, "No common electrons vertices measurement stored !");
+    //   return dynamic_cast<const snemo::datamodel::delta_vertices_measurement&> (get_measurement("vertices_probability_e1_e2")).get_vertices_location();
+    // }
 
     void topology_2e_pattern::tree_dump(std::ostream      & out_,
                                         const std::string & title_,

@@ -73,8 +73,7 @@ namespace snemo {
       /// Main process
       void process(const snemo::datamodel::particle_track & pt1_,
                    const snemo::datamodel::particle_track & pt2_,
-                   std::string & location_,
-                   double & probability_);
+                   geomtools::blur_spot & barycenter_);
 
       /// Check if theclusterizer is initialized
       bool is_initialized() const;
@@ -96,12 +95,12 @@ namespace snemo {
       /// Special method to process and generate particle track data
       void _process_algo(const snemo::datamodel::particle_track & pt1_,
                          const snemo::datamodel::particle_track & pt2_,
-                         std::string & location_,
-                         double & probability_);
+                         geomtools::blur_spot & barycenter_);
 
       /// Retrieve the probability of a common vertices hypothesis
       double _get_probability(const geomtools::blur_spot & vertex_1_,
-                              const geomtools::blur_spot & vertex_2_);
+                              const geomtools::blur_spot & vertex_2_,
+                              geomtools::blur_spot & barycenter_);
 
       /// Give default values to specific class members.
       void _set_defaults();

@@ -27,7 +27,7 @@ namespace snemo {
     void delta_vertices_measurement::serialize(Archive & ar_, const unsigned int /* version_ */)
     {
       ar_ & BOOST_SERIALIZATION_BASE_OBJECT_NVP(base_topology_measurement);
-      ar_ & boost::serialization::make_nvp("pair_common_vertices_probability", _vertices_probability_);
+      ar_ & boost::serialization::make_nvp("vertices_barycenter", _vertices_barycenter_);
       return;
     }
 
