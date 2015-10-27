@@ -164,8 +164,6 @@ namespace snemo {
 
       probability_ = 0;
 
-      std::cout << "--BEGIN--" << std::endl;
-
       const snemo::datamodel::particle_track::vertex_collection_type & the_vertices_1
         = pt1_.get_vertices();
       const snemo::datamodel::particle_track::vertex_collection_type & the_vertices_2
@@ -196,21 +194,21 @@ namespace snemo {
           double tmp_proba = _get_probability(a_vertex_1, a_vertex_2);
           if (tmp_proba > probability_) {
             probability_ = tmp_proba;
+
+            // no better function in particle_track ?
             if (snemo::datamodel::particle_track::vertex_is_on_source_foil(a_vertex_1))
-              location_ = "source";
-            else if (snemo::datamodel::particle_track::vertex_is_on_main_calorimeter(a_vertex_1) ||
-                     snemo::datamodel::particle_track::vertex_is_on_x_calorimeter(a_vertex_1) ||
-                     snemo::datamodel::particle_track::vertex_is_on_gamma_veto(a_vertex_1))
-              location_ = "calorimeter";
+              location_ = snemo::datamodel::particle_track::vertex_on_source_foil_label();
+            else if (snemo::datamodel::particle_track::vertex_is_on_main_calorimeter(a_vertex_1))
+              location_ = snemo::datamodel::particle_track::vertex_on_main_calorimeter_label();
+            else if (snemo::datamodel::particle_track::vertex_is_on_x_calorimeter(a_vertex_1))
+              location_ = snemo::datamodel::particle_track::vertex_on_x_calorimeter_label();
+            else if (snemo::datamodel::particle_track::vertex_is_on_gamma_veto(a_vertex_1))
+              location_ = snemo::datamodel::particle_track::vertex_on_gamma_veto_label();
             else
               location_ = "tracker";
-            std::cout << "---" << std::endl;
-            std::cout << "location-proba : " << location_ << " - " << probability_  << std::endl;
-            std::cout << "---" << std::endl;
           }
         }
       }
-      std::cout << "----" << std::endl;
       DT_LOG_TRACE(get_logging_priority(), "Exiting...");
       return;
     }
