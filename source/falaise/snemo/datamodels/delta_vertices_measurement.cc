@@ -36,9 +36,6 @@ namespace snemo {
 
     const double & delta_vertices_measurement::get_probability() const
     {
-      // if(!_vertices_barycenter_.get_auxiliaries().has_key("Probability"))
-      //   return 0;
-      std::cout << std::endl << "dv meas Vertices probability : " << _vertices_barycenter_.get_auxiliaries().fetch_real("Probability") << std::endl << std::endl;
       return _vertices_barycenter_.get_auxiliaries().fetch_real("Probability");
     }
 
