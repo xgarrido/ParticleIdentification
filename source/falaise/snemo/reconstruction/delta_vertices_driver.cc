@@ -137,14 +137,14 @@ namespace snemo {
 
           const geomtools::blur_spot & a_vertex_2 = ivertex_2->get();
 
-          if (!(snemo::datamodel::particle_track::vertex_is_on_source_foil(a_vertex_1) &&
-                snemo::datamodel::particle_track::vertex_is_on_source_foil(a_vertex_2) ||
-                snemo::datamodel::particle_track::vertex_is_on_main_calorimeter(a_vertex_1) &&
-                snemo::datamodel::particle_track::vertex_is_on_main_calorimeter(a_vertex_2) ||
-                snemo::datamodel::particle_track::vertex_is_on_x_calorimeter(a_vertex_1) &&
-                snemo::datamodel::particle_track::vertex_is_on_x_calorimeter(a_vertex_2) ||
-                snemo::datamodel::particle_track::vertex_is_on_gamma_veto(a_vertex_1) &&
-                snemo::datamodel::particle_track::vertex_is_on_gamma_veto(a_vertex_2))
+          if (!((snemo::datamodel::particle_track::vertex_is_on_source_foil(a_vertex_1) &&
+                 snemo::datamodel::particle_track::vertex_is_on_source_foil(a_vertex_2)) ||
+                (snemo::datamodel::particle_track::vertex_is_on_main_calorimeter(a_vertex_1) &&
+                 snemo::datamodel::particle_track::vertex_is_on_main_calorimeter(a_vertex_2)) ||
+                (snemo::datamodel::particle_track::vertex_is_on_x_calorimeter(a_vertex_1) &&
+                 snemo::datamodel::particle_track::vertex_is_on_x_calorimeter(a_vertex_2)) ||
+                (snemo::datamodel::particle_track::vertex_is_on_gamma_veto(a_vertex_1) &&
+                 snemo::datamodel::particle_track::vertex_is_on_gamma_veto(a_vertex_2)))
               )
             continue;
 
@@ -167,12 +167,7 @@ namespace snemo {
         }
       }
 
-
-      // std::cout << std::endl << "DVD Vertices probability : " << probability << std::endl << std::endl;
-
       barycenter_.grab_auxiliaries().store("Probability",probability);
-
-      // std::cout << std::endl << "DVD aux Vertices probability : " << barycenter_.grab_auxiliaries().fetch_real("Probability") << std::endl << std::endl;
 
       DT_LOG_TRACE(get_logging_priority(), "Exiting...");
       return;
