@@ -29,7 +29,7 @@ namespace snemo {
 
     void topology_1e1p_builder::_build_measurement_dictionary(snemo::datamodel::base_topology_pattern & pattern_)
     {
-      snemo::reconstruction::topology_1e_builder::build_measurement_dictionary(pattern_);
+      snemo::reconstruction::topology_1e_builder::_build_measurement_dictionary(pattern_);
 
       const std::string e1_label = "e1";
       DT_THROW_IF(! pattern_.has_particle_track(e1_label), std::logic_error,

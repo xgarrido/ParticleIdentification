@@ -87,6 +87,7 @@ list(APPEND FalaiseParticleIdentificationPlugin_SOURCES
   source/falaise/snemo/reconstruction/base_topology_builder.cc
   source/falaise/snemo/reconstruction/topology_1e_builder.cc
   source/falaise/snemo/reconstruction/topology_1e1a_builder.cc
+  source/falaise/snemo/reconstruction/topology_1e1p_builder.cc
   source/falaise/snemo/reconstruction/topology_1e_builder.cc
   source/falaise/snemo/reconstruction/topology_2e_builder.cc
   source/falaise/snemo/reconstruction/topology_1eNg_builder.cc
