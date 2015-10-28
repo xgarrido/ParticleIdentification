@@ -59,13 +59,13 @@ namespace snemo {
         MODE_RANGE_INTERNAL_PROBABILITY = datatools::bit_mask::bit03,
         MODE_RANGE_EXTERNAL_PROBABILITY = datatools::bit_mask::bit04,
         MODE_HAS_VERTICES_PROBABILITY   = datatools::bit_mask::bit05,
-        MODE_RANGE_VERTICES_PROBABILITY = datatools::bit_mask::bit07,
-        MODE_HAS_ANGLE                  = datatools::bit_mask::bit09,
-        MODE_RANGE_ANGLE                = datatools::bit_mask::bit10,
-        MODE_HAS_MINIMAL_ENERGY         = datatools::bit_mask::bit11,
-        MODE_RANGE_MINIMAL_ENERGY       = datatools::bit_mask::bit12,
-        MODE_HAS_MAXIMAL_ENERGY         = datatools::bit_mask::bit13,
-        MODE_RANGE_MAXIMAL_ENERGY       = datatools::bit_mask::bit14
+        MODE_RANGE_VERTICES_PROBABILITY = datatools::bit_mask::bit06,
+        MODE_HAS_ANGLE                  = datatools::bit_mask::bit07,
+        MODE_RANGE_ANGLE                = datatools::bit_mask::bit08,
+        MODE_HAS_MINIMAL_ENERGY         = datatools::bit_mask::bit09,
+        MODE_RANGE_MINIMAL_ENERGY       = datatools::bit_mask::bit10,
+        MODE_HAS_MAXIMAL_ENERGY         = datatools::bit_mask::bit11,
+        MODE_RANGE_MAXIMAL_ENERGY       = datatools::bit_mask::bit12
       };
 
       /// Return the cut mode

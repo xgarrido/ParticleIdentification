@@ -32,12 +32,14 @@ namespace snemo {
       datatools::invalidate(_prob_int_max_);
       datatools::invalidate(_prob_ext_min_);
       datatools::invalidate(_prob_ext_max_);
-      datatools::invalidate(_delta_vertices_y_min_);
-      datatools::invalidate(_delta_vertices_y_max_);
-      datatools::invalidate(_delta_vertices_z_min_);
-      datatools::invalidate(_delta_vertices_z_max_);
+      datatools::invalidate(_vertices_probability_min_);
+      datatools::invalidate(_vertices_probability_max_);
       datatools::invalidate(_angle_min_);
       datatools::invalidate(_angle_max_);
+      datatools::invalidate(_minimal_energy_min_);
+      datatools::invalidate(_minimal_energy_max_);
+      datatools::invalidate(_maximal_energy_min_);
+      datatools::invalidate(_maximal_energy_max_);
       return;
     }
 
@@ -66,24 +68,14 @@ namespace snemo {
       return _mode_ & MODE_RANGE_EXTERNAL_PROBABILITY;
     }
 
-    bool channel_1e1p_cut::is_mode_has_delta_vertices_y() const
+    bool channel_1e1p_cut::is_mode_has_vertices_probability() const
     {
-      return _mode_ & MODE_HAS_DELTA_VERTICES_Y;
+      return _mode_ & MODE_HAS_VERTICES_PROBABILITY;
     }
 
-    bool channel_1e1p_cut::is_mode_range_delta_vertices_y() const
+    bool channel_1e1p_cut::is_mode_range_vertices_probability() const
     {
-      return _mode_ & MODE_RANGE_DELTA_VERTICES_Y;
-    }
-
-    bool channel_1e1p_cut::is_mode_has_delta_vertices_z() const
-    {
-      return _mode_ & MODE_HAS_DELTA_VERTICES_Z;
-    }
-
-    bool channel_1e1p_cut::is_mode_range_delta_vertices_z() const
-    {
-      return _mode_ & MODE_RANGE_DELTA_VERTICES_Z;
+      return _mode_ & MODE_RANGE_VERTICES_PROBABILITY;
     }
 
     bool channel_1e1p_cut::is_mode_has_angle() const
@@ -94,6 +86,26 @@ namespace snemo {
     bool channel_1e1p_cut::is_mode_range_angle() const
     {
       return _mode_ & MODE_RANGE_ANGLE;
+    }
+
+    bool channel_1e1p_cut::is_mode_has_minimal_energy() const
+    {
+      return _mode_ & MODE_HAS_MINIMAL_ENERGY;
+    }
+
+    bool channel_1e1p_cut::is_mode_range_minimal_energy() const
+    {
+      return _mode_ & MODE_RANGE_MINIMAL_ENERGY;
+    }
+
+    bool channel_1e1p_cut::is_mode_has_maximal_energy() const
+    {
+      return _mode_ & MODE_HAS_MAXIMAL_ENERGY;
+    }
+
+    bool channel_1e1p_cut::is_mode_range_maximal_energy() const
+    {
+      return _mode_ & MODE_RANGE_MAXIMAL_ENERGY;
     }
 
     channel_1e1p_cut::channel_1e1p_cut(datatools::logger::priority logger_priority_)
@@ -142,23 +154,29 @@ namespace snemo {
       if (configuration_.has_flag("mode.range_external_probability")) {
         _mode_ |= MODE_RANGE_EXTERNAL_PROBABILITY;
       }
-      if (configuration_.has_flag("mode.has_delta_vertices_y")) {
-        _mode_ |= MODE_HAS_DELTA_VERTICES_Y;
+      if (configuration_.has_flag("mode.has_vertices_probability")) {
+        _mode_ |= MODE_HAS_VERTICES_PROBABILITY;
       }
-      if (configuration_.has_flag("mode.has_delta_vertices_z")) {
-        _mode_ |= MODE_HAS_DELTA_VERTICES_Z;
-      }
-      if (configuration_.has_flag("mode.range_delta_vertices_y")) {
-        _mode_ |= MODE_RANGE_DELTA_VERTICES_Y;
-      }
-      if (configuration_.has_flag("mode.range_delta_vertices_z")) {
-        _mode_ |= MODE_RANGE_DELTA_VERTICES_Z;
+      if (configuration_.has_flag("mode.range_vertices_probability")) {
+        _mode_ |= MODE_RANGE_VERTICES_PROBABILITY;
       }
       if (configuration_.has_flag("mode.has_angle")) {
         _mode_ |= MODE_HAS_ANGLE;
       }
       if (configuration_.has_flag("mode.range_angle")) {
         _mode_ |= MODE_RANGE_ANGLE;
+      }
+      if (configuration_.has_flag("mode.has_minimal_energy")) {
+        _mode_ |= MODE_HAS_MINIMAL_ENERGY;
+      }
+      if (configuration_.has_flag("mode.range_minimal_energy")) {
+        _mode_ |= MODE_RANGE_MINIMAL_ENERGY;
+      }
+      if (configuration_.has_flag("mode.has_maximal_energy")) {
+        _mode_ |= MODE_HAS_MAXIMAL_ENERGY;
+      }
+      if (configuration_.has_flag("mode.range_maximal_energy")) {
+        _mode_ |= MODE_RANGE_MAXIMAL_ENERGY;
       }
       DT_THROW_IF(_mode_ == MODE_UNDEFINED, std::logic_error,
                   "Missing at least a 'mode.XXX' property !");
