@@ -264,7 +264,7 @@ namespace snemo {
           _vertices_probability_min_ = vertices_probability_min;
           count++;
         }
-        if (configuration_.has_key("range_vertices_probablity.max")) {
+        if (configuration_.has_key("range_vertices_probability.max")) {
           double vertices_probability_max = configuration_.fetch_real("range_vertices_probability.max");
           DT_THROW_IF(vertices_probability_max < 0.0 || vertices_probability_max > 1, std::range_error,
                       "Invalid maximal vertices probability (" << vertices_probability_max << ") !");
