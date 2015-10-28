@@ -57,9 +57,6 @@ namespace snemo {
         meas["vertices_probability_" + e1_label + "_" + e2_label].reset(ptr_delta_vertices_measurement);
         if (drivers.DVD) drivers.DVD->process(e1, e2,
                                               ptr_delta_vertices_measurement->grab_vertices_barycenter());
-        // std::cout << "Vertices location : " << ptr_delta_vertices_measurement->grab_probability() << std::endl;
-        // std::cout << std::endl << "2e builder Vertices probability : " << ptr_delta_vertices_measurement->get_probability() << std::endl << std::endl;
-        // std::cout << std::endl << "2e builder Vertices probability : " << ptr_delta_vertices_measurement->grab_vertices_barycenter().get_auxiliaries().fetch_real("Probability") << std::endl << std::endl;
       }
 
       {
