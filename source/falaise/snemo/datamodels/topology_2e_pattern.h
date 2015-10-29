@@ -69,7 +69,7 @@ namespace snemo {
       /// Check common vertices probability between electrons validity
       bool has_electrons_vertices_probability() const;
 
-      /// Get common vertices between electrons
+      /// Get common vertices probability between electrons
       double get_electrons_vertices_probability() const;
 
       // /// Get common vertices location between electrons

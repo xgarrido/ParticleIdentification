@@ -31,20 +31,7 @@
 #ifndef FALAISE_SNEMO_CUT_CHANNEL_2E_CUT_H
 #define FALAISE_SNEMO_CUT_CHANNEL_2E_CUT_H 1
 
-// Standard library:
-#include <string>
-
-// // Third party:
-// // - Boost:
-// #include <boost/cstdint.hpp>
-// // - Bayeux/datatools:
-// #include <datatools/bit_mask.h>
-// // - Bayeux/cuts:
-// #include <cuts/i_cut.h>
-
 #include <falaise/snemo/cuts/base_channel_cut.h>
-
-
 
 namespace snemo {
 

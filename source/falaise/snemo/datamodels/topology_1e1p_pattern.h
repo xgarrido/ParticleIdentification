@@ -65,6 +65,24 @@ namespace snemo {
       /// Get electron-positron TOF external probability
       double get_electron_positron_external_probability() const;
 
+      /// Check common vertices probability between electron and positron validity
+      bool has_electron_positron_vertices_probability() const;
+
+      /// Get common vertices probability between electron and positron
+      double get_electron_positron_vertices_probability() const;
+
+      /// Check electron minimal energy validity
+      bool has_electron_positron_minimal_energy() const;
+
+      /// Get electron minimal energy
+      double get_electron_positron_minimal_energy() const;
+
+      /// Check electron maximal energy validity
+      bool has_electron_positron_maximal_energy() const;
+
+      /// Get electron maximal energy
+      double get_electron_positron_maximal_energy() const;
+
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,
                              const std::string & title_  = "",
