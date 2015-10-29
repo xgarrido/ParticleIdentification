@@ -34,78 +34,26 @@
 // Standard library:
 #include <string>
 
-// Third party:
-// - Boost:
-#include <boost/cstdint.hpp>
-// - Bayeux/datatools:
-#include <datatools/bit_mask.h>
-// - Bayeux/cuts:
-#include <cuts/i_cut.h>
+// // Third party:
+// // - Boost:
+// #include <boost/cstdint.hpp>
+// // - Bayeux/datatools:
+// #include <datatools/bit_mask.h>
+// // - Bayeux/cuts:
+// #include <cuts/i_cut.h>
+
+#include <falaise/snemo/cuts/base_channel_cut.h>
+
+
 
 namespace snemo {
 
   namespace cut {
 
     /// \brief A channel_2e event cut
-    class channel_2e_cut : public cuts::i_cut
+    class channel_2e_cut : public base_channel_cut
     {
     public:
-
-      /// Mode of the cut
-      enum mode_type {
-        MODE_UNDEFINED = 0,
-        MODE_HAS_INTERNAL_PROBABILITY   = datatools::bit_mask::bit01,
-        MODE_HAS_EXTERNAL_PROBABILITY   = datatools::bit_mask::bit02,
-        MODE_RANGE_INTERNAL_PROBABILITY = datatools::bit_mask::bit03,
-        MODE_RANGE_EXTERNAL_PROBABILITY = datatools::bit_mask::bit04,
-        MODE_HAS_VERTICES_PROBABILITY   = datatools::bit_mask::bit05,
-        MODE_RANGE_VERTICES_PROBABILITY = datatools::bit_mask::bit06,
-        MODE_HAS_ANGLE                  = datatools::bit_mask::bit07,
-        MODE_RANGE_ANGLE                = datatools::bit_mask::bit08,
-        MODE_HAS_MINIMAL_ENERGY         = datatools::bit_mask::bit09,
-        MODE_RANGE_MINIMAL_ENERGY       = datatools::bit_mask::bit10,
-        MODE_HAS_MAXIMAL_ENERGY         = datatools::bit_mask::bit11,
-        MODE_RANGE_MAXIMAL_ENERGY       = datatools::bit_mask::bit12
-      };
-
-      /// Return the cut mode
-      uint32_t get_mode() const;
-
-      /// Check mode HAS_INTERNAL_PROBABILITY
-      bool is_mode_has_internal_probability() const;
-
-      /// Check mode HAS_EXTERNAL_PROBABILITY
-      bool is_mode_has_external_probability() const;
-
-      /// Check mode RANGE_INTERNAL_PROBABILITY
-      bool is_mode_range_internal_probability() const;
-
-      /// Check mode RANGE_EXTERNAL_PROBABILITY
-      bool is_mode_range_external_probability() const;
-
-      /// Check mode HAS_VERTICES_PROBABILITY
-      bool is_mode_has_vertices_probability() const;
-
-      /// Check mode RANGE_VERTICES_PROBABILITY
-      bool is_mode_range_vertices_probability() const;
-
-      /// Check mode HAS_ANGLE
-      bool is_mode_has_angle() const;
-
-      /// Check mode RANGE_ANGLE
-      bool is_mode_range_angle() const;
-
-      /// Check mode HAS_MINIMAL_ENERGY
-      bool is_mode_has_minimal_energy() const;
-
-      /// Check mode RANGE_MINIMAL_ENERGY
-      bool is_mode_range_minimal_energy() const;
-
-      /// Check mode HAS_MAXIMAL_ENERGY
-      bool is_mode_has_maximal_energy() const;
-
-      /// Check mode RANGE_MAXIMAL_ENERGY
-      bool is_mode_range_maximal_energy() const;
 
       /// Constructor
       channel_2e_cut(datatools::logger::priority logging_priority_ = datatools::logger::PRIO_FATAL);
@@ -130,23 +78,6 @@ namespace snemo {
       virtual int _accept();
 
     private:
-
-      std::string _TD_label_; //!< Name of the "Topology data" bank
-      uint32_t    _mode_;     //!< Mode of the cut
-
-      double _prob_int_min_; //!< Minimal internal probability
-      double _prob_int_max_; //!< Maximal internal probability
-      double _prob_ext_min_; //!< Minimal external probability
-      double _prob_ext_max_; //!< Maximal external probability
-      std::string _vertices_probability_location_;
-      double _vertices_probability_min_;
-      double _vertices_probability_max_;
-      double _angle_min_;
-      double _angle_max_;
-      double _minimal_energy_min_;
-      double _minimal_energy_max_;
-      double _maximal_energy_min_;
-      double _maximal_energy_max_;
 
       // Macro to automate the registration of the cut :
       CUT_REGISTRATION_INTERFACE(channel_2e_cut);
