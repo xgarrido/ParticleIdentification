@@ -130,6 +130,7 @@ namespace snemo {
       virtual int _accept() = 0;
 
     // private:
+
     public:
       std::string _TD_label_; //!< Name of the "Topology data" bank
       uint32_t    _mode_;     //!< Mode of the cut
