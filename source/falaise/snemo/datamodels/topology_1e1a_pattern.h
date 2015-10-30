@@ -45,6 +45,12 @@ namespace snemo {
       /// Return electron-alpha angle
       double get_electron_alpha_angle() const;
 
+      /// Check common vertices probability between electron and alpha validity
+      bool has_electron_alpha_vertices_probability() const;
+
+      /// Get common vertices probability between electrons
+      double get_electron_alpha_vertices_probability() const;
+
       // /// Get alpha delayed time
       // double get_alpha_delayed_time() const;
 

@@ -4,6 +4,7 @@
 // Ourselves:
 #include <falaise/snemo/datamodels/topology_1e1a_pattern.h>
 #include <falaise/snemo/datamodels/angle_measurement.h>
+#include <falaise/snemo/datamodels/delta_vertices_measurement.h>
 
 namespace snemo {
 
@@ -50,6 +51,20 @@ namespace snemo {
     {
       DT_THROW_IF(! has_electron_alpha_angle(), std::logic_error, "No electron-alpha angle measurement stored !");
       return dynamic_cast<const snemo::datamodel::angle_measurement&> (get_measurement("angle_e1_a1")).get_angle();
+    }
+
+    bool topology_1e1a_pattern::has_electron_alpha_vertices_probability() const
+    {
+      return has_measurement("vertices_probability_e1_a1");
+    }
+
+    double topology_1e1a_pattern::get_electron_alpha_vertices_probability() const
+    {
+      DT_THROW_IF(! has_electron_alpha_vertices_probability(), std::logic_error, "No common electron-alpha vertices measurement stored !");
+
+      // return dynamic_cast<const snemo::datamodel::delta_vertices_measurement&> (get_measurement("vertices_probability_e1_a1")).get_probability();
+      // The method above does not appear to work (return random value)
+      return dynamic_cast<const snemo::datamodel::delta_vertices_measurement&> (get_measurement("vertices_probability_e1_a1")).get_vertices_barycenter().get_auxiliaries().fetch_real("Probability");
     }
 
     // delta_vertices
