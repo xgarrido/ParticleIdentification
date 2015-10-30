@@ -75,7 +75,7 @@ namespace snemo {
     double topology_1e1p_pattern::get_electron_positron_internal_probability() const
     {
       DT_THROW_IF(! has_electron_positron_internal_probability(), std::logic_error, "No electron-positron TOF measurement stored !");
-      dynamic_cast<const snemo::datamodel::tof_measurement&> (get_measurement("tof_e1_p1")).get_internal_probabilities().front();
+      return dynamic_cast<const snemo::datamodel::tof_measurement&> (get_measurement("tof_e1_p1")).get_internal_probabilities().front();
     }
 
     bool topology_1e1p_pattern::has_electron_positron_external_probability() const
@@ -86,7 +86,7 @@ namespace snemo {
     double topology_1e1p_pattern::get_electron_positron_external_probability() const
     {
       DT_THROW_IF(! has_electron_positron_external_probability(), std::logic_error, "No electron-positron TOF measurement stored !");
-      dynamic_cast<const snemo::datamodel::tof_measurement&> (get_measurement("tof_e1_p1")).get_external_probabilities().front();
+      return dynamic_cast<const snemo::datamodel::tof_measurement&> (get_measurement("tof_e1_p1")).get_external_probabilities().front();
     }
 
     bool topology_1e1p_pattern::has_electron_positron_vertices_probability() const

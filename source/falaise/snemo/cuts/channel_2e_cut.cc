@@ -61,7 +61,6 @@ namespace snemo {
       return;
     }
 
-
     int channel_2e_cut::_accept()
     {
       uint32_t cut_returned = cuts::SELECTION_INAPPLICABLE;
