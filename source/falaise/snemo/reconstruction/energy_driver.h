@@ -67,8 +67,7 @@ namespace snemo {
       ~energy_driver();
 
       /// Main process
-      void process(const snemo::datamodel::particle_track & pt_,
-                   double & energy);
+      void process(const snemo::datamodel::particle_track & pt_, double & energy_);
 
       /// Check if theclusterizer is initialized
       bool is_initialized() const;
@@ -88,8 +87,7 @@ namespace snemo {
       void _set_initialized(bool);
 
       /// Special method to process and generate particle track data
-      void _process_algo(const snemo::datamodel::particle_track & pt_,
-                         double & energy);
+      void _process_algo(const snemo::datamodel::particle_track & pt_, double & energy_);
 
       /// Give default values to specific class members.
       void _set_defaults();
