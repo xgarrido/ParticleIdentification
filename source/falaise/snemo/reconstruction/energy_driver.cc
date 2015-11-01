@@ -117,7 +117,6 @@ namespace snemo {
       }
 
       DT_LOG_DEBUG(get_logging_priority(), "Particle energy = " << energy_/CLHEP::MeV << " MeV");
-
       DT_LOG_TRACE(get_logging_priority(), "Exiting...");
       return;
     }

@@ -1,6 +1,7 @@
 # - List of test programs:
 set(FalaiseParticleIdentificationPlugin_TESTS
   test_energy_driver.cxx
+  test_angle_driver.cxx
   )
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
