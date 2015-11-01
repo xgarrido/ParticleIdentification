@@ -25,7 +25,7 @@ namespace snemo {
 
     const std::string & angle_driver::get_id()
     {
-      static const std::string _id("AMD");
+      static const std::string _id("AD");
       return _id;
     }
 
@@ -224,8 +224,8 @@ namespace snemo {
     // static
     void angle_driver::init_ocd(datatools::object_configuration_description & ocd_)
     {
-      // Prefix "AMD" stands for "Angle Measurement Driver" :
-      datatools::logger::declare_ocd_logging_configuration(ocd_, "fatal", "AMD.");
+      // Prefix "AD" stands for "Angle Driver" :
+      datatools::logger::declare_ocd_logging_configuration(ocd_, "fatal", "AD.");
     }
 
   } // end of namespace reconstruction

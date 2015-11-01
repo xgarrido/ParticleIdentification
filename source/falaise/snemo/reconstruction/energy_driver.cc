@@ -17,7 +17,7 @@ namespace snemo {
 
     const std::string & energy_driver::get_id()
     {
-      static const std::string _id("EMD");
+      static const std::string _id("ED");
       return _id;
     }
 
@@ -125,8 +125,8 @@ namespace snemo {
     // static
     void energy_driver::init_ocd(datatools::object_configuration_description & ocd_)
     {
-      // Prefix "EMD" stands for "Energy Measurement Driver" :
-      datatools::logger::declare_ocd_logging_configuration(ocd_, "fatal", "EMD.");
+      // Prefix "ED" stands for "Energy Driver" :
+      datatools::logger::declare_ocd_logging_configuration(ocd_, "fatal", "ED.");
     }
 
   } // end of namespace reconstruction
@@ -140,7 +140,7 @@ DOCD_CLASS_IMPLEMENT_LOAD_BEGIN(snemo::reconstruction::energy_driver, ocd_)
   ocd_.set_class_name("snemo::reconstruction::energy_driver");
   ocd_.set_class_description("A driver class for the Energy Measurement algorithm");
   ocd_.set_class_library("Falaise_ParticleIdentification");
-  ocd_.set_class_documentation("The driver determines the spatial difference between vertices");
+  ocd_.set_class_documentation("The driver determines the energy deposited inside calorimeter.");
   ocd_.set_validation_support(true);
   ocd_.lock();
   return;
