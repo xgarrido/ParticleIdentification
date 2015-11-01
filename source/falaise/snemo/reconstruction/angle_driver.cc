@@ -212,7 +212,7 @@ namespace snemo {
         const snemo::datamodel::base_trajectory_pattern & a_track_pattern = a_trajectory.get_pattern();
         direction_ = a_track_pattern.get_shape().get_direction_on_curve(foil_vertex);
       } else {
-        DT_LOG_WARNING(get_logging_priority(), "Particle track has tracker trajectory associated !");
+        DT_LOG_WARNING(get_logging_priority(), "Particle track has no tracker trajectory associated !");
         return;
       }
 
