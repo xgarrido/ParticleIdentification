@@ -16,9 +16,6 @@ int main()
   try {
     std::clog << "Test program for the 'energy_driver' class." << std::endl;
 
-    namespace sdm = snemo::datamodel;
-    namespace srt = snemo::reconstruction;
-
     snemo::reconstruction::energy_driver ED;
     datatools::properties ED_config;
     ED_config.store("logging.priority", "debug");
@@ -27,6 +24,7 @@ int main()
     // Fake electron track :
     {
       snemo::datamodel::particle_track electron;
+      // Push some fake calorimeter hits
       {
         snemo::datamodel::calibrated_calorimeter_hit::collection_type & the_calos
           = electron.grab_associated_calorimeter_hits();
@@ -43,6 +41,7 @@ int main()
     // Fake gamma track :
     {
       snemo::datamodel::particle_track gamma;
+      // Push some fake calorimeter hits
       {
         snemo::datamodel::calibrated_calorimeter_hit::collection_type & the_calos
           = gamma.grab_associated_calorimeter_hits();
