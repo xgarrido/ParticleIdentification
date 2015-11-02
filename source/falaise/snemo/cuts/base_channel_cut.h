@@ -115,7 +115,8 @@ namespace snemo {
 
     // private:
 
-    public:
+    protected:
+
       std::string _TD_label_; //!< Name of the "Topology data" bank
       uint32_t    _mode_;     //!< Mode of the cut
 
