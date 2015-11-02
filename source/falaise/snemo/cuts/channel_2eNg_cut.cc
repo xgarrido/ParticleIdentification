@@ -96,13 +96,10 @@ namespace snemo {
 
       this->i_cut::_common_initialize(configuration_);
 
-      if (configuration_.has_key("TD_label")) {
-        _TD_label_ = configuration_.fetch_string("TD_label");
-      }
-      if (configuration_.has_flag("mode.has_gamma")) {
+      if (configuration_.has_flag("mode.has_number_of_gammas")) {
         _mode_ |= datatools::bit_mask::bit09;
       }
-      if (configuration_.has_flag("mode.range_gamma")) {
+      if (configuration_.has_flag("mode.range_number_of_gammas")) {
         _mode_ |= datatools::bit_mask::bit10;
       }
       if (configuration_.has_flag("mode.has_electron_gamma_internal_probability")) {
@@ -144,6 +141,7 @@ namespace snemo {
       }
 
       if (is_mode_range_electrons_gammas_internal_probability()) {
+        std::cout << "DEBUG ! is mode range electrons gammas pint" << std::cout;
         DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_ELECTRON_GAMMA_INTERNAL_PROBABILITY mode...");
         size_t count = 0;
         if (configuration_.has_key("range_electron_gamma_internal_probability.min")) {
