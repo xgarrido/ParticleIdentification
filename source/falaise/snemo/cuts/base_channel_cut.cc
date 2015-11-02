@@ -190,7 +190,7 @@ namespace snemo {
           _prob_ext_min_ = pmin;
           count++;
         }
-        if (configuration_.has_key("range_external_probablity.max")) {
+        if (configuration_.has_key("range_external_probability.max")) {
           double pmax = configuration_.fetch_real("range_external_probability.max");
           if (! configuration_.has_explicit_unit("range_external_probability.max")) {
             pmax *= CLHEP::perCent;
