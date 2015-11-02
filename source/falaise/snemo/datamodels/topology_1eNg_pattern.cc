@@ -21,7 +21,7 @@ namespace snemo {
     topology_1eNg_pattern::topology_1eNg_pattern()
       : topology_1e_pattern()
     {
-      // _number_of_gammas_ = 0;
+      _number_of_gammas_ = -1;
       return;
     }
 
@@ -30,46 +30,66 @@ namespace snemo {
       return;
     }
 
-    // void topology_1eNg_pattern::set_number_of_gammas(const size_t ngammas_)
-    // {
-    //   _number_of_gammas_ = ngammas_;
-    //   return;
-    // }
+    bool topology_1eNg_pattern::has_number_of_gammas() const
+    {
+      return _number_of_gammas_ != -1;
+    }
 
-    // size_t topology_1eNg_pattern::get_number_of_gammas() const
-    // {
-    //   return _number_of_gammas_;
-    // }
+    void topology_1eNg_pattern::set_number_of_gammas(const int ngammas_)
+    {
+      _number_of_gammas_ = ngammas_;
+      return;
+    }
 
-    // bool topology_1eNg_pattern::has_internal_probabilities() const
-    // {
-    //   bool check_pair_has_internal_proba = true;
-    //   for(unsigned int i=0; i<get_TOF_collection().size(); i++)
-    //     if(get_TOF_collection().at(i).get_internal_probabilities().empty())
-    //       check_pair_has_internal_proba = false;
+    int topology_1eNg_pattern::get_number_of_gammas() const
+    {
+      return _number_of_gammas_;
+    }
 
-    //   return check_pair_has_internal_proba;
-    // }
+    bool topology_1eNg_pattern::has_electron_gammas_internal_probabilities() const
+    {
+      // bool check_pair_has_internal_proba = true;
+      // for(unsigned int i=0; i<get_tof_collection().size(); i++)
+      //   if(get_tof_collection().at(i).get_internal_probabilities().empty())
+      //     check_pair_has_internal_proba = false;
 
-    // bool topology_1eNg_pattern::has_external_probabilities() const
-    // {
-    //   bool check_pair_has_external_proba = true;
-    //   for(unsigned int i=0; i<get_TOF_collection().size(); i++)
-    //     if(get_TOF_collection().at(i).get_external_probabilities().empty())
-    //       check_pair_has_external_proba = false;
+      // return check_pair_has_internal_proba;
 
-    //   return check_pair_has_external_proba;
-    // }
+      return has_measurement("tof_e1_g1");
+    }
 
-    // const topology_1eNg_pattern::TOF_collection_type & topology_1eNg_pattern::get_TOF_collection() const
-    // {
-    //   return _tofs_;
-    // }
+    bool topology_1eNg_pattern::has_electron_gammas_external_probabilities() const
+    {
+      // bool check_pair_has_external_proba = true;
+      // for(unsigned int i=0; i<get_tof_collection().size(); i++)
+      //   if(get_tof_collection().at(i).get_external_probabilities().empty())
+      //     check_pair_has_external_proba = false;
 
-    // topology_1eNg_pattern::TOF_collection_type & topology_1eNg_pattern::grab_TOF_collection()
-    // {
-    //   return _tofs_;
-    // }
+      // return check_pair_has_external_proba;
+      return has_measurement("tof_e1_g1");
+    }
+
+    const topology_1eNg_pattern::tof_collection_type & topology_1eNg_pattern::get_electron_gammas_internal_probabilities() const {
+      DT_THROW_IF(! has_electron_gammas_internal_probabilities(), std::logic_error, "No electron-gammas TOF measurement stored !");
+      topology_1eNg_pattern::tof_collection_type tofs_int;
+      for(size_t i_gamma = 1; i_gamma <= get_number_of_gammas(); ++i_gamma) {
+        std::ostringstream oss;
+        oss << "tof_e1_g" << i_gamma;
+        tofs_int.push_back(dynamic_cast<const snemo::datamodel::tof_measurement&> (get_measurement(oss.str())).get_internal_probabilities());
+      }
+      return tofs_int;
+    }
+
+    const topology_1eNg_pattern::tof_collection_type & topology_1eNg_pattern::get_electron_gammas_external_probabilities() const {
+      DT_THROW_IF(! has_electron_gammas_external_probabilities(), std::logic_error, "No electron-gammas TOF measurement stored !");
+      topology_1eNg_pattern::tof_collection_type tofs_ext;
+      for(size_t i_gamma = 1; i_gamma <= get_number_of_gammas(); ++i_gamma) {
+        std::ostringstream oss;
+        oss << "tof_e1_g" << i_gamma;
+        tofs_ext.push_back(dynamic_cast<const snemo::datamodel::tof_measurement&> (get_measurement(oss.str())).get_external_probabilities());
+      }
+      return tofs_ext;
+    }
 
     // const topology_1eNg_pattern::angle_collection_type & topology_1eNg_pattern::get_angle_collection() const
     // {

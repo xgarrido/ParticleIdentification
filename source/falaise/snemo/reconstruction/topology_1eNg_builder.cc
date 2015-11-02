@@ -10,6 +10,7 @@
 #include <falaise/snemo/datamodels/tof_measurement.h>
 #include <falaise/snemo/datamodels/angle_measurement.h>
 #include <falaise/snemo/datamodels/energy_measurement.h>
+#include <falaise/snemo/datamodels/pid_utils.h>
 
 namespace snemo {
 
@@ -36,11 +37,15 @@ namespace snemo {
 
       // const snemo::datamodel::particle_track_data::particle_collection_type & the_particles
       //   = ptd_.get_particles();
-      //
+
+      const int ngammas = pattern_.get_particle_track_dictionary().size()-1;
+
+      dynamic_cast<snemo::datamodel::topology_1eNg_pattern &>(pattern_).set_number_of_gammas(ngammas);
+
       // Either this way
       // for (size_t i_gamma = 1; i_gamma <= h_pattern_->get_number_of_gammas();++i_gamma) {
       // Or this way but less evolutive
-      for (size_t i_gamma = 1; i_gamma <= pattern_.get_particle_track_dictionary().size()-1;++i_gamma) {
+      for (size_t i_gamma = 1; i_gamma <= ngammas;++i_gamma) {
         std::ostringstream oss;
         oss << "g" << i_gamma;
 
