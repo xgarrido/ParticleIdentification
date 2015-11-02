@@ -31,41 +31,34 @@
 #ifndef FALAISE_SNEMO_CUT_CHANNEL_1ENG_CUT_H
 #define FALAISE_SNEMO_CUT_CHANNEL_1ENG_CUT_H 1
 
-// Standard library:
-#include <string>
-
-// Third party:
-// - Boost:
-#include <boost/cstdint.hpp>
-// - Bayeux/datatools:
-#include <datatools/bit_mask.h>
-// - Bayeux/cuts:
-#include <cuts/i_cut.h>
+#include <falaise/snemo/cuts/base_channel_cut.h>
 
 namespace snemo {
 
   namespace cut {
 
     /// \brief A channel_2eNg event cut
-    class channel_2eNg_cut : public cuts::i_cut
+    class channel_2eNg_cut : public base_channel_cut
     {
     public:
 
-      /// Mode of the cut
-      enum mode_type {
-        MODE_UNDEFINED = 0,
-        MODE_HAS_GAMMA                  = datatools::bit_mask::bit01,
-        MODE_RANGE_GAMMA                = datatools::bit_mask::bit02,
-      };
+      /// Check mode HAS_NUMBER_OF_GAMMAS
+      virtual bool is_mode_has_number_of_gammas() const;
 
-      /// Return the cut mode
-      uint32_t get_mode() const;
+      /// Check mode RANGE_NUMBER_OF_GAMMAS
+      virtual bool is_mode_range_number_of_gammas() const;
 
-      /// Check mode HAS_GAMMA
-      bool is_mode_has_gamma() const;
+      /// Check mode HAS_ELECTRONS_GAMMAS_INTERNAL_PROBABILITY
+      virtual bool is_mode_has_electrons_gammas_internal_probability() const;
 
-      /// Check mode HAS_THREE_GAMMA
-      bool is_mode_range_gamma() const;
+      /// Check mode RANGE_ELECTRONS_GAMMAS_INTERNAL_PORBABILITY
+      virtual bool is_mode_range_electrons_gammas_internal_probability() const;
+
+      /// Check mode HAS_ELECTRONS_GAMMAS_EXTERNAL_PROBABILITY
+      virtual bool is_mode_has_electrons_gammas_external_probability() const;
+
+      /// Check mode RANGE_ELECTRONS_GAMMAS_EXTERNAL_PORBABILITY
+      virtual bool is_mode_range_electrons_gammas_external_probability() const;
 
       /// Constructor
       channel_2eNg_cut(datatools::logger::priority logging_priority_ = datatools::logger::PRIO_FATAL);
@@ -96,6 +89,10 @@ namespace snemo {
 
       int    _number_of_gammas_min_;
       int    _number_of_gammas_max_;
+      double _electron_gamma_prob_int_min_;
+      double _electron_gamma_prob_int_max_;
+      double _electron_gamma_prob_ext_min_;
+      double _electron_gamma_prob_ext_max_;
 
       // Macro to automate the registration of the cut :
       CUT_REGISTRATION_INTERFACE(channel_2eNg_cut);

@@ -9,11 +9,9 @@
 #ifndef FALAISE_SNEMO_DATAMODEL_TOPOLOGY_2ENG_PATTERN_H
 #define FALAISE_SNEMO_DATAMODEL_TOPOLOGY_2ENG_PATTERN_H 1
 
-// Standard library:
-#include <string>
-
 // This project:
 #include <falaise/snemo/datamodels/topology_2e_pattern.h>
+#include <falaise/snemo/datamodels/tof_measurement.h>
 
 namespace snemo {
 
@@ -24,6 +22,9 @@ namespace snemo {
     {
     public:
 
+      /// Typedef for TOF dictionnary
+      typedef std::vector<std::vector<double>> tof_collection_type;
+
       /// Return pattern identifier of the pattern
       virtual std::string pattern_id() const;
 
@@ -33,11 +34,38 @@ namespace snemo {
       /// Destructor
       virtual ~topology_2eNg_pattern();
 
-      // /// Set number of gammas
-      // void set_number_of_gammas(const size_t ngammas_);
+      /// Check number of gammas validity
+      bool has_number_of_gammas() const;
 
-      // /// Return internal probability
-      // size_t get_number_of_gammas() const;
+      /// Set number of gammas
+      void set_number_of_gammas(const int ngammas_);
+
+      /// Return internal probability
+      int get_number_of_gammas() const;
+
+      // /// Check electrons-gammas internal probabilities validity
+      // bool has_electrons_internal_probabilities() const;
+
+      // /// Check electrons-gammas external probabilities validity
+      // bool has_electrons_external_probabilities() const;
+
+      // /// Return the electron-gammas internal TOF probability
+      // const tof_collection_type & get_electrons_internal_probabilities() const;
+
+      // /// Return the electron-gammas external TOF probability
+      // const tof_collection_type & get_electrons_external_probabilities() const;
+
+      /// Check electrons-gammas internal probabilities validity
+      bool has_electrons_gammas_internal_probabilities() const;
+
+      /// Check electrons-gammas external probabilities validity
+      bool has_electrons_gammas_external_probabilities() const;
+
+      /// Return the electron-gammas internal TOF probability
+      const tof_collection_type & get_electrons_gammas_internal_probabilities() const;
+
+      /// Return the electron-gammas external TOF probability
+      const tof_collection_type & get_electrons_gammas_external_probabilities() const;
 
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,
@@ -47,8 +75,7 @@ namespace snemo {
 
     private:
 
-      // size_t _number_of_gammas_;
-
+      int _number_of_gammas_;
       DATATOOLS_SERIALIZATION_DECLARATION();
 
     };
