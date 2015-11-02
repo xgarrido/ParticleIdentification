@@ -71,10 +71,10 @@ namespace snemo {
       DT_THROW_IF(is_initialized(), std::logic_error,
                   "Cut '" << get_name() << "' is already initialized ! ");
 
-      if (configuration_.has_flag("mode.has_internal_probability")) {
+      if (configuration_.has_flag("mode.has_number_of_gammas")) {
         _mode_ |= datatools::bit_mask::bit09;
       }
-      if (configuration_.has_flag("mode.range_internal_probability")) {
+      if (configuration_.has_flag("mode.range_number_of_gammas")) {
         _mode_ |= datatools::bit_mask::bit10;
       }
 
