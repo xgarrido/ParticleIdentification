@@ -35,10 +35,6 @@ namespace snemo {
       datatools::invalidate(_vertices_probability_max_);
       datatools::invalidate(_angle_min_);
       datatools::invalidate(_angle_max_);
-      datatools::invalidate(_minimal_energy_min_);
-      datatools::invalidate(_minimal_energy_max_);
-      datatools::invalidate(_maximal_energy_min_);
-      datatools::invalidate(_maximal_energy_max_);
       return;
     }
 
@@ -85,26 +81,6 @@ namespace snemo {
     bool base_channel_cut::is_mode_range_angle() const
     {
       return _mode_ & MODE_RANGE_ANGLE;
-    }
-
-    bool base_channel_cut::is_mode_has_minimal_energy() const
-    {
-      return _mode_ & MODE_HAS_MINIMAL_ENERGY;
-    }
-
-    bool base_channel_cut::is_mode_range_minimal_energy() const
-    {
-      return _mode_ & MODE_RANGE_MINIMAL_ENERGY;
-    }
-
-    bool base_channel_cut::is_mode_has_maximal_energy() const
-    {
-      return _mode_ & MODE_HAS_MAXIMAL_ENERGY;
-    }
-
-    bool base_channel_cut::is_mode_range_maximal_energy() const
-    {
-      return _mode_ & MODE_RANGE_MAXIMAL_ENERGY;
     }
 
     base_channel_cut::base_channel_cut(datatools::logger::priority logger_priority_)
@@ -163,18 +139,6 @@ namespace snemo {
       }
       if (configuration_.has_flag("mode.range_angle")) {
         _mode_ |= MODE_RANGE_ANGLE;
-      }
-      if (configuration_.has_flag("mode.has_minimal_energy")) {
-        _mode_ |= MODE_HAS_MINIMAL_ENERGY;
-      }
-      if (configuration_.has_flag("mode.range_minimal_energy")) {
-        _mode_ |= MODE_RANGE_MINIMAL_ENERGY;
-      }
-      if (configuration_.has_flag("mode.has_maximal_energy")) {
-        _mode_ |= MODE_HAS_MAXIMAL_ENERGY;
-      }
-      if (configuration_.has_flag("mode.range_maximal_energy")) {
-        _mode_ |= MODE_RANGE_MAXIMAL_ENERGY;
       }
       DT_THROW_IF(_mode_ == MODE_UNDEFINED, std::logic_error,
                   "Missing at least a 'mode.XXX' property !");
@@ -306,68 +270,6 @@ namespace snemo {
         if (count == 2 && _angle_min_ >= 0 && _angle_max_ >= 0) {
           DT_THROW_IF(_angle_min_ > _angle_max_, std::logic_error,
                       "Invalid 'range_angle.min' > 'range_angle.max' values !");
-        }
-      }
-
-      if (is_mode_range_minimal_energy()) {
-        DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_MINIMAL_ENERGY mode...");
-        size_t count = 0;
-        if (configuration_.has_key("range_minimal_energy.min")) {
-          double minimal_energy_min = configuration_.fetch_real("range_minimal_energy.min");
-          if (! configuration_.has_explicit_unit("range_minimal_energy.min")) {
-            minimal_energy_min *= CLHEP::MeV;
-          }
-          DT_THROW_IF(minimal_energy_min < 0.0*CLHEP::MeV, std::range_error,
-                      "Invalid minimal minimal_energy (" << minimal_energy_min << ") !");
-          _minimal_energy_min_ = minimal_energy_min;
-          count++;
-        }
-        if (configuration_.has_key("range_minimal_energy.max")) {
-          double minimal_energy_max = configuration_.fetch_real("range_minimal_energy.max");
-          if (! configuration_.has_explicit_unit("range_minimal_energy.max")) {
-            minimal_energy_max *= CLHEP::degree;
-          }
-          DT_THROW_IF(minimal_energy_max < 0.0*CLHEP::degree, std::range_error,
-                      "Invalid maximal minimal_energy (" << minimal_energy_max << ") !");
-          _minimal_energy_max_ = minimal_energy_max;
-          count++;
-        }
-        DT_THROW_IF(count == 0, std::logic_error,
-                    "Missing 'range_minimal_energy.min' or 'range_minimal_energy.max' property !");
-        if (count == 2 && _minimal_energy_min_ >= 0 && _minimal_energy_max_ >= 0) {
-          DT_THROW_IF(_minimal_energy_min_ > _minimal_energy_max_, std::logic_error,
-                      "Invalid 'range_minimal_energy.min' > 'range_minimal_energy.max' values !");
-        }
-      }
-
-      if (is_mode_range_maximal_energy()) {
-        DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_MAXIMAL_ENERGY mode...");
-        size_t count = 0;
-        if (configuration_.has_key("range_maximal_energy.min")) {
-          double maximal_energy_min = configuration_.fetch_real("range_maximal_energy.min");
-          if (! configuration_.has_explicit_unit("range_maximal_energy.min")) {
-            maximal_energy_min *= CLHEP::MeV;
-          }
-          DT_THROW_IF(maximal_energy_min < 0.0*CLHEP::MeV, std::range_error,
-                      "Invalid minimal maximal_energy (" << maximal_energy_min << ") !");
-          _maximal_energy_min_ = maximal_energy_min;
-          count++;
-        }
-        if (configuration_.has_key("range_maximal_energy.max")) {
-          double maximal_energy_max = configuration_.fetch_real("range_maximal_energy.max");
-          if (! configuration_.has_explicit_unit("range_maximal_energy.max")) {
-            maximal_energy_max *= CLHEP::degree;
-          }
-          DT_THROW_IF(maximal_energy_max < 0.0*CLHEP::degree, std::range_error,
-                      "Invalid maximal maximal_energy (" << maximal_energy_max << ") !");
-          _maximal_energy_max_ = maximal_energy_max;
-          count++;
-        }
-        DT_THROW_IF(count == 0, std::logic_error,
-                    "Missing 'range_maximal_energy.min' or 'range_maximal_energy.max' property !");
-        if (count == 2 && _maximal_energy_min_ >= 0 && _maximal_energy_max_ >= 0) {
-          DT_THROW_IF(_maximal_energy_min_ > _maximal_energy_max_, std::logic_error,
-                      "Invalid 'range_maximal_energy.min' > 'range_maximal_energy.max' values !");
         }
       }
 

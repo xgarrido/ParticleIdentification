@@ -61,11 +61,7 @@ namespace snemo {
         MODE_HAS_VERTICES_PROBABILITY   = datatools::bit_mask::bit05,
         MODE_RANGE_VERTICES_PROBABILITY = datatools::bit_mask::bit06,
         MODE_HAS_ANGLE                  = datatools::bit_mask::bit07,
-        MODE_RANGE_ANGLE                = datatools::bit_mask::bit08,
-        MODE_HAS_MINIMAL_ENERGY         = datatools::bit_mask::bit09,
-        MODE_RANGE_MINIMAL_ENERGY       = datatools::bit_mask::bit10,
-        MODE_HAS_MAXIMAL_ENERGY         = datatools::bit_mask::bit11,
-        MODE_RANGE_MAXIMAL_ENERGY       = datatools::bit_mask::bit12
+        MODE_RANGE_ANGLE                = datatools::bit_mask::bit08
       };
 
       /// Return the cut mode
@@ -94,18 +90,6 @@ namespace snemo {
 
       /// Check mode RANGE_ANGLE
       virtual bool is_mode_range_angle() const;
-
-      /// Check mode HAS_MINIMAL_ENERGY
-      virtual bool is_mode_has_minimal_energy() const;
-
-      /// Check mode RANGE_MINIMAL_ENERGY
-      virtual bool is_mode_range_minimal_energy() const;
-
-      /// Check mode HAS_MAXIMAL_ENERGY
-      virtual bool is_mode_has_maximal_energy() const;
-
-      /// Check mode RANGE_MAXIMAL_ENERGY
-      virtual bool is_mode_range_maximal_energy() const;
 
       /// Constructor
       base_channel_cut(datatools::logger::priority logging_priority_ = datatools::logger::PRIO_FATAL);
@@ -144,10 +128,6 @@ namespace snemo {
       double _vertices_probability_max_;
       double _angle_min_;
       double _angle_max_;
-      double _minimal_energy_min_;
-      double _minimal_energy_max_;
-      double _maximal_energy_min_;
-      double _maximal_energy_max_;
 
       // // Macro to automate the registration of the cut :
       // CUT_REGISTRATION_INTERFACE(base_channel_cut);
