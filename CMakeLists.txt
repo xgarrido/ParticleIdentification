@@ -38,6 +38,7 @@ list(APPEND FalaiseParticleIdentificationPlugin_HEADERS
   source/falaise/snemo/reconstruction/topology_1eNg_builder.h
   source/falaise/snemo/reconstruction/topology_2eNg_builder.h
   source/falaise/snemo/cuts/topology_data_cut.h
+  source/falaise/snemo/cuts/tof_measurement_cut.h
   source/falaise/snemo/cuts/base_channel_cut.h
   source/falaise/snemo/cuts/channel_1e_cut.h
   source/falaise/snemo/cuts/channel_2e_cut.h
@@ -96,6 +97,7 @@ list(APPEND FalaiseParticleIdentificationPlugin_SOURCES
   source/falaise/snemo/reconstruction/topology_1eNg_builder.cc
   source/falaise/snemo/reconstruction/topology_2eNg_builder.cc
   source/falaise/snemo/cuts/topology_data_cut.cc
+  source/falaise/snemo/cuts/tof_measurement_cut.cc
   source/falaise/snemo/cuts/base_channel_cut.cc
   source/falaise/snemo/cuts/channel_1e_cut.cc
   source/falaise/snemo/cuts/channel_2e_cut.cc

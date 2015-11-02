@@ -1,0 +1,374 @@
+// falaise/snemo/cuts/tof_measurement_cut.cc
+
+// Ourselves:
+#include <falaise/snemo/cuts/tof_measurement_cut.h>
+
+// Standard library:
+#include <stdexcept>
+#include <sstream>
+
+// Third party:
+// - Bayeux/datatools:
+#include <datatools/properties.h>
+#include <datatools/things.h>
+#include <datatools/clhep_units.h>
+
+// SuperNEMO data models :
+#include <falaise/snemo/datamodels/tof_measurement.h>
+
+namespace snemo {
+
+  namespace cut {
+
+    // Registration instantiation macro :
+    CUT_REGISTRATION_IMPLEMENT(tof_measurement_cut, "snemo::cut::tof_measurement_cut");
+
+    void tof_measurement_cut::_set_defaults()
+    {
+      _mode_ = MODE_UNDEFINED;
+      datatools::invalidate(_int_prob_range_min_);
+      datatools::invalidate(_int_prob_range_max_);
+      datatools::invalidate(_ext_prob_range_min_);
+      datatools::invalidate(_ext_prob_range_max_);
+      return;
+    }
+
+    uint32_t tof_measurement_cut::get_mode() const
+    {
+      return _mode_;
+    }
+
+    bool tof_measurement_cut::is_mode_has_internal_probability() const
+    {
+      return _mode_ & MODE_HAS_INTERNAL_PROBABILITY;
+    }
+
+    bool tof_measurement_cut::is_mode_range_internal_probability() const
+    {
+      return _mode_ & MODE_RANGE_INTERNAL_PROBABILITY;
+    }
+
+    bool tof_measurement_cut::is_mode_has_external_probability() const
+    {
+      return _mode_ & MODE_HAS_EXTERNAL_PROBABILITY;
+    }
+
+    bool tof_measurement_cut::is_mode_range_external_probability() const
+    {
+      return _mode_ & MODE_RANGE_EXTERNAL_PROBABILITY;
+    }
+
+    tof_measurement_cut::tof_measurement_cut(datatools::logger::priority logger_priority_)
+      : cuts::i_cut(logger_priority_)
+    {
+      _set_defaults();
+      return;
+    }
+
+    tof_measurement_cut::~tof_measurement_cut()
+    {
+      if (is_initialized()) this->tof_measurement_cut::reset();
+      return;
+    }
+
+    void tof_measurement_cut::reset()
+    {
+      _set_defaults();
+      this->i_cut::_reset();
+      this->i_cut::_set_initialized(false);
+      return;
+    }
+
+    void tof_measurement_cut::initialize(const datatools::properties & configuration_,
+                                         datatools::service_manager  & /* service_manager_ */,
+                                         cuts::cut_handle_dict_type  & /* cut_dict_ */)
+    {
+      DT_THROW_IF(is_initialized(), std::logic_error,
+                  "Cut '" << get_name() << "' is already initialized ! ");
+
+      this->i_cut::_common_initialize(configuration_);
+
+      if (_mode_ == MODE_UNDEFINED) {
+        if (configuration_.has_flag("mode.has_internal_probability")) {
+          _mode_ |= MODE_HAS_INTERNAL_PROBABILITY;
+        }
+        if (configuration_.has_flag("mode.range_internal_probability")) {
+          _mode_ |= MODE_RANGE_INTERNAL_PROBABILITY;
+        }
+        if (configuration_.has_flag("mode.has_external_probability")) {
+          _mode_ |= MODE_HAS_EXTERNAL_PROBABILITY;
+        }
+        if (configuration_.has_flag("mode.range_external_probability")) {
+          _mode_ |= MODE_RANGE_EXTERNAL_PROBABILITY;
+        }
+        DT_THROW_IF(_mode_ == MODE_UNDEFINED, std::logic_error,
+                    "Missing at least a 'mode.XXX' property !");
+
+        // mode HAS_INTERNAL_PROBABILITY:
+        if (is_mode_has_internal_probability()) {
+          DT_LOG_DEBUG(get_logging_priority(), "Using HAS_INTERNAL_PROBABILITY mode...");
+        } // end if is_mode_has_internal_probability
+
+        // mode PARTICLE_RANGE_INTERNAL_PROBABILITY:
+        if (is_mode_range_internal_probability()) {
+          DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_INTERNAL_PROBABILITY mode...");
+          size_t count = 0;
+          if (configuration_.has_key("range_internal_probability.min")) {
+            double pmin = configuration_.fetch_real("range_internal_probability.min");
+            if (! configuration_.has_explicit_unit("range_internal_probability.min")) {
+              pmin *= CLHEP::perCent;
+            }
+            DT_THROW_IF(pmin < 0.0*CLHEP::perCent || pmin > 100.0*CLHEP::perCent,
+                        std::range_error,
+                        "Invalid minimal internal probability (" << pmin << ") !");
+            _int_prob_range_min_ = pmin;
+            count++;
+          }
+          if (configuration_.has_key("range_internal_probability.max")) {
+            double pmax = configuration_.fetch_real("range_internal_probability.max");
+            if (! configuration_.has_explicit_unit("range_internal_probability.max")) {
+              pmax *= CLHEP::perCent;
+            }
+            DT_THROW_IF(pmax < 0.0*CLHEP::perCent || pmax > 100.0*CLHEP::perCent,
+                        std::range_error,
+                        "Invalid maximal internal probability (" << pmax << ") !");
+            _int_prob_range_max_ = pmax;
+            count++;
+          }
+          DT_THROW_IF(count == 0, std::logic_error,
+                      "Missing 'range_internal_probability.min' or 'range_internal_probability.max' property !");
+          if (count == 2 && _int_prob_range_min_ >= 0 && _int_prob_range_max_ >= 0) {
+            DT_THROW_IF(_int_prob_range_min_ > _int_prob_range_max_, std::logic_error,
+                        "Invalid 'range_internal_probability.min' > 'range_internal_probability.max' values !");
+          }
+        } // end if is_mode_range_internal_probability
+
+        // mode HAS_EXTERNAL_PROBABILITY:
+        if (is_mode_has_external_probability()) {
+          DT_LOG_DEBUG(get_logging_priority(), "Using HAS_EXTERNAL_PROBABILITY mode...");
+        } // end if is_mode_has_external_probability
+
+        // mode PARTICLE_RANGE_EXTERNAL_PROBABILITY:
+        if (is_mode_range_external_probability()) {
+          DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_EXTERNAL_PROBABILITY mode...");
+          size_t count = 0;
+          if (configuration_.has_key("range_external_probability.min")) {
+            double pmin = configuration_.fetch_real("range_external_probability.min");
+            if (! configuration_.has_explicit_unit("range_external_probability.min")) {
+              pmin *= CLHEP::perCent;
+            }
+            DT_THROW_IF(pmin < 0.0*CLHEP::perCent || pmin > 100.0*CLHEP::perCent,
+                        std::range_error,
+                        "Invalid minimal external probability (" << pmin << ") !");
+            _ext_prob_range_min_ = pmin;
+            count++;
+          }
+          if (configuration_.has_key("range_external_probability.max")) {
+            double pmax = configuration_.fetch_real("range_external_probability.max");
+            if (! configuration_.has_explicit_unit("range_external_probability.max")) {
+              pmax *= CLHEP::perCent;
+            }
+            DT_THROW_IF(pmax < 0.0*CLHEP::perCent || pmax > 100.0*CLHEP::perCent,
+                        std::range_error,
+                        "Invalid maximal external probability (" << pmax << ") !");
+            _ext_prob_range_max_ = pmax;
+            count++;
+          }
+          DT_THROW_IF(count == 0, std::logic_error,
+                      "Missing 'range_external_probability.min' or 'range_external_probability.max' property !");
+          if (count == 2 && _ext_prob_range_min_ >= 0 && _ext_prob_range_max_ >= 0) {
+            DT_THROW_IF(_ext_prob_range_min_ > _ext_prob_range_max_, std::logic_error,
+                        "Invalid 'range_external_probability.min' > 'range_external_probability.max' values !");
+          }
+        } // end if is_mode_range_external_probability
+     }
+
+      this->i_cut::_set_initialized(true);
+      return;
+    }
+
+
+    int tof_measurement_cut::_accept()
+    {
+      DT_LOG_TRACE(get_logging_priority(), "Entering...");
+      uint32_t cut_returned = cuts::SELECTION_INAPPLICABLE;
+
+      // Get tof measurement
+      const snemo::datamodel::tof_measurement & a_tof_meas = get_user_data<snemo::datamodel::tof_measurement>();
+
+      cut_returned = cuts::SELECTION_REJECTED;
+      return cut_returned;
+    }
+
+  }  // end of namespace cut
+
+}  // end of namespace snemo
+
+DOCD_CLASS_IMPLEMENT_LOAD_BEGIN(snemo::cut::tof_measurement_cut, ocd_)
+{
+  ocd_.set_class_name("snemo::cut::tof_measurement_cut");
+  ocd_.set_class_description("Cut based on criteria applied to a Time-Of-Flight measurement");
+  ocd_.set_class_library("falaise");
+  // ocd_.set_class_documentation("");
+
+  cuts::i_cut::common_ocd(ocd_);
+
+  {
+    // Description of the 'mode.has_internal_probability' configuration property :
+    datatools::configuration_property_description & cpd = ocd_.add_property_info();
+    cpd.set_name_pattern("mode.has_internal_probability")
+      .set_terse_description("Mode requiring internal probability value")
+      .set_traits(datatools::TYPE_BOOLEAN)
+      .add_example("Activate the requested internal probability mode:: \n"
+                   "                                                   \n"
+                   "  mode.has_internal_probability : boolean = true   \n"
+                   "                                                   \n"
+                   )
+      ;
+  }
+
+  {
+    // Description of the 'mode.has_external_probability' configuration property :
+    datatools::configuration_property_description & cpd = ocd_.add_property_info();
+    cpd.set_name_pattern("mode.has_external_probability")
+      .set_terse_description("Mode requiring external probability value")
+      .set_traits(datatools::TYPE_BOOLEAN)
+      .add_example("Activate the requested external probability mode:: \n"
+                   "                                                   \n"
+                   "  mode.has_external_probability : boolean = true   \n"
+                   "                                                   \n"
+                   )
+      ;
+  }
+
+  {
+    // Description of the 'mode.range_internal_probability' configuration property :
+    datatools::configuration_property_description & cpd = ocd_.add_property_info();
+    cpd.set_name_pattern("mode.range_internal_probability")
+      .set_terse_description("Mode with a special requested ranged of internal probability value")
+      .set_traits(datatools::TYPE_BOOLEAN)
+      .add_example("Activate the mode::                                \n"
+                   "                                                   \n"
+                   "  mode.range_internal_probability : boolean = true \n"
+                   "                                                   \n"
+                   )
+      ;
+  }
+
+  {
+    // Description of the 'mode.range_external_probability' configuration property :
+    datatools::configuration_property_description & cpd = ocd_.add_property_info();
+    cpd.set_name_pattern("mode.range_external_probability")
+      .set_terse_description("Mode with a special requested ranged of external probability value")
+      .set_traits(datatools::TYPE_BOOLEAN)
+      .add_example("Activate the mode::                                \n"
+                   "                                                   \n"
+                   "  mode.range_external_probability : boolean = true \n"
+                   "                                                   \n"
+                   )
+      ;
+  }
+
+  {
+    // Description of the 'range_internal_probability.min' configuration property :
+    datatools::configuration_property_description & cpd = ocd_.add_property_info();
+    cpd.set_name_pattern("range_internal_probability.min")
+      .set_terse_description("Minimal value of the requested ranged internal probability")
+      .set_triggered_by_flag("mode.range_internal_probability")
+      .set_traits(datatools::TYPE_REAL)
+      .set_traits(datatools::TYPE_REAL)
+      .set_explicit_unit(true)
+      .set_unit_label("fraction")
+      .set_unit_symbol("%")
+      .add_example("Set a specific minimal value of the internal probability:: \n"
+                   "                                                           \n"
+                   "  range_internal_probability.min : real as fraction = 4 %  \n"
+                   "                                                           \n"
+                   )
+      ;
+  }
+
+  {
+    // Description of the 'range_internal_probability.max' configuration property :
+    datatools::configuration_property_description & cpd = ocd_.add_property_info();
+    cpd.set_name_pattern("range_internal_probability.max")
+      .set_terse_description("Maximal value of the requested ranged internal probability")
+      .set_triggered_by_flag("mode.range_internal_probability")
+      .set_traits(datatools::TYPE_REAL)
+      .set_traits(datatools::TYPE_REAL)
+      .set_explicit_unit(true)
+      .set_unit_label("fraction")
+      .set_unit_symbol("%")
+      .add_example("Set a specific maximal value of the internal probability:: \n"
+                   "                                                           \n"
+                   "  range_internal_probability.max : real as fraction = 4 %  \n"
+                   "                                                           \n"
+                   )
+      ;
+  }
+
+  {
+    // Description of the 'range_external_probability.min' configuration property :
+    datatools::configuration_property_description & cpd = ocd_.add_property_info();
+    cpd.set_name_pattern("range_external_probability.min")
+      .set_terse_description("Minimal value of the requested ranged external probability")
+      .set_triggered_by_flag("mode.range_external_probability")
+      .set_traits(datatools::TYPE_REAL)
+      .set_traits(datatools::TYPE_REAL)
+      .set_explicit_unit(true)
+      .set_unit_label("fraction")
+      .set_unit_symbol("%")
+      .add_example("Set a specific minimal value of the external probability:: \n"
+                   "                                                           \n"
+                   "  range_external_probability.min : real as fraction = 4 %  \n"
+                   "                                                           \n"
+                   )
+      ;
+  }
+
+
+  {
+    // Description of the 'range_external_probability.max' configuration property :
+    datatools::configuration_property_description & cpd = ocd_.add_property_info();
+    cpd.set_name_pattern("range_external_probability.max")
+      .set_terse_description("Maximal value of the requested ranged external probability")
+      .set_triggered_by_flag("mode.range_external_probability")
+      .set_traits(datatools::TYPE_REAL)
+      .set_traits(datatools::TYPE_REAL)
+      .set_explicit_unit(true)
+      .set_unit_label("fraction")
+      .set_unit_symbol("%")
+      .add_example("Set a specific maximal value of the external probability:: \n"
+                   "                                                           \n"
+                   "  range_external_probability.max : real as fraction = 4 %  \n"
+                   "                                                           \n"
+                   )
+      ;
+  }
+
+  // Additional configuration hints :
+  ocd_.set_configuration_hints("Here is a full configuration example in the                  \n"
+                               "``datatools::properties`` ASCII format::                     \n"
+                               "                                                             \n"
+                               "   mode.has_internal_probability : boolean = true            \n"
+                               "   mode.range_internal_probability : boolean = true          \n"
+                               "   range_internal_probability.min : real as fraction = 5 %   \n"
+                               "   range_internal_probability.max : real as fraction = 100 % \n"
+                               "                                                             \n"
+                               );
+
+  ocd_.set_validation_support(true);
+  ocd_.lock();
+  return;
+}
+DOCD_CLASS_IMPLEMENT_LOAD_END() // Closing macro for implementation
+
+// Registration macro for class 'snemo::cut::simulated_data_cut' :
+DOCD_CLASS_SYSTEM_REGISTRATION(snemo::cut::tof_measurement_cut, "snemo::cut::tof_measurement_cut")
+
+/*
+** Local Variables: --
+** mode: c++ --
+** c-file-style: "gnu" --
+** End: --
+*/
