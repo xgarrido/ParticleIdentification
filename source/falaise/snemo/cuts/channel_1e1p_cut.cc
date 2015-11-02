@@ -223,70 +223,6 @@ namespace snemo {
         }
       }
 
-      // Check if event has minimal energy
-      bool check_has_minimal_energy = true;
-      if (is_mode_has_minimal_energy()) {
-        if (! a_1e1p_pattern.has_electron_positron_minimal_energy()) {
-            check_has_minimal_energy = false;
-        }
-      }
-
-      // Check if event has required electron minimal energy
-      bool check_range_minimal_energy = true;
-      if (is_mode_range_minimal_energy()) {
-        if (! a_1e1p_pattern.has_electron_positron_minimal_energy()) {
-          DT_LOG_DEBUG(get_logging_priority(), "Missing minimal energy !");
-          return cuts::SELECTION_INAPPLICABLE;
-        }
-        const double minimal_energy = a_1e1p_pattern.get_electron_positron_minimal_energy();
-        if (datatools::is_valid(_minimal_energy_min_)) {
-          if ( minimal_energy < _minimal_energy_min_) {
-            DT_LOG_DEBUG(get_logging_priority(),
-                         "Minimal energy (" << minimal_energy << ") lower than " << _minimal_energy_min_);
-            check_range_minimal_energy = false;
-          }
-        }
-        if (datatools::is_valid(_minimal_energy_max_)) {
-          if (minimal_energy > _minimal_energy_max_) {
-            DT_LOG_DEBUG(get_logging_priority(),
-                         "Minimal energy (" << minimal_energy << ") greater than " << _minimal_energy_max_);
-            check_range_minimal_energy = false;
-          }
-        }
-      }
-
-      // Check if event has maximal energy
-      bool check_has_maximal_energy = true;
-      if (is_mode_has_maximal_energy()) {
-        if (! a_1e1p_pattern.has_electron_positron_maximal_energy()) {
-            check_has_maximal_energy = false;
-        }
-      }
-
-      // Check if event has required electron maximal energy
-      bool check_range_maximal_energy = true;
-      if (is_mode_range_maximal_energy()) {
-        if (! a_1e1p_pattern.has_electron_positron_maximal_energy()) {
-          DT_LOG_DEBUG(get_logging_priority(), "Missing maximal energy !");
-          return cuts::SELECTION_INAPPLICABLE;
-        }
-        const double maximal_energy = a_1e1p_pattern.get_electron_positron_maximal_energy();
-        if (datatools::is_valid(_maximal_energy_min_)) {
-          if ( maximal_energy < _maximal_energy_min_) {
-            DT_LOG_DEBUG(get_logging_priority(),
-                         "Maximal energy (" << maximal_energy << ") lower than " << _maximal_energy_min_);
-            check_range_maximal_energy = false;
-          }
-        }
-        if (datatools::is_valid(_maximal_energy_max_)) {
-          if (maximal_energy > _maximal_energy_max_) {
-            DT_LOG_DEBUG(get_logging_priority(),
-                         "Maximal energy (" << maximal_energy << ") greater than " << _maximal_energy_max_);
-            check_range_maximal_energy = false;
-          }
-        }
-      }
-
       cut_returned = cuts::SELECTION_REJECTED;
       if (check_has_internal_probability &&
           check_has_external_probability &&
@@ -295,11 +231,7 @@ namespace snemo {
           check_has_vertices_probability &&
           check_range_vertices_probability &&
           check_has_angle &&
-          check_range_angle &&
-          check_has_minimal_energy &&
-          check_range_minimal_energy &&
-          check_has_maximal_energy &&
-          check_range_maximal_energy) {
+          check_range_angle) {
         DT_LOG_DEBUG(get_logging_priority(), "Event rejected by channel 1e1p cut!");
         cut_returned = cuts::SELECTION_ACCEPTED;
       }
