@@ -61,8 +61,10 @@ namespace snemo {
       // /// Return a mutable reference to the angle dictionary
       // angle_collection_type & grab_angle_collection();
 
+      /// Check electron-gammas internal probabilities validity
       bool has_electron_gammas_internal_probabilities() const;
 
+      /// Check electron-gammas external probabilities validity
       bool has_electron_gammas_external_probabilities() const;
 
       /// Return the electron-gammas internal TOF probability

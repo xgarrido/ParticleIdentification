@@ -143,25 +143,25 @@ namespace snemo {
         = dynamic_cast<const snemo::datamodel::topology_1eNg_pattern &>(a_pattern);
 
       // Check if event has gammas
-      bool check_has_gamma = true;
+      bool check_has_number_of_gammas = true;
       if (is_mode_has_number_of_gammas()) {
         if (! a_1eNg_pattern.has_number_of_gammas())
-          check_has_gamma = false;
+          check_has_number_of_gammas = false;
       }
 
       // Check if event has correct number of gammas
-      bool check_range_gamma = true;
+      bool check_range_number_of_gammas = true;
       if (is_mode_range_number_of_gammas()) {
         const int ngamma = a_1eNg_pattern.get_number_of_gammas();
         if (ngamma < _number_of_gammas_min_) {
           DT_LOG_DEBUG(get_logging_priority(),
                        "Number of gammas (" << ngamma << ") lower than " << _number_of_gammas_min_);
-          check_range_gamma = false;
+          check_range_number_of_gammas = false;
         }
         if (ngamma > _number_of_gammas_max_) {
           DT_LOG_DEBUG(get_logging_priority(),
                        "Number of gammas (" << ngamma << ") greater than " << _number_of_gammas_max_);
-          check_range_gamma = false;
+          check_range_number_of_gammas = false;
         }
       }
 
@@ -180,9 +180,7 @@ namespace snemo {
           DT_LOG_DEBUG(get_logging_priority(), "Missing internal probability !");
           return cuts::SELECTION_INAPPLICABLE;
         }
-
         snemo::datamodel::topology_1eNg_pattern::tof_collection_type internal_probabilities = a_1eNg_pattern.get_electron_gammas_internal_probabilities();
-
         for(unsigned int i=0; i<internal_probabilities.size(); i++) {
           //If gammas are indeed intern with the electrons, only the proba
           //with the first calorimeter in the list is checked
@@ -194,7 +192,6 @@ namespace snemo {
               check_range_internal_probability = false;
             }
           }
-
           if (datatools::is_valid(_prob_int_max_)) {
             if (pint > _prob_int_max_) {
               DT_LOG_DEBUG(get_logging_priority(),
@@ -245,8 +242,8 @@ namespace snemo {
       }
 
       cut_returned = cuts::SELECTION_REJECTED;
-      if (check_has_gamma &&
-          check_range_gamma &&
+      if (check_has_number_of_gammas &&
+          check_range_number_of_gammas &&
           check_has_internal_probability &&
           check_range_internal_probability &&
           check_has_external_probability &&
