@@ -157,7 +157,7 @@ namespace snemo {
           _prob_int_min_ = pmin;
           count++;
         }
-        if (configuration_.has_key("range_internal_probablity.max")) {
+        if (configuration_.has_key("range_internal_probability.max")) {
           double pmax = configuration_.fetch_real("range_internal_probability.max");
           if (! configuration_.has_explicit_unit("range_internal_probability.max")) {
             pmax *= CLHEP::perCent;
