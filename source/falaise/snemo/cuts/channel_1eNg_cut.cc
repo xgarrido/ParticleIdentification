@@ -82,14 +82,14 @@ namespace snemo {
         DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_NUMBER_OF_GAMMAS mode...");
         size_t count = 0;
         if (configuration_.has_key("range_number_of_gammas.min")) {
-          double ngammas_min = configuration_.fetch_real("range_number_of_gammas.min");
+          double ngammas_min = configuration_.fetch_integer("range_number_of_gammas.min");
           DT_THROW_IF(ngammas_min < 0, std::range_error,
                       "Invalid minimal number of gammas (" << ngammas_min << ") !");
           _number_of_gammas_min_ = ngammas_min;
           count++;
         }
         if (configuration_.has_key("range_number_of_gammas.max")) {
-          double ngammas_max = configuration_.fetch_real("range_number_of_gammas.max");
+          double ngammas_max = configuration_.fetch_integer("range_number_of_gammas.max");
           DT_THROW_IF(ngammas_max < 0, std::range_error,
                       "Invalid maximal number of gammas (" << ngammas_max << ") !");
           _number_of_gammas_max_ = ngammas_max;
