@@ -141,7 +141,6 @@ namespace snemo {
       }
 
       if (is_mode_range_electrons_gammas_internal_probability()) {
-        std::cout << "DEBUG ! is mode range electrons gammas pint" << std::cout;
         DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_ELECTRON_GAMMA_INTERNAL_PROBABILITY mode...");
         size_t count = 0;
         if (configuration_.has_key("range_electron_gamma_internal_probability.min")) {

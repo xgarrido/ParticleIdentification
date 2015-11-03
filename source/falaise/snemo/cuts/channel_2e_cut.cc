@@ -231,7 +231,7 @@ namespace snemo {
           check_range_vertices_probability &&
           check_has_angle &&
           check_range_angle) {
-        DT_LOG_DEBUG(get_logging_priority(), "Event rejected by channel 2e cut!");
+        DT_LOG_DEBUG(get_logging_priority(), "Event accepted by channel 2e cut!");
         cut_returned = cuts::SELECTION_ACCEPTED;
       }
 
