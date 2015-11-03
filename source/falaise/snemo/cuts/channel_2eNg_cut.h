@@ -84,9 +84,6 @@ namespace snemo {
 
     private:
 
-      std::string _TD_label_; //!< Name of the "Topology data" bank
-      uint32_t    _mode_;     //!< Mode of the cut
-
       int    _number_of_gammas_min_;
       int    _number_of_gammas_max_;
       double _electron_gamma_prob_int_min_;

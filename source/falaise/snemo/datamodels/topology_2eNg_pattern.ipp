@@ -24,7 +24,7 @@ namespace snemo {
     void topology_2eNg_pattern::serialize(Archive & ar_, const unsigned int /* version_ */)
     {
       ar_ & BOOST_SERIALIZATION_BASE_OBJECT_NVP(topology_2e_pattern);
-      // ar_ & boost::serialization::make_nvp("number_of_gammas", _number_of_gammas_);
+      ar_ & boost::serialization::make_nvp("number_of_gammas", _number_of_gammas_);
       return;
     }
 

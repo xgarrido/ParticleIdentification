@@ -39,10 +39,10 @@ namespace snemo {
                   "No particle with label '" << e2_label << "' has been stored !");
       const snemo::datamodel::particle_track & e2 = pattern_.get_particle_track(e2_label);
 
-      // Either this way
-      // for (size_t i_gamma = 1; i_gamma <= h_pattern_->get_number_of_gammas();++i_gamma) {
-      // Or this way but less evolutive
-      for (size_t i_gamma = 1; i_gamma <= pattern_.get_particle_track_dictionary().size()-2; ++i_gamma) {
+      const int ngammas = pattern_.get_particle_track_dictionary().size()-2;
+      dynamic_cast<snemo::datamodel::topology_2eNg_pattern &>(pattern_).set_number_of_gammas(ngammas);
+
+      for (int i_gamma = 1; i_gamma <= ngammas; ++i_gamma) {
         std::ostringstream oss;
         oss << "g" << i_gamma;
 
