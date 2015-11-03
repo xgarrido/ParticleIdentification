@@ -33,6 +33,7 @@ namespace snemo {
       datatools::invalidate(_electron_gamma_prob_int_max_);
       datatools::invalidate(_electron_gamma_prob_ext_min_);
       datatools::invalidate(_electron_gamma_prob_ext_max_);
+      base_channel_cut::_set_defaults();
       return;
     }
 
