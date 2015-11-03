@@ -30,11 +30,17 @@ namespace snemo {
       /// Destructor
       ~tof_measurement();
 
+      /// Check if current measure has internal probabilities
+      bool has_internal_probabilities() const;
+
       /// Get a non-mutable reference to internal probabilities
       const probability_type & get_internal_probabilities() const;
 
       /// Get a mutable reference to internal probabilities
       probability_type & grab_internal_probabilities();
+
+      /// Check if current measure has external probabilities
+      bool has_external_probabilities() const;
 
       /// Get a non-mutable reference to external probabilities
       const probability_type & get_external_probabilities() const;

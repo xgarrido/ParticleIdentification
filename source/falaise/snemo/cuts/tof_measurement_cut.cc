@@ -196,7 +196,71 @@ namespace snemo {
       // Get tof measurement
       const snemo::datamodel::tof_measurement & a_tof_meas = get_user_data<snemo::datamodel::tof_measurement>();
 
+      // Check if event has internal probability
+      bool check_has_internal_probability = true;
+      if (is_mode_has_internal_probability()) {
+        if (! a_tof_meas.has_internal_probabilities()) {
+          check_has_internal_probability = false;
+        }
+      }
+
+      // // Check if event has correct internal probability
+      // bool check_range_internal_probability = true;
+      // if (is_mode_range_internal_probability()) {
+      //   if (! a_2e_pattern.has_electrons_internal_probability()) {
+      //     DT_LOG_DEBUG(get_logging_priority(), "Missing internal probability !");
+      //     return cuts::SELECTION_INAPPLICABLE;
+      //   }
+      //   const double pint = a_2e_pattern.get_electrons_internal_probability();
+      //   if (datatools::is_valid(_prob_int_min_)) {
+      //     if (pint < _prob_int_min_) {
+      //       DT_LOG_DEBUG(get_logging_priority(),
+      //                    "Internal probability (" << pint << ") lower than " << _prob_int_min_);
+      //       check_range_internal_probability = false;
+      //     }
+      //   }
+      //   if (datatools::is_valid(_prob_int_max_)) {
+      //     if (pint > _prob_int_max_) {
+      //       DT_LOG_DEBUG(get_logging_priority(),
+      //                    "Internal probability (" << pint << ") greater than " << _prob_int_max_);
+      //       check_range_internal_probability = false;
+      //     }
+      //   }
+      // }
+
+      // Check if event has external probability
+      bool check_has_external_probability = true;
+      if (is_mode_has_external_probability()) {
+        if (! a_tof_meas.has_external_probabilities()) {
+          check_has_external_probability = false;
+        }
+      }
+
+      // // Check if event has correct external probability
+      // bool check_range_external_probability = true;
+      // if (is_mode_range_external_probability()) {
+      //   if (! a_2e_pattern.has_electrons_external_probability()) {
+      //     DT_LOG_DEBUG(get_logging_priority(), "Missing external probability !");
+      //     return cuts::SELECTION_INAPPLICABLE;
+      //   }
+      //   const double pext = a_2e_pattern.get_electrons_external_probability();
+      //   if (datatools::is_valid(_prob_ext_min_)) {
+      //     if (pext < _prob_ext_min_) check_range_external_probability = false;
+      //   }
+      //   if (datatools::is_valid(_prob_ext_max_)) {
+      //     if (pext > _prob_ext_max_) check_range_external_probability = false;
+      //   }
+      // }
+
       cut_returned = cuts::SELECTION_REJECTED;
+      if (check_has_internal_probability &&
+          check_has_external_probability//  &&
+          // check_range_internal_probability &&
+          // check_range_external_probability
+          ) {
+        DT_LOG_DEBUG(get_logging_priority(), "Event rejected by TOF measurement cut!");
+        cut_returned = cuts::SELECTION_ACCEPTED;
+      }
       return cut_returned;
     }
 
@@ -217,7 +281,7 @@ DOCD_CLASS_IMPLEMENT_LOAD_BEGIN(snemo::cut::tof_measurement_cut, ocd_)
     // Description of the 'mode.has_internal_probability' configuration property :
     datatools::configuration_property_description & cpd = ocd_.add_property_info();
     cpd.set_name_pattern("mode.has_internal_probability")
-      .set_terse_description("Mode requiring internal probability value")
+      .set_terse_description("Mode requiring internal probability availability")
       .set_traits(datatools::TYPE_BOOLEAN)
       .add_example("Activate the requested internal probability mode:: \n"
                    "                                                   \n"
@@ -231,7 +295,7 @@ DOCD_CLASS_IMPLEMENT_LOAD_BEGIN(snemo::cut::tof_measurement_cut, ocd_)
     // Description of the 'mode.has_external_probability' configuration property :
     datatools::configuration_property_description & cpd = ocd_.add_property_info();
     cpd.set_name_pattern("mode.has_external_probability")
-      .set_terse_description("Mode requiring external probability value")
+      .set_terse_description("Mode requiring external probability availability")
       .set_traits(datatools::TYPE_BOOLEAN)
       .add_example("Activate the requested external probability mode:: \n"
                    "                                                   \n"

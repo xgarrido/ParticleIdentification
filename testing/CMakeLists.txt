@@ -2,6 +2,7 @@
 set(FalaiseParticleIdentificationPlugin_TESTS
   test_energy_driver.cxx
   test_angle_driver.cxx
+  test_tof_measurement_cut.cxx
   )
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})

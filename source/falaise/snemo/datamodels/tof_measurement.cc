@@ -22,6 +22,11 @@ namespace snemo {
       return;
     }
 
+    bool tof_measurement::has_internal_probabilities() const
+    {
+      return ! _internal_probabilities_.empty();
+    }
+
     const tof_measurement::probability_type & tof_measurement::get_internal_probabilities() const
     {
       return _internal_probabilities_;
@@ -30,6 +35,11 @@ namespace snemo {
     tof_measurement::probability_type & tof_measurement::grab_internal_probabilities()
     {
       return _internal_probabilities_;
+    }
+
+    bool tof_measurement::has_external_probabilities() const
+    {
+      return ! _external_probabilities_.empty();
     }
 
     const tof_measurement::probability_type & tof_measurement::get_external_probabilities() const
