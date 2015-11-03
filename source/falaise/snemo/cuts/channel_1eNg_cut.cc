@@ -180,7 +180,8 @@ namespace snemo {
           DT_LOG_DEBUG(get_logging_priority(), "Missing internal probability !");
           return cuts::SELECTION_INAPPLICABLE;
         }
-        snemo::datamodel::topology_1eNg_pattern::tof_collection_type internal_probabilities = a_1eNg_pattern.get_electron_gammas_internal_probabilities();
+        snemo::datamodel::topology_1eNg_pattern::tof_collection_type internal_probabilities;
+        a_1eNg_pattern.fetch_electron_gammas_internal_probabilities(internal_probabilities);
         for(unsigned int i=0; i<internal_probabilities.size(); i++) {
           //If gammas are indeed intern with the electrons, only the proba
           //with the first calorimeter in the list is checked
@@ -218,7 +219,9 @@ namespace snemo {
           return cuts::SELECTION_INAPPLICABLE;
         }
 
-        snemo::datamodel::topology_1eNg_pattern::tof_collection_type external_probabilities = a_1eNg_pattern.get_electron_gammas_external_probabilities();
+        snemo::datamodel::topology_1eNg_pattern::tof_collection_type external_probabilities;
+        a_1eNg_pattern.fetch_electron_gammas_external_probabilities(external_probabilities);
+
         for(unsigned int i=0; i<external_probabilities.size(); ++i) {
           for(unsigned int j=0; j<external_probabilities.at(i).size(); ++j) {
             // Requires that no calorimeter of any gamma has a good external proba

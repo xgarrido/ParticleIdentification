@@ -395,26 +395,29 @@ namespace snemo {
           DT_LOG_DEBUG(get_logging_priority(), "Missing electrons gammas internal probability !");
           return cuts::SELECTION_INAPPLICABLE;
         }
-        snemo::datamodel::topology_2eNg_pattern::tof_collection_type electrons_gammas_internal_probabilities = a_2eNg_pattern.get_electrons_gammas_internal_probabilities();
-        for(unsigned int i=0; i<electrons_gammas_internal_probabilities.size(); i++) {
-          //If gammas are indeed intern with the electrons, only the proba
-          //with the first calorimeter in the list is checked
-          double pint = electrons_gammas_internal_probabilities.at(i).front();
-          if (datatools::is_valid(_electron_gamma_prob_int_min_)) {
-            if (pint < _electron_gamma_prob_int_min_) {
-              DT_LOG_DEBUG(get_logging_priority(),
-                           "Internal probability (" << pint << ") lower than " << _electron_gamma_prob_int_min_);
-              check_range_electrons_gammas_internal_probability = false;
-            }
-          }
-          if (datatools::is_valid(_electron_gamma_prob_int_max_)) {
-            if (pint > _electron_gamma_prob_int_max_) {
-              DT_LOG_DEBUG(get_logging_priority(),
-                           "Internal probability (" << pint << ") greater than " << _electron_gamma_prob_int_max_);
-              check_range_electrons_gammas_internal_probability = false;
-            }
+
+      snemo::datamodel::topology_2eNg_pattern::tof_collection_type electrons_gammas_internal_probabilities;
+      a_2eNg_pattern.fetch_electrons_gammas_internal_probabilities(electrons_gammas_internal_probabilities);
+
+      for(unsigned int i=0; i<electrons_gammas_internal_probabilities.size(); i++) {
+        //If gammas are indeed intern with the electrons, only the proba
+        //with the first calorimeter in the list is checked
+        double pint = electrons_gammas_internal_probabilities.at(i).front();
+        if (datatools::is_valid(_electron_gamma_prob_int_min_)) {
+          if (pint < _electron_gamma_prob_int_min_) {
+            DT_LOG_DEBUG(get_logging_priority(),
+                         "Internal probability (" << pint << ") lower than " << _electron_gamma_prob_int_min_);
+            check_range_electrons_gammas_internal_probability = false;
           }
         }
+        if (datatools::is_valid(_electron_gamma_prob_int_max_)) {
+          if (pint > _electron_gamma_prob_int_max_) {
+            DT_LOG_DEBUG(get_logging_priority(),
+                         "Internal probability (" << pint << ") greater than " << _electron_gamma_prob_int_max_);
+            check_range_electrons_gammas_internal_probability = false;
+          }
+        }
+      }
       }
 
       cut_returned = cuts::SELECTION_REJECTED;

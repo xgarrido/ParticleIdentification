@@ -56,32 +56,32 @@ namespace snemo {
       return has_measurement("tof_e1_g1") && has_measurement("tof_e2_g1");
     }
 
-    const topology_2eNg_pattern::tof_collection_type & topology_2eNg_pattern::get_electrons_gammas_internal_probabilities() const {
+    void topology_2eNg_pattern::fetch_electrons_gammas_internal_probabilities(topology_2eNg_pattern::tof_collection_type & eg_pint_) const
+    {
       DT_THROW_IF(! has_electrons_gammas_internal_probabilities(), std::logic_error, "No electrons-gammas TOF measurement stored !");
-      topology_2eNg_pattern::tof_collection_type tofs_int;
-      for(size_t i_gamma = 1; i_gamma <= get_number_of_gammas(); ++i_gamma) {
+      for(int i_gamma = 1; i_gamma <= get_number_of_gammas(); ++i_gamma) {
         std::ostringstream oss;
         oss << "tof_e1_g" << i_gamma;
         std::ostringstream oss2;
         oss2 << "tof_e2_g" << i_gamma;
-        tofs_int.push_back(dynamic_cast<const snemo::datamodel::tof_measurement&> (get_measurement(oss.str())).get_internal_probabilities());
-        tofs_int.push_back(dynamic_cast<const snemo::datamodel::tof_measurement&> (get_measurement(oss2.str())).get_internal_probabilities());
+        eg_pint_.push_back(dynamic_cast<const snemo::datamodel::tof_measurement&> (get_measurement(oss.str())).get_internal_probabilities());
+        eg_pint_.push_back(dynamic_cast<const snemo::datamodel::tof_measurement&> (get_measurement(oss2.str())).get_internal_probabilities());
       }
-      return tofs_int;
+      return;
     }
 
-    const topology_2eNg_pattern::tof_collection_type & topology_2eNg_pattern::get_electrons_gammas_external_probabilities() const {
+    void topology_2eNg_pattern::fetch_electrons_gammas_external_probabilities(topology_2eNg_pattern::tof_collection_type & eg_pext_) const
+    {
       DT_THROW_IF(! has_electrons_gammas_external_probabilities(), std::logic_error, "No electrons-gammas TOF measurement stored !");
-      topology_2eNg_pattern::tof_collection_type tofs_ext;
-      for(size_t i_gamma = 1; i_gamma <= get_number_of_gammas(); ++i_gamma) {
+      for(int i_gamma = 1; i_gamma <= get_number_of_gammas(); ++i_gamma) {
         std::ostringstream oss;
         oss << "tof_e1_g" << i_gamma;
         std::ostringstream oss2;
         oss2 << "tof_e2_g" << i_gamma;
-        tofs_ext.push_back(dynamic_cast<const snemo::datamodel::tof_measurement&> (get_measurement(oss.str())).get_external_probabilities());
-        tofs_ext.push_back(dynamic_cast<const snemo::datamodel::tof_measurement&> (get_measurement(oss2.str())).get_external_probabilities());
+        eg_pext_.push_back(dynamic_cast<const snemo::datamodel::tof_measurement&> (get_measurement(oss.str())).get_external_probabilities());
+        eg_pext_.push_back(dynamic_cast<const snemo::datamodel::tof_measurement&> (get_measurement(oss2.str())).get_external_probabilities());
       }
-      return tofs_ext;
+      return;
     }
 
     void topology_2eNg_pattern::tree_dump(std::ostream      & out_,

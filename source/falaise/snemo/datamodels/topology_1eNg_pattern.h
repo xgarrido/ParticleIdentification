@@ -67,11 +67,11 @@ namespace snemo {
       /// Check electron-gammas external probabilities validity
       bool has_electron_gammas_external_probabilities() const;
 
-      /// Return the electron-gammas internal TOF probability
-      const tof_collection_type & get_electron_gammas_internal_probabilities() const;
+      /// Fetch the electron-gammas internal TOF probability
+      void fetch_electron_gammas_internal_probabilities(tof_collection_type & eg_pint_) const;
 
-      /// Return the electron-gammas external TOF probability
-      const tof_collection_type & get_electron_gammas_external_probabilities() const;
+      /// Fetch the electron-gammas external TOF probability
+      void fetch_electron_gammas_external_probabilities(tof_collection_type & eg_pext_) const;
 
       // /// Check electron energy validity
       // bool has_electron_energy() const;
