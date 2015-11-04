@@ -166,7 +166,6 @@ namespace snemo {
                       "Invalid '_electron_gamma_prob_int_min_' > '_electron_gamma_prob_int_max_' values !");
         }
       }
-
       if (is_mode_range_electrons_gammas_external_probability()) {
         DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_ELECTRON_GAMMA_EXTERNAL_PROBABILITY mode...");
         size_t count = 0;
@@ -203,7 +202,6 @@ namespace snemo {
 
       // Get event record
       const datatools::things & ER = get_user_data<datatools::things>();
-
       if (! ER.has(_TD_label_)) {
         DT_LOG_WARNING(get_logging_priority(), "Event record has no '" << _TD_label_ << "' bank !");
         return cut_returned;
@@ -473,8 +471,8 @@ namespace snemo {
           check_range_number_of_gammas &&
           check_has_electrons_gammas_internal_probability &&
           check_range_electrons_gammas_internal_probability &&
-          check_has_electrons_gammas_internal_probability &&
-          check_range_electrons_gammas_internal_probability) {
+          check_has_electrons_gammas_external_probability &&
+          check_range_electrons_gammas_external_probability) {
         DT_LOG_DEBUG(get_logging_priority(), "Event rejected by channel 2eNg cut!");
         cut_returned = cuts::SELECTION_ACCEPTED;
       }
