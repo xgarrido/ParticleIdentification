@@ -41,18 +41,21 @@ int main()
         a_vertex.set_errors(0.1 * CLHEP::mm, 2 * CLHEP::mm, 7 * CLHEP::mm);
         a_vertex.grab_auxiliaries().update(snemo::datamodel::particle_track::vertex_type_key(),
                                            snemo::datamodel::particle_track::vertex_on_source_foil_label());
-
-        snemo::datamodel::particle_track::vertex_collection_type & the_vertices_2
-          = electron_2.grab_vertices();
-        the_vertices_2.push_back(new geomtools::blur_spot);
-        geomtools::blur_spot & a_vertex_2 = the_vertices_2.back().grab();
-        a_vertex_2.set_blur_dimension(geomtools::blur_spot::dimension_three);
-        a_vertex_2.set_position(geomtools::vector_3d(0, 2*CLHEP::mm, 7*CLHEP::mm));
-        a_vertex_2.set_errors(0.1 * CLHEP::mm, 2 * CLHEP::mm, 7 * CLHEP::mm);
-        a_vertex_2.grab_auxiliaries().update(snemo::datamodel::particle_track::vertex_type_key(),
-                                           snemo::datamodel::particle_track::vertex_on_source_foil_label());
-
       }
+
+      // Add a source foil vertex
+      {
+        snemo::datamodel::particle_track::vertex_collection_type & the_vertices
+          = electron_2.grab_vertices();
+        the_vertices.push_back(new geomtools::blur_spot);
+        geomtools::blur_spot & a_vertex = the_vertices.back().grab();
+        a_vertex.set_blur_dimension(geomtools::blur_spot::dimension_three);
+        a_vertex.set_position(geomtools::vector_3d(0, 2*CLHEP::mm, 7*CLHEP::mm));
+        a_vertex.set_errors(0.1 * CLHEP::mm, 2 * CLHEP::mm, 7 * CLHEP::mm);
+        a_vertex.grab_auxiliaries().update(snemo::datamodel::particle_track::vertex_type_key(),
+                                           snemo::datamodel::particle_track::vertex_on_source_foil_label());
+      }
+
       electron.tree_dump();
       electron_2.tree_dump();
       geomtools::blur_spot vertices_barycenter;
