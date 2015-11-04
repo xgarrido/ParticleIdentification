@@ -34,7 +34,7 @@ namespace snemo {
       bool is_valid() const;
 
       /// Get a non-mutable reference to delta vertices blurspot
-      const double & get_probability() const;
+      double get_probability() const;
 
       // const std::string & get_vertices_location() const;
 
