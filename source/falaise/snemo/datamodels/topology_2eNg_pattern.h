@@ -43,18 +43,6 @@ namespace snemo {
       /// Return internal probability
       int get_number_of_gammas() const;
 
-      // /// Check electrons-gammas internal probabilities validity
-      // bool has_electrons_internal_probabilities() const;
-
-      // /// Check electrons-gammas external probabilities validity
-      // bool has_electrons_external_probabilities() const;
-
-      // /// Return the electron-gammas internal TOF probability
-      // const tof_collection_type & get_electrons_internal_probabilities() const;
-
-      // /// Return the electron-gammas external TOF probability
-      // const tof_collection_type & get_electrons_external_probabilities() const;
-
       /// Check electrons-gammas internal probabilities validity
       bool has_electrons_gammas_internal_probabilities() const;
 
