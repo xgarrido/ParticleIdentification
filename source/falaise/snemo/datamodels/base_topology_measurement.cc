@@ -22,10 +22,20 @@ namespace snemo {
       return;
     }
 
+    const datatools::properties & base_topology_measurement::get_auxiliaries() const
+    {
+      return _auxiliaries_;
+    }
+
+    datatools::properties & base_topology_measurement::grab_auxiliaries()
+    {
+      return _auxiliaries_;
+    }
+
     void base_topology_measurement::tree_dump(std::ostream      & out_,
-                                          const std::string & title_,
-                                          const std::string & indent_,
-                                          bool /*inherit_*/) const
+                                              const std::string & title_,
+                                              const std::string & indent_,
+                                              bool inherit_) const
     {
       std::string indent;
       if (! indent_.empty()) {
@@ -34,6 +44,20 @@ namespace snemo {
       if (! title_.empty()) {
         out_ << indent << title_ << std::endl;
       }
+
+      out_ << indent << datatools::i_tree_dumpable::inherit_tag(inherit_)
+           << "Auxiliaries : ";
+      if (_auxiliaries_.empty()) {
+        out_ << "<empty>";
+      }
+      out_ << std::endl;
+      {
+        std::ostringstream indent_oss;
+        indent_oss << indent;
+        indent_oss << datatools::i_tree_dumpable::inherit_skip_tag(inherit_) ;
+        _auxiliaries_.tree_dump(out_, "", indent_oss.str());
+      }
+
       return;
     }
 

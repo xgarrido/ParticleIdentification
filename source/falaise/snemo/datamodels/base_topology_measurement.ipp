@@ -24,6 +24,7 @@ namespace snemo {
     void base_topology_measurement::serialize(Archive & ar_, const unsigned int /* version_ */)
     {
       ar_ & DATATOOLS_SERIALIZATION_I_SERIALIZABLE_BASE_OBJECT_NVP;
+      ar_ & boost::serialization::make_nvp("auxiliaries", _auxiliaries_);
       return;
     }
 
