@@ -32,6 +32,7 @@ int main()
     ext_probs.push_back(1e-1 * CLHEP::perCent);
     ext_probs.push_back(1e-4 * CLHEP::perCent);
     ext_probs.push_back(1e-5 * CLHEP::perCent);
+    TM.tree_dump();
 
     {
       snemo::cut::tof_measurement_cut TMC;
@@ -99,6 +100,22 @@ int main()
         std::cout << "not ";
       }
       std::cout << "all internal probability between 5% and 20%" << std::endl;
+    }
+    {
+      snemo::cut::tof_measurement_cut TMC;
+      datatools::properties TMC_config;
+      TMC_config.store("logging.priority", "debug");
+      TMC_config.store("mode.range_external_probability", true);
+      TMC_config.store("range_external_probability.mode", "all");
+      TMC_config.store_real_with_explicit_unit("range_external_probability.max", 5 * CLHEP::perCent);
+      TMC.initialize_standalone(TMC_config);
+      TMC.set_user_data(TM);
+      const int status = TMC.process();
+      std::cout << "Current TOF measurement has ";
+      if (status != cuts::SELECTION_ACCEPTED) {
+        std::cout << "not ";
+      }
+      std::cout << "all external probability below 5%" << std::endl;
     }
 
   } catch (std::exception & x) {

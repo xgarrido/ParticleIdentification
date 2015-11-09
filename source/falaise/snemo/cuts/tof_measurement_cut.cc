@@ -280,27 +280,52 @@ namespace snemo {
         }
       }
 
-      // // Check if event has correct external probability
-      // bool check_range_external_probability = true;
-      // if (is_mode_range_external_probability()) {
-      //   if (! a_2e_pattern.has_electrons_external_probability()) {
-      //     DT_LOG_DEBUG(get_logging_priority(), "Missing external probability !");
-      //     return cuts::SELECTION_INAPPLICABLE;
-      //   }
-      //   const double pext = a_2e_pattern.get_electrons_external_probability();
-      //   if (datatools::is_valid(_prob_ext_min_)) {
-      //     if (pext < _prob_ext_min_) check_range_external_probability = false;
-      //   }
-      //   if (datatools::is_valid(_prob_ext_max_)) {
-      //     if (pext > _prob_ext_max_) check_range_external_probability = false;
-      //   }
-      // }
+      // Check if measurement has correct external probability
+      bool check_range_external_probability = true;
+      if (is_mode_range_external_probability()) {
+        if (! a_tof_meas.has_external_probabilities()) {
+          DT_LOG_DEBUG(get_logging_priority(), "Missing external probability !");
+          return cuts::SELECTION_INAPPLICABLE;
+        }
+        const snemo::datamodel::tof_measurement::probability_type & pexts
+          = a_tof_meas.get_external_probabilities();
+        for (snemo::datamodel::tof_measurement::probability_type::const_iterator
+               ip = pexts.begin(); ip != pexts.end(); ++ip) {
+          const double pext = *ip;
+          if (datatools::is_valid(_ext_prob_range_min_)) {
+            if (pext < _ext_prob_range_min_) {
+              DT_LOG_DEBUG(get_logging_priority(),
+                           "External probability (" << pext/CLHEP::perCent << "%) lower than "
+                           << _ext_prob_range_min_/CLHEP::perCent << "%");
+              check_range_external_probability = false;
+              if (_ext_prob_range_mode_ == MODE_RANGE_STRICT) {
+                break;
+              }
+            }
+          }
+        }
+        for (snemo::datamodel::tof_measurement::probability_type::const_iterator
+               ip = pexts.begin(); ip != pexts.end(); ++ip) {
+          const double pext = *ip;
+          if (datatools::is_valid(_ext_prob_range_max_)) {
+            if (pext > _ext_prob_range_max_) {
+              DT_LOG_DEBUG(get_logging_priority(),
+                           "External probability (" << pext/CLHEP::perCent << "%) greater than "
+                           << _ext_prob_range_max_/CLHEP::perCent << "%");
+              check_range_external_probability = false;
+              if (_ext_prob_range_mode_ == MODE_RANGE_STRICT) {
+                break;
+              }
+            }
+          }
+        }
+      } // end of is_mode_range_external_probability
 
       cut_returned = cuts::SELECTION_REJECTED;
       if (check_has_internal_probability &&
           check_has_external_probability &&
-          check_range_internal_probability // &&
-          // check_range_external_probability
+          check_range_internal_probability &&
+          check_range_external_probability
           ) {
         DT_LOG_DEBUG(get_logging_priority(), "Event accepted by TOF measurement cut!");
         cut_returned = cuts::SELECTION_ACCEPTED;
