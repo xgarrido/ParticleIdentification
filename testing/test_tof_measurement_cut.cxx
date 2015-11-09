@@ -32,7 +32,7 @@ int main()
     ext_probs.push_back(1e-1 * CLHEP::perCent);
     ext_probs.push_back(1e-4 * CLHEP::perCent);
     ext_probs.push_back(1e-5 * CLHEP::perCent);
-    TM.tree_dump();
+    TM.tree_dump(std::cout, "TOF measurement dump:", "[notice]: ");
 
     {
       snemo::cut::tof_measurement_cut TMC;
@@ -53,6 +53,7 @@ int main()
       snemo::cut::tof_measurement_cut TMC;
       datatools::properties TMC_config;
       TMC_config.store("logging.priority", "debug");
+      TMC_config.store("mode.has_internal_probability", true);
       TMC_config.store("mode.range_internal_probability", true);
       TMC_config.store("range_internal_probability.mode", "strict");
       TMC_config.store_real_with_explicit_unit("range_internal_probability.min", 10 * CLHEP::perCent);
@@ -71,7 +72,8 @@ int main()
       snemo::cut::tof_measurement_cut TMC;
       datatools::properties TMC_config;
       TMC_config.store("logging.priority", "debug");
-      TMC_config.store("mode.range_internal_probability", true);
+      TMC_config.store("mode.has_internal_probability", true);
+ TMC_config.store("mode.range_internal_probability", true);
       TMC_config.store("range_internal_probability.mode", "all");
       TMC_config.store_real_with_explicit_unit("range_internal_probability.min", 5 * CLHEP::perCent);
       TMC_config.store_real_with_explicit_unit("range_internal_probability.max", 50 * CLHEP::perCent);
@@ -88,6 +90,7 @@ int main()
       snemo::cut::tof_measurement_cut TMC;
       datatools::properties TMC_config;
       TMC_config.store("logging.priority", "debug");
+      TMC_config.store("mode.has_internal_probability", true);
       TMC_config.store("mode.range_internal_probability", true);
       TMC_config.store("range_internal_probability.mode", "all");
       TMC_config.store_real_with_explicit_unit("range_internal_probability.min", 5 * CLHEP::perCent);
@@ -105,6 +108,7 @@ int main()
       snemo::cut::tof_measurement_cut TMC;
       datatools::properties TMC_config;
       TMC_config.store("logging.priority", "debug");
+      TMC_config.store("mode.has_external_probability", true);
       TMC_config.store("mode.range_external_probability", true);
       TMC_config.store("range_external_probability.mode", "all");
       TMC_config.store_real_with_explicit_unit("range_external_probability.max", 5 * CLHEP::perCent);

@@ -48,6 +48,12 @@ namespace snemo {
       /// Get a mutable reference to external probabilities
       probability_type & grab_external_probabilities();
 
+      /// Smart print
+      virtual void tree_dump(std::ostream      & out_    = std::clog,
+                             const std::string & title_  = "",
+                             const std::string & indent_ = "",
+                             bool inherit_               = false) const;
+
     private:
 
       probability_type _internal_probabilities_;//!< TOF internal probabilities
