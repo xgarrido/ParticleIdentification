@@ -1,5 +1,6 @@
 # - List of test programs:
 set(FalaiseParticleIdentificationPlugin_TESTS
+  test_tof_measurement.cxx
   test_energy_driver.cxx
   test_angle_driver.cxx
   test_delta_vertices_driver.cxx

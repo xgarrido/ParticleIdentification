@@ -8,7 +8,7 @@
 
 // Third party:
 // - Bayeux/datatools:
-#include <datatools/clhep_units.h>
+#include <bayeux/datatools/clhep_units.h>
 
 // This project:
 #include <falaise/snemo/datamodels/tof_measurement.h>
