@@ -65,6 +65,20 @@ int main()
         a_vertex.grab_auxiliaries().update(snemo::datamodel::particle_track::vertex_type_key(),
                                            snemo::datamodel::particle_track::vertex_on_source_foil_label());
       }
+      // Add gamma calo vertex
+      {
+        snemo::datamodel::particle_track::vertex_collection_type & the_vertices
+          = gamma.grab_vertices();
+        the_vertices.push_back(new geomtools::blur_spot);
+        geomtools::blur_spot & a_vertex = the_vertices.back().grab();
+        a_vertex.set_position(geomtools::vector_3d(45*CLHEP::cm, 45*CLHEP::cm, 0));
+        a_vertex.grab_auxiliaries().update(snemo::datamodel::particle_track::vertex_type_key(),
+                                           snemo::datamodel::particle_track::vertex_on_main_calorimeter_label());
+        std::istringstream iss("[1302:0.1.4.6.*]");
+        geomtools::geom_id a_gid;
+        iss >> a_gid;
+        a_vertex.set_geom_id(a_gid);
+         }
 
       // Add electron fake trajectory
       {
@@ -96,21 +110,6 @@ int main()
         electron_2.set_trajectory_handle(a_trajectory);
       }
 
-      // Add gamma fake trajectory
-      {
-        snemo::datamodel::line_trajectory_pattern * ltp
-          = new snemo::datamodel::line_trajectory_pattern;
-        geomtools::line_3d & l3d = ltp->grab_segment();
-        l3d.set_first(geomtools::vector_3d(0, 0, 0));
-        l3d.set_last(geomtools::vector_3d(45*CLHEP::cm, 45*CLHEP::cm, 0));
-        snemo::datamodel::tracker_trajectory::handle_pattern a_pattern;
-        a_pattern.reset(ltp);
-        snemo::datamodel::tracker_trajectory::handle_type a_trajectory;
-        a_trajectory.reset(new snemo::datamodel::tracker_trajectory);
-        a_trajectory.grab().set_pattern_handle(a_pattern);
-        gamma.set_trajectory_handle(a_trajectory);
-      }
-
     //Push some fake electron calorimeter hit
     {
       snemo::datamodel::calibrated_calorimeter_hit::collection_type & the_calos
@@ -122,7 +121,6 @@ int main()
       a_calo.set_time(1.6 * CLHEP::ns);
       a_calo.set_sigma_time(0.05 * CLHEP::ns);
     }
-
     //Push some fake electron_2 calorimeter hit
     {
       snemo::datamodel::calibrated_calorimeter_hit::collection_type & the_calos
@@ -134,7 +132,6 @@ int main()
       a_calo.set_time(1.4 * CLHEP::ns);
       a_calo.set_sigma_time(0.05 * CLHEP::ns);
     }
-
     //Push some fake gamma calorimeter hit
     {
       snemo::datamodel::calibrated_calorimeter_hit::collection_type & the_calos
@@ -145,42 +142,27 @@ int main()
       a_calo.set_sigma_energy(80 * CLHEP::keV);
       a_calo.set_time(2 * CLHEP::ns);
       a_calo.set_sigma_time(0.05 * CLHEP::ns);
+      std::istringstream iss("[1302:0.1.4.6.*]");
+      geomtools::geom_id a_gid;
+      iss >> a_gid;
+      a_calo.set_geom_id(a_gid);
     }
 
     electron.tree_dump();
     electron_2.tree_dump();
     gamma.tree_dump();
-    std::vector<double> proba_int_e1_e2; // = datatools::invalid_real();
-    std::vector<double> proba_ext_e1_e2; // = datatools::invalid_real();
-    std::vector<double> proba_int_e1_g; // = datatools::invalid_real();
-    std::vector<double> proba_ext_e1_g; // = datatools::invalid_real();
-    TOFD.process(electron, electron_2, proba_int_e1_e2, proba_ext_e1_e2);
-    TOFD.process(electron, gamma, proba_int_e1_g, proba_ext_e1_g);
-    std::clog << "Proba int e1 e2 = " << proba_int_e1_e2.front() << std::endl;
-    std::clog << "Proba ext e1 e2 = " << proba_ext_e1_e2.front() << std::endl;
-    std::clog << "Proba int e1 g = " << proba_int_e1_g.front() << std::endl;
-    std::clog << "Proba ext e1 g = " << proba_ext_e1_g.front() << std::endl;
-    }
 
-    // // Fake gamma track :
-    //    {
-    //      snemo::datamodel::particle_track gamma;
-    //      // Push some fake calorimeter hits
-    //      {
-    //        snemo::datamodel::calibrated_calorimeter_hit::collection_type & the_calos
-    //          = gamma.grab_associated_calorimeter_hits();
-    //        the_calos.push_back(new snemo::datamodel::calibrated_calorimeter_hit);
-    //        snemo::datamodel::calibrated_calorimeter_hit & a_calo1 = the_calos.back().grab();
-    //        a_calo1.set_energy(500 * CLHEP::keV);
-    //        the_calos.push_back(new snemo::datamodel::calibrated_calorimeter_hit);
-    //        snemo::datamodel::calibrated_calorimeter_hit & a_calo2 = the_calos.back().grab();
-    //        a_calo2.set_energy(1000 * CLHEP::keV);
-    //      }
-    //      gamma.tree_dump();
-    //      double angle = datatools::invalid_real();
-    //      // ED.process(gamma, energy);
-    //      // std::clog << "Gamma energy = " << energy/CLHEP::keV << " keV" << std::endl;
-    //    }
+    std::vector<double> proba_int_e1_e2 = {}; // ensures the invalidation, C++11 ?
+    std::vector<double> proba_ext_e1_e2 = {};
+    std::vector<double> proba_int_e1_g1 = {};
+    std::vector<double> proba_ext_e1_g1 = {};
+    TOFD.process(electron, electron_2, proba_int_e1_e2, proba_ext_e1_e2);
+    TOFD.process(electron, gamma, proba_int_e1_g1, proba_ext_e1_g1);
+    std::clog << "Internal probability e1 e2 = " << proba_int_e1_e2.front() << std::endl;
+    std::clog << "External probability e1 e2 = " << proba_ext_e1_e2.front() << std::endl;
+    std::clog << "Internal probability e1 g1 = " << proba_int_e1_g1.front() << std::endl;
+    std::clog << "External probability e1 g1 = " << proba_ext_e1_g1.front() << std::endl;
+    }
 
   } catch (std::exception & x) {
     std::cerr << "error: " << x.what() << std::endl;
