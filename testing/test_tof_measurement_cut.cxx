@@ -40,7 +40,6 @@ int main()
       TMC_config.store("mode.has_internal_probability", true);
       TMC_config.store("mode.has_external_probability", true);
       TMC.initialize_standalone(TMC_config);
-
       TMC.set_user_data(TM);
       const int status = TMC.process();
       std::cout << "Current TOF measurement has ";
@@ -48,6 +47,58 @@ int main()
         std::cout << "no ";
       }
       std::cout << "internal/external probabilities" << std::endl;
+    }
+    {
+      snemo::cut::tof_measurement_cut TMC;
+      datatools::properties TMC_config;
+      TMC_config.store("logging.priority", "debug");
+      TMC_config.store("mode.range_internal_probability", true);
+      TMC_config.store("range_internal_probability.mode", "strict");
+      TMC_config.store_real_with_explicit_unit("range_internal_probability.min", 10 * CLHEP::perCent);
+      TMC.initialize_standalone(TMC_config);
+      TMC.set_user_data(TM);
+      const int status = TMC.process();
+      std::cout << "Current TOF measurement has ";
+      if (status != cuts::SELECTION_ACCEPTED) {
+        std::cout << "no ";
+      } else {
+        std::cout << "at least one ";
+      }
+      std::cout << "internal probability greater than 10%" << std::endl;
+    }
+    {
+      snemo::cut::tof_measurement_cut TMC;
+      datatools::properties TMC_config;
+      TMC_config.store("logging.priority", "debug");
+      TMC_config.store("mode.range_internal_probability", true);
+      TMC_config.store("range_internal_probability.mode", "all");
+      TMC_config.store_real_with_explicit_unit("range_internal_probability.min", 5 * CLHEP::perCent);
+      TMC_config.store_real_with_explicit_unit("range_internal_probability.max", 50 * CLHEP::perCent);
+      TMC.initialize_standalone(TMC_config);
+      TMC.set_user_data(TM);
+      const int status = TMC.process();
+      std::cout << "Current TOF measurement has ";
+      if (status != cuts::SELECTION_ACCEPTED) {
+        std::cout << "not ";
+      }
+      std::cout << "all internal probability between 5% and 50%" << std::endl;
+    }
+    {
+      snemo::cut::tof_measurement_cut TMC;
+      datatools::properties TMC_config;
+      TMC_config.store("logging.priority", "debug");
+      TMC_config.store("mode.range_internal_probability", true);
+      TMC_config.store("range_internal_probability.mode", "all");
+      TMC_config.store_real_with_explicit_unit("range_internal_probability.min", 5 * CLHEP::perCent);
+      TMC_config.store_real_with_explicit_unit("range_internal_probability.max", 20 * CLHEP::perCent);
+      TMC.initialize_standalone(TMC_config);
+      TMC.set_user_data(TM);
+      const int status = TMC.process();
+      std::cout << "Current TOF measurement has ";
+      if (status != cuts::SELECTION_ACCEPTED) {
+        std::cout << "not ";
+      }
+      std::cout << "all internal probability between 5% and 20%" << std::endl;
     }
 
   } catch (std::exception & x) {

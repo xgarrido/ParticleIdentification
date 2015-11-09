@@ -37,6 +37,12 @@ namespace snemo {
         MODE_RANGE_EXTERNAL_PROBABILITY = datatools::bit_mask::bit04,
       };
 
+      enum mode_range_type {
+        MODE_RANGE_UNDEFINED = 0,
+        MODE_RANGE_STRICT    = 1, //!< Require at least one probability
+        MODE_RANGE_ALL       = 2  //!< Require all probabilities
+      };
+
       /// Return the cut mode
       uint32_t get_mode() const;
 
@@ -80,6 +86,8 @@ namespace snemo {
     private:
 
       uint32_t _mode_;             //!< Mode of the cut
+      uint32_t _int_prob_range_mode_; //!< Mode when ranging internal probability
+      uint32_t _ext_prob_range_mode_; //!< Mode when ranging internal probability
       double _int_prob_range_min_; //!< Minimal internal probability
       double _int_prob_range_max_; //!< Maximal internal probability
       double _ext_prob_range_min_; //!< Minimal external probability
