@@ -403,6 +403,46 @@ DOCD_CLASS_IMPLEMENT_LOAD_BEGIN(snemo::cut::tof_measurement_cut, ocd_)
   }
 
   {
+    // Description of the 'range_internal_probability.mode' configuration property :
+    datatools::configuration_property_description & cpd = ocd_.add_property_info();
+    cpd.set_name_pattern("range_internal_probability.mode")
+      .set_terse_description("Mode defining how to select internal probability value")
+      .set_traits(datatools::TYPE_STRING)
+      .set_long_description("Supported values are:                                   \n"
+                            "                                                        \n"
+                            " * ``strict`` require at least one internal probability \n"
+                            " * ``all``    require all internal probabilities        \n"
+                            "                                                        \n"
+                            )
+      .add_example("Activate the ``strict`` mode::                          \n"
+                   "                                                        \n"
+                   "  range_internal_probability.mode : string = \"strict\" \n"
+                   "                                                        \n"
+                   )
+      ;
+  }
+
+  {
+    // Description of the 'range_external_probability.mode' configuration property :
+    datatools::configuration_property_description & cpd = ocd_.add_property_info();
+    cpd.set_name_pattern("range_external_probability.mode")
+      .set_terse_description("Mode defining how to select external probability value")
+      .set_traits(datatools::TYPE_STRING)
+      .set_long_description("Supported values are:                                   \n"
+                            "                                                        \n"
+                            " * ``strict`` require at least one external probability \n"
+                            " * ``all``    require all external probabilities        \n"
+                            "                                                        \n"
+                            )
+      .add_example("Activate the ``strict`` mode::                          \n"
+                   "                                                        \n"
+                   "  range_external_probability.mode : string = \"strict\" \n"
+                   "                                                        \n"
+                   )
+      ;
+  }
+
+  {
     // Description of the 'range_internal_probability.min' configuration property :
     datatools::configuration_property_description & cpd = ocd_.add_property_info();
     cpd.set_name_pattern("range_internal_probability.min")
@@ -485,6 +525,7 @@ DOCD_CLASS_IMPLEMENT_LOAD_BEGIN(snemo::cut::tof_measurement_cut, ocd_)
                                "                                                             \n"
                                "   mode.has_internal_probability : boolean = true            \n"
                                "   mode.range_internal_probability : boolean = true          \n"
+                               "   range_internal_probability.mode : string = \"all\"        \n"
                                "   range_internal_probability.min : real as fraction = 5 %   \n"
                                "   range_internal_probability.max : real as fraction = 100 % \n"
                                "                                                             \n"
