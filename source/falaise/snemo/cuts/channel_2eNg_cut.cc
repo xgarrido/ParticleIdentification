@@ -165,7 +165,6 @@ namespace snemo {
                       "Invalid '_electron_gamma_prob_int_min_' > '_electron_gamma_prob_int_max_' values !");
         }
       }
-
       if (is_mode_range_electrons_gammas_external_probability()) {
         DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_ELECTRON_GAMMA_EXTERNAL_PROBABILITY mode...");
         size_t count = 0;
@@ -202,7 +201,6 @@ namespace snemo {
 
       // Get event record
       const datatools::things & ER = get_user_data<datatools::things>();
-
       if (! ER.has(_TD_label_)) {
         DT_LOG_WARNING(get_logging_priority(), "Event record has no '" << _TD_label_ << "' bank !");
         return cut_returned;
@@ -394,26 +392,69 @@ namespace snemo {
           DT_LOG_DEBUG(get_logging_priority(), "Missing electrons gammas internal probability !");
           return cuts::SELECTION_INAPPLICABLE;
         }
-        snemo::datamodel::topology_2eNg_pattern::tof_collection_type electrons_gammas_internal_probabilities = a_2eNg_pattern.get_electrons_gammas_internal_probabilities();
-        for(unsigned int i=0; i<electrons_gammas_internal_probabilities.size(); i++) {
-          //If gammas are indeed intern with the electrons, only the proba
-          //with the first calorimeter in the list is checked
-          double pint = electrons_gammas_internal_probabilities.at(i).front();
-          if (datatools::is_valid(_electron_gamma_prob_int_min_)) {
-            if (pint < _electron_gamma_prob_int_min_) {
-              DT_LOG_DEBUG(get_logging_priority(),
-                           "Internal probability (" << pint << ") lower than " << _electron_gamma_prob_int_min_);
-              check_range_electrons_gammas_internal_probability = false;
-            }
-          }
-          if (datatools::is_valid(_electron_gamma_prob_int_max_)) {
-            if (pint > _electron_gamma_prob_int_max_) {
-              DT_LOG_DEBUG(get_logging_priority(),
-                           "Internal probability (" << pint << ") greater than " << _electron_gamma_prob_int_max_);
-              check_range_electrons_gammas_internal_probability = false;
-            }
+
+      snemo::datamodel::topology_2eNg_pattern::tof_collection_type electrons_gammas_internal_probabilities;
+      a_2eNg_pattern.fetch_electrons_gammas_internal_probabilities(electrons_gammas_internal_probabilities);
+
+      for(unsigned int i=0; i<electrons_gammas_internal_probabilities.size(); i++) {
+        //If gammas are indeed intern with the electrons, only the proba
+        //with the first calorimeter in the list is checked
+        double pint = electrons_gammas_internal_probabilities.at(i).front();
+        if (datatools::is_valid(_electron_gamma_prob_int_min_)) {
+          if (pint < _electron_gamma_prob_int_min_) {
+            DT_LOG_DEBUG(get_logging_priority(),
+                         "Internal probability (" << pint << ") lower than " << _electron_gamma_prob_int_min_);
+            check_range_electrons_gammas_internal_probability = false;
           }
         }
+        if (datatools::is_valid(_electron_gamma_prob_int_max_)) {
+          if (pint > _electron_gamma_prob_int_max_) {
+            DT_LOG_DEBUG(get_logging_priority(),
+                         "Internal probability (" << pint << ") greater than " << _electron_gamma_prob_int_max_);
+            check_range_electrons_gammas_internal_probability = false;
+          }
+        }
+      }
+      }
+
+      // Check if event has electron gamma external probability
+      bool check_has_electrons_gammas_external_probability = true;
+      if (is_mode_has_electrons_gammas_external_probability()) {
+        if (! a_2eNg_pattern.has_electrons_gammas_external_probabilities()) {
+          check_has_electrons_gammas_external_probability = false;
+        }
+      }
+
+      // Check if event has correct electron gamma external probability
+      bool check_range_electrons_gammas_external_probability = true;
+      if (is_mode_range_electrons_gammas_external_probability()) {
+        if (! a_2eNg_pattern.has_electrons_gammas_external_probabilities()) {
+          DT_LOG_DEBUG(get_logging_priority(), "Missing electrons gammas external probability !");
+          return cuts::SELECTION_INAPPLICABLE;
+        }
+
+      snemo::datamodel::topology_2eNg_pattern::tof_collection_type electrons_gammas_external_probabilities;
+      a_2eNg_pattern.fetch_electrons_gammas_external_probabilities(electrons_gammas_external_probabilities);
+
+      for(unsigned int i=0; i<electrons_gammas_external_probabilities.size(); i++) {
+        //If gammas are indeed extern with the electrons, only the proba
+        //with the first calorimeter in the list is checked
+        double pext = electrons_gammas_external_probabilities.at(i).front();
+        if (datatools::is_valid(_electron_gamma_prob_ext_min_)) {
+          if (pext < _electron_gamma_prob_ext_min_) {
+            DT_LOG_DEBUG(get_logging_priority(),
+                         "External probability (" << pext << ") lower than " << _electron_gamma_prob_ext_min_);
+            check_range_electrons_gammas_external_probability = false;
+          }
+        }
+        if (datatools::is_valid(_electron_gamma_prob_ext_max_)) {
+          if (pext > _electron_gamma_prob_ext_max_) {
+            DT_LOG_DEBUG(get_logging_priority(),
+                         "External probability (" << pext << ") greater than " << _electron_gamma_prob_ext_max_);
+            check_range_electrons_gammas_external_probability = false;
+          }
+        }
+      }
       }
 
       cut_returned = cuts::SELECTION_REJECTED;
@@ -428,7 +469,9 @@ namespace snemo {
           check_has_number_of_gammas &&
           check_range_number_of_gammas &&
           check_has_electrons_gammas_internal_probability &&
-          check_range_electrons_gammas_internal_probability) {
+          check_range_electrons_gammas_internal_probability &&
+          check_has_electrons_gammas_external_probability &&
+          check_range_electrons_gammas_external_probability) {
         DT_LOG_DEBUG(get_logging_priority(), "Event rejected by channel 2eNg cut!");
         cut_returned = cuts::SELECTION_ACCEPTED;
       }

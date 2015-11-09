@@ -43,29 +43,17 @@ namespace snemo {
       /// Return internal probability
       int get_number_of_gammas() const;
 
-      // /// Check electrons-gammas internal probabilities validity
-      // bool has_electrons_internal_probabilities() const;
-
-      // /// Check electrons-gammas external probabilities validity
-      // bool has_electrons_external_probabilities() const;
-
-      // /// Return the electron-gammas internal TOF probability
-      // const tof_collection_type & get_electrons_internal_probabilities() const;
-
-      // /// Return the electron-gammas external TOF probability
-      // const tof_collection_type & get_electrons_external_probabilities() const;
-
       /// Check electrons-gammas internal probabilities validity
       bool has_electrons_gammas_internal_probabilities() const;
 
       /// Check electrons-gammas external probabilities validity
       bool has_electrons_gammas_external_probabilities() const;
 
-      /// Return the electron-gammas internal TOF probability
-      const tof_collection_type & get_electrons_gammas_internal_probabilities() const;
+      /// Fetch the electron-gammas internal TOF probability
+      void fetch_electrons_gammas_internal_probabilities(tof_collection_type & eg_pint_) const;
 
-      /// Return the electron-gammas external TOF probability
-      const tof_collection_type & get_electrons_gammas_external_probabilities() const;
+      /// Fetch the electron-gammas external TOF probability
+      void fetch_electrons_gammas_external_probabilities(tof_collection_type & eg_pext_) const;
 
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,

@@ -114,10 +114,7 @@ namespace snemo {
     double topology_2e_pattern::get_electrons_vertices_probability() const
     {
       DT_THROW_IF(! has_electrons_vertices_probability(), std::logic_error, "No common electrons vertices measurement stored !");
-
-      // return dynamic_cast<const snemo::datamodel::delta_vertices_measurement&> (get_measurement("vertices_probability_e1_e2")).get_probability();
-      // The method above does not appear to work (return random value)
-      return dynamic_cast<const snemo::datamodel::delta_vertices_measurement&> (get_measurement("vertices_probability_e1_e2")).get_vertices_barycenter().get_auxiliaries().fetch_real("Probability");
+      return dynamic_cast<const snemo::datamodel::delta_vertices_measurement&> (get_measurement("vertices_probability_e1_e2")).get_probability();
     }
 
     // std::string topology_2e_pattern::get_electrons_vertices_location() const

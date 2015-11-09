@@ -61,10 +61,7 @@ namespace snemo {
     double topology_1e1a_pattern::get_electron_alpha_vertices_probability() const
     {
       DT_THROW_IF(! has_electron_alpha_vertices_probability(), std::logic_error, "No common electron-alpha vertices measurement stored !");
-
-      // return dynamic_cast<const snemo::datamodel::delta_vertices_measurement&> (get_measurement("vertices_probability_e1_a1")).get_probability();
-      // The method above does not appear to work (return random value)
-      return dynamic_cast<const snemo::datamodel::delta_vertices_measurement&> (get_measurement("vertices_probability_e1_a1")).get_vertices_barycenter().get_auxiliaries().fetch_real("Probability");
+      return dynamic_cast<const snemo::datamodel::delta_vertices_measurement&> (get_measurement("vertices_probability_e1_a1")).get_probability();
     }
 
     // delta_vertices

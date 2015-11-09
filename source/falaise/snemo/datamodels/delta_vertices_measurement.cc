@@ -34,7 +34,7 @@ namespace snemo {
               _vertices_barycenter_.get_auxiliaries().has_key("Probability"));
     }
 
-    const double & delta_vertices_measurement::get_probability() const
+    double delta_vertices_measurement::get_probability() const
     {
       return _vertices_barycenter_.get_auxiliaries().fetch_real("Probability");
     }

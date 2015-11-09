@@ -69,26 +69,26 @@ namespace snemo {
       return has_measurement("tof_e1_g1");
     }
 
-    const topology_1eNg_pattern::tof_collection_type & topology_1eNg_pattern::get_electron_gammas_internal_probabilities() const {
+    void topology_1eNg_pattern::fetch_electron_gammas_internal_probabilities(topology_1eNg_pattern::tof_collection_type & eg_pint_) const
+    {
       DT_THROW_IF(! has_electron_gammas_internal_probabilities(), std::logic_error, "No electron-gammas TOF measurement stored !");
-      topology_1eNg_pattern::tof_collection_type tofs_int;
-      for(size_t i_gamma = 1; i_gamma <= get_number_of_gammas(); ++i_gamma) {
+      for(int i_gamma = 1; i_gamma <= get_number_of_gammas(); ++i_gamma) {
         std::ostringstream oss;
         oss << "tof_e1_g" << i_gamma;
-        tofs_int.push_back(dynamic_cast<const snemo::datamodel::tof_measurement&> (get_measurement(oss.str())).get_internal_probabilities());
+        eg_pint_.push_back(dynamic_cast<const snemo::datamodel::tof_measurement&> (get_measurement(oss.str())).get_internal_probabilities());
       }
-      return tofs_int;
+      return;
     }
 
-    const topology_1eNg_pattern::tof_collection_type & topology_1eNg_pattern::get_electron_gammas_external_probabilities() const {
+    void topology_1eNg_pattern::fetch_electron_gammas_external_probabilities(topology_1eNg_pattern::tof_collection_type & eg_pext_) const
+    {
       DT_THROW_IF(! has_electron_gammas_external_probabilities(), std::logic_error, "No electron-gammas TOF measurement stored !");
-      topology_1eNg_pattern::tof_collection_type tofs_ext;
-      for(size_t i_gamma = 1; i_gamma <= get_number_of_gammas(); ++i_gamma) {
+      for(int i_gamma = 1; i_gamma <= get_number_of_gammas(); ++i_gamma) {
         std::ostringstream oss;
         oss << "tof_e1_g" << i_gamma;
-        tofs_ext.push_back(dynamic_cast<const snemo::datamodel::tof_measurement&> (get_measurement(oss.str())).get_external_probabilities());
+        eg_pext_.push_back(dynamic_cast<const snemo::datamodel::tof_measurement&> (get_measurement(oss.str())).get_external_probabilities());
       }
-      return tofs_ext;
+      return;
     }
 
     // const topology_1eNg_pattern::angle_collection_type & topology_1eNg_pattern::get_angle_collection() const
