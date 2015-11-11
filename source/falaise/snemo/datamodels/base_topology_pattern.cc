@@ -65,7 +65,7 @@ namespace snemo {
     void base_topology_pattern::tree_dump(std::ostream      & out_,
                                           const std::string & title_,
                                           const std::string & indent_,
-                                          bool /*inherit_*/) const
+                                          bool inherit_) const
     {
       std::string indent;
       if (! indent_.empty()) {
@@ -108,7 +108,7 @@ namespace snemo {
       }
 
       {
-        out_ << indent << datatools::i_tree_dumpable::last_tag
+        out_ << indent << datatools::i_tree_dumpable::inherit_tag(inherit_)
              << "Associated measurements : ";
         if (_meas_.empty()) {
           out_ << "<none>";
@@ -120,13 +120,13 @@ namespace snemo {
                i = _meas_.begin(); i != _meas_.end(); ++i) {
           const std::string & a_name = i->first;
           const snemo::datamodel::base_topology_measurement & a_meas = i->second.get();
-          out_ << indent << datatools::i_tree_dumpable::last_skip_tag;
+          out_ << indent << datatools::i_tree_dumpable::inherit_skip_tag(inherit_);
           snemo::datamodel::base_topology_pattern::measurement_dict_type::const_iterator j = i;
           std::ostringstream indent2;
-          indent2 << indent << datatools::i_tree_dumpable::last_skip_tag;
+          indent2 << indent << datatools::i_tree_dumpable::inherit_skip_tag(inherit_);
           if (++j == _meas_.end()) {
-            out_ << datatools::i_tree_dumpable::last_tag;
-            indent2 << datatools::i_tree_dumpable::last_skip_tag;
+            out_ << datatools::i_tree_dumpable::inherit_tag(inherit_);
+            indent2 << datatools::i_tree_dumpable::inherit_skip_tag(inherit_);
           } else {
             out_ << datatools::i_tree_dumpable::tag;
             indent2 << datatools::i_tree_dumpable::skip_tag;
