@@ -102,8 +102,37 @@ namespace snemo {
             out_ << datatools::i_tree_dumpable::tag;
             indent2 << datatools::i_tree_dumpable::skip_tag;
           }
-          out_ << "Particle '" << a_name << "'" << std::endl;
+          out_ << "Particle '" << a_name << "' :" << std::endl;
           a_track.tree_dump(out_, "", indent2.str());
+        }
+      }
+
+      {
+        out_ << indent << datatools::i_tree_dumpable::last_tag
+             << "Associated measurements : ";
+        if (_meas_.empty()) {
+          out_ << "<none>";
+        } else {
+          out_ << _meas_.size();
+        }
+        out_ << std::endl;
+        for (snemo::datamodel::base_topology_pattern::measurement_dict_type::const_iterator
+               i = _meas_.begin(); i != _meas_.end(); ++i) {
+          const std::string & a_name = i->first;
+          const snemo::datamodel::base_topology_measurement & a_meas = i->second.get();
+          out_ << indent << datatools::i_tree_dumpable::last_skip_tag;
+          snemo::datamodel::base_topology_pattern::measurement_dict_type::const_iterator j = i;
+          std::ostringstream indent2;
+          indent2 << indent << datatools::i_tree_dumpable::last_skip_tag;
+          if (++j == _meas_.end()) {
+            out_ << datatools::i_tree_dumpable::last_tag;
+            indent2 << datatools::i_tree_dumpable::last_skip_tag;
+          } else {
+            out_ << datatools::i_tree_dumpable::tag;
+            indent2 << datatools::i_tree_dumpable::skip_tag;
+          }
+          out_ << "Measurement '" << a_name << "' :" << std::endl;
+          a_meas.tree_dump(out_, "", indent2.str());
         }
       }
 
