@@ -34,9 +34,11 @@ int main()
 
     // Check measurement existence (through regular expression)
     std::vector<std::string> keys = {
-      "fake_tof_1",
+      "fake_tof",
       "fake_tof_.?",
-      "fake_tof_[[:digit:]]",
+      "fake_tof_[[:digit:]]+",
+      "fake_tof_[[:digit:]]{2}",
+      "fake_tof_[[:digit:]]{3}",
       ".*",
       ".*_(1|10)",
       ".*_(100|1000)"
