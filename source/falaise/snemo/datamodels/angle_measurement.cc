@@ -4,6 +4,10 @@
 // Ourselves:
 #include <falaise/snemo/datamodels/angle_measurement.h>
 
+// Third party:
+// - Bayeux/datatools:
+#include <bayeux/datatools/clhep_units.h>
+
 namespace snemo {
 
   namespace datamodel {
@@ -42,6 +46,25 @@ namespace snemo {
     double & angle_measurement::grab_angle()
     {
       return _angle_;
+    }
+
+    void angle_measurement::tree_dump(std::ostream      & out_,
+                                      const std::string & title_,
+                                      const std::string & indent_,
+                                      bool inherit_) const
+    {
+      std::string indent;
+      if (! indent_.empty ()) indent = indent_;
+      base_topology_measurement::tree_dump(out_, title_, indent_, true);
+
+      out_ << indent << datatools::i_tree_dumpable::inherit_tag(inherit_)
+           << "Angle: ";
+      if (has_angle()) {
+        out_ << _angle_/CLHEP::degree << "°" << std::endl;
+      } else {
+        out_ << "<no value>" << std::endl;
+      }
+      return;
     }
 
   } // end of namespace datamodel

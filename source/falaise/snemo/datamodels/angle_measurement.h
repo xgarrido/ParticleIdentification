@@ -39,6 +39,12 @@ namespace snemo {
       /// Get a mutable reference to angle
       double & grab_angle();
 
+      /// Smart print
+      virtual void tree_dump(std::ostream      & out_    = std::clog,
+                             const std::string & title_  = "",
+                             const std::string & indent_ = "",
+                             bool inherit_               = false) const;
+
     private:
 
       double _angle_; //!< The angle value
