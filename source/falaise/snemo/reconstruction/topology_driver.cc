@@ -17,7 +17,7 @@
 #include <falaise/snemo/datamodels/base_topology_pattern.h>
 
 #include <falaise/snemo/reconstruction/tof_driver.h>
-#include <falaise/snemo/reconstruction/delta_vertices_driver.h>
+#include <falaise/snemo/reconstruction/vertex_driver.h>
 #include <falaise/snemo/reconstruction/angle_driver.h>
 #include <falaise/snemo/reconstruction/energy_driver.h>
 
@@ -98,12 +98,12 @@ namespace snemo {
           datatools::properties TOFD_config;
           setup_.export_and_rename_starting_with(TOFD_config, std::string(a_driver_name + "."), "");
           _drivers_.TOFD->initialize(TOFD_config);
-        } else if (a_driver_name == snemo::reconstruction::delta_vertices_driver::get_id()) {
+        } else if (a_driver_name == snemo::reconstruction::vertex_driver::get_id()) {
           // Initialize Delta Vertices Driver
-          _drivers_.DVD.reset(new snemo::reconstruction::delta_vertices_driver);
-          datatools::properties DVD_config;
-          setup_.export_and_rename_starting_with(DVD_config, std::string(a_driver_name + "."), "");
-          _drivers_.DVD->initialize(DVD_config);
+          _drivers_.VD.reset(new snemo::reconstruction::vertex_driver);
+          datatools::properties VD_config;
+          setup_.export_and_rename_starting_with(VD_config, std::string(a_driver_name + "."), "");
+          _drivers_.VD->initialize(VD_config);
         } else if (a_driver_name == snemo::reconstruction::angle_driver::get_id()) {
           // Initialize Delta Vertices Driver
           _drivers_.AMD.reset(new snemo::reconstruction::angle_driver);
@@ -153,7 +153,7 @@ namespace snemo {
     {
       _logging_priority_ = datatools::logger::PRIO_WARNING;
       _drivers_.TOFD.reset(0);
-      _drivers_.DVD.reset(0);
+      _drivers_.VD.reset(0);
       _drivers_.AMD.reset(0);
       _drivers_.EMD.reset(0);
       return;
@@ -225,11 +225,11 @@ namespace snemo {
         a_class_id = "snemo::reconstruction::topology_1e1a_builder";
       } else if (a_classification == "1e1p") {
         a_class_id = "snemo::reconstruction::topology_1e1p_builder";
-      } else if (std::regex_match(a_classification, std::regex("1e.?g"))) {
+      } else if (std::regex_match(a_classification, std::regex("1e[[:digit:]]+g"))) {
         a_class_id = "snemo::reconstruction::topology_1eNg_builder";
       } else if (a_classification == "2e") {
         a_class_id = "snemo::reconstruction::topology_2e_builder";
-      } else if (std::regex_match(a_classification, std::regex("2e.?g"))) {
+      } else if (std::regex_match(a_classification, std::regex("2e[[:digit:]]+g"))) {
         a_class_id = "snemo::reconstruction::topology_2eNg_builder";
       } else {
         DT_LOG_WARNING(get_logging_priority(), "Non supported classification '" << a_classification << "' !");
@@ -246,7 +246,7 @@ namespace snemo {
 
       // Invoke specific OCD support from the driver class:
       ::snemo::reconstruction::tof_driver::init_ocd(ocd_);
-      ::snemo::reconstruction::delta_vertices_driver::init_ocd(ocd_);
+      ::snemo::reconstruction::vertex_driver::init_ocd(ocd_);
       ::snemo::reconstruction::angle_driver::init_ocd(ocd_);
       ::snemo::reconstruction::energy_driver::init_ocd(ocd_);
 

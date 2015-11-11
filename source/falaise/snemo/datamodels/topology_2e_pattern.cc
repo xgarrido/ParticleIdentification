@@ -7,7 +7,7 @@
 #include <falaise/snemo/datamodels/energy_measurement.h>
 #include <falaise/snemo/datamodels/tof_measurement.h>
 #include <falaise/snemo/datamodels/angle_measurement.h>
-#include <falaise/snemo/datamodels/delta_vertices_measurement.h>
+#include <falaise/snemo/datamodels/vertex_measurement.h>
 
 namespace snemo {
 
@@ -120,13 +120,13 @@ namespace snemo {
     double topology_2e_pattern::get_electrons_vertices_probability() const
     {
       DT_THROW_IF(! has_electrons_vertices_probability(), std::logic_error, "No common electrons vertices measurement stored !");
-      return dynamic_cast<const snemo::datamodel::delta_vertices_measurement&> (get_measurement("vertices_probability_e1_e2")).get_probability();
+      return dynamic_cast<const snemo::datamodel::vertex_measurement&> (get_measurement("vertices_probability_e1_e2")).get_probability();
     }
 
     // std::string topology_2e_pattern::get_electrons_vertices_location() const
     // {
     //   DT_THROW_IF(! has_electrons_vertices_probability(), std::logic_error, "No common electrons vertices measurement stored !");
-    //   return dynamic_cast<const snemo::datamodel::delta_vertices_measurement&> (get_measurement("vertices_probability_e1_e2")).get_vertices_location();
+    //   return dynamic_cast<const snemo::datamodel::vertex_measurement&> (get_measurement("vertices_probability_e1_e2")).get_vertices_location();
     // }
 
   } // end of namespace datamodel

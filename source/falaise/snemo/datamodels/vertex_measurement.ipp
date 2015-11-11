@@ -1,11 +1,11 @@
 // -*- mode: c++ ; -*-
-/// \file falaise/snemo/datamodels/delta_vertices_measurement.ipp
+/// \file falaise/snemo/datamodels/vertex_measurement.ipp
 
-#ifndef FALAISE_SNEMO_DATAMODEL_DELTA_VERTICES_MEASUREMENT_IPP
-#define FALAISE_SNEMO_DATAMODEL_DELTA_VERTICES_MEASUREMENT_IPP 1
+#ifndef FALAISE_SNEMO_DATAMODEL_VERTEX_MEASUREMENT_IPP
+#define FALAISE_SNEMO_DATAMODEL_VERTEX_MEASUREMENT_IPP 1
 
 // Ourselves:
-#include <falaise/snemo/datamodels/delta_vertices_measurement.h>
+#include <falaise/snemo/datamodels/vertex_measurement.h>
 
 // Third party:
 // - Boost:
@@ -24,10 +24,10 @@ namespace snemo {
 
     /// Serialization method
     template<class Archive>
-    void delta_vertices_measurement::serialize(Archive & ar_, const unsigned int /* version_ */)
+    void vertex_measurement::serialize(Archive & ar_, const unsigned int /* version_ */)
     {
       ar_ & BOOST_SERIALIZATION_BASE_OBJECT_NVP(base_topology_measurement);
-      ar_ & boost::serialization::make_nvp("vertices_barycenter", _vertices_barycenter_);
+      ar_ & boost::serialization::make_nvp("vertex", _vertex_);
       return;
     }
 
@@ -35,4 +35,4 @@ namespace snemo {
 
 } // end of namespace snemo
 
-#endif // FALAISE_SNEMO_DATAMODEL_DELTA_VERTICES_MEASUREMENT_IPP
+#endif // FALAISE_SNEMO_DATAMODEL_VERTEX_MEASUREMENT_IPP

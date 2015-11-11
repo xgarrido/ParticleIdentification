@@ -1,4 +1,4 @@
-// test_delta_vertices_driver.cxx
+// test_vertex_driver.cxx
 
 // Standard library:
 #include <cstdlib>
@@ -9,18 +9,18 @@
 // This project:
 #include <falaise/snemo/datamodels/particle_track.h>
 #include <falaise/snemo/datamodels/pid_utils.h>
-#include <falaise/snemo/reconstruction/delta_vertices_driver.h>
+#include <falaise/snemo/reconstruction/vertex_driver.h>
 
 int main()
 {
   int error_code = EXIT_SUCCESS;
   try {
-    std::clog << "Test program for the 'delta_vertices_driver' class." << std::endl;
+    std::clog << "Test program for the 'vertex_driver' class." << std::endl;
 
-    snemo::reconstruction::delta_vertices_driver DVD;
-    datatools::properties DVD_config;
-    DVD_config.store("logging.priority", "debug");
-    DVD.initialize(DVD_config);
+    snemo::reconstruction::vertex_driver VD;
+    datatools::properties VD_config;
+    VD_config.store("logging.priority", "debug");
+    VD.initialize(VD_config);
 
     // Fake electron tracks :
     {
@@ -60,7 +60,7 @@ int main()
       electron_2.tree_dump();
       geomtools::blur_spot vertices_barycenter;
       vertices_barycenter.invalidate();
-      DVD.process(electron, electron_2, vertices_barycenter);
+      VD.process(electron, electron_2, vertices_barycenter);
       double vertices_probability;
       vertices_probability = vertices_barycenter.get_auxiliaries().fetch_real("Probability");
       std::clog << "Vertices probability = " << vertices_probability << std::endl;

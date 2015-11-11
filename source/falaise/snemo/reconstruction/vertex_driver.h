@@ -1,4 +1,4 @@
-/** \file falaise/snemo/reconstruction/delta_vertices_driver.h
+/** \file falaise/snemo/reconstruction/vertex_driver.h
  * Author(s)     : Steven Calvez <calvez@lal.in2p3.fr>
  * Creation date : 2015-04-01
  * Last modified : 2015-04-01
@@ -28,15 +28,15 @@
  *
  */
 
-#ifndef FALAISE_DELTA_VERTICES_PLUGIN_SNEMO_RECONSTRUCTION_DELTA_VERTICES_DRIVER_H
-#define FALAISE_DELTA_VERTICES_PLUGIN_SNEMO_RECONSTRUCTION_DELTA_VERTICES_DRIVER_H 1
+#ifndef FALAISE_VERTEX_PLUGIN_SNEMO_RECONSTRUCTION_VERTEX_DRIVER_H
+#define FALAISE_VERTEX_PLUGIN_SNEMO_RECONSTRUCTION_VERTEX_DRIVER_H 1
 
 // Standard library:
 #include <string>
 
 // Third party:
 // - Bayeux/datatools:
-#include <datatools/logger.h>
+#include <bayeux/datatools/logger.h>
 
 namespace geomtools {
   class blur_spot;
@@ -51,7 +51,7 @@ namespace snemo {
   namespace reconstruction {
 
     /// Driver for the gamma clustering algorithms
-    class delta_vertices_driver
+    class vertex_driver
     {
     public:
 
@@ -65,10 +65,10 @@ namespace snemo {
       datatools::logger::priority get_logging_priority() const;
 
       /// Constructor
-      delta_vertices_driver();
+      vertex_driver();
 
       /// Destructor
-      ~delta_vertices_driver();
+      ~vertex_driver();
 
       /// Main process
       void process(const snemo::datamodel::particle_track & pt1_,
@@ -97,10 +97,10 @@ namespace snemo {
                          const snemo::datamodel::particle_track & pt2_,
                          geomtools::blur_spot & barycenter_);
 
-      /// Retrieve the probability of a common vertices hypothesis
-      double _get_probability(const geomtools::blur_spot & vertex_1_,
-                              const geomtools::blur_spot & vertex_2_,
-                              geomtools::blur_spot & barycenter_);
+      /// Find the common vertex between particle track vertices
+      void _find_vertex(const geomtools::blur_spot & vertex_1_,
+                        const geomtools::blur_spot & vertex_2_,
+                        geomtools::blur_spot & barycenter_);
 
       /// Give default values to specific class members.
       void _set_defaults();
@@ -117,9 +117,9 @@ namespace snemo {
 
 // Declare the OCD interface of the module
 #include <datatools/ocd_macros.h>
-DOCD_CLASS_DECLARATION(snemo::reconstruction::delta_vertices_driver)
+DOCD_CLASS_DECLARATION(snemo::reconstruction::vertex_driver)
 
-#endif // FALAISE_DELTA_VERTICES_PLUGIN_SNEMO_RECONSTRUCTION_DELTA_VERTICES_DRIVER_H
+#endif // FALAISE_VERTEX_PLUGIN_SNEMO_RECONSTRUCTION_VERTEX_DRIVER_H
 
 /*
 ** Local Variables: --

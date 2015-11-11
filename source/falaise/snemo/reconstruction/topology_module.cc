@@ -225,9 +225,9 @@ DOCD_CLASS_IMPLEMENT_LOAD_BEGIN(snemo::reconstruction::topology_module, ocd_)
                                "                                                   \n"
                                "  PTD_label : string = \"PTD\"                     \n"
                                "  TD_label  : string = \"TD\"                      \n"
-                               "  drivers   : string[3] = \"TOFD\" \"DVD\" \"AMD\" \n"
+                               "  drivers   : string[3] = \"TOFD\" \"VD\" \"AD\" \n"
                                "  TOFD.logging.priority : string = \"error\"       \n"
-                               "  DVD.logging.priority  : string = \"error\"       \n"
+                               "  VD.logging.priority  : string = \"error\"       \n"
                                "  AMD.logging.priority  : string = \"error\"       \n"
                                "                                                   \n"
                                );

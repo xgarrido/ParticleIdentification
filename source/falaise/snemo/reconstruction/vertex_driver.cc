@@ -1,7 +1,7 @@
-/// \file falaise/snemo/reconstruction/delta_vertices_driver.cc
+/// \file falaise/snemo/reconstruction/vertex_driver.cc
 
 // Ourselves:
-#include <snemo/reconstruction/delta_vertices_driver.h>
+#include <snemo/reconstruction/vertex_driver.h>
 
 // Standard library:
 #include <stdexcept>
@@ -19,43 +19,43 @@ namespace snemo {
 
   namespace reconstruction {
 
-    const std::string & delta_vertices_driver::get_id()
+    const std::string & vertex_driver::get_id()
     {
-      static const std::string _id("DVD");
+      static const std::string _id("VD");
       return _id;
     }
 
-    bool delta_vertices_driver::is_initialized() const
+    bool vertex_driver::is_initialized() const
     {
       return _initialized_;
     }
 
-    void delta_vertices_driver::_set_initialized(bool i_)
+    void vertex_driver::_set_initialized(bool i_)
     {
       _initialized_ = i_;
       return;
     }
 
-    void delta_vertices_driver::set_logging_priority(const datatools::logger::priority priority_)
+    void vertex_driver::set_logging_priority(const datatools::logger::priority priority_)
     {
       _logging_priority_ = priority_;
       return;
     }
 
-    datatools::logger::priority delta_vertices_driver::get_logging_priority() const
+    datatools::logger::priority vertex_driver::get_logging_priority() const
     {
       return _logging_priority_;
     }
 
     // Constructor
-    delta_vertices_driver::delta_vertices_driver()
+    vertex_driver::vertex_driver()
     {
       _set_defaults();
       return;
     }
 
     // Destructor
-    delta_vertices_driver::~delta_vertices_driver()
+    vertex_driver::~vertex_driver()
     {
       if (is_initialized()) {
         reset();
@@ -63,7 +63,7 @@ namespace snemo {
       return;
     }
 
-    void delta_vertices_driver::_set_defaults()
+    void vertex_driver::_set_defaults()
     {
 
       _initialized_ = false;
@@ -72,7 +72,7 @@ namespace snemo {
     }
 
     // Initialization :
-    void delta_vertices_driver::initialize(const datatools::properties  & setup_)
+    void vertex_driver::initialize(const datatools::properties  & setup_)
     {
       DT_THROW_IF(is_initialized(), std::logic_error, "Driver '" << get_id() << "' is already initialized !");
 
@@ -86,14 +86,14 @@ namespace snemo {
       return;
     }
 
-    void delta_vertices_driver::reset()
+    void vertex_driver::reset()
     {
       _set_defaults();
       _set_initialized(false);
       return;
     }
 
-    void delta_vertices_driver::process(const snemo::datamodel::particle_track & pt1_,
+    void vertex_driver::process(const snemo::datamodel::particle_track & pt1_,
                                         const snemo::datamodel::particle_track & pt2_,
                                         geomtools::blur_spot & barycenter_)
     {
@@ -102,7 +102,7 @@ namespace snemo {
       return;
     }
 
-    void delta_vertices_driver::_process_algo(const snemo::datamodel::particle_track & pt1_,
+    void vertex_driver::_process_algo(const snemo::datamodel::particle_track & pt1_,
                                               const snemo::datamodel::particle_track & pt2_,
                                               geomtools::blur_spot & barycenter_)
     {
@@ -118,8 +118,6 @@ namespace snemo {
                        "Delta vertices cannot be computed if one particle is a gamma!");
         return;
       }
-
-      double probability = 0;
 
       const snemo::datamodel::particle_track::vertex_collection_type & the_vertices_1
         = pt1_.get_vertices();
@@ -148,63 +146,49 @@ namespace snemo {
               )
             continue;
 
-          double tmp_proba = _get_probability(a_vertex_1, a_vertex_2, barycenter_);
-
-          if (tmp_proba > probability) {
-            probability = tmp_proba;
-            // // no better function in particle_track ?
-            // if (snemo::datamodel::particle_track::vertex_is_on_source_foil(a_vertex_1))
-            //   location_ = snemo::datamodel::particle_track::vertex_on_source_foil_label();
-            // else if (snemo::datamodel::particle_track::vertex_is_on_main_calorimeter(a_vertex_1))
-            //   location_ = snemo::datamodel::particle_track::vertex_on_main_calorimeter_label();
-            // else if (snemo::datamodel::particle_track::vertex_is_on_x_calorimeter(a_vertex_1))
-            //   location_ = snemo::datamodel::particle_track::vertex_on_x_calorimeter_label();
-            // else if (snemo::datamodel::particle_track::vertex_is_on_gamma_veto(a_vertex_1))
-            //   location_ = snemo::datamodel::particle_track::vertex_on_gamma_veto_label();
-            // else
-            //   location_ = "tracker";
-          }
+          _find_vertex(a_vertex_1, a_vertex_2, barycenter_);
         }
       }
-
-      barycenter_.grab_auxiliaries().store("Probability",probability);
 
       DT_LOG_TRACE(get_logging_priority(), "Exiting...");
       return;
     }
 
-    double delta_vertices_driver::_get_probability(const geomtools::blur_spot & vertex_1_,
-                                                   const geomtools::blur_spot & vertex_2_,
-                                                   geomtools::blur_spot & barycenter_)
+    void vertex_driver::_find_vertex(const geomtools::blur_spot & vertex_1_,
+                                     const geomtools::blur_spot & vertex_2_,
+                                     geomtools::blur_spot & barycenter_)
 
     {
-      double sigma_x_1 = vertex_1_.get_x_error();
-      double sigma_y_1 = vertex_1_.get_y_error();
-      double sigma_z_1 = vertex_1_.get_z_error();
-      double sigma_1 = sigma_x_1*sigma_x_1+ sigma_y_1*sigma_y_1+sigma_z_1*sigma_z_1;
+      const double sigma_x_1 = vertex_1_.get_x_error();
+      const double sigma_y_1 = vertex_1_.get_y_error();
+      const double sigma_z_1 = vertex_1_.get_z_error();
+      const double sigma_1 = sigma_x_1*sigma_x_1+ sigma_y_1*sigma_y_1+sigma_z_1*sigma_z_1;
 
-      double sigma_x_2 = vertex_2_.get_x_error();
-      double sigma_y_2 = vertex_2_.get_y_error();
-      double sigma_z_2 = vertex_2_.get_z_error();
-      double sigma_2 = sigma_x_2*sigma_x_2+ sigma_y_2*sigma_y_2+sigma_z_2*sigma_z_2;
+      const double sigma_x_2 = vertex_2_.get_x_error();
+      const double sigma_y_2 = vertex_2_.get_y_error();
+      const double sigma_z_2 = vertex_2_.get_z_error();
+      const double sigma_2 = sigma_x_2*sigma_x_2+ sigma_y_2*sigma_y_2+sigma_z_2*sigma_z_2;
 
       geomtools::vector_3d v_barycenter = (vertex_1_.get_position()/(sigma_1) +
                                            vertex_2_.get_position()/(sigma_2))/(1/sigma_1+1/sigma_2);
 
+      barycenter_.set_blur_dimension(geomtools::blur_spot::DIMENSION_THREE);
       barycenter_.set_position(v_barycenter);
       //no errors for now
 
-      double chi_2 = ((v_barycenter-vertex_1_.get_position())*(v_barycenter-vertex_1_.get_position()) +
-                      (v_barycenter-vertex_2_.get_position())*(v_barycenter-vertex_2_.get_position()))/(sigma_1 + sigma_2);
+      const double chi_2 = ((v_barycenter-vertex_1_.get_position())*(v_barycenter-vertex_1_.get_position()) +
+                            (v_barycenter-vertex_2_.get_position())*(v_barycenter-vertex_2_.get_position()))/(sigma_1 + sigma_2);
+      const double probability = gsl_cdf_chisq_Q(chi_2, 1);
 
-      return gsl_cdf_chisq_Q(chi_2, 1);
+      barycenter_.grab_auxiliaries().store("Probability",probability);
+      return ;
     }
 
     // static
-    void delta_vertices_driver::init_ocd(datatools::object_configuration_description & ocd_)
+    void vertex_driver::init_ocd(datatools::object_configuration_description & ocd_)
     {
-      // Prefix "DVD" stands for "Delta Vertices Driver" :
-      datatools::logger::declare_ocd_logging_configuration(ocd_, "fatal", "DVD.");
+      // Prefix "VD" stands for "Vertex Driver" :
+      datatools::logger::declare_ocd_logging_configuration(ocd_, "fatal", "VD.");
     }
 
   } // end of namespace reconstruction
@@ -213,9 +197,9 @@ namespace snemo {
 
   /* OCD support */
 #include <datatools/object_configuration_description.h>
-DOCD_CLASS_IMPLEMENT_LOAD_BEGIN(snemo::reconstruction::delta_vertices_driver, ocd_)
+DOCD_CLASS_IMPLEMENT_LOAD_BEGIN(snemo::reconstruction::vertex_driver, ocd_)
 {
-  ocd_.set_class_name("snemo::reconstruction::delta_vertices_driver");
+  ocd_.set_class_name("snemo::reconstruction::vertex_driver");
   ocd_.set_class_description("A driver class for the Delta Vertices algorithm");
   ocd_.set_class_library("Falaise_ParticleIdentification");
   ocd_.set_class_documentation("The driver determines the spatial difference between vertices");
@@ -224,5 +208,5 @@ DOCD_CLASS_IMPLEMENT_LOAD_BEGIN(snemo::reconstruction::delta_vertices_driver, oc
   return;
 }
 DOCD_CLASS_IMPLEMENT_LOAD_END() // Closing macro for implementation
-DOCD_CLASS_SYSTEM_REGISTRATION(snemo::reconstruction::delta_vertices_driver,
-                               "snemo::reconstruction::delta_vertices_driver")
+DOCD_CLASS_SYSTEM_REGISTRATION(snemo::reconstruction::vertex_driver,
+                               "snemo::reconstruction::vertex_driver")

@@ -4,7 +4,7 @@
 // Ourselves:
 #include <falaise/snemo/datamodels/topology_1e1a_pattern.h>
 #include <falaise/snemo/datamodels/angle_measurement.h>
-#include <falaise/snemo/datamodels/delta_vertices_measurement.h>
+#include <falaise/snemo/datamodels/vertex_measurement.h>
 
 namespace snemo {
 
@@ -67,10 +67,10 @@ namespace snemo {
     double topology_1e1a_pattern::get_electron_alpha_vertices_probability() const
     {
       DT_THROW_IF(! has_electron_alpha_vertices_probability(), std::logic_error, "No common electron-alpha vertices measurement stored !");
-      return dynamic_cast<const snemo::datamodel::delta_vertices_measurement&> (get_measurement("vertices_probability_e1_a1")).get_probability();
+      return dynamic_cast<const snemo::datamodel::vertex_measurement&> (get_measurement("vertices_probability_e1_a1")).get_probability();
     }
 
-    // delta_vertices
+    // vertex
 
     // double topology_1e1a_pattern::get_alpha_delayed_time() const
     // {

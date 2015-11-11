@@ -3,9 +3,10 @@ set(FalaiseParticleIdentificationPlugin_TESTS
   test_topology_data.cxx
   test_base_topology_pattern.cxx
   test_tof_measurement.cxx
+  test_vertex_measurement.cxx
   test_energy_driver.cxx
   test_angle_driver.cxx
-  test_delta_vertices_driver.cxx
+  test_vertex_driver.cxx
   test_tof_driver.cxx
   test_tof_measurement_cut.cxx
   )

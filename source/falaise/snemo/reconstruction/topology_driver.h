@@ -49,13 +49,13 @@ namespace snemo {
 
     // Forward declaration
     class tof_driver;
-    class delta_vertices_driver;
+    class vertex_driver;
     class angle_driver;
     class energy_driver;
 
     struct measurement_drivers {
       boost::scoped_ptr<snemo::reconstruction::tof_driver> TOFD;
-      boost::scoped_ptr<snemo::reconstruction::delta_vertices_driver> DVD;
+      boost::scoped_ptr<snemo::reconstruction::vertex_driver> VD;
       boost::scoped_ptr<snemo::reconstruction::angle_driver> AMD;
       boost::scoped_ptr<snemo::reconstruction::energy_driver> EMD;
     };

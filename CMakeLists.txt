@@ -27,7 +27,7 @@ list(APPEND FalaiseParticleIdentificationPlugin_HEADERS
   source/falaise/snemo/reconstruction/topology_module.h
   source/falaise/snemo/reconstruction/topology_driver.h
   source/falaise/snemo/reconstruction/tof_driver.h
-  source/falaise/snemo/reconstruction/delta_vertices_driver.h
+  source/falaise/snemo/reconstruction/vertex_driver.h
   source/falaise/snemo/reconstruction/angle_driver.h
   source/falaise/snemo/reconstruction/energy_driver.h
   source/falaise/snemo/reconstruction/base_topology_builder.h
@@ -69,8 +69,8 @@ list(APPEND FalaiseParticleIdentificationPlugin_HEADERS
   source/falaise/snemo/datamodels/base_topology_measurement.ipp
   source/falaise/snemo/datamodels/tof_measurement.h
   source/falaise/snemo/datamodels/tof_measurement.ipp
-  source/falaise/snemo/datamodels/delta_vertices_measurement.h
-  source/falaise/snemo/datamodels/delta_vertices_measurement.ipp
+  source/falaise/snemo/datamodels/vertex_measurement.h
+  source/falaise/snemo/datamodels/vertex_measurement.ipp
   source/falaise/snemo/datamodels/angle_measurement.h
   source/falaise/snemo/datamodels/angle_measurement.ipp
   source/falaise/snemo/datamodels/energy_measurement.h
@@ -85,7 +85,7 @@ list(APPEND FalaiseParticleIdentificationPlugin_SOURCES
   source/falaise/snemo/reconstruction/topology_module.cc
   source/falaise/snemo/reconstruction/topology_driver.cc
   source/falaise/snemo/reconstruction/tof_driver.cc
-  source/falaise/snemo/reconstruction/delta_vertices_driver.cc
+  source/falaise/snemo/reconstruction/vertex_driver.cc
   source/falaise/snemo/reconstruction/angle_driver.cc
   source/falaise/snemo/reconstruction/energy_driver.cc
   source/falaise/snemo/reconstruction/base_topology_builder.cc
@@ -117,7 +117,7 @@ list(APPEND FalaiseParticleIdentificationPlugin_SOURCES
   source/falaise/snemo/datamodels/topology_1e1p_pattern.cc
   source/falaise/snemo/datamodels/base_topology_measurement.cc
   source/falaise/snemo/datamodels/tof_measurement.cc
-  source/falaise/snemo/datamodels/delta_vertices_measurement.cc
+  source/falaise/snemo/datamodels/vertex_measurement.cc
   source/falaise/snemo/datamodels/angle_measurement.cc
   source/falaise/snemo/datamodels/energy_measurement.cc
   source/falaise/snemo/datamodels/pid_utils.cc

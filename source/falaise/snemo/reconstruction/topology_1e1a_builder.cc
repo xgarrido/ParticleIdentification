@@ -4,10 +4,10 @@
 // Ourselves:
 #include <falaise/snemo/reconstruction/topology_1e1a_builder.h>
 #include <falaise/snemo/reconstruction/angle_driver.h>
-#include <falaise/snemo/reconstruction/delta_vertices_driver.h>
+#include <falaise/snemo/reconstruction/vertex_driver.h>
 #include <falaise/snemo/datamodels/topology_1e1a_pattern.h>
 #include <falaise/snemo/datamodels/angle_measurement.h>
-#include <falaise/snemo/datamodels/delta_vertices_measurement.h>
+#include <falaise/snemo/datamodels/vertex_measurement.h>
 
 namespace snemo {
 
@@ -54,10 +54,10 @@ namespace snemo {
       }
 
       {
-        snemo::datamodel::delta_vertices_measurement * ptr_delta_vertices_measurement = new snemo::datamodel::delta_vertices_measurement;
-        meas["vertices_probability_" + e1_label + "_" + a1_label].reset(ptr_delta_vertices_measurement);
-        if (drivers.DVD) drivers.DVD->process(e1, a1,
-                                              ptr_delta_vertices_measurement->grab_vertices_barycenter());
+        snemo::datamodel::vertex_measurement * ptr_vertex_measurement = new snemo::datamodel::vertex_measurement;
+        meas["vertices_probability_" + e1_label + "_" + a1_label].reset(ptr_vertex_measurement);
+        if (drivers.VD) drivers.VD->process(e1, a1,
+                                              ptr_vertex_measurement->grab_vertex());
       }
 
       return;

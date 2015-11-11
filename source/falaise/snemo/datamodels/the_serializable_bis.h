@@ -20,9 +20,9 @@ BOOST_CLASS_EXPORT_IMPLEMENT(snemo::datamodel::energy_measurement)
 #include <falaise/snemo/datamodels/angle_measurement.ipp>
 DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snemo::datamodel::angle_measurement)
 BOOST_CLASS_EXPORT_IMPLEMENT(snemo::datamodel::angle_measurement)
-#include <falaise/snemo/datamodels/delta_vertices_measurement.ipp>
-DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snemo::datamodel::delta_vertices_measurement)
-BOOST_CLASS_EXPORT_IMPLEMENT(snemo::datamodel::delta_vertices_measurement)
+#include <falaise/snemo/datamodels/vertex_measurement.ipp>
+DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snemo::datamodel::vertex_measurement)
+BOOST_CLASS_EXPORT_IMPLEMENT(snemo::datamodel::vertex_measurement)
 #include <falaise/snemo/datamodels/tof_measurement.ipp>
 DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snemo::datamodel::tof_measurement)
 BOOST_CLASS_EXPORT_IMPLEMENT(snemo::datamodel::tof_measurement)

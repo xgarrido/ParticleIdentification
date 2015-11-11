@@ -236,7 +236,7 @@ namespace snemo {
         }
         DT_THROW_IF(count == 0, std::logic_error,
                     "Missing 'range_vertices_probability.min' or 'range_vertices_probability.max' property !");
-        if (count == 2) {// && _delta_vertices_y_min_ >= 0 && _delta_vertices_y_max_ >= 0) {
+        if (count == 2) {// && _vertex_y_min_ >= 0 && _vertex_y_max_ >= 0) {
           DT_THROW_IF(_vertices_probability_min_ > _vertices_probability_max_, std::logic_error,
                       "Invalid 'range_vertices_probability.min' > 'range_vertices_probability.max' values !");
         }

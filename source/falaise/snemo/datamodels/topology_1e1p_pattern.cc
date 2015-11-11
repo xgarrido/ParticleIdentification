@@ -6,7 +6,7 @@
 #include <falaise/snemo/datamodels/energy_measurement.h>
 #include <falaise/snemo/datamodels/angle_measurement.h>
 #include <falaise/snemo/datamodels/tof_measurement.h>
-#include <falaise/snemo/datamodels/delta_vertices_measurement.h>
+#include <falaise/snemo/datamodels/vertex_measurement.h>
 
 namespace snemo {
 
@@ -103,7 +103,7 @@ namespace snemo {
     double topology_1e1p_pattern::get_electron_positron_vertices_probability() const
     {
       DT_THROW_IF(! has_electron_positron_vertices_probability(), std::logic_error, "No common electrons vertices measurement stored !");
-      return dynamic_cast<const snemo::datamodel::delta_vertices_measurement&> (get_measurement("vertices_probability_e1_e2")).get_probability();
+      return dynamic_cast<const snemo::datamodel::vertex_measurement&> (get_measurement("vertices_probability_e1_e2")).get_probability();
     }
 
     bool topology_1e1p_pattern::has_electron_positron_minimal_energy() const
