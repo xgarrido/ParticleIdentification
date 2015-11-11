@@ -76,7 +76,37 @@ namespace snemo {
       }
 
       out_ << indent << datatools::i_tree_dumpable::tag
-           << "Pattern ID : " << "'" << pattern_id() << "'" << std::endl;
+           << "Pattern ID : " << "'" << get_pattern_id() << "'" << std::endl;
+
+      {
+        out_ << indent << datatools::i_tree_dumpable::tag
+             << "Associated particle tracks : ";
+        if (_tracks_.empty()) {
+          out_ << "<none>";
+        } else {
+          out_ << _tracks_.size();
+        }
+        out_ << std::endl;
+        for (snemo::datamodel::base_topology_pattern::particle_track_dict_type::const_iterator
+               i = _tracks_.begin(); i != _tracks_.end(); ++i) {
+          const std::string & a_name = i->first;
+          const snemo::datamodel::particle_track & a_track = i->second.get();
+          out_ << indent << datatools::i_tree_dumpable::skip_tag;
+          snemo::datamodel::base_topology_pattern::particle_track_dict_type::const_iterator j = i;
+          std::ostringstream indent2;
+          indent2 << indent << datatools::i_tree_dumpable::skip_tag;
+          if (++j == _tracks_.end()) {
+            out_ << datatools::i_tree_dumpable::last_tag;
+            indent2 << datatools::i_tree_dumpable::last_skip_tag;
+          } else {
+            out_ << datatools::i_tree_dumpable::tag;
+            indent2 << datatools::i_tree_dumpable::skip_tag;
+          }
+          out_ << "Particle '" << a_name << "'" << std::endl;
+          a_track.tree_dump(out_, "", indent2.str());
+        }
+      }
+
       return;
     }
 
