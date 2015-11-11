@@ -4,6 +4,9 @@
 // Ourselves:
 #include <falaise/snemo/datamodels/base_topology_pattern.h>
 
+// Standard library:
+#include <regex>
+
 namespace snemo {
 
   namespace datamodel {
@@ -44,7 +47,12 @@ namespace snemo {
 
     bool base_topology_pattern::has_measurement(const std::string & key_) const
     {
-      return _meas_.find(key_) != _meas_.end();
+      // Use key as regular expression and match over it
+      auto it = std::find_if(_meas_.begin(), _meas_.end(),
+                             [key_](const std::pair<std::string, handle_measurement> & t) -> bool {
+                               return std::regex_match(t.first, std::regex(key_));
+                             });
+      return it != _meas_.end();
     }
 
     const snemo::datamodel::base_topology_measurement & base_topology_pattern::get_measurement(const std::string & key_) const
