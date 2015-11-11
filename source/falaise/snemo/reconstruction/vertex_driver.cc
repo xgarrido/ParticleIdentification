@@ -94,8 +94,8 @@ namespace snemo {
     }
 
     void vertex_driver::process(const snemo::datamodel::particle_track & pt1_,
-                                        const snemo::datamodel::particle_track & pt2_,
-                                        geomtools::blur_spot & barycenter_)
+                                const snemo::datamodel::particle_track & pt2_,
+                                geomtools::blur_spot & barycenter_)
     {
       DT_THROW_IF(! is_initialized(), std::logic_error, "Driver '" << get_id() << "' is already initialized !");
       this->_process_algo(pt1_, pt2_, barycenter_);
@@ -103,14 +103,10 @@ namespace snemo {
     }
 
     void vertex_driver::_process_algo(const snemo::datamodel::particle_track & pt1_,
-                                              const snemo::datamodel::particle_track & pt2_,
-                                              geomtools::blur_spot & barycenter_)
+                                      const snemo::datamodel::particle_track & pt2_,
+                                      geomtools::blur_spot & barycenter_)
     {
       DT_LOG_TRACE(get_logging_priority(), "Entering...");
-
-      // Invalidate results
-      // set to +infinity later...
-      // probability_.invalidate();
 
       if (snemo::datamodel::pid_utils::particle_is_gamma(pt1_) ||
           snemo::datamodel::pid_utils::particle_is_gamma(pt2_)) {
@@ -146,7 +142,8 @@ namespace snemo {
               )
             continue;
 
-          _find_vertex(a_vertex_1, a_vertex_2, barycenter_);
+#warning do not look for vertex due to vertex selection issue
+          // _find_vertex(a_vertex_1, a_vertex_2, barycenter_);
         }
       }
 
