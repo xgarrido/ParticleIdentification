@@ -12,16 +12,22 @@ namespace snemo {
     DATATOOLS_SERIALIZATION_SERIAL_TAG_IMPLEMENTATION(topology_2eNg_pattern,
                                                       "snemo::datamodel::topology_2eNg_pattern")
 
-    std::string topology_2eNg_pattern::pattern_id() const
+    // static
+    const std::string & topology_2eNg_pattern::pattern_id()
     {
-      const std::string id("2eNg");
-      return id;
+      static const std::string _id("2eNg");
+      return _id;
+    }
+
+    std::string topology_2eNg_pattern::get_pattern_id() const
+    {
+      return topology_2eNg_pattern::pattern_id();
     }
 
     topology_2eNg_pattern::topology_2eNg_pattern()
       : topology_2e_pattern()
     {
-      _number_of_gammas_ = -1;
+      _number_of_gammas_ = 0;
       return;
     }
 
@@ -32,16 +38,16 @@ namespace snemo {
 
     bool topology_2eNg_pattern::has_number_of_gammas() const
     {
-      return _number_of_gammas_ != -1;
+      return _number_of_gammas_ != 0;
     }
 
-    void topology_2eNg_pattern::set_number_of_gammas(const int ngammas_)
+    void topology_2eNg_pattern::set_number_of_gammas(const size_t ngammas_)
     {
       _number_of_gammas_ = ngammas_;
       return;
     }
 
-    int topology_2eNg_pattern::get_number_of_gammas() const
+    size_t topology_2eNg_pattern::get_number_of_gammas() const
     {
       return _number_of_gammas_;
     }
@@ -58,14 +64,17 @@ namespace snemo {
 
     void topology_2eNg_pattern::fetch_electrons_gammas_internal_probabilities(topology_2eNg_pattern::tof_collection_type & eg_pint_) const
     {
-      DT_THROW_IF(! has_electrons_gammas_internal_probabilities(), std::logic_error, "No electrons-gammas TOF measurement stored !");
-      for(int i_gamma = 1; i_gamma <= get_number_of_gammas(); ++i_gamma) {
-        std::ostringstream oss;
-        oss << "tof_e1_g" << i_gamma;
-        std::ostringstream oss2;
-        oss2 << "tof_e2_g" << i_gamma;
-        eg_pint_.push_back(dynamic_cast<const snemo::datamodel::tof_measurement&> (get_measurement(oss.str())).get_internal_probabilities());
-        eg_pint_.push_back(dynamic_cast<const snemo::datamodel::tof_measurement&> (get_measurement(oss2.str())).get_internal_probabilities());
+      DT_THROW_IF(! has_electrons_gammas_internal_probabilities(), std::logic_error,
+                  "No electrons-gammas TOF measurement stored !");
+      for (size_t ig = 1; ig <= get_number_of_gammas(); ig++) {
+        for (size_t ie = 1; ie <= 2; ie++) {
+          std::ostringstream oss;
+          oss << "tof_e" << ie << "_g" << ig;
+          DT_THROW_IF(! has_measurement(oss.str()), std::logic_error, "Missing '" << oss.str() << "' TOF measurement !");
+          const snemo::datamodel::tof_measurement & a_tof_meas
+            = dynamic_cast<const snemo::datamodel::tof_measurement&>(get_measurement(oss.str()));
+          eg_pint_.push_back(a_tof_meas.get_internal_probabilities());
+        }
       }
       return;
     }
@@ -73,13 +82,15 @@ namespace snemo {
     void topology_2eNg_pattern::fetch_electrons_gammas_external_probabilities(topology_2eNg_pattern::tof_collection_type & eg_pext_) const
     {
       DT_THROW_IF(! has_electrons_gammas_external_probabilities(), std::logic_error, "No electrons-gammas TOF measurement stored !");
-      for(int i_gamma = 1; i_gamma <= get_number_of_gammas(); ++i_gamma) {
-        std::ostringstream oss;
-        oss << "tof_e1_g" << i_gamma;
-        std::ostringstream oss2;
-        oss2 << "tof_e2_g" << i_gamma;
-        eg_pext_.push_back(dynamic_cast<const snemo::datamodel::tof_measurement&> (get_measurement(oss.str())).get_external_probabilities());
-        eg_pext_.push_back(dynamic_cast<const snemo::datamodel::tof_measurement&> (get_measurement(oss2.str())).get_external_probabilities());
+      for (size_t ig = 1; ig <= get_number_of_gammas(); ig++) {
+        for (size_t ie = 1; ie <= 2; ie++) {
+          std::ostringstream oss;
+          oss << "tof_e" << ie << "_g" << ig;
+          DT_THROW_IF(! has_measurement(oss.str()), std::logic_error, "Missing '" << oss.str() << "' TOF measurement !");
+          const snemo::datamodel::tof_measurement & a_tof_meas
+            = dynamic_cast<const snemo::datamodel::tof_measurement&>(get_measurement(oss.str()));
+          eg_pext_.push_back(a_tof_meas.get_external_probabilities());
+        }
       }
       return;
     }

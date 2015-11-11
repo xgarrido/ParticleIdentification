@@ -23,10 +23,13 @@ namespace snemo {
     public:
 
       /// Typedef for TOF dictionnary
-      typedef std::vector<std::vector<double>> tof_collection_type;
+      typedef std::vector<snemo::datamodel::tof_measurement::probability_type> tof_collection_type;
+
+      /// Static function to return pattern identifier of the pattern
+      static const std::string & pattern_id();
 
       /// Return pattern identifier of the pattern
-      virtual std::string pattern_id() const;
+      virtual std::string get_pattern_id() const;
 
       /// Constructor
       topology_2eNg_pattern();
@@ -38,10 +41,10 @@ namespace snemo {
       bool has_number_of_gammas() const;
 
       /// Set number of gammas
-      void set_number_of_gammas(const int ngammas_);
+      void set_number_of_gammas(const size_t ngammas_);
 
       /// Return internal probability
-      int get_number_of_gammas() const;
+      size_t get_number_of_gammas() const;
 
       /// Check electrons-gammas internal probabilities validity
       bool has_electrons_gammas_internal_probabilities() const;
@@ -63,7 +66,8 @@ namespace snemo {
 
     private:
 
-      int _number_of_gammas_;
+      size_t _number_of_gammas_;//!< Number of gamma in the topology
+
       DATATOOLS_SERIALIZATION_DECLARATION();
 
     };

@@ -1,9 +1,9 @@
 /// \file falaise/snemo/datamodels/base_topology_pattern.h
-/* Author(s) :    François Mauger <mauger@lpccaen.in2p3.fr>
- * Creation date: 2012-03-19
- * Last modified: 2014-01-27
+/* Author(s) :    Steven Calvez <calvez@lal.in2p3.fr>
+ * Creation date: 2015-09-19
+ * Last modified: 2015-11-11
  *
- * Description: The base class of trajectory patterns
+ * Description: The base class of topology patterns
  */
 
 #ifndef FALAISE_SNEMO_DATAMODEL_BASE_TOPOLOGY_PATTERN_H
@@ -11,6 +11,7 @@
 
 // Standard library:
 #include <string>
+#include <map>
 
 // Third party:
 // - Bayeux/datatools:
@@ -31,6 +32,9 @@ namespace snemo {
     {
     public:
 
+      /// Return topology pattern id
+      virtual std::string get_pattern_id() const = 0;
+
       /// Typedef to particle track dictionary
       typedef std::map<std::string, snemo::datamodel::particle_track::handle_type> particle_track_dict_type;
 
@@ -42,9 +46,6 @@ namespace snemo {
 
       /// Typedef to measurement dictionary
       typedef std::map<std::string, handle_measurement> measurement_dict_type;
-
-      /// Return topology pattern id
-      virtual std::string pattern_id() const = 0;
 
       /// Get a mutable reference to particle track dictionary
       particle_track_dict_type & grab_particle_track_dictionary();

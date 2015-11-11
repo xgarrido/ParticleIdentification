@@ -24,8 +24,11 @@ namespace snemo {
     {
     public:
 
+      /// Static function to return pattern identifier of the pattern
+      static const std::string & pattern_id();
+
       /// Return pattern identifier of the pattern
-      virtual std::string pattern_id() const;
+      virtual std::string get_pattern_id() const;
 
       /// Constructor
       topology_1e1a_pattern();

@@ -12,16 +12,22 @@ namespace snemo {
     DATATOOLS_SERIALIZATION_SERIAL_TAG_IMPLEMENTATION(topology_1eNg_pattern,
                                                       "snemo::datamodel::topology_1eNg_pattern")
 
-    std::string topology_1eNg_pattern::pattern_id() const
+    // static
+    const std::string & topology_1eNg_pattern::pattern_id()
     {
-      const std::string id("1eNg");
-      return id;
+      static const std::string _id("1eNg");
+      return _id;
+    }
+
+    std::string topology_1eNg_pattern::get_pattern_id() const
+    {
+      return topology_1eNg_pattern::pattern_id();
     }
 
     topology_1eNg_pattern::topology_1eNg_pattern()
       : topology_1e_pattern()
     {
-      _number_of_gammas_ = -1;
+      _number_of_gammas_ = 0;
       return;
     }
 
@@ -35,13 +41,13 @@ namespace snemo {
       return _number_of_gammas_ != -1;
     }
 
-    void topology_1eNg_pattern::set_number_of_gammas(const int ngammas_)
+    void topology_1eNg_pattern::set_number_of_gammas(const size_t ngammas_)
     {
       _number_of_gammas_ = ngammas_;
       return;
     }
 
-    int topology_1eNg_pattern::get_number_of_gammas() const
+    size_t topology_1eNg_pattern::get_number_of_gammas() const
     {
       return _number_of_gammas_;
     }

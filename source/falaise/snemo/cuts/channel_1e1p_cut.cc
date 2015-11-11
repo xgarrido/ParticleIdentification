@@ -81,16 +81,9 @@ namespace snemo {
         return cuts::SELECTION_INAPPLICABLE;
       }
       const snemo::datamodel::base_topology_pattern & a_pattern = TD.get_pattern();
-      const std::string & a_pattern_id = a_pattern.pattern_id();
-
-      std::string pattern_id_1e1p;
-      {
-        snemo::datamodel::topology_1e1p_pattern * a_1e1p_pattern = new snemo::datamodel::topology_1e1p_pattern;
-        pattern_id_1e1p = a_1e1p_pattern->pattern_id();
-      }
-      if (a_pattern_id != pattern_id_1e1p) {
+      if (a_pattern.get_pattern_id() != snemo::datamodel::topology_1e1p_pattern::pattern_id()) {
         DT_LOG_DEBUG(get_logging_priority(), "This cut is only applicable to '"
-                     << pattern_id_1e1p << "' topology !");
+                     << snemo::datamodel::topology_1e1p_pattern::pattern_id() << "' topology !");
         return cuts::SELECTION_INAPPLICABLE;
       }
       const snemo::datamodel::topology_1e1p_pattern & a_1e1p_pattern

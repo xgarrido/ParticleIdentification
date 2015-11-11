@@ -129,7 +129,7 @@ namespace snemo {
           // return cuts::SELECTION_REJECTED;
         }
         const snemo::datamodel::base_topology_pattern & a_pattern = TD.get_pattern();
-        const std::string & a_pattern_id = a_pattern.pattern_id();
+        const std::string & a_pattern_id = a_pattern.get_pattern_id();
         if (a_pattern_id != _pattern_id_label_) check_pattern_id = false;
       }
 

@@ -13,8 +13,6 @@
 #include <string>
 
 // This project:
-#include <falaise/snemo/datamodels/base_topology_pattern.h>
-#include <falaise/snemo/datamodels/base_topology_measurement.h>
 #include <falaise/snemo/datamodels/topology_1e_pattern.h>
 
 namespace snemo {
@@ -26,8 +24,11 @@ namespace snemo {
     {
     public:
 
+      /// Static function to return pattern identifier of the pattern
+      static const std::string & pattern_id();
+
       /// Return pattern identifier of the pattern
-      virtual std::string pattern_id() const;
+      virtual std::string get_pattern_id() const;
 
       /// Constructor
       topology_1e1p_pattern();

@@ -17,10 +17,16 @@ namespace snemo {
                                                       "snemo::datamodel::topology_1e1p_pattern")
 
 
-    std::string topology_1e1p_pattern::pattern_id() const
+    // static
+    const std::string & topology_1e1p_pattern::pattern_id()
     {
-      const std::string id("1e1p");
-      return id;
+      static const std::string _id("1e1p");
+      return _id;
+    }
+
+    std::string topology_1e1p_pattern::get_pattern_id() const
+    {
+      return topology_1e1p_pattern::pattern_id();
     }
 
     topology_1e1p_pattern::topology_1e1p_pattern()

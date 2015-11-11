@@ -1,9 +1,9 @@
 /// \file falaise/snemo/datamodels/topology_1e_pattern.h
-/* Author(s) :    François Mauger <mauger@lpccaen.in2p3.fr>
- * Creation date: 2012-03-19
- * Last modified: 2014-01-27
+/* Author(s) :    Steven Calvez <calvez@lal.in2p3.fr>
+ * Creation date: 2015-11-09
+ * Last modified: 2015-11-09
  *
- * Description: The 1e class of trajectory patterns
+ * Description: The 1 electron topology pattern class
  */
 
 #ifndef FALAISE_SNEMO_DATAMODEL_TOPOLOGY_1E_PATTERN_H
@@ -16,16 +16,16 @@ namespace snemo {
 
   namespace datamodel {
 
-    // // Forward declaration
-    // class angle_measurement;
-
     /// \brief The 1e class of reconstructed topology
     class topology_1e_pattern : public base_topology_pattern
     {
     public:
 
+      /// Static function to return pattern identifier of the pattern
+      static const std::string & pattern_id();
+
       /// Return pattern identifier of the pattern
-      virtual std::string pattern_id() const;
+      virtual std::string get_pattern_id() const;
 
       /// Constructor
       topology_1e_pattern();

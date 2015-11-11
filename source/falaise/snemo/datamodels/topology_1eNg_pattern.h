@@ -17,22 +17,19 @@ namespace snemo {
 
   namespace datamodel {
 
-    // // Forward declaration
-    // class tof_measurement;
-
     /// \brief The 1e1Ng class of reconstructed topology
     class topology_1eNg_pattern : public topology_1e_pattern
     {
     public:
 
       /// Typedef for TOF dictionnary
-      typedef std::vector<std::vector<double>> tof_collection_type;
+      typedef std::vector<snemo::datamodel::tof_measurement::probability_type> tof_collection_type;
 
-      // /// Typedef for TOF dictionnary
-      // typedef std::vector<angle_measurement> angle_collection_type;
+      /// Static function to return pattern identifier of the pattern
+      static const std::string & pattern_id();
 
       /// Return pattern identifier of the pattern
-      virtual std::string pattern_id() const;
+      virtual std::string get_pattern_id() const;
 
       /// Constructor
       topology_1eNg_pattern();
@@ -44,22 +41,10 @@ namespace snemo {
       bool has_number_of_gammas() const;
 
       /// Set number of gammas
-      void set_number_of_gammas(const int ngammas_);
+      void set_number_of_gammas(const size_t ngammas_);
 
       /// Return internal probability
-      int get_number_of_gammas() const;
-
-      // /// Return a non mutable reference to the TOF collection
-      // const tof_collection_type & get_tof_collection() const;
-
-      // /// Return a mutable reference to the TOF dictionary
-      // tof_collection_type & grab_tof_collection();
-
-      // /// Return a non mutable reference to the angle collection
-      // const angle_collection_type & get_angle_collection() const;
-
-      // /// Return a mutable reference to the angle dictionary
-      // angle_collection_type & grab_angle_collection();
+      size_t get_number_of_gammas() const;
 
       /// Check electron-gammas internal probabilities validity
       bool has_electron_gammas_internal_probabilities() const;
@@ -73,48 +58,6 @@ namespace snemo {
       /// Fetch the electron-gammas external TOF probability
       void fetch_electron_gammas_external_probabilities(tof_collection_type & eg_pext_) const;
 
-      // /// Check electron energy validity
-      // bool has_electron_energy() const;
-
-      // /// Set maximal energy
-      // void set_electron_energy(double);
-
-      // /// Get electron energy
-      // double get_electron_energy() const;
-
-      // /// Check gamma maximal energy validity
-      // bool has_gamma_max_energy() const;
-
-      // /// Set gamma maximal energy
-      // void set_gamma_max_energy(double);
-
-      // /// Get gamma maximal energy
-      // double get_gamma_max_energy() const;
-
-      // /// Check gamma middle energy validity
-      // bool has_gamma_mid_energy() const;
-
-      // /// Set gamma middle energy
-      // void set_gamma_mid_energy(double);
-
-      // /// Get gamma middle energy
-      // double get_gamma_mid_energy() const;
-
-      // /// Check gamma minimal energy validity
-      // bool has_gamma_min_energy() const;
-
-      // /// Set gamma minimal energy
-      // void set_gamma_min_energy(double);
-
-      // /// Get gamma minimal energy
-      // double get_gamma_min_energy() const;
-
-      // /// Check total energy validity
-      // bool has_total_energy() const;
-
-      // /// Return total energy
-      // double get_total_energy() const;
-
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,
                              const std::string & title_  = "",
@@ -123,7 +66,7 @@ namespace snemo {
 
     private:
 
-      int _number_of_gammas_;
+      size_t _number_of_gammas_; //!< Number of gamma in the topology
 
       DATATOOLS_SERIALIZATION_DECLARATION();
 
