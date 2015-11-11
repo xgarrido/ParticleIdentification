@@ -17,7 +17,7 @@ namespace snemo {
 
   namespace datamodel {
 
-    /// \brief The 2 election - N gammas class of reconstructed topology
+    /// \brief The 2 electron - N gammas class of reconstructed topology
     class topology_2eNg_pattern : public topology_2e_pattern
     {
     public:
@@ -46,11 +46,8 @@ namespace snemo {
       /// Return internal probability
       size_t get_number_of_gammas() const;
 
-      /// Check electrons-gammas internal probabilities validity
-      bool has_electrons_gammas_internal_probabilities() const;
-
-      /// Check electrons-gammas external probabilities validity
-      bool has_electrons_gammas_external_probabilities() const;
+      /// Check electrons-gammas TOF probabilities existence
+      bool has_electrons_gammas_tof_probabilities() const;
 
       /// Fetch the electron-gammas internal TOF probability
       void fetch_electrons_gammas_internal_probabilities(tof_collection_type & eg_pint_) const;

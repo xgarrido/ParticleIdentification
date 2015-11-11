@@ -52,19 +52,14 @@ namespace snemo {
       return _number_of_gammas_;
     }
 
-    bool topology_2eNg_pattern::has_electrons_gammas_internal_probabilities() const
+    bool topology_2eNg_pattern::has_electrons_gammas_tof_probabilities() const
     {
-      return has_measurement("tof_e1_g1") && has_measurement("tof_e2_g1");
-    }
-
-    bool topology_2eNg_pattern::has_electrons_gammas_external_probabilities() const
-    {
-      return has_electrons_gammas_internal_probabilities();
+      return has_measurement("tof_e[[:digit:]]+_g[[:digit:]]+");
     }
 
     void topology_2eNg_pattern::fetch_electrons_gammas_internal_probabilities(topology_2eNg_pattern::tof_collection_type & eg_pint_) const
     {
-      DT_THROW_IF(! has_electrons_gammas_internal_probabilities(), std::logic_error,
+      DT_THROW_IF(! has_electrons_gammas_tof_probabilities(), std::logic_error,
                   "No electrons-gammas TOF measurement stored !");
       for (size_t ig = 1; ig <= get_number_of_gammas(); ig++) {
         for (size_t ie = 1; ie <= 2; ie++) {
@@ -81,7 +76,8 @@ namespace snemo {
 
     void topology_2eNg_pattern::fetch_electrons_gammas_external_probabilities(topology_2eNg_pattern::tof_collection_type & eg_pext_) const
     {
-      DT_THROW_IF(! has_electrons_gammas_external_probabilities(), std::logic_error, "No electrons-gammas TOF measurement stored !");
+      DT_THROW_IF(! has_electrons_gammas_tof_probabilities(), std::logic_error,
+                  "No electrons-gammas TOF measurement stored !");
       for (size_t ig = 1; ig <= get_number_of_gammas(); ig++) {
         for (size_t ie = 1; ie <= 2; ie++) {
           std::ostringstream oss;

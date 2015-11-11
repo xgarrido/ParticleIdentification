@@ -160,7 +160,7 @@ namespace snemo {
       // Check if event has internal probability
       bool check_has_internal_probability = true;
       if (is_mode_has_internal_probability()) {
-        if (! a_1eNg_pattern.has_electron_gammas_internal_probabilities()) {
+        if (! a_1eNg_pattern.has_electron_gammas_tof_probabilities()) {
           check_has_internal_probability = false;
         }
       }
@@ -168,7 +168,7 @@ namespace snemo {
       // Check if event has correct internal probability
       bool check_range_internal_probability = true;
       if (is_mode_range_internal_probability()) {
-        if (! a_1eNg_pattern.has_electron_gammas_internal_probabilities()) {
+        if (! a_1eNg_pattern.has_electron_gammas_tof_probabilities()) {
           DT_LOG_DEBUG(get_logging_priority(), "Missing internal probability !");
           return cuts::SELECTION_INAPPLICABLE;
         }
@@ -198,7 +198,7 @@ namespace snemo {
       // Check if event has external probability
       bool check_has_external_probability = true;
       if (is_mode_has_external_probability()) {
-        if (! a_1eNg_pattern.has_electron_gammas_external_probabilities()) {
+        if (! a_1eNg_pattern.has_electron_gammas_tof_probabilities()) {
           check_has_external_probability = false;
         }
       }
@@ -206,7 +206,7 @@ namespace snemo {
       // Check if event has correct external probability
       bool check_range_external_probability = true;
       if (is_mode_range_external_probability()) {
-        if (! a_1eNg_pattern.has_electron_gammas_external_probabilities()) {
+        if (! a_1eNg_pattern.has_electron_gammas_tof_probabilities()) {
           DT_LOG_DEBUG(get_logging_priority(), "Missing external probability !");
           return cuts::SELECTION_INAPPLICABLE;
         }

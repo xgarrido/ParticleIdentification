@@ -372,7 +372,7 @@ namespace snemo {
       // Check if event has electron gamma internal probability
       bool check_has_electrons_gammas_internal_probability = true;
       if (is_mode_has_electrons_gammas_internal_probability()) {
-        if (! a_2eNg_pattern.has_electrons_gammas_internal_probabilities()) {
+        if (! a_2eNg_pattern.has_electrons_gammas_tof_probabilities()) {
           check_has_electrons_gammas_internal_probability = false;
         }
       }
@@ -380,7 +380,7 @@ namespace snemo {
       // Check if event has correct electron gamma internal probability
       bool check_range_electrons_gammas_internal_probability = true;
       if (is_mode_range_electrons_gammas_internal_probability()) {
-        if (! a_2eNg_pattern.has_electrons_gammas_internal_probabilities()) {
+        if (! a_2eNg_pattern.has_electrons_gammas_tof_probabilities()) {
           DT_LOG_DEBUG(get_logging_priority(), "Missing electrons gammas internal probability !");
           return cuts::SELECTION_INAPPLICABLE;
         }
@@ -412,7 +412,7 @@ namespace snemo {
       // Check if event has electron gamma external probability
       bool check_has_electrons_gammas_external_probability = true;
       if (is_mode_has_electrons_gammas_external_probability()) {
-        if (! a_2eNg_pattern.has_electrons_gammas_external_probabilities()) {
+        if (! a_2eNg_pattern.has_electrons_gammas_tof_probabilities()) {
           check_has_electrons_gammas_external_probability = false;
         }
       }
@@ -420,7 +420,7 @@ namespace snemo {
       // Check if event has correct electron gamma external probability
       bool check_range_electrons_gammas_external_probability = true;
       if (is_mode_range_electrons_gammas_external_probability()) {
-        if (! a_2eNg_pattern.has_electrons_gammas_external_probabilities()) {
+        if (! a_2eNg_pattern.has_electrons_gammas_tof_probabilities()) {
           DT_LOG_DEBUG(get_logging_priority(), "Missing electrons gammas external probability !");
           return cuts::SELECTION_INAPPLICABLE;
         }

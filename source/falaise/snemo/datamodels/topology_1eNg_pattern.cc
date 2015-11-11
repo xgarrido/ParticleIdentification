@@ -52,157 +52,41 @@ namespace snemo {
       return _number_of_gammas_;
     }
 
-    bool topology_1eNg_pattern::has_electron_gammas_internal_probabilities() const
+    bool topology_1eNg_pattern::has_electron_gammas_tof_probabilities() const
     {
-      // bool check_pair_has_internal_proba = true;
-      // for(unsigned int i=0; i<get_tof_collection().size(); i++)
-      //   if(get_tof_collection().at(i).get_internal_probabilities().empty())
-      //     check_pair_has_internal_proba = false;
-
-      // return check_pair_has_internal_proba;
-
-      return has_measurement("tof_e1_g1");
-    }
-
-    bool topology_1eNg_pattern::has_electron_gammas_external_probabilities() const
-    {
-      // bool check_pair_has_external_proba = true;
-      // for(unsigned int i=0; i<get_tof_collection().size(); i++)
-      //   if(get_tof_collection().at(i).get_external_probabilities().empty())
-      //     check_pair_has_external_proba = false;
-
-      // return check_pair_has_external_proba;
-      return has_measurement("tof_e1_g1");
+      return has_measurement("tof_e1_g[[:digit:]]+");
     }
 
     void topology_1eNg_pattern::fetch_electron_gammas_internal_probabilities(topology_1eNg_pattern::tof_collection_type & eg_pint_) const
     {
-      DT_THROW_IF(! has_electron_gammas_internal_probabilities(), std::logic_error, "No electron-gammas TOF measurement stored !");
+      DT_THROW_IF(! has_electron_gammas_tof_probabilities(), std::logic_error,
+                  "No electron-gammas TOF measurement stored !");
       for (size_t ig = 1; ig <= get_number_of_gammas(); ig++) {
         std::ostringstream oss;
         oss << "tof_e1_g" << ig;
-        eg_pint_.push_back(dynamic_cast<const snemo::datamodel::tof_measurement&> (get_measurement(oss.str())).get_internal_probabilities());
+        DT_THROW_IF(! has_measurement(oss.str()), std::logic_error,
+                    "Missing '" << oss.str() << "' TOF measurement !");
+        const snemo::datamodel::tof_measurement & a_tof_meas
+          = dynamic_cast<const snemo::datamodel::tof_measurement&>(get_measurement(oss.str()));
+        eg_pint_.push_back(a_tof_meas.get_internal_probabilities());
       }
       return;
     }
 
     void topology_1eNg_pattern::fetch_electron_gammas_external_probabilities(topology_1eNg_pattern::tof_collection_type & eg_pext_) const
     {
-      DT_THROW_IF(! has_electron_gammas_external_probabilities(), std::logic_error, "No electron-gammas TOF measurement stored !");
+      DT_THROW_IF(! has_electron_gammas_tof_probabilities(), std::logic_error, "No electron-gammas TOF measurement stored !");
       for(size_t ig = 1; ig <= get_number_of_gammas(); ++ig) {
         std::ostringstream oss;
         oss << "tof_e1_g" << ig;
-        eg_pext_.push_back(dynamic_cast<const snemo::datamodel::tof_measurement&> (get_measurement(oss.str())).get_external_probabilities());
+        DT_THROW_IF(! has_measurement(oss.str()), std::logic_error,
+                    "Missing '" << oss.str() << "' TOF measurement !");
+        const snemo::datamodel::tof_measurement & a_tof_meas
+          = dynamic_cast<const snemo::datamodel::tof_measurement&>(get_measurement(oss.str()));
+        eg_pext_.push_back(a_tof_meas.get_external_probabilities());
       }
       return;
     }
-
-    // const topology_1eNg_pattern::angle_collection_type & topology_1eNg_pattern::get_angle_collection() const
-    // {
-    //   return _angles_;
-    // }
-
-    // topology_1eNg_pattern::angle_collection_type & topology_1eNg_pattern::grab_angle_collection()
-    // {
-    //   return _angles_;
-    // }
-
-    // bool topology_1eNg_pattern::has_electron_energy() const
-    // {
-    //   return datatools::is_valid(_electron_energy_);
-    // }
-
-    // void topology_1eNg_pattern::set_electron_energy(double energy_)
-    // {
-    //   _electron_energy_ = energy_;
-    //   return;
-    // }
-
-    // double topology_1eNg_pattern::get_electron_energy() const
-    // {
-    //   return _electron_energy_;
-    // }
-
-    // bool topology_1eNg_pattern::has_gamma_max_energy() const
-    // {
-    //   return datatools::is_valid(_gamma_max_energy_);
-    // }
-
-    // void topology_1eNg_pattern::set_gamma_max_energy(double energy_)
-    // {
-    //   _gamma_max_energy_ = energy_;
-    //   return;
-    // }
-
-    // double topology_1eNg_pattern::get_gamma_max_energy() const
-    // {
-    //   return _gamma_max_energy_;
-    // }
-
-    // bool topology_1eNg_pattern::has_gamma_mid_energy() const
-    // {
-    //   return datatools::is_valid(_gamma_mid_energy_);
-    // }
-
-    // void topology_1eNg_pattern::set_gamma_mid_energy(double energy_)
-    // {
-    //   _gamma_mid_energy_ = energy_;
-    //   return;
-    // }
-
-    // double topology_1eNg_pattern::get_gamma_mid_energy() const
-    // {
-    //   return _gamma_mid_energy_;
-    // }
-
-    // bool topology_1eNg_pattern::has_gamma_min_energy() const
-    // {
-    //   return datatools::is_valid(_gamma_min_energy_);
-    // }
-
-    // void topology_1eNg_pattern::set_gamma_min_energy(double energy_)
-    // {
-    //   _gamma_min_energy_ = energy_;
-    //   return;
-    // }
-
-    // double topology_1eNg_pattern::get_gamma_min_energy() const
-    // {
-    //   return _gamma_min_energy_;
-    // }
-
-    // bool topology_1eNg_pattern::has_total_energy() const
-    // {
-    //   if(get_number_of_gammas() == 1)
-    //     return has_electron_energy() && has_gamma_max_energy();
-    //   else if(get_number_of_gammas() == 2)
-    //     return has_electron_energy() && has_gamma_max_energy()
-    //       && has_gamma_min_energy();
-    //   else if(get_number_of_gammas() == 3)
-    //     return get_electron_energy() && get_gamma_max_energy()
-    //       && get_gamma_mid_energy() && get_gamma_min_energy();
-    //   else
-    //     return false;
-    // }
-
-    // double topology_1eNg_pattern::get_total_energy() const
-    // {
-    //   if(get_number_of_gammas() == 1)
-    //     return get_electron_energy() + get_gamma_max_energy();
-    //   else if(get_number_of_gammas() == 2)
-    //     return get_electron_energy() + get_gamma_max_energy()
-    //       + get_gamma_min_energy();
-    //   else if(get_number_of_gammas() == 3)
-    //     return get_electron_energy() + get_gamma_max_energy()
-    //       + get_gamma_mid_energy() + get_gamma_min_energy();
-    //   else
-    //     return 0;
-    // }
-
-    // // bool topology_1eNg_pattern::has_tof_measurement() const
-    // // {
-    // //   return has_internal_probability() && has_external_probability();
-    // // }
 
   } // end of namespace datamodel
 
