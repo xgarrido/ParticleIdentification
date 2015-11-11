@@ -78,12 +78,6 @@ namespace snemo {
       // /// Get common vertices location between electrons
       // std::string get_electrons_vertices_location() const;
 
-      /// Smart print
-      virtual void tree_dump(std::ostream      & out_    = std::clog,
-                             const std::string & title_  = "",
-                             const std::string & indent_ = "",
-                             bool inherit_               = false) const;
-
     private:
 
       DATATOOLS_SERIALIZATION_DECLARATION();

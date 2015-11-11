@@ -63,12 +63,6 @@ namespace snemo {
       // /// Get electron track length
       // double get_electron_track_length() const;
 
-      /// Smart print
-      virtual void tree_dump(std::ostream      & out_    = std::clog,
-                             const std::string & title_  = "",
-                             const std::string & indent_ = "",
-                             bool inherit_               = false) const;
-
     private:
 
       DATATOOLS_SERIALIZATION_DECLARATION();

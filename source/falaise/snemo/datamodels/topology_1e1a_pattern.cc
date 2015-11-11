@@ -116,62 +116,6 @@ namespace snemo {
     //   return length;
     // }
 
-    void topology_1e1a_pattern::tree_dump(std::ostream      & out_,
-                                          const std::string & title_,
-                                          const std::string & indent_,
-                                          bool inherit_) const
-    {
-      std::string indent;
-      if (! indent_.empty()) indent = indent_;
-      base_topology_pattern::tree_dump(out_, title_, indent_, true);
-
-      // out_ << indent << datatools::i_tree_dumpable::tag
-      //      << "Delta vertices Y : ";
-      // if (has_delta_vertices_y()) {
-      //   out_ << get_delta_vertices_y()/CLHEP::mm << " mm";
-      // } else {
-      //   out_ << "No value";
-      // }
-      // out_ << std::endl;
-
-      // out_ << indent << datatools::i_tree_dumpable::tag
-      //      << "Delta vertices Z : ";
-      // if (has_delta_vertices_z()) {
-      //   out_ << get_delta_vertices_z()/CLHEP::mm << " mm";
-      // } else {
-      //   out_ << "No value";
-      // }
-      // out_ << std::endl;
-
-      // out_ << indent << datatools::i_tree_dumpable::tag
-      //      << "Angle : ";
-      // if (has_angle()) {
-      //   out_ << get_angle()/CLHEP::degree << "°";
-      // } else {
-      //   out_ << "No value";
-      // }
-      // out_ << std::endl;
-
-      // out_ << indent << datatools::i_tree_dumpable::tag
-      //      << "Electron particle : ";
-      // if (has_electron_particle()) {
-      //   out_ << std::endl;
-      //   get_electron_particle().tree_dump(out_, title_, indent_, inherit_);
-      // } else {
-      //   out_ << "<none>" << std::endl;
-      // }
-
-      // out_ << indent << datatools::i_tree_dumpable::tag
-      //      << "Alpha particle : ";
-      // if (has_alpha_particle()) {
-      //   out_ << std::endl;
-      //   get_alpha_particle().tree_dump(out_, title_, indent_, inherit_);
-      // } else {
-      //   out_ << "<none>" << std::endl;
-      // }
-
-      return;
-    }
   } // end of namespace datamodel
 
 } // end of namespace snemo

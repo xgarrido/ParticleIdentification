@@ -129,17 +129,6 @@ namespace snemo {
     //   return dynamic_cast<const snemo::datamodel::delta_vertices_measurement&> (get_measurement("vertices_probability_e1_e2")).get_vertices_location();
     // }
 
-    void topology_2e_pattern::tree_dump(std::ostream      & out_,
-                                        const std::string & title_,
-                                        const std::string & indent_,
-                                        bool /*inherit_*/) const
-    {
-      std::string indent;
-      if (! indent_.empty()) indent = indent_;
-      base_topology_pattern::tree_dump(out_, title_, indent_, true);
-
-      return;
-    }
   } // end of namespace datamodel
 
 } // end of namespace snemo

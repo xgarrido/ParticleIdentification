@@ -59,26 +59,6 @@ namespace snemo {
       return dynamic_cast<const snemo::datamodel::energy_measurement&> (get_measurement("energy_e1")).get_energy();
     }
 
-    void topology_1e_pattern::tree_dump(std::ostream      & out_,
-                                        const std::string & title_,
-                                        const std::string & indent_,
-                                        bool /*inherit_*/) const
-    {
-      std::string indent;
-      if (! indent_.empty()) indent = indent_;
-      base_topology_pattern::tree_dump(out_, title_, indent_, true);
-
-      // out_ << indent << datatools::i_tree_dumpable::inherit_tag(inherit_)
-      //      << "Angle : ";
-      // if (has_angle()) {
-      //   out_ << get_angle()/CLHEP::degree << "°";
-      // } else {
-      //   out_ << "No value";
-      // }
-      // out_ << std::endl;
-
-      return;
-    }
   } // end of namespace datamodel
 
 } // end of namespace snemo

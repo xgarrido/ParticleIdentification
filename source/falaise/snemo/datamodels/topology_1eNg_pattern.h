@@ -58,12 +58,6 @@ namespace snemo {
       /// Fetch the electron-gammas external TOF probability
       void fetch_electron_gammas_external_probabilities(tof_collection_type & eg_pext_) const;
 
-      /// Smart print
-      virtual void tree_dump(std::ostream      & out_    = std::clog,
-                             const std::string & title_  = "",
-                             const std::string & indent_ = "",
-                             bool inherit_               = false) const;
-
     private:
 
       size_t _number_of_gammas_; //!< Number of gamma in the topology

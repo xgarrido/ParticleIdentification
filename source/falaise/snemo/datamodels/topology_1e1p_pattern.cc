@@ -128,31 +128,9 @@ namespace snemo {
     {
       DT_THROW_IF(! has_electron_positron_maximal_energy(), std::logic_error, "No electron/positron maximal energy measurement stored !");
       return std::max(dynamic_cast<const snemo::datamodel::energy_measurement&> (get_measurement("energy_e1")).get_energy(),
-                      dynamic_cast<const snemo::datamodel::energy_measurement&> (get_measurement("energy_e2")).get_energy());
+                      dynamic_cast<const snemo::datamodel::energy_measurement&> (get_measurement("energy_p1")).get_energy());
     }
 
-    void topology_1e1p_pattern::tree_dump(std::ostream      & out_,
-                                          const std::string & title_,
-                                          const std::string & indent_,
-                                          bool /*inherit_*/) const
-    {
-      std::string indent;
-      if (! indent_.empty()) indent = indent_;
-      base_topology_pattern::tree_dump(out_, title_, indent_, true);
-
-      // out_ << indent << datatools::i_tree_dumpable::tag
-      //      << "Internal probability : " << get_internal_probability() << std::endl;
-      // out_ << indent << datatools::i_tree_dumpable::tag
-      //      << "External probability : " << get_external_probability() << std::endl;
-      // out_ << indent << datatools::i_tree_dumpable::tag
-      //      << "Delta vertices Y : " << get_delta_vertices_y()/CLHEP::mm << " mm" << std::endl;
-      // out_ << indent << datatools::i_tree_dumpable::tag
-      //      << "Delta vertices Z : " << get_delta_vertices_z()/CLHEP::mm << " mm" << std::endl;
-      // out_ << indent << datatools::i_tree_dumpable::tag
-      //      << "Angle : " << get_angle() << std::endl;
-
-      return;
-    }
   } // end of namespace datamodel
 
 } // end of namespace snemo

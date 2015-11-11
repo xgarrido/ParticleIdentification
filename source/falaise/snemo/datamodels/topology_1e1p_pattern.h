@@ -84,12 +84,6 @@ namespace snemo {
       /// Get electron maximal energy
       double get_electron_positron_maximal_energy() const;
 
-      /// Smart print
-      virtual void tree_dump(std::ostream      & out_    = std::clog,
-                             const std::string & title_  = "",
-                             const std::string & indent_ = "",
-                             bool inherit_               = false) const;
-
     private:
 
       DATATOOLS_SERIALIZATION_DECLARATION();

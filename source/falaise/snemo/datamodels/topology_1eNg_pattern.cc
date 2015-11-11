@@ -38,7 +38,7 @@ namespace snemo {
 
     bool topology_1eNg_pattern::has_number_of_gammas() const
     {
-      return _number_of_gammas_ != -1;
+      return _number_of_gammas_ != 0;
     }
 
     void topology_1eNg_pattern::set_number_of_gammas(const size_t ngammas_)
@@ -78,9 +78,9 @@ namespace snemo {
     void topology_1eNg_pattern::fetch_electron_gammas_internal_probabilities(topology_1eNg_pattern::tof_collection_type & eg_pint_) const
     {
       DT_THROW_IF(! has_electron_gammas_internal_probabilities(), std::logic_error, "No electron-gammas TOF measurement stored !");
-      for(int i_gamma = 1; i_gamma <= get_number_of_gammas(); ++i_gamma) {
+      for (size_t ig = 1; ig <= get_number_of_gammas(); ig++) {
         std::ostringstream oss;
-        oss << "tof_e1_g" << i_gamma;
+        oss << "tof_e1_g" << ig;
         eg_pint_.push_back(dynamic_cast<const snemo::datamodel::tof_measurement&> (get_measurement(oss.str())).get_internal_probabilities());
       }
       return;
@@ -89,9 +89,9 @@ namespace snemo {
     void topology_1eNg_pattern::fetch_electron_gammas_external_probabilities(topology_1eNg_pattern::tof_collection_type & eg_pext_) const
     {
       DT_THROW_IF(! has_electron_gammas_external_probabilities(), std::logic_error, "No electron-gammas TOF measurement stored !");
-      for(int i_gamma = 1; i_gamma <= get_number_of_gammas(); ++i_gamma) {
+      for(size_t ig = 1; ig <= get_number_of_gammas(); ++ig) {
         std::ostringstream oss;
-        oss << "tof_e1_g" << i_gamma;
+        oss << "tof_e1_g" << ig;
         eg_pext_.push_back(dynamic_cast<const snemo::datamodel::tof_measurement&> (get_measurement(oss.str())).get_external_probabilities());
       }
       return;
@@ -203,23 +203,6 @@ namespace snemo {
     // // {
     // //   return has_internal_probability() && has_external_probability();
     // // }
-
-    void topology_1eNg_pattern::tree_dump(std::ostream      & out_,
-                                          const std::string & title_,
-                                          const std::string & indent_,
-                                          bool /*inherit_*/) const
-    {
-      std::string indent;
-      if (! indent_.empty()) indent = indent_;
-      base_topology_pattern::tree_dump(out_, title_, indent_, true);
-
-      // out_ << indent << datatools::i_tree_dumpable::tag
-      //      << "Internal probability : " << get_internal_probability() << std::endl;
-      // out_ << indent << datatools::i_tree_dumpable::tag
-      //      << "External probability : " << get_external_probability() << std::endl;
-
-      return;
-    }
 
   } // end of namespace datamodel
 
