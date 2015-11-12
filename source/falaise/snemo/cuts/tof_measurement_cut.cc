@@ -64,6 +64,7 @@ namespace snemo {
       : cuts::i_cut(logger_priority_)
     {
       _set_defaults();
+      this->register_supported_user_data_type<snemo::datamodel::tof_measurement>();
       return;
     }
 
