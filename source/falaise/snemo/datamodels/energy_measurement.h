@@ -38,6 +38,12 @@ namespace snemo {
       /// Get a mutable reference to energy
       double & grab_energy();
 
+      /// Smart print
+      virtual void tree_dump(std::ostream      & out_    = std::clog,
+                             const std::string & title_  = "",
+                             const std::string & indent_ = "",
+                             bool inherit_               = false) const;
+
     private:
 
       double _energy_; //!< The energy value

@@ -8,7 +8,6 @@
 #include <sstream>
 
 // This project:
-#include <falaise/snemo/datamodels/pid_utils.h>
 #include <falaise/snemo/datamodels/particle_track.h>
 
 namespace snemo {
