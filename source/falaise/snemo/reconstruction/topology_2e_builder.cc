@@ -54,9 +54,8 @@ namespace snemo {
 
       {
         snemo::datamodel::vertex_measurement * ptr_vertex_measurement = new snemo::datamodel::vertex_measurement;
-        meas["vertices_probability_" + e1_label + "_" + e2_label].reset(ptr_vertex_measurement);
-        if (drivers.VD) drivers.VD->process(e1, e2,
-                                              ptr_vertex_measurement->grab_vertex());
+        meas["vertex_" + e1_label + "_" + e2_label].reset(ptr_vertex_measurement);
+        if (drivers.VD) drivers.VD->process(e1, e2, *ptr_vertex_measurement);
       }
 
       {
