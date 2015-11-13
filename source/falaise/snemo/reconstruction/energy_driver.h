@@ -36,12 +36,13 @@
 
 // Third party:
 // - Bayeux/datatools:
-#include <datatools/logger.h>
+#include <bayeux/datatools/logger.h>
 
 namespace snemo {
 
   namespace datamodel {
     class particle_track;
+    class energy_measurement;
   }
 
   namespace reconstruction {
@@ -67,7 +68,8 @@ namespace snemo {
       ~energy_driver();
 
       /// Main process
-      void process(const snemo::datamodel::particle_track & pt_, double & energy_);
+      void process(const snemo::datamodel::particle_track & pt_,
+                   snemo::datamodel::energy_measurement & energy_);
 
       /// Check if theclusterizer is initialized
       bool is_initialized() const;
@@ -86,11 +88,12 @@ namespace snemo {
       /// Set the initialization flag
       void _set_initialized(bool);
 
-      /// Special method to process and generate particle track data
-      void _process_algo(const snemo::datamodel::particle_track & pt_, double & energy_);
-
       /// Give default values to specific class members.
       void _set_defaults();
+
+      /// Special method to process and generate particle track data
+      void _process_algo(const snemo::datamodel::particle_track & pt_,
+                         double & energy_);
 
     private:
       bool                        _initialized_;      //!< Initialization status

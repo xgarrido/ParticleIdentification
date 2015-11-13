@@ -8,6 +8,7 @@
 
 // This project:
 #include <falaise/snemo/datamodels/particle_track.h>
+#include <falaise/snemo/datamodels/energy_measurement.h>
 #include <falaise/snemo/reconstruction/energy_driver.h>
 
 int main()
@@ -33,9 +34,10 @@ int main()
         a_calo.set_energy(1000 * CLHEP::keV);
       }
       electron.tree_dump();
-      double energy = datatools::invalid_real();
+      snemo::datamodel::energy_measurement energy;
       ED.process(electron, energy);
-      std::clog << "Electron energy = " << energy/CLHEP::keV << " keV" << std::endl;
+      std::clog << "Electron energy " << std::endl;
+      energy.tree_dump();
     }
 
     // Fake gamma track :
@@ -53,9 +55,10 @@ int main()
         a_calo2.set_energy(1000 * CLHEP::keV);
       }
       gamma.tree_dump();
-      double energy = datatools::invalid_real();
+      snemo::datamodel::energy_measurement energy;
       ED.process(gamma, energy);
-      std::clog << "Gamma energy = " << energy/CLHEP::keV << " keV" << std::endl;
+      std::clog << "Gamma energy " << std::endl;
+      energy.tree_dump();
     }
 
   } catch (std::exception & x) {

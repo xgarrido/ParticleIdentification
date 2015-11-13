@@ -43,7 +43,7 @@ namespace snemo {
       {
         snemo::datamodel::energy_measurement * ptr_energy = new snemo::datamodel::energy_measurement;
         meas["energy_" + e1_label].reset(ptr_energy);
-        if (drivers.EMD) drivers.EMD->process(e1, ptr_energy->grab_energy());
+        if (drivers.EMD) drivers.EMD->process(e1, *ptr_energy);
       }
 
       return;

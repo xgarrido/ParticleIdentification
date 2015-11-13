@@ -9,6 +9,7 @@
 
 // This project:
 #include <falaise/snemo/datamodels/particle_track.h>
+#include <falaise/snemo/datamodels/energy_measurement.h>
 
 namespace snemo {
 
@@ -67,7 +68,7 @@ namespace snemo {
     }
 
     // Initialization :
-    void energy_driver::initialize(const datatools::properties  & setup_)
+    void energy_driver::initialize(const datatools::properties & setup_)
     {
       DT_THROW_IF(is_initialized(), std::logic_error, "Driver '" << get_id() << "' is already initialized !");
 
@@ -89,10 +90,10 @@ namespace snemo {
     }
 
     void energy_driver::process(const snemo::datamodel::particle_track & pt_,
-                                double & energy_)
+                                snemo::datamodel::energy_measurement & energy_)
     {
       DT_THROW_IF(! is_initialized(), std::logic_error, "Driver '" << get_id() << "' is already initialized !");
-      this->_process_algo(pt_,energy_);
+      this->_process_algo(pt_, energy_.grab_energy());
       return;
     }
 
