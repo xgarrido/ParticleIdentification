@@ -31,13 +31,11 @@
 #ifndef FALAISE_VERTEX_PLUGIN_SNEMO_RECONSTRUCTION_VERTEX_DRIVER_H
 #define FALAISE_VERTEX_PLUGIN_SNEMO_RECONSTRUCTION_VERTEX_DRIVER_H 1
 
-// Standard library:
-#include <string>
-
 // Third party:
 // - Bayeux/datatools:
 #include <bayeux/datatools/logger.h>
 
+// Forward declaration
 namespace geomtools {
   class blur_spot;
 }
@@ -46,6 +44,7 @@ namespace snemo {
 
   namespace datamodel {
     class particle_track;
+    class vertex_measurement;
   }
 
   namespace reconstruction {
@@ -73,7 +72,7 @@ namespace snemo {
       /// Main process
       void process(const snemo::datamodel::particle_track & pt1_,
                    const snemo::datamodel::particle_track & pt2_,
-                   geomtools::blur_spot & barycenter_);
+                   snemo::datamodel::vertex_measurement & vertex_);
 
       /// Check if theclusterizer is initialized
       bool is_initialized() const;
@@ -92,18 +91,18 @@ namespace snemo {
       /// Set the initialization flag
       void _set_initialized(bool);
 
-      /// Special method to process and generate particle track data
-      void _process_algo(const snemo::datamodel::particle_track & pt1_,
-                         const snemo::datamodel::particle_track & pt2_,
-                         geomtools::blur_spot & barycenter_);
-
-      /// Find the common vertex between particle track vertices
-      void _find_vertex(const geomtools::blur_spot & vertex_1_,
-                        const geomtools::blur_spot & vertex_2_,
-                        geomtools::blur_spot & barycenter_);
-
       /// Give default values to specific class members.
       void _set_defaults();
+
+      /// Special method to process and determine common vertex between particle tracks
+      void _process_algo(const snemo::datamodel::particle_track & pt1_,
+                         const snemo::datamodel::particle_track & pt2_,
+                         snemo::datamodel::vertex_measurement & vertex_);
+
+      /// Find the common vertex between two vertices
+      void _find_common_vertex(const geomtools::blur_spot & vtx1_,
+                               const geomtools::blur_spot & vtx2_,
+                               snemo::datamodel::vertex_measurement & vertex_);
 
     private:
       bool                        _initialized_;      //!< Initialization status

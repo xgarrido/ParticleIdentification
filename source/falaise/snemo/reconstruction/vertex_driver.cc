@@ -10,10 +10,13 @@
 // Third party:
 //- GSL:
 #include <gsl/gsl_cdf.h>
+// - Bayeux/geomtools:
+#include <bayeux/geomtools/blur_spot.h>
 
 // This project:
 #include <falaise/snemo/datamodels/pid_utils.h>
 #include <falaise/snemo/datamodels/particle_track.h>
+#include <falaise/snemo/datamodels/vertex_measurement.h>
 
 namespace snemo {
 
@@ -95,23 +98,23 @@ namespace snemo {
 
     void vertex_driver::process(const snemo::datamodel::particle_track & pt1_,
                                 const snemo::datamodel::particle_track & pt2_,
-                                geomtools::blur_spot & barycenter_)
+                                snemo::datamodel::vertex_measurement & vertex_)
     {
       DT_THROW_IF(! is_initialized(), std::logic_error, "Driver '" << get_id() << "' is already initialized !");
-      this->_process_algo(pt1_, pt2_, barycenter_);
+      this->_process_algo(pt1_, pt2_, vertex_);
       return;
     }
 
     void vertex_driver::_process_algo(const snemo::datamodel::particle_track & pt1_,
                                       const snemo::datamodel::particle_track & pt2_,
-                                      geomtools::blur_spot & barycenter_)
+                                      snemo::datamodel::vertex_measurement & vertex_)
     {
       DT_LOG_TRACE(get_logging_priority(), "Entering...");
 
       if (snemo::datamodel::pid_utils::particle_is_gamma(pt1_) ||
           snemo::datamodel::pid_utils::particle_is_gamma(pt2_)) {
         DT_LOG_WARNING(get_logging_priority(),
-                       "Delta vertices cannot be computed if one particle is a gamma!");
+                       "Vertex measurement cannot be computed if one particle is a gamma!");
         return;
       }
 
@@ -120,30 +123,42 @@ namespace snemo {
       const snemo::datamodel::particle_track::vertex_collection_type & the_vertices_2
         = pt2_.get_vertices();
       for (snemo::datamodel::particle_track::vertex_collection_type::const_iterator
-             ivertex_1 = the_vertices_1.begin();
-           ivertex_1 != the_vertices_1.end(); ++ivertex_1) {
-
-        const geomtools::blur_spot & a_vertex_1 = ivertex_1->get();
-
+             ivtx1 = the_vertices_1.begin();
+           ivtx1 != the_vertices_1.end(); ++ivtx1) {
         for (snemo::datamodel::particle_track::vertex_collection_type::const_iterator
-               ivertex_2 = the_vertices_2.begin();
-             ivertex_2 != the_vertices_2.end(); ++ivertex_2) {
+               ivtx2 = the_vertices_2.begin();
+             ivtx2 != the_vertices_2.end(); ++ivtx2) {
+          const geomtools::blur_spot & vtx1 = ivtx1->get();
+          const geomtools::blur_spot & vtx2 = ivtx2->get();
 
-          const geomtools::blur_spot & a_vertex_2 = ivertex_2->get();
+          auto have_same_origin = [] (const geomtools::blur_spot & vtx1_,
+                                      const geomtools::blur_spot & vtx2_) -> bool
+            {
+              if (snemo::datamodel::particle_track::vertex_is_on_source_foil(vtx1_) &&
+                  snemo::datamodel::particle_track::vertex_is_on_source_foil(vtx2_)) {
+                return true;
+              }
+              if (snemo::datamodel::particle_track::vertex_is_on_main_calorimeter(vtx1_) &&
+                  snemo::datamodel::particle_track::vertex_is_on_main_calorimeter(vtx2_)) {
+                return true;
+              }
+              if (snemo::datamodel::particle_track::vertex_is_on_x_calorimeter(vtx1_) &&
+                  snemo::datamodel::particle_track::vertex_is_on_x_calorimeter(vtx2_)) {
+                return true;
+              }
+              if (snemo::datamodel::particle_track::vertex_is_on_gamma_veto(vtx1_) &&
+                  snemo::datamodel::particle_track::vertex_is_on_gamma_veto(vtx2_)) {
+                return true;
+              }
+              return false;
+            };
 
-          if (!((snemo::datamodel::particle_track::vertex_is_on_source_foil(a_vertex_1) &&
-                 snemo::datamodel::particle_track::vertex_is_on_source_foil(a_vertex_2)) ||
-                (snemo::datamodel::particle_track::vertex_is_on_main_calorimeter(a_vertex_1) &&
-                 snemo::datamodel::particle_track::vertex_is_on_main_calorimeter(a_vertex_2)) ||
-                (snemo::datamodel::particle_track::vertex_is_on_x_calorimeter(a_vertex_1) &&
-                 snemo::datamodel::particle_track::vertex_is_on_x_calorimeter(a_vertex_2)) ||
-                (snemo::datamodel::particle_track::vertex_is_on_gamma_veto(a_vertex_1) &&
-                 snemo::datamodel::particle_track::vertex_is_on_gamma_veto(a_vertex_2)))
-              )
+          if (! have_same_origin(vtx1, vtx2)) {
+            DT_LOG_TRACE(get_logging_priority(), "Vertices do not come from the same origin !");
             continue;
+          }
 
-#warning do not look for vertex due to vertex selection issue
-          // _find_vertex(a_vertex_1, a_vertex_2, barycenter_);
+          _find_common_vertex(vtx1, vtx2, vertex_);
         }
       }
 
@@ -151,33 +166,44 @@ namespace snemo {
       return;
     }
 
-    void vertex_driver::_find_vertex(const geomtools::blur_spot & vertex_1_,
-                                     const geomtools::blur_spot & vertex_2_,
-                                     geomtools::blur_spot & barycenter_)
+    void vertex_driver::_find_common_vertex(const geomtools::blur_spot & vtx1_,
+                                            const geomtools::blur_spot & vtx2_,
+                                            snemo::datamodel::vertex_measurement & vertex_)
 
     {
-      const double sigma_x_1 = vertex_1_.get_x_error();
-      const double sigma_y_1 = vertex_1_.get_y_error();
-      const double sigma_z_1 = vertex_1_.get_z_error();
-      const double sigma_1 = sigma_x_1*sigma_x_1+ sigma_y_1*sigma_y_1+sigma_z_1*sigma_z_1;
+      DT_THROW_IF(vtx1_.get_blur_dimension() != vtx2_.get_blur_dimension(),
+                  std::logic_error, "Blur dimensions are differents !");
 
-      const double sigma_x_2 = vertex_2_.get_x_error();
-      const double sigma_y_2 = vertex_2_.get_y_error();
-      const double sigma_z_2 = vertex_2_.get_z_error();
-      const double sigma_2 = sigma_x_2*sigma_x_2+ sigma_y_2*sigma_y_2+sigma_z_2*sigma_z_2;
+      auto sigma = [] (const geomtools::blur_spot & vtx_) -> double
+        {
+          double sigma = 0.0;
+          if (vtx_.get_blur_dimension() >= geomtools::blur_spot::DIMENSION_ONE) {
+            sigma += std::pow(vtx_.get_x_error(), 2);
+          }
+          if (vtx_.get_blur_dimension() >= geomtools::blur_spot::DIMENSION_TWO) {
+            sigma += std::pow(vtx_.get_y_error(), 2);
+          }
+          if (vtx_.get_blur_dimension() >= geomtools::blur_spot::DIMENSION_THREE) {
+            sigma += std::pow(vtx_.get_z_error(), 2);
+          }
+          return datatools::is_valid(sigma) ? sigma : 1.0;
+        };
+      const double sigma1 = sigma(vtx1_);
+      const double sigma2 = sigma(vtx2_);
+      const geomtools::vector_3d & pos1 = vtx1_.get_position();
+      const geomtools::vector_3d & pos2 = vtx2_.get_position();
+      const geomtools::vector_3d bary = (pos1/sigma1 + pos2/sigma2)/(1/sigma1 + 1/sigma2);
 
-      geomtools::vector_3d v_barycenter = (vertex_1_.get_position()/(sigma_1) +
-                                           vertex_2_.get_position()/(sigma_2))/(1/sigma_1+1/sigma_2);
-
-      barycenter_.set_blur_dimension(geomtools::blur_spot::DIMENSION_THREE);
-      barycenter_.set_position(v_barycenter);
-      //no errors for now
-
-      const double chi_2 = ((v_barycenter-vertex_1_.get_position())*(v_barycenter-vertex_1_.get_position()) +
-                            (v_barycenter-vertex_2_.get_position())*(v_barycenter-vertex_2_.get_position()))/(sigma_1 + sigma_2);
+      const double chi_2 = ((bary-pos1).mag2() + (bary-pos2).mag2())/(sigma1 + sigma2);
       const double probability = gsl_cdf_chisq_Q(chi_2, 1);
 
-      barycenter_.grab_auxiliaries().store("Probability",probability);
+      if (! vertex_.has_probability() || vertex_.get_probability() < probability) {
+        // Update vertex value
+        vertex_.set_probability(probability);
+        geomtools::blur_spot & a_spot = vertex_.grab_vertex();
+        a_spot.set_blur_dimension(vtx1_.get_blur_dimension());
+        a_spot.set_position(bary);
+      }
       return ;
     }
 
