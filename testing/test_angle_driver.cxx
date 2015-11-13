@@ -10,6 +10,7 @@
 #include <falaise/snemo/datamodels/line_trajectory_pattern.h>
 #include <falaise/snemo/datamodels/particle_track.h>
 #include <falaise/snemo/datamodels/pid_utils.h>
+#include <falaise/snemo/datamodels/angle_measurement.h>
 #include <falaise/snemo/reconstruction/angle_driver.h>
 
 int main()
@@ -54,30 +55,11 @@ int main()
         electron.set_trajectory_handle(a_trajectory);
       }
       electron.tree_dump();
-      double angle = datatools::invalid_real();
+      snemo::datamodel::angle_measurement angle;
       AD.process(electron, angle);
-      std::clog << "Electron angle = " << angle/CLHEP::degree << "°" << std::endl;
+      std::clog << "Electron angle : " << std::endl;
+      angle.tree_dump();
     }
-
-    // // Fake gamma track :
-    // {
-    //   snemo::datamodel::particle_track gamma;
-    //   // Push some fake calorimeter hits
-    //   {
-    //     snemo::datamodel::calibrated_calorimeter_hit::collection_type & the_calos
-    //       = gamma.grab_associated_calorimeter_hits();
-    //     the_calos.push_back(new snemo::datamodel::calibrated_calorimeter_hit);
-    //     snemo::datamodel::calibrated_calorimeter_hit & a_calo1 = the_calos.back().grab();
-    //     a_calo1.set_energy(500 * CLHEP::keV);
-    //     the_calos.push_back(new snemo::datamodel::calibrated_calorimeter_hit);
-    //     snemo::datamodel::calibrated_calorimeter_hit & a_calo2 = the_calos.back().grab();
-    //     a_calo2.set_energy(1000 * CLHEP::keV);
-    //   }
-    //   gamma.tree_dump();
-    //   double angle = datatools::invalid_real();
-    //   // ED.process(gamma, energy);
-    //   // std::clog << "Gamma energy = " << energy/CLHEP::keV << " keV" << std::endl;
-    // }
 
   } catch (std::exception & x) {
     std::cerr << "error: " << x.what() << std::endl;

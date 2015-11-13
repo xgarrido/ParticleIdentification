@@ -7,17 +7,10 @@
 #include <stdexcept>
 #include <sstream>
 
-// Third party:
-// - Bayeux/datatools:
-#include <datatools/service_manager.h>
-// - Bayeux/geomtools:
-#include <geomtools/geometry_service.h>
-#include <bayeux/geomtools/manager.h>
-
 // This project:
-#include <falaise/snemo/datamodels/data_model.h>
 #include <falaise/snemo/datamodels/pid_utils.h>
-#include <falaise/snemo/datamodels/particle_track_data.h>
+#include <falaise/snemo/datamodels/particle_track.h>
+#include <falaise/snemo/datamodels/angle_measurement.h>
 
 namespace snemo {
 
@@ -76,7 +69,7 @@ namespace snemo {
     }
 
     // Initialization :
-    void angle_driver::initialize(const datatools::properties  & setup_)
+    void angle_driver::initialize(const datatools::properties & setup_)
     {
       DT_THROW_IF(is_initialized(), std::logic_error,
                   "Driver '" << get_id() << "' is already initialized !");
@@ -99,19 +92,19 @@ namespace snemo {
     }
 
     void angle_driver::process(const snemo::datamodel::particle_track & pt_,
-                               double & angle_)
+                               snemo::datamodel::angle_measurement & angle_)
     {
       DT_THROW_IF(! is_initialized(), std::logic_error, "Driver '" << get_id() << "' is already initialized !");
-      this->_process_algo(pt_, angle_);
+      this->_process_algo(pt_, angle_.grab_angle());
       return;
     }
 
     void angle_driver::process(const snemo::datamodel::particle_track & pt1_,
                                const snemo::datamodel::particle_track & pt2_,
-                               double & angle_)
+                               snemo::datamodel::angle_measurement & angle_)
     {
       DT_THROW_IF(! is_initialized(), std::logic_error, "Driver '" << get_id() << "' is already initialized !");
-      this->_process_algo(pt1_, pt2_, angle_);
+      this->_process_algo(pt1_, pt2_, angle_.grab_angle());
       return;
     }
 

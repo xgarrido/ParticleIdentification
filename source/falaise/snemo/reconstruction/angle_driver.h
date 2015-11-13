@@ -36,14 +36,15 @@
 #include <vector>
 
 // - Bayeux/datatools:
-#include <datatools/logger.h>
+#include <bayeux/datatools/logger.h>
 // - Bayeux/geomtools:
-#include <geomtools/clhep.h>
+#include <bayeux/geomtools/clhep.h>
 
 namespace snemo {
 
   namespace datamodel {
     class particle_track;
+    class angle_measurement;
   }
 
   namespace reconstruction {
@@ -68,21 +69,20 @@ namespace snemo {
       /// Destructor
       ~angle_driver();
 
-      /// Main process for single prticle track measurement
-      void process(const snemo::datamodel::particle_track & pt_,
-                   double & angle_);
-
-      /// Main process for angle between two particle tracks
-      void process(const snemo::datamodel::particle_track & pt1_,
-                   const snemo::datamodel::particle_track & pt2_,
-                   double & angle_);
-
-
       /// Check if the driver is initialized
       bool is_initialized() const;
 
       /// Initialize the driver through configuration properties
       void initialize(const datatools::properties & setup_);
+
+      /// Main process for single particle angle measurement
+      void process(const snemo::datamodel::particle_track & pt_,
+                   snemo::datamodel::angle_measurement & angle_);
+
+      /// Main process for angle between two particle tracks
+      void process(const snemo::datamodel::particle_track & pt1_,
+                   const snemo::datamodel::particle_track & pt2_,
+                   snemo::datamodel::angle_measurement & angle_);
 
       /// Reset the driver
       void reset();
@@ -96,16 +96,16 @@ namespace snemo {
       void _set_initialized(bool);
 
       /// Give default values to specific class members.
-      void _set_defaults ();
+      void _set_defaults();
 
       /// Special method to process single particle track
       void _process_algo(const snemo::datamodel::particle_track & pt_,
-                         double & angle);
+                         double & angle_);
 
       /// Special method to process two particle tracks
       void _process_algo(const snemo::datamodel::particle_track & pt1_,
                          const snemo::datamodel::particle_track & pt2_,
-                         double & angle);
+                         double & angle_);
 
       /// Get direction of a particle track
       void _get_direction(const snemo::datamodel::particle_track & pt_,

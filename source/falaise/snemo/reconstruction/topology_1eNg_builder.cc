@@ -63,7 +63,7 @@ namespace snemo {
         {
           snemo::datamodel::angle_measurement * ptr_angle = new snemo::datamodel::angle_measurement;
           meas["angle_e1_" + g_label].reset(ptr_angle);
-          if (drivers.AMD) drivers.AMD->process(e1, gamma, ptr_angle->grab_angle());
+          if (drivers.AMD) drivers.AMD->process(e1, gamma, *ptr_angle);
         }
 
         {
