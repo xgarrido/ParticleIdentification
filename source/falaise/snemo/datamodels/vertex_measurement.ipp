@@ -27,6 +27,7 @@ namespace snemo {
     void vertex_measurement::serialize(Archive & ar_, const unsigned int /* version_ */)
     {
       ar_ & BOOST_SERIALIZATION_BASE_OBJECT_NVP(base_topology_measurement);
+      ar_ & boost::serialization::make_nvp("probability", _probability_);
       ar_ & boost::serialization::make_nvp("vertex", _vertex_);
       return;
     }

@@ -3,7 +3,7 @@
  * Creation date: 2015-10-24
  * Last modified: 2015-10-24
  *
- * Description: The class for delta vertices measurement
+ * Description: The class for vertex measurement
  */
 
 #ifndef FALAISE_SNEMO_DATAMODEL_VERTEX_MEASUREMENT_H
@@ -40,8 +40,14 @@ namespace snemo {
       /// Get a mutable reference to vertex location
       geomtools::blur_spot & grab_vertex();
 
+      /// Check probability validity
+      bool has_probability() const;
+
       /// Return vertex probability
       double get_probability() const;
+
+      /// Set probability value
+      void set_probability(const double probability_);
 
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,
@@ -51,7 +57,8 @@ namespace snemo {
 
     private:
 
-      geomtools::blur_spot _vertex_;
+      double _probability_;          //!< Chi2 probability of the vertex
+      geomtools::blur_spot _vertex_; //!< 3D position and associated errors
 
       DATATOOLS_SERIALIZATION_DECLARATION();
     };

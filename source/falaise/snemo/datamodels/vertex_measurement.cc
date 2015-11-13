@@ -15,6 +15,7 @@ namespace snemo {
     vertex_measurement::vertex_measurement()
     {
       _vertex_.invalidate();
+      datatools::invalidate(_probability_);
       return;
     }
 
@@ -27,7 +28,8 @@ namespace snemo {
     {
       // Only test if placement is valid (blur_spot validation implies a valid
       // base_hit i.e. valid geom_id + valid errors...)
-      return _vertex_.get_placement().is_valid();
+      // return _vertex_.get_placement().is_valid();
+      return has_probability();
     }
 
     const geomtools::blur_spot & vertex_measurement::get_vertex() const
@@ -40,9 +42,20 @@ namespace snemo {
       return _vertex_;
     }
 
+    bool vertex_measurement::has_probability() const
+    {
+      return datatools::is_valid(_probability_);
+    }
+
     double vertex_measurement::get_probability() const
     {
-      return _vertex_.get_auxiliaries().fetch_real("Probability");
+      return _probability_;
+    }
+
+    void vertex_measurement::set_probability(const double probability_)
+    {
+      _probability_ = probability_;
+      return;
     }
 
     void vertex_measurement::tree_dump(std::ostream      & out_,
@@ -53,6 +66,14 @@ namespace snemo {
       std::string indent;
       if (! indent_.empty ()) indent = indent_;
       base_topology_measurement::tree_dump(out_, title_, indent_, true);
+
+      out_ << indent << datatools::i_tree_dumpable::tag
+           << "Probability: ";
+      if (! has_probability()) {
+        out_ << "<no value>" << std::endl;
+      } else {
+        out_ << _probability_/CLHEP::perCent << "%" << std::endl;
+      }
 
       out_ << indent << datatools::i_tree_dumpable::inherit_tag(inherit_)
            << "Vertex: ";
