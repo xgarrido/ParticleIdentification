@@ -57,9 +57,7 @@ namespace snemo {
         {
           snemo::datamodel::tof_measurement * ptr_tof = new snemo::datamodel::tof_measurement;
           meas["tof_e1_" + g_label].reset(ptr_tof);
-          if (drivers.TOFD) drivers.TOFD->process(e1, gamma,
-                                                  ptr_tof->grab_internal_probabilities(),
-                                                  ptr_tof->grab_external_probabilities());
+          if (drivers.TOFD) drivers.TOFD->process(e1, gamma, *ptr_tof);
         }
 
         {

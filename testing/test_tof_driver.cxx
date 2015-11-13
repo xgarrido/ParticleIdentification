@@ -10,6 +10,7 @@
 #include <falaise/snemo/datamodels/line_trajectory_pattern.h>
 #include <falaise/snemo/datamodels/particle_track.h>
 #include <falaise/snemo/datamodels/pid_utils.h>
+#include <falaise/snemo/datamodels/tof_measurement.h>
 #include <falaise/snemo/reconstruction/tof_driver.h>
 
 int main()
@@ -25,30 +26,30 @@ int main()
 
     // Fake tracks track :
     {
-      snemo::datamodel::particle_track electron;
-      electron.grab_auxiliaries().update(snemo::datamodel::pid_utils::pid_label_key(),
-                                         snemo::datamodel::pid_utils::electron_label());
-      snemo::datamodel::particle_track electron_2;
-      electron_2.grab_auxiliaries().update(snemo::datamodel::pid_utils::pid_label_key(),
-                                         snemo::datamodel::pid_utils::electron_label());
+      snemo::datamodel::particle_track electron1;
+      electron1.grab_auxiliaries().update(snemo::datamodel::pid_utils::pid_label_key(),
+                                          snemo::datamodel::pid_utils::electron_label());
+      snemo::datamodel::particle_track electron2;
+      electron2.grab_auxiliaries().update(snemo::datamodel::pid_utils::pid_label_key(),
+                                          snemo::datamodel::pid_utils::electron_label());
       snemo::datamodel::particle_track gamma;
       gamma.grab_auxiliaries().update(snemo::datamodel::pid_utils::pid_label_key(),
                                       snemo::datamodel::pid_utils::gamma_label());
 
-      // Add electron source foil vertex
+      // Add electron1 source foil vertex
       {
         snemo::datamodel::particle_track::vertex_collection_type & the_vertices
-          = electron.grab_vertices();
+          = electron1.grab_vertices();
         the_vertices.push_back(new geomtools::blur_spot);
         geomtools::blur_spot & a_vertex = the_vertices.back().grab();
         a_vertex.set_position(geomtools::vector_3d(0, 0, 0));
         a_vertex.grab_auxiliaries().update(snemo::datamodel::particle_track::vertex_type_key(),
                                            snemo::datamodel::particle_track::vertex_on_source_foil_label());
       }
-      // Add electron_2 source foil vertex
+      // Add electron2 source foil vertex
       {
         snemo::datamodel::particle_track::vertex_collection_type & the_vertices
-          = electron_2.grab_vertices();
+          = electron2.grab_vertices();
         the_vertices.push_back(new geomtools::blur_spot);
         geomtools::blur_spot & a_vertex = the_vertices.back().grab();
         a_vertex.set_position(geomtools::vector_3d(0, 0, 0));
@@ -78,9 +79,9 @@ int main()
         geomtools::geom_id a_gid;
         iss >> a_gid;
         a_vertex.set_geom_id(a_gid);
-         }
+      }
 
-      // Add electron fake trajectory
+      // Add electron1 fake trajectory
       {
         snemo::datamodel::line_trajectory_pattern * ltp
           = new snemo::datamodel::line_trajectory_pattern;
@@ -92,10 +93,10 @@ int main()
         snemo::datamodel::tracker_trajectory::handle_type a_trajectory;
         a_trajectory.reset(new snemo::datamodel::tracker_trajectory);
         a_trajectory.grab().set_pattern_handle(a_pattern);
-        electron.set_trajectory_handle(a_trajectory);
+        electron1.set_trajectory_handle(a_trajectory);
       }
 
-      // Add electron_2 fake trajectory
+      // Add electron2 fake trajectory
       {
         snemo::datamodel::line_trajectory_pattern * ltp
           = new snemo::datamodel::line_trajectory_pattern;
@@ -107,13 +108,13 @@ int main()
         snemo::datamodel::tracker_trajectory::handle_type a_trajectory;
         a_trajectory.reset(new snemo::datamodel::tracker_trajectory);
         a_trajectory.grab().set_pattern_handle(a_pattern);
-        electron_2.set_trajectory_handle(a_trajectory);
+        electron2.set_trajectory_handle(a_trajectory);
       }
 
-    //Push some fake electron calorimeter hit
+    //Push some fake electron1 calorimeter hit
     {
       snemo::datamodel::calibrated_calorimeter_hit::collection_type & the_calos
-        = electron.grab_associated_calorimeter_hits();
+        = electron1.grab_associated_calorimeter_hits();
       the_calos.push_back(new snemo::datamodel::calibrated_calorimeter_hit);
       snemo::datamodel::calibrated_calorimeter_hit & a_calo = the_calos.back().grab();
       a_calo.set_energy(1000 * CLHEP::keV);
@@ -121,10 +122,10 @@ int main()
       a_calo.set_time(1.6 * CLHEP::ns);
       a_calo.set_sigma_time(0.05 * CLHEP::ns);
     }
-    //Push some fake electron_2 calorimeter hit
+    //Push some fake electron2 calorimeter hit
     {
       snemo::datamodel::calibrated_calorimeter_hit::collection_type & the_calos
-        = electron_2.grab_associated_calorimeter_hits();
+        = electron2.grab_associated_calorimeter_hits();
       the_calos.push_back(new snemo::datamodel::calibrated_calorimeter_hit);
       snemo::datamodel::calibrated_calorimeter_hit & a_calo = the_calos.back().grab();
       a_calo.set_energy(1000 * CLHEP::keV);
@@ -148,20 +149,19 @@ int main()
       a_calo.set_geom_id(a_gid);
     }
 
-    electron.tree_dump();
-    electron_2.tree_dump();
+    electron1.tree_dump();
+    electron2.tree_dump();
     gamma.tree_dump();
 
-    std::vector<double> proba_int_e1_e2 = {}; // ensures the invalidation, C++11 ?
-    std::vector<double> proba_ext_e1_e2 = {};
-    std::vector<double> proba_int_e1_g1 = {};
-    std::vector<double> proba_ext_e1_g1 = {};
-    TOFD.process(electron, electron_2, proba_int_e1_e2, proba_ext_e1_e2);
-    TOFD.process(electron, gamma, proba_int_e1_g1, proba_ext_e1_g1);
-    std::clog << "Internal probability e1 e2 = " << proba_int_e1_e2.front() << std::endl;
-    std::clog << "External probability e1 e2 = " << proba_ext_e1_e2.front() << std::endl;
-    std::clog << "Internal probability e1 g1 = " << proba_int_e1_g1.front() << std::endl;
-    std::clog << "External probability e1 g1 = " << proba_ext_e1_g1.front() << std::endl;
+    snemo::datamodel::tof_measurement tof_e1_e2;
+    TOFD.process(electron1, electron2, tof_e1_e2);
+    snemo::datamodel::tof_measurement tof_e1_g1;
+    TOFD.process(electron1, gamma, tof_e1_g1);
+
+    std::clog << "TOF measurement for e1/e2" << std::endl;
+    tof_e1_e2.tree_dump();
+    std::clog << "TOF measurement for e1/g1" << std::endl;
+    tof_e1_g1.tree_dump();
     }
 
   } catch (std::exception & x) {

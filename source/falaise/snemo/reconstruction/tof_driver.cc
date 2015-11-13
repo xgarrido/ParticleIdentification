@@ -19,6 +19,7 @@
 #include <falaise/snemo/datamodels/helix_trajectory_pattern.h>
 
 #include <falaise/snemo/datamodels/pid_utils.h>
+#include <falaise/snemo/datamodels/tof_measurement.h>
 
 namespace snemo {
 
@@ -232,28 +233,11 @@ namespace snemo {
 
     void tof_driver::process(const snemo::datamodel::particle_track & pt1_,
                              const snemo::datamodel::particle_track & pt2_,
-                             double & proba_int_, double & proba_ext_)
+                             snemo::datamodel::tof_measurement & tof_)
     {
       DT_THROW_IF(! is_initialized(), std::logic_error,
                   "Driver '" << get_id() << "' is not initialized !");
-
-      datatools::invalidate(proba_int_);
-      datatools::invalidate(proba_ext_);
-      std::vector<double> v_proba_int;
-      std::vector<double> v_proba_ext;
-      this->_process_algo(pt1_, pt2_, v_proba_int, v_proba_ext);
-      if (! v_proba_int.empty()) proba_int_ = v_proba_int.front();
-      if (! v_proba_ext.empty()) proba_ext_ = v_proba_ext.front();
-      return;
-    }
-
-    void tof_driver::process(const snemo::datamodel::particle_track & pt1_,
-                             const snemo::datamodel::particle_track & pt2_,
-                             std::vector<double> & proba_int_, std::vector<double> & proba_ext_)
-    {
-      DT_THROW_IF(! is_initialized(), std::logic_error,
-                  "Driver '" << get_id() << "' is not initialized !");
-      this->_process_algo(pt1_, pt2_, proba_int_, proba_ext_);
+      this->_process_algo(pt1_, pt2_, tof_.grab_internal_probabilities(), tof_.grab_external_probabilities());
       return;
     }
 
@@ -361,11 +345,9 @@ namespace snemo {
       for (snemo::datamodel::particle_track::vertex_collection_type::iterator
              ivtx = the_gamma_calos_vertices.begin();
            ivtx != the_gamma_calos_vertices.end(); ++ivtx) {
-        const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
-          the_gamma_calorimeters = a_gamma.get_associated_calorimeter_hits();
         double tl2, t2, sigma_t2;
-        this->_get_vertex_to_calo_info(a_charged, the_gamma_calorimeters, ivtx->get(),
-                                       tl2, t2, sigma_t2);
+        this->_get_vertex_to_calo_info_(a_charged, a_gamma, ivtx->get(),
+                                        tl2, t2, sigma_t2);
 
         const double t2_th = tof_tool::get_theoretical_time(E2, m2, tl2);
         const double sigma_l = 0.6 * CLHEP::ns;
@@ -383,12 +365,10 @@ namespace snemo {
       return;
     }
 
-    void tof_driver::_get_vertex_to_calo_info(const snemo::datamodel::particle_track & ptc_,
-                                              const snemo::datamodel::calibrated_calorimeter_hit::
-                                              collection_type & the_gamma_calorimeters_,
-                                              const geomtools::blur_spot & vertex_,
-                                              double & track_length_,
-                                              double & time_, double & sigma_time_)
+    void tof_driver::_get_vertex_to_calo_info_(const snemo::datamodel::particle_track & ptc_,
+                                               const snemo::datamodel::particle_track & ptg_,
+                                               const geomtools::blur_spot & vertex_,
+                                               double & track_length_, double & time_, double & sigma_time_)
     {
       datatools::invalidate(track_length_);
       datatools::invalidate(time_);
@@ -415,14 +395,16 @@ namespace snemo {
         return;
       }
 
+      const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
+        the_gamma_calorimeters = ptg_.get_associated_calorimeter_hits();
       geomtools::base_hit::has_geom_id_predicate hit_pred(vertex_.get_geom_id());
       datatools::mother_to_daughter_predicate<geomtools::base_hit,
                                               snemo::datamodel::calibrated_calorimeter_hit> pred_M2D(hit_pred);
       datatools::handle_predicate<snemo::datamodel::calibrated_calorimeter_hit> pred_via_handle(pred_M2D);
       snemo::datamodel::calibrated_calorimeter_hit::collection_type::const_iterator
-        found = std::find_if(the_gamma_calorimeters_.begin(), the_gamma_calorimeters_.end(), pred_via_handle);
-      DT_THROW_IF(found == the_gamma_calorimeters_.end(), std::logic_error,
-                  "Calibrated calorimeter hit with id " <<vertex_.get_geom_id()
+        found = std::find_if(the_gamma_calorimeters.begin(),the_gamma_calorimeters.end(), pred_via_handle);
+      DT_THROW_IF(found == the_gamma_calorimeters.end(), std::logic_error,
+                  "Calibrated calorimeter hit with id " << vertex_.get_geom_id()
                   << " can not be found");
       const snemo::datamodel::calibrated_calorimeter_hit & a_calo_hit = found->get();
 

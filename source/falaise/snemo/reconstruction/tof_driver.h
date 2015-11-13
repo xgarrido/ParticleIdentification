@@ -38,35 +38,19 @@
 #include <vector>
 
 // Third party:
-// - Boost:
-#include <boost/scoped_ptr.hpp>
-
 // - Bayeux/datatools:
 #include <bayeux/datatools/logger.h>
-#include <bayeux/datatools/properties.h>
 
-// This project:
-#include <falaise/snemo/datamodels/particle_track.h>
-
+// Forward declaration
 namespace geomtools {
-  class manager;
+  class blur_spot;
 }
 
 namespace snemo {
 
   namespace datamodel {
-    class particle_track_data;
-  }
-
-  namespace datamodel {
-    class topology_data;
-  }
-
-  namespace geometry {
-    class locator_plugin;
-    class calo_locator;
-    class xcalo_locator;
-    class gveto_locator;
+    class particle_track;
+    class tof_measurement;
   }
 
   namespace reconstruction {
@@ -121,23 +105,18 @@ namespace snemo {
       /// Getting logging priority
       datatools::logger::priority get_logging_priority() const;
 
-      /// Main process of multiple calorimeters
-      void process(const snemo::datamodel::particle_track & pt1_,
-                   const snemo::datamodel::particle_track & pt2_,
-                   std::vector<double> & proba_int, std::vector<double> & proba_ext);
-
-      /// Main process of charged particles
-      void process(const snemo::datamodel::particle_track & pt1_,
-                   const snemo::datamodel::particle_track & pt2_,
-                   double & proba_int, double & proba_ext);
-
-      /// Check if theclusterizer is initialized
+      /// Check if the driver is initialized
       bool is_initialized() const;
 
-      /// Initialize the gamma tracker through configuration properties
+      /// Initialize the driver through configuration properties
       void initialize(const datatools::properties & setup_);
 
-      /// Reset the clusterizer
+      /// Main process
+      void process(const snemo::datamodel::particle_track & pt1_,
+                   const snemo::datamodel::particle_track & pt2_,
+                   snemo::datamodel::tof_measurement & tof_);
+
+      /// Reset the driver
       void reset();
 
       /// OCD support:
@@ -152,27 +131,27 @@ namespace snemo {
       void _set_defaults ();
 
       /// Main method to process particles and to retrieve internal/external TOF probabilities
-      void _process_algo(const snemo::datamodel::particle_track & particle_1_,
-                         const snemo::datamodel::particle_track & particle_2_,
+      void _process_algo(const snemo::datamodel::particle_track & pt1_,
+                         const snemo::datamodel::particle_track & pt2_,
                          std::vector<double> & proba_int_, std::vector<double> & proba_ext_);
 
       /// Special method to process charged particles
-      void _process_charged_particles(const snemo::datamodel::particle_track & particle_1_,
-                                      const snemo::datamodel::particle_track & particle_2_,
+      void _process_charged_particles(const snemo::datamodel::particle_track & pt1_,
+                                      const snemo::datamodel::particle_track & pt2_,
                                       std::vector<double> & proba_int_, std::vector<double> & proba_ext_);
 
-      /// Special method to process charged particles
-      void _process_charged_gamma_particles(const snemo::datamodel::particle_track & particle_1_,
-                                            const snemo::datamodel::particle_track & particle_2_,
+      /// Special method to process gamma particles
+      void _process_charged_gamma_particles(const snemo::datamodel::particle_track & pt1_,
+                                            const snemo::datamodel::particle_track & pt2_,
                                             std::vector<double> & proba_int_, std::vector<double> & proba_ext_);
+    private:
 
-      /// Special method to process charged particles
-      void _get_vertex_to_calo_info(const snemo::datamodel::particle_track & particle_charged_,
-                                    const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
-                                    the_gamma_calorimeters,
-                                    const geomtools::blur_spot & a_vertex,
-                                    double & track_length_,
-                                    double & time_, double & sigma_time_);
+      /// Special internal method to extract gamma information (track length,
+      /// time) given a charged particle track
+      void _get_vertex_to_calo_info_(const snemo::datamodel::particle_track & ptc_,
+                                     const snemo::datamodel::particle_track & ptg_,
+                                     const geomtools::blur_spot & vertex_,
+                                     double & track_length_, double & time_, double & sigma_time_);
 
     private:
       bool _initialized_;                             //!< Initialization status
