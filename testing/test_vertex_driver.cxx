@@ -9,6 +9,7 @@
 // This project:
 #include <falaise/snemo/datamodels/particle_track.h>
 #include <falaise/snemo/datamodels/pid_utils.h>
+#include <falaise/snemo/datamodels/vertex_measurement.h>
 #include <falaise/snemo/reconstruction/vertex_driver.h>
 
 int main()
@@ -24,16 +25,16 @@ int main()
 
     // Fake electron tracks :
     {
-      snemo::datamodel::particle_track electron;
-      electron.grab_auxiliaries().update(snemo::datamodel::pid_utils::pid_label_key(),
-                                         snemo::datamodel::pid_utils::electron_label());
-      snemo::datamodel::particle_track electron_2;
-      electron_2.grab_auxiliaries().update(snemo::datamodel::pid_utils::pid_label_key(),
-                                         snemo::datamodel::pid_utils::electron_label());
+      snemo::datamodel::particle_track electron1;
+      electron1.grab_auxiliaries().update(snemo::datamodel::pid_utils::pid_label_key(),
+                                          snemo::datamodel::pid_utils::electron_label());
+      snemo::datamodel::particle_track electron2;
+      electron2.grab_auxiliaries().update(snemo::datamodel::pid_utils::pid_label_key(),
+                                          snemo::datamodel::pid_utils::electron_label());
       // Add a source foil vertex
       {
         snemo::datamodel::particle_track::vertex_collection_type & the_vertices
-          = electron.grab_vertices();
+          = electron1.grab_vertices();
         the_vertices.push_back(new geomtools::blur_spot);
         geomtools::blur_spot & a_vertex = the_vertices.back().grab();
         a_vertex.set_blur_dimension(geomtools::blur_spot::dimension_three);
@@ -46,7 +47,7 @@ int main()
       // Add a source foil vertex
       {
         snemo::datamodel::particle_track::vertex_collection_type & the_vertices
-          = electron_2.grab_vertices();
+          = electron2.grab_vertices();
         the_vertices.push_back(new geomtools::blur_spot);
         geomtools::blur_spot & a_vertex = the_vertices.back().grab();
         a_vertex.set_blur_dimension(geomtools::blur_spot::dimension_three);
@@ -56,14 +57,12 @@ int main()
                                            snemo::datamodel::particle_track::vertex_on_source_foil_label());
       }
 
-      electron.tree_dump();
-      electron_2.tree_dump();
-      geomtools::blur_spot vertices_barycenter;
-      vertices_barycenter.invalidate();
-      VD.process(electron, electron_2, vertices_barycenter);
-      double vertices_probability;
-      vertices_probability = vertices_barycenter.get_auxiliaries().fetch_real("Probability");
-      std::clog << "Vertices probability = " << vertices_probability << std::endl;
+      electron1.tree_dump();
+      electron2.tree_dump();
+      snemo::datamodel::vertex_measurement VM;
+      VD.process(electron1, electron2, VM);
+      const double vertices_probability = VM.get_probability();
+      std::clog << "Vertices probability = " << vertices_probability/CLHEP::perCent << "%" << std::endl;
     }
 
   } catch (std::exception & x) {
