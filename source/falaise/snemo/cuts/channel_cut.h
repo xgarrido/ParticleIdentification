@@ -69,6 +69,7 @@ namespace snemo {
     private:
 
       std::string _TD_label_; //!< Topology Data bank label
+      cuts::cut_handle_dict_type _cuts_; //!< Collection of cut/meas.
 
       /// Macro to automate the registration of the cut
       CUT_REGISTRATION_INTERFACE(channel_cut);
