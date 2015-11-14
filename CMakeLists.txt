@@ -37,16 +37,10 @@ list(APPEND FalaiseParticleIdentificationPlugin_HEADERS
   source/falaise/snemo/reconstruction/topology_2e_builder.h
   source/falaise/snemo/reconstruction/topology_1eNg_builder.h
   source/falaise/snemo/reconstruction/topology_2eNg_builder.h
+  source/falaise/snemo/cuts/pid_cut.h
   source/falaise/snemo/cuts/topology_data_cut.h
   source/falaise/snemo/cuts/tof_measurement_cut.h
-  source/falaise/snemo/cuts/base_channel_cut.h
-  source/falaise/snemo/cuts/channel_1e_cut.h
-  source/falaise/snemo/cuts/channel_2e_cut.h
-  source/falaise/snemo/cuts/channel_1e1p_cut.h
-  source/falaise/snemo/cuts/channel_1e1a_cut.h
-  source/falaise/snemo/cuts/channel_1eNg_cut.h
-  source/falaise/snemo/cuts/channel_2eNg_cut.h
-  source/falaise/snemo/cuts/pid_cut.h
+  source/falaise/snemo/cuts/channel_cut.h
   source/falaise/snemo/datamodels/topology_data.h
   source/falaise/snemo/datamodels/topology_data.ipp
   source/falaise/snemo/datamodels/the_serializable_bis.h
@@ -96,16 +90,10 @@ list(APPEND FalaiseParticleIdentificationPlugin_SOURCES
   source/falaise/snemo/reconstruction/topology_2e_builder.cc
   source/falaise/snemo/reconstruction/topology_1eNg_builder.cc
   source/falaise/snemo/reconstruction/topology_2eNg_builder.cc
+  source/falaise/snemo/cuts/pid_cut.cc
   source/falaise/snemo/cuts/topology_data_cut.cc
   source/falaise/snemo/cuts/tof_measurement_cut.cc
-  source/falaise/snemo/cuts/base_channel_cut.cc
-  source/falaise/snemo/cuts/channel_1e_cut.cc
-  source/falaise/snemo/cuts/channel_2e_cut.cc
-  source/falaise/snemo/cuts/channel_1e1p_cut.cc
-  source/falaise/snemo/cuts/channel_1e1a_cut.cc
-  source/falaise/snemo/cuts/channel_1eNg_cut.cc
-  source/falaise/snemo/cuts/channel_2eNg_cut.cc
-  source/falaise/snemo/cuts/pid_cut.cc
+  source/falaise/snemo/cuts/channel_cut.cc
   source/falaise/snemo/datamodels/topology_data.cc
   source/falaise/snemo/datamodels/the_serializable_bis.cc
   source/falaise/snemo/datamodels/base_topology_pattern.cc
