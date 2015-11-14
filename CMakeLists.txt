@@ -40,6 +40,8 @@ list(APPEND FalaiseParticleIdentificationPlugin_HEADERS
   source/falaise/snemo/cuts/pid_cut.h
   source/falaise/snemo/cuts/topology_data_cut.h
   source/falaise/snemo/cuts/tof_measurement_cut.h
+  source/falaise/snemo/cuts/angle_measurement_cut.h
+  source/falaise/snemo/cuts/energy_measurement_cut.h
   source/falaise/snemo/cuts/channel_cut.h
   source/falaise/snemo/datamodels/topology_data.h
   source/falaise/snemo/datamodels/topology_data.ipp
@@ -93,6 +95,8 @@ list(APPEND FalaiseParticleIdentificationPlugin_SOURCES
   source/falaise/snemo/cuts/pid_cut.cc
   source/falaise/snemo/cuts/topology_data_cut.cc
   source/falaise/snemo/cuts/tof_measurement_cut.cc
+  source/falaise/snemo/cuts/angle_measurement_cut.cc
+  source/falaise/snemo/cuts/energy_measurement_cut.cc
   source/falaise/snemo/cuts/channel_cut.cc
   source/falaise/snemo/datamodels/topology_data.cc
   source/falaise/snemo/datamodels/the_serializable_bis.cc

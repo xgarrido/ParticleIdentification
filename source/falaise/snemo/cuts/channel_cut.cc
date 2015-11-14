@@ -78,6 +78,8 @@ namespace snemo {
         const std::string a_meas_label = configuration_.fetch_string(a_name + ".measurement_label");
         _cuts_.insert(std::make_pair(a_meas_label, cut_dict_[a_cut_label]));
       }
+
+      this->i_cut::_set_initialized(true);
       return;
     }
 
