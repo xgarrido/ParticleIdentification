@@ -73,7 +73,7 @@ int main()
       datatools::properties TMC_config;
       TMC_config.store("logging.priority", "debug");
       TMC_config.store("mode.has_internal_probability", true);
- TMC_config.store("mode.range_internal_probability", true);
+      TMC_config.store("mode.range_internal_probability", true);
       TMC_config.store("range_internal_probability.mode", "all");
       TMC_config.store_real_with_explicit_unit("range_internal_probability.min", 5 * CLHEP::perCent);
       TMC_config.store_real_with_explicit_unit("range_internal_probability.max", 50 * CLHEP::perCent);
@@ -124,6 +124,25 @@ int main()
         std::cout << "not ";
       }
       std::cout << "all external probability below 5%" << std::endl;
+    }
+
+    {
+      datatools::handle<snemo::datamodel::base_topology_measurement> HBTM;
+      HBTM.reset(new snemo::datamodel::tof_measurement);
+      HBTM.get().tree_dump();
+      snemo::cut::tof_measurement_cut TMC;
+      datatools::properties TMC_config;
+      TMC_config.store("logging.priority", "debug");
+      TMC_config.store("mode.has_internal_probability", true);
+      TMC_config.store("mode.has_external_probability", true);
+      TMC.initialize_standalone(TMC_config);
+      TMC.set_user_data(HBTM.get());
+      const int status = TMC.process();
+      std::cout << "Current TOF measurement has ";
+      if (status != cuts::SELECTION_ACCEPTED) {
+        std::cout << "no ";
+      }
+      std::cout << "internal/external probabilities" << std::endl;
     }
 
   } catch (std::exception & x) {
