@@ -549,7 +549,7 @@ DOCD_CLASS_IMPLEMENT_LOAD_BEGIN(snemo::cut::tof_measurement_cut, ocd_)
 }
 DOCD_CLASS_IMPLEMENT_LOAD_END() // Closing macro for implementation
 
-// Registration macro for class 'snemo::cut::simulated_data_cut' :
+// Registration macro for class 'snemo::cut::tof_measurement_cut' :
 DOCD_CLASS_SYSTEM_REGISTRATION(snemo::cut::tof_measurement_cut, "snemo::cut::tof_measurement_cut")
 
 /*
