@@ -130,6 +130,85 @@ namespace snemo {
 
 }  // end of namespace snemo
 
+DOCD_CLASS_IMPLEMENT_LOAD_BEGIN(snemo::cut::channel_cut, ocd_)
+{
+  ocd_.set_class_name("snemo::cut::channel_cut");
+  ocd_.set_class_description("Cut used to select physics channel");
+  ocd_.set_class_library("falaise");
+  // ocd_.set_class_documentation("");
+
+  cuts::i_cut::common_ocd(ocd_);
+
+  {
+    // Description of the 'cuts' configuration property :
+    datatools::configuration_property_description & cpd = ocd_.add_property_info();
+    cpd.set_name_pattern("cuts")
+      .set_terse_description("The list of name of the cuts to be combined")
+      .set_traits(datatools::TYPE_STRING,
+                  datatools::configuration_property_description::ARRAY)
+      .set_mandatory(true)
+      .set_long_description("The list of all cuts' to be combined with a logical AND.")
+      .add_example("Combine 2 cuts: ::                               \n"
+                   "                                                 \n"
+                   "    cuts : string[2] = \"int_prob\" \"ext_prob\" \n"
+                   "                                                 \n"
+                   )
+      ;
+  }
+
+  {
+    datatools::configuration_property_description & cpd = ocd_.add_configuration_property_info();
+    cpd.set_name_pattern("${cuts}.cut_label")
+      .set_terse_description("The cut label name to be associated to ${cuts}")
+      .set_traits(datatools::TYPE_STRING)
+      .set_mandatory(true)
+      .add_example("Set the cut labels::                                              \n"
+                   "                                                                  \n"
+                   "  cuts : string[2] = \"int_prob\" \"ext_prob\"                    \n"
+                   "  int_prob.cut_label : string = \"good_internal_probability_cut\" \n"
+                   "  ext_prob.cut_label : string = \"bad_external_probability_cut\"  \n"
+                   "                                                                  \n"
+                   )
+      ;
+  }
+
+  {
+    datatools::configuration_property_description & cpd = ocd_.add_configuration_property_info();
+    cpd.set_name_pattern("${cuts}.measurement_label")
+      .set_terse_description("The measurement label name to be associated to ${cuts}")
+      .set_traits(datatools::TYPE_STRING)
+      .set_mandatory(true)
+      .add_example("Set the measurement labels::                          \n"
+                   "                                                      \n"
+                   "  cuts : string[2] = \"int_prob\" \"ext_prob\"        \n"
+                   "  int_prob.measurement_label : string = \"tof_e1_e2\" \n"
+                   "  ext_prob.measurement_label : string = \"tof_e1_e2\" \n"
+                   "                                                      \n"
+                   )
+      ;
+  }
+
+  // Additional configuration hints :
+  ocd_.set_configuration_hints("Here is a full configuration example in the                               \n"
+                               "``datatools::properties`` ASCII format::                                  \n"
+                               "                                                                          \n"
+                               "  cuts : string[2] = \"int_prob\" \"ext_prob\"                            \n"
+                               "  int_prob.cut_label         : string = \"good_internal_probability_cut\" \n"
+                               "  int_prob.measurement_label : string = \"tof_e1_e2\"                     \n"
+                               "  ext_prob.cut_label         : string = \"bad_external_probability_cut\"  \n"
+                               "  ext_prob.measurement_label : string = \"tof_e1_e2\"                     \n"
+                               "                                                                          \n"
+                               );
+
+  ocd_.set_validation_support(true);
+  ocd_.lock();
+  return;
+}
+DOCD_CLASS_IMPLEMENT_LOAD_END() // Closing macro for implementation
+
+// Registration macro for class 'snemo::cut::channel_cut' :
+DOCD_CLASS_SYSTEM_REGISTRATION(snemo::cut::channel_cut, "snemo::cut::channel_cut")
+
 /*
 ** Local Variables: --
 ** mode: c++ --
