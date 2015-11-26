@@ -6,6 +6,7 @@
 // Standard library:
 #include <stdexcept>
 #include <sstream>
+#include <algorithm>
 
 // Third party:
 // - Bayeux/datatools:
@@ -26,6 +27,8 @@ namespace snemo {
     void topology_data_cut::_set_defaults()
     {
       _mode_ = MODE_UNDEFINED;
+      _number_of_gammas_min_ = -1;
+      _number_of_gammas_max_ = -1;
       _TD_label_ = "TD";//snemo::datamodel::data_info::default_topology_data_label();
       return;
     }
@@ -43,6 +46,11 @@ namespace snemo {
     bool topology_data_cut::is_mode_pattern_id() const
     {
       return _mode_ & MODE_PATTERN_ID;
+    }
+
+    bool topology_data_cut::is_mode_range_number_of_gammas() const
+    {
+      return _mode_ & MODE_RANGE_NUMBER_OF_GAMMAS;
     }
 
     topology_data_cut::topology_data_cut(datatools::logger::priority logger_priority_)
@@ -84,6 +92,9 @@ namespace snemo {
       if (configuration_.has_flag("mode.pattern_id")) {
         _mode_ |= MODE_PATTERN_ID;
       }
+      if (configuration_.has_flag("mode.range_number_of_gammas")) {
+        _mode_ |= MODE_RANGE_NUMBER_OF_GAMMAS;
+      }
       DT_THROW_IF(_mode_ == MODE_UNDEFINED, std::logic_error,
                   "Missing at least a 'mode.XXX' property !");
 
@@ -92,6 +103,31 @@ namespace snemo {
         DT_THROW_IF(! configuration_.has_key("pattern_id.label"), std::logic_error,
                     "Missing 'pattern_id.label' !");
         _pattern_id_label_ = configuration_.fetch_string("pattern_id.label");
+      }
+
+      if (is_mode_range_number_of_gammas()) {
+        DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_NUMBER_OF_GAMMAS mode...");
+        size_t count = 0;
+        if (configuration_.has_key("range_number_of_gammas.min")) {
+          double ngammas_min = configuration_.fetch_integer("range_number_of_gammas.min");
+          DT_THROW_IF(ngammas_min < 0, std::range_error,
+                      "Invalid minimal number of gammas (" << ngammas_min << ") !");
+          _number_of_gammas_min_ = ngammas_min;
+          count++;
+        }
+        if (configuration_.has_key("range_number_of_gammas.max")) {
+          double ngammas_max = configuration_.fetch_integer("range_number_of_gammas.max");
+          DT_THROW_IF(ngammas_max < 0, std::range_error,
+                      "Invalid maximal number of gammas (" << ngammas_max << ") !");
+          _number_of_gammas_max_ = ngammas_max;
+          count++;
+        }
+        DT_THROW_IF(count == 0, std::logic_error,
+                    "Missing 'range_number_of_gammas.min' or 'range_number_of_gammas.max' property !");
+        if (count == 2 && _number_of_gammas_min_ >= 0 && _number_of_gammas_max_ >= 0) {
+          DT_THROW_IF(_number_of_gammas_min_ > _number_of_gammas_max_, std::logic_error,
+                      "Invalid 'range_number_of_gammas.min' > 'range_number_of_gammas.max' values !");
+        }
       }
 
       this->i_cut::_set_initialized(true);
@@ -133,9 +169,34 @@ namespace snemo {
         if (a_pattern_id != _pattern_id_label_) check_pattern_id = false;
       }
 
+      // Check if event has correct number of gammas
+      bool check_range_number_of_gammas = true;
+      if (is_mode_range_number_of_gammas()) {
+
+        const int ngamma = std::count_if (TD.get_pattern().get_particle_track_dictionary().begin(),
+                                          TD.get_pattern().get_particle_track_dictionary().end(),
+                                          [](const std::pair<std::string,
+                                             snemo::datamodel::particle_track::handle_type> & t) -> bool
+                                          {
+                                            return t.first.find("g") != std::string::npos;
+                                          });
+
+        if (ngamma < _number_of_gammas_min_) {
+          DT_LOG_DEBUG(get_logging_priority(),
+                       "Number of gammas (" << ngamma << ") lower than " << _number_of_gammas_min_);
+          check_range_number_of_gammas = false;
+        }
+        if (ngamma > _number_of_gammas_max_) {
+          DT_LOG_DEBUG(get_logging_priority(),
+                       "Number of gammas (" << ngamma << ") greater than " << _number_of_gammas_max_);
+          check_range_number_of_gammas = false;
+        }
+      }
+
       cut_returned = cuts::SELECTION_REJECTED;
       if (check_has_pattern_id &&
-          check_pattern_id) {
+          check_pattern_id     &&
+          check_range_number_of_gammas) {
         DT_LOG_DEBUG(get_logging_priority(), "Event rejected by topology cut!");
         cut_returned = cuts::SELECTION_ACCEPTED;
       }
