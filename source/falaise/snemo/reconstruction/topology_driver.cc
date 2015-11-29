@@ -99,13 +99,13 @@ namespace snemo {
           setup_.export_and_rename_starting_with(TOFD_config, std::string(a_driver_name + "."), "");
           _drivers_.TOFD->initialize(TOFD_config);
         } else if (a_driver_name == snemo::reconstruction::vertex_driver::get_id()) {
-          // Initialize Delta Vertices Driver
+          // Initialize Vertex Driver
           _drivers_.VD.reset(new snemo::reconstruction::vertex_driver);
           datatools::properties VD_config;
           setup_.export_and_rename_starting_with(VD_config, std::string(a_driver_name + "."), "");
           _drivers_.VD->initialize(VD_config);
         } else if (a_driver_name == snemo::reconstruction::angle_driver::get_id()) {
-          // Initialize Delta Vertices Driver
+          // Initialize Angle Driver
           _drivers_.AMD.reset(new snemo::reconstruction::angle_driver);
           datatools::properties AMD_config;
           setup_.export_and_rename_starting_with(AMD_config, std::string(a_driver_name + "."), "");
