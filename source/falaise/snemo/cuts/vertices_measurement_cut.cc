@@ -378,8 +378,6 @@ namespace snemo {
           return cuts::SELECTION_INAPPLICABLE;
         }
         const double & vtx_dist_y = a_vertices_meas.get_vertices_distance_y();
-        std::cout << "--------- DEBUG  vtx distance min : " << _vertices_dist_y_range_min_ << std::endl;
-        std::cout << "--------- DEBUG  vtx distance y : " << vtx_dist_y << std::endl << std::endl;
 
         if (datatools::is_valid(_vertices_dist_y_range_min_)) {
           if (vtx_dist_y < _vertices_dist_y_range_min_) {
@@ -387,7 +385,6 @@ namespace snemo {
                          "Vertices distance in Y (" << vtx_dist_y/CLHEP::mm << "mm) lower than "
                          << _vertices_dist_y_range_min_/CLHEP::mm << "mm");
             check_range_vertices_distance_y = false;
-            std::cout << "--------- DEBUG  not lower" << std::endl;
           }
         }
 
@@ -436,7 +433,6 @@ namespace snemo {
           check_range_vertices_distance_y  &&
           check_range_vertices_distance_z
           ) {
-        std::cout << "--------- DEBUG  event accepted" << std::endl;
         DT_LOG_DEBUG(get_logging_priority(), "Event accepted by VERTICES measurement cut!");
         cut_returned = cuts::SELECTION_ACCEPTED;
       }
