@@ -214,6 +214,10 @@ namespace snemo {
         geomtools::blur_spot & a_spot = vertex_.grab_vertex();
         a_spot.set_blur_dimension(vtx1_.get_blur_dimension());
         a_spot.set_position(bary);
+        // temporary store the vertices distance in the barycenter errors
+        a_spot.set_errors(std:abs(pos1.x()-pos2.x()),
+                          std:abs(pos1.y()-pos2.y()),
+                          std:abs(pos1.z()-pos2.z()));
       }
       return ;
     }
