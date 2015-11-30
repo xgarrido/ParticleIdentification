@@ -58,6 +58,28 @@ namespace snemo {
       return;
     }
 
+    bool vertex_measurement::has_vertices_distance() const
+    {
+      return (datatools::is_valid(_vertex_.get_x_error()) &&
+              datatools::is_valid(_vertex_.get_y_error()) &&
+              datatools::is_valid(_vertex_.get_z_error()));
+    }
+
+    double vertex_measurement::get_vertices_distance_x() const
+    {
+      return _vertex_.get_x_error();
+    }
+
+    double vertex_measurement::get_vertices_distance_y() const
+    {
+      return _vertex_.get_y_error();
+    }
+
+    double vertex_measurement::get_vertices_distance_z() const
+    {
+      return _vertex_.get_z_error();
+    }
+
     void vertex_measurement::tree_dump(std::ostream      & out_,
                                        const std::string & title_,
                                        const std::string & indent_,
