@@ -8,6 +8,10 @@ project(FalaiseParticleIdentificationPlugin)
 # Use C++11
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
+set(Boost_COMPONENTS regex)
+find_package(Boost 1.47 QUIET COMPONENTS ${Boost_COMPONENTS} NO_MODULE)
+find_package(Boost 1.47 REQUIRED ${Boost_COMPONENTS})
+
 # Ensure our code can see the Falaise headers
 #include_directories(${Falaise_INCLUDE_DIRS})
 include_directories(${Falaise_BUILDPRODUCT_DIR}/include)
@@ -124,7 +128,7 @@ add_library(Falaise_ParticleIdentification SHARED
   ${FalaiseParticleIdentificationPlugin_HEADERS}
   ${FalaiseParticleIdentificationPlugin_SOURCES})
 
-target_link_libraries(Falaise_ParticleIdentification Falaise)
+target_link_libraries(Falaise_ParticleIdentification Falaise ${Boost_LIBRARIES})
 
 # Apple linker requires dynamic lookup of symbols, so we
 # add link flags on this platform

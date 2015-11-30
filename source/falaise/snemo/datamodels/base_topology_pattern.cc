@@ -5,7 +5,7 @@
 #include <falaise/snemo/datamodels/base_topology_pattern.h>
 
 // Standard library:
-#include <regex>
+#include <boost/regex.hpp>
 
 namespace snemo {
 
@@ -50,7 +50,7 @@ namespace snemo {
       // Use key as regular expression and match over it
       auto it = std::find_if(_meas_.begin(), _meas_.end(),
                              [key_](const std::pair<std::string, handle_measurement> & t) -> bool {
-                               return std::regex_match(t.first, std::regex(key_));
+                               return boost::regex_match(t.first, boost::regex(key_));
                              });
       return it != _meas_.end();
     }
