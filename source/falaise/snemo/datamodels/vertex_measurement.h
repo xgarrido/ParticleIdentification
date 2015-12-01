@@ -49,6 +49,18 @@ namespace snemo {
       /// Set probability value
       void set_probability(const double probability_);
 
+      /// Check vertices distance validity
+      bool has_vertices_distance() const;
+
+      /// Return vertices distance in X
+      double get_vertices_distance_x() const;
+
+      /// Return vertices distance in Y
+      double get_vertices_distance_y() const;
+
+      /// Return vertices distance in Z
+      double get_vertices_distance_z() const;
+
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,
                              const std::string & title_  = "",

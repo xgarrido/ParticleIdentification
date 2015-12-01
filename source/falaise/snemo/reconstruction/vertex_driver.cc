@@ -188,14 +188,25 @@ namespace snemo {
           }
           return datatools::is_valid(sigma) ? sigma : 1.0;
         };
+
       const double sigma1 = sigma(vtx1_);
       const double sigma2 = sigma(vtx2_);
+
+      const double sigma1_x = vtx1_.get_x_error();
+      const double sigma1_y = vtx1_.get_y_error();
+      const double sigma1_z = vtx1_.get_z_error();
+      const double sigma2_x = vtx2_.get_x_error();
+      const double sigma2_y = vtx2_.get_y_error();
+      const double sigma2_z = vtx2_.get_z_error();
+
       const geomtools::vector_3d & pos1 = vtx1_.get_position();
       const geomtools::vector_3d & pos2 = vtx2_.get_position();
       const geomtools::vector_3d bary = (pos1/sigma1 + pos2/sigma2)/(1/sigma1 + 1/sigma2);
 
-      const double chi_2 = ((bary-pos1).mag2() + (bary-pos2).mag2())/(sigma1 + sigma2);
-      const double probability = gsl_cdf_chisq_Q(chi_2, 1);
+      const double chi_2_y = (std::pow(bary.y()-pos1.y(),2) + std::pow(bary.y()-pos2.y(),2))/(sigma1_y*sigma1_y + sigma2_y*sigma2_y);
+      const double chi_2_z = (std::pow(bary.z()-pos1.z(),2) + std::pow(bary.z()-pos2.z(),2))/(sigma1_z*sigma1_z + sigma2_z*sigma2_z);
+
+      const double probability = gsl_cdf_chisq_Q(chi_2_y+chi_2_z, 1);
 
       if (! vertex_.has_probability() || vertex_.get_probability() < probability) {
         // Update vertex value
@@ -203,6 +214,10 @@ namespace snemo {
         geomtools::blur_spot & a_spot = vertex_.grab_vertex();
         a_spot.set_blur_dimension(vtx1_.get_blur_dimension());
         a_spot.set_position(bary);
+        // temporary store the vertices distance in the barycenter errors
+        a_spot.set_errors(std::abs(pos1.x()-pos2.x()),
+                          std::abs(pos1.y()-pos2.y()),
+                          std::abs(pos1.z()-pos2.z()));
       }
       return ;
     }

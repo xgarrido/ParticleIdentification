@@ -33,6 +33,10 @@ namespace snemo {
         MODE_UNDEFINED                  = 0,
         MODE_HAS_VERTICES_PROBABILITY   = datatools::bit_mask::bit01,
         MODE_RANGE_VERTICES_PROBABILITY = datatools::bit_mask::bit02,
+        MODE_HAS_VERTICES_DISTANCE      = datatools::bit_mask::bit03,
+        MODE_RANGE_VERTICES_DISTANCE_X  = datatools::bit_mask::bit04,
+        MODE_RANGE_VERTICES_DISTANCE_Y  = datatools::bit_mask::bit05,
+        MODE_RANGE_VERTICES_DISTANCE_Z  = datatools::bit_mask::bit06,
       };
 
       /// Return the cut mode
@@ -46,6 +50,18 @@ namespace snemo {
 
       /// Check mode RANGE_VERTICES_PROBABILITY
       bool is_mode_range_vertices_probability() const;
+
+      /// Check mode HAS_VERTICES_DISTANCE
+      bool is_mode_has_vertices_distance() const;
+
+      /// Check mode RANGE_VERTICES_DISTANCE_X
+      bool is_mode_range_vertices_distance_x() const;
+
+      /// Check mode RANGE_VERTICES_DISTANCE_y
+      bool is_mode_range_vertices_distance_y() const;
+
+      /// Check mode RANGE_VERTICES_DISTANCE_z
+      bool is_mode_range_vertices_distance_z() const;
 
       /// Constructor
       vertices_measurement_cut(datatools::logger::priority logging_priority_ = datatools::logger::PRIO_FATAL);
@@ -74,6 +90,12 @@ namespace snemo {
       uint32_t _mode_;             //!< Mode of the cut
       double _vertices_prob_range_min_; //!< Minimal vertices probability
       double _vertices_prob_range_max_; //!< Maximal vertices probability
+      double _vertices_dist_x_range_min_; //!< Minimal vertices distance in x
+      double _vertices_dist_x_range_max_; //!< Maximal vertices distance in x
+      double _vertices_dist_y_range_min_; //!< Minimal vertices distance in y
+      double _vertices_dist_y_range_max_; //!< Maximal vertices distance in y
+      double _vertices_dist_z_range_min_; //!< Minimal vertices distance in z
+      double _vertices_dist_z_range_max_; //!< Maximal vertices distance in z
 
       // Macro to automate the registration of the cut :
       CUT_REGISTRATION_INTERFACE(vertices_measurement_cut);
