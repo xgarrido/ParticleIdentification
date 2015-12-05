@@ -53,23 +53,23 @@ namespace snemo {
 
       /// Mode of the cut
       enum mode_type {
-        MODE_UNDEFINED              = 0,
-        MODE_HAS_PATTERN_ID         = datatools::bit_mask::bit01,
-        MODE_PATTERN_ID             = datatools::bit_mask::bit02,
-        MODE_RANGE_NUMBER_OF_GAMMAS = datatools::bit_mask::bit03
+        MODE_UNDEFINED      = 0,
+        MODE_HAS_PATTERN    = datatools::bit_mask::bit01,
+        MODE_HAS_PATTERN_ID = datatools::bit_mask::bit02,
+        MODE_CLASSIFICATION = datatools::bit_mask::bit03
       };
 
       /// Return the cut mode
       uint32_t get_mode() const;
 
+      /// Check mode HAS_PATTERN
+      bool is_mode_has_pattern() const;
+
       /// Check mode HAS_PATTERN_ID
       bool is_mode_has_pattern_id() const;
 
-      /// Check mode PATTERN_ID
-      bool is_mode_pattern_id() const;
-
-      /// Check mode RANGE_NUMBER_OF_GAMMAS
-      bool is_mode_range_number_of_gammas() const;
+      /// Check mode CLASSIFICATION
+      bool is_mode_classification() const;
 
       /// Constructor
       topology_data_cut(datatools::logger::priority logging_priority_ = datatools::logger::PRIO_FATAL);
@@ -98,9 +98,8 @@ namespace snemo {
       std::string _TD_label_; //!< Name of the "Topology data" bank
       uint32_t    _mode_;     //!< Mode of the cut
 
-      std::string _pattern_id_label_; //!< Pattern ID label
-      int _number_of_gammas_min_; //!< Minimal number of gammas
-      int _number_of_gammas_max_; //!< Maximal number of gammas
+      std::string _pattern_id_label_;     //!< Pattern ID label
+      std::string _classification_label_; //!< Classification label
 
       // Macro to automate the registration of the cut :
       CUT_REGISTRATION_INTERFACE(topology_data_cut);
