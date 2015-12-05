@@ -10,7 +10,7 @@
 
 // Third party:
 // - Boost:
-#include <boost/regex.hpp>
+#include <regex>
 // - Bayeux/datatools:
 #include <datatools/properties.h>
 #include <datatools/things.h>
@@ -162,7 +162,7 @@ namespace snemo {
           return cuts::SELECTION_INAPPLICABLE;
         }
         const std::string & a_classification = td_aux.fetch_string(snemo::datamodel::pid_utils::classification_label_key());
-        if (! boost::regex_match(a_classification, boost::regex(_classification_label_))) {
+        if (! std::regex_match(a_classification, std::regex(_classification_label_))) {
           check_classification = false;
         }
       }
