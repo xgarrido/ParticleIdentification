@@ -21,6 +21,13 @@ namespace snemo {
       return s;
     }
 
+    const std::string & pid_utils::classification_label_key()
+    {
+      static const std::string s(snemo::datamodel::pid_utils::pid_prefix_key() +
+                                 ".classification");
+      return s;
+    }
+
     const std::string & pid_utils::electron_label()
     {
       static const std::string s("electron");
