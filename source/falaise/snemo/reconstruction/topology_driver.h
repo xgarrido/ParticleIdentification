@@ -111,8 +111,11 @@ namespace snemo {
 
     private:
 
-      /// Build the topology builder class id
-      std::string _get_builder_class_id_(const snemo::datamodel::particle_track_data & ptd_) const;
+      /// Build the event classification
+      std::string _get_classification_(const snemo::datamodel::particle_track_data & ptd_) const;
+
+      /// Build the topology builder class id from the classification field
+      std::string _get_builder_class_id_(const std::string & classification) const;
 
     private:
 
