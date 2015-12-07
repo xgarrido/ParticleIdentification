@@ -60,8 +60,10 @@ namespace snemo {
 
     bool vertex_measurement::has_vertices_distance() const
     {
-      return (datatools::is_valid(_vertex_.get_x_error()) &&
-              datatools::is_valid(_vertex_.get_y_error()) &&
+      // return (datatools::is_valid(_vertex_.get_x_error()) &&
+      //         datatools::is_valid(_vertex_.get_y_error()) &&
+      //         datatools::is_valid(_vertex_.get_z_error()));
+      return (datatools::is_valid(_vertex_.get_y_error()) &&
               datatools::is_valid(_vertex_.get_z_error()));
     }
 

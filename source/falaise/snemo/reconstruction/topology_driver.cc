@@ -167,7 +167,7 @@ namespace snemo {
       // Regex machinery...
       const std::string builder_class_id = topology_driver::_get_builder_class_id_(ptd_);
       if (builder_class_id.empty()) {
-        DT_LOG_WARNING(get_logging_priority(), "Topology not supported for the measurements ");
+        DT_LOG_DEBUG(get_logging_priority(), "Topology not supported for the measurements ");
         return 0;
       }
 
@@ -232,7 +232,7 @@ namespace snemo {
       } else if (std::regex_match(a_classification, std::regex("2e[0-9]+g"))) {
         a_class_id = "snemo::reconstruction::topology_2eNg_builder";
       } else {
-        DT_LOG_WARNING(get_logging_priority(), "Non supported classification '" << a_classification << "' !");
+        DT_LOG_DEBUG(get_logging_priority(), "Non supported classification '" << a_classification << "' !");
       }
       DT_LOG_TRACE(get_logging_priority(), "Builder class id : " << a_class_id);
       return a_class_id;
