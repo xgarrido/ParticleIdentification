@@ -4,7 +4,7 @@
 #include <snemo/reconstruction/topology_driver.h>
 
 // Standard library
-#include <boost/regex.hpp>
+#include <regex>
 
 // Third party:
 // - Bayeux/cuts:
@@ -232,11 +232,11 @@ namespace snemo {
         a_class_id = "snemo::reconstruction::topology_1e1a_builder";
       } else if (classification_ == "1e1p") {
         a_class_id = "snemo::reconstruction::topology_1e1p_builder";
-      } else if (boost::regex_match(classification_, boost::regex("1e[0-9]+g"))) {
+      } else if (std::regex_match(classification_, std::regex("1e[0-9]+g"))) {
         a_class_id = "snemo::reconstruction::topology_1eNg_builder";
       } else if (classification_ == "2e") {
         a_class_id = "snemo::reconstruction::topology_2e_builder";
-      } else if (boost::regex_match(classification_, boost::regex("2e[0-9]+g"))) {
+      } else if (std::regex_match(classification_, std::regex("2e[0-9]+g"))) {
         a_class_id = "snemo::reconstruction::topology_2eNg_builder";
       } else {
         DT_LOG_DEBUG(get_logging_priority(), "Non supported classification '" << classification_ << "' !");
