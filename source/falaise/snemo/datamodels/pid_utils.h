@@ -26,6 +26,9 @@ namespace snemo {
       /// The name of a string property representing the Particle Identification label
       static const std::string & pid_label_key();
 
+      /// The name of a string property representing the classification label
+      static const std::string & classification_label_key();
+
       /// The label of electron particle
       static const std::string & electron_label();
 

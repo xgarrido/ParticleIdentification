@@ -4,7 +4,7 @@
 #include <snemo/reconstruction/topology_driver.h>
 
 // Standard library
-#include <regex>
+#include <boost/regex.hpp>
 
 // Third party:
 // - Bayeux/cuts:
@@ -164,20 +164,22 @@ namespace snemo {
     {
       DT_LOG_TRACE(get_logging_priority(), "Entering...");
 
-      // Regex machinery...
-      const std::string builder_class_id = topology_driver::_get_builder_class_id_(ptd_);
-      if (builder_class_id.empty()) {
+      const std::string a_classification = topology_driver::_get_classification_(ptd_);
+      td_.grab_auxiliaries().store(snemo::datamodel::pid_utils::classification_label_key(),
+                                   a_classification);
+      const std::string a_builder_class_id = topology_driver::_get_builder_class_id_(a_classification);
+      if (a_builder_class_id.empty()) {
         DT_LOG_DEBUG(get_logging_priority(), "Topology not supported for the measurements ");
         return 0;
       }
 
       const base_topology_builder::factory_register_type & FB
         = DATATOOLS_FACTORY_GET_SYSTEM_REGISTER(base_topology_builder);
-      DT_THROW_IF(! FB.has(builder_class_id), std::logic_error,
-                  "Topology builder class id '" << builder_class_id << "' "
+      DT_THROW_IF(! FB.has(a_builder_class_id), std::logic_error,
+                  "Topology builder class id '" << a_builder_class_id << "' "
                   << "is not available from the system builder factory register !");
       const base_topology_builder::factory_register_type::factory_type & the_factory
-        = FB.get(builder_class_id);
+        = FB.get(a_builder_class_id);
       snemo::reconstruction::base_topology_builder * new_builder = the_factory();
       td_.set_pattern_handle(new_builder->create_pattern());
 
@@ -194,7 +196,7 @@ namespace snemo {
       return 0;
     }
 
-    std::string topology_driver::_get_builder_class_id_(const snemo::datamodel::particle_track_data & ptd_) const
+    std::string topology_driver::_get_classification_(const snemo::datamodel::particle_track_data & ptd_) const
     {
       const datatools::properties & aux = ptd_.get_auxiliaries();
       std::ostringstream classification;
@@ -217,19 +219,24 @@ namespace snemo {
       }
       const std::string a_classification = classification.str();
       DT_LOG_TRACE(get_logging_priority(), "Event classification : " << a_classification);
+      return a_classification;
+    }
 
+    std::string topology_driver::_get_builder_class_id_(const std::string & classification_) const
+    {
+      // Regex machinery...
       std::string a_class_id;
-      if (a_classification == "1e") {
+      if (classification_ == "1e") {
         a_class_id = "snemo::reconstruction::topology_1e_builder";
-      } else if (a_classification == "1e1a") {
+      } else if (classification_ == "1e1a") {
         a_class_id = "snemo::reconstruction::topology_1e1a_builder";
-      } else if (a_classification == "1e1p") {
+      } else if (classification_ == "1e1p") {
         a_class_id = "snemo::reconstruction::topology_1e1p_builder";
-      } else if (std::regex_match(a_classification, std::regex("1e[0-9]+g"))) {
+      } else if (boost::regex_match(classification_, boost::regex("1e[0-9]+g"))) {
         a_class_id = "snemo::reconstruction::topology_1eNg_builder";
-      } else if (a_classification == "2e") {
+      } else if (classification_ == "2e") {
         a_class_id = "snemo::reconstruction::topology_2e_builder";
-      } else if (std::regex_match(a_classification, std::regex("2e[0-9]+g"))) {
+      } else if (boost::regex_match(classification_, boost::regex("2e[0-9]+g"))) {
         a_class_id = "snemo::reconstruction::topology_2eNg_builder";
       } else {
         DT_LOG_DEBUG(get_logging_priority(), "Non supported classification '" << a_classification << "' !");

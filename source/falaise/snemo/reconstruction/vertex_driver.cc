@@ -203,10 +203,11 @@ namespace snemo {
       const geomtools::vector_3d & pos2 = vtx2_.get_position();
       const geomtools::vector_3d bary = (pos1/sigma1 + pos2/sigma2)/(1/sigma1 + 1/sigma2);
 
-      const double chi_2_y = (std::pow(bary.y()-pos1.y(),2) + std::pow(bary.y()-pos2.y(),2))/(sigma1_y*sigma1_y + sigma2_y*sigma2_y);
-      const double chi_2_z = (std::pow(bary.z()-pos1.z(),2) + std::pow(bary.z()-pos2.z(),2))/(sigma1_z*sigma1_z + sigma2_z*sigma2_z);
+      const double chi2_x = (std::pow(bary.x()-pos1.x(),2) + std::pow(bary.x()-pos2.x(),2))/(sigma1_x*sigma1_x + sigma2_x*sigma2_x);
+      const double chi2_y = (std::pow(bary.y()-pos1.y(),2) + std::pow(bary.y()-pos2.y(),2))/(sigma1_y*sigma1_y + sigma2_y*sigma2_y);
+      const double chi2_z = (std::pow(bary.z()-pos1.z(),2) + std::pow(bary.z()-pos2.z(),2))/(sigma1_z*sigma1_z + sigma2_z*sigma2_z);
 
-      const double probability = gsl_cdf_chisq_Q(chi_2_y+chi_2_z, 1);
+      const double probability = gsl_cdf_chisq_Q(chi2_x+chi2_y+chi2_z, 1);
 
       if (! vertex_.has_probability() || vertex_.get_probability() < probability) {
         // Update vertex value
