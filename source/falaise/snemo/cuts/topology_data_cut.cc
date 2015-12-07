@@ -44,9 +44,9 @@ namespace snemo {
       return _mode_ & MODE_HAS_PATTERN;
     }
 
-    bool topology_data_cut::is_mode_has_pattern_id() const
+    bool topology_data_cut::is_mode_has_classification() const
     {
-      return _mode_ & MODE_HAS_PATTERN_ID;
+      return _mode_ & MODE_HAS_CLASSIFICATION;
     }
 
     bool topology_data_cut::is_mode_classification() const
@@ -90,8 +90,8 @@ namespace snemo {
       if (configuration_.has_flag("mode.has_pattern")) {
         _mode_ |= MODE_HAS_PATTERN;
       }
-      if (configuration_.has_flag("mode.has_pattern_id")) {
-        _mode_ |= MODE_HAS_PATTERN_ID;
+      if (configuration_.has_flag("mode.has_classification")) {
+        _mode_ |= MODE_HAS_CLASSIFICATION;
       }
       if (configuration_.has_flag("mode.classification")) {
         _mode_ |= MODE_CLASSIFICATION;
@@ -99,14 +99,7 @@ namespace snemo {
       DT_THROW_IF(_mode_ == MODE_UNDEFINED, std::logic_error,
                   "Missing at least a 'mode.XXX' property !");
 
-      if (is_mode_has_pattern_id()) {
-        DT_LOG_DEBUG(get_logging_priority(), "Using HAS_PATTERN_ID mode...");
-        DT_THROW_IF(! configuration_.has_key("has_pattern_id.label"), std::logic_error,
-                    "Missing 'has_pattern_id.label' !");
-        _pattern_id_label_ = configuration_.fetch_string("has_pattern_id.label");
-      }
-
-      if (is_mode_classification()) {
+      if (is_mode_has_classification()) {
         DT_LOG_DEBUG(get_logging_priority(), "Using CLASSIFICATION mode...");
         DT_THROW_IF(! configuration_.has_key("classification.label"), std::logic_error,
                     "Missing 'classification.label' !");
@@ -138,18 +131,13 @@ namespace snemo {
         if (! TD.has_pattern()) check_has_pattern = false;
       }
 
-      // Check if event has the correct pattern id
-      bool check_has_pattern_id = true;
-      if (is_mode_has_pattern_id()) {
-        DT_LOG_DEBUG(get_logging_priority(), "Running HAS_PATTERN_ID mode...");
-        if (! TD.has_pattern()) {
-          DT_LOG_DEBUG(get_logging_priority(), "The event does not have associated topology pattern !");
-          return cuts::SELECTION_INAPPLICABLE;
-          // return cuts::SELECTION_REJECTED;
-        }
-        const snemo::datamodel::base_topology_pattern & a_pattern = TD.get_pattern();
-        const std::string & a_pattern_id = a_pattern.get_pattern_id();
-        if (a_pattern_id != _pattern_id_label_) check_has_pattern_id = false;
+      // Check if event has a classification
+      bool check_has_classification = true;
+      if (is_mode_has_classification()) {
+        DT_LOG_DEBUG(get_logging_priority(), "Running HAS_CLASSIFICATION mode...");
+        const datatools::properties & td_aux = TD.get_auxiliaries();
+        if (! td_aux.has_key(snemo::datamodel::pid_utils::classification_label_key()))
+          check_has_pattern = false;
       }
 
       // Check if event has the correct classification label
@@ -162,6 +150,11 @@ namespace snemo {
           return cuts::SELECTION_INAPPLICABLE;
         }
         const std::string & a_classification = td_aux.fetch_string(snemo::datamodel::pid_utils::classification_label_key());
+        std::cout << "finding " << a_classification << " in " << _classification_label_ << std::endl;
+        std::regex_tmp(_a_classification_label_);
+        if (std::regex_match(a_classification, regex_tmp)) {
+          std::cout << "found ! " << a_classification << " in " << _classification_label_ << std::endl;
+        }
         if (! std::regex_match(a_classification, std::regex(_classification_label_))) {
           check_classification = false;
         }
@@ -169,7 +162,7 @@ namespace snemo {
 
       cut_returned = cuts::SELECTION_REJECTED;
       if (check_has_pattern &&
-          check_has_pattern_id  &&
+          check_has_classification &&
           check_classification) {
         DT_LOG_DEBUG(get_logging_priority(), "Event accepted by topology cut!");
         cut_returned = cuts::SELECTION_ACCEPTED;

@@ -54,9 +54,9 @@ namespace snemo {
       /// Mode of the cut
       enum mode_type {
         MODE_UNDEFINED      = 0,
-        MODE_HAS_PATTERN    = datatools::bit_mask::bit01,
-        MODE_HAS_PATTERN_ID = datatools::bit_mask::bit02,
-        MODE_CLASSIFICATION = datatools::bit_mask::bit03
+        MODE_HAS_PATTERN        = datatools::bit_mask::bit01,
+        MODE_HAS_CLASSIFICATION = datatools::bit_mask::bit02,
+        MODE_CLASSIFICATION     = datatools::bit_mask::bit03
       };
 
       /// Return the cut mode
@@ -65,8 +65,8 @@ namespace snemo {
       /// Check mode HAS_PATTERN
       bool is_mode_has_pattern() const;
 
-      /// Check mode HAS_PATTERN_ID
-      bool is_mode_has_pattern_id() const;
+      /// Check mode HAS_CLASSIFICATION
+      bool is_mode_has_classification() const;
 
       /// Check mode CLASSIFICATION
       bool is_mode_classification() const;
@@ -98,7 +98,6 @@ namespace snemo {
       std::string _TD_label_; //!< Name of the "Topology data" bank
       uint32_t    _mode_;     //!< Mode of the cut
 
-      std::string _pattern_id_label_;     //!< Pattern ID label
       std::string _classification_label_; //!< Classification label
 
       // Macro to automate the registration of the cut :
