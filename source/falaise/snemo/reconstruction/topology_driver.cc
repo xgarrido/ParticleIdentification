@@ -239,7 +239,7 @@ namespace snemo {
       } else if (boost::regex_match(classification_, boost::regex("2e[0-9]+g"))) {
         a_class_id = "snemo::reconstruction::topology_2eNg_builder";
       } else {
-        DT_LOG_DEBUG(get_logging_priority(), "Non supported classification '" << classification << "' !");
+        DT_LOG_DEBUG(get_logging_priority(), "Non supported classification '" << classification_ << "' !");
       }
       DT_LOG_TRACE(get_logging_priority(), "Builder class id : " << a_class_id);
       return a_class_id;
