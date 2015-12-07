@@ -216,9 +216,21 @@ namespace snemo {
         a_spot.set_blur_dimension(vtx1_.get_blur_dimension());
         a_spot.set_position(bary);
         // temporary store the vertices distance in the barycenter errors
-        a_spot.set_errors(std::abs(pos1.x()-pos2.x()),
-                          std::abs(pos1.y()-pos2.y()),
-                          std::abs(pos1.z()-pos2.z()));
+        if(datatools::is_valid(std::abs(pos1.x()-pos2.x())))
+          a_spot.set_x_error(std::abs(pos1.x()-pos2.x()));
+        else
+          a_spot.set_x_error(0);
+
+        if(datatools::is_valid(std::abs(pos1.y()-pos2.y())))
+          a_spot.set_y_error(std::abs(pos1.y()-pos2.y()));
+        else
+          a_spot.set_y_error(0);
+
+        if(datatools::is_valid(std::abs(pos1.z()-pos2.z())))
+          a_spot.set_z_error(std::abs(pos1.z()-pos2.z()));
+        else
+          a_spot.set_z_error(0);
+
       }
       return ;
     }
