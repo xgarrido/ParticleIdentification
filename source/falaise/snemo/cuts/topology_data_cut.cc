@@ -162,6 +162,8 @@ namespace snemo {
           return cuts::SELECTION_INAPPLICABLE;
         }
         const std::string & a_classification = td_aux.fetch_string(snemo::datamodel::pid_utils::classification_label_key());
+        DT_LOG_TRACE(get_logging_priority(), "Looking for " << _classification_label_
+                     << " (current classification is '" << a_classification << "')");
         if (! std::regex_match(a_classification, std::regex(_classification_label_))) {
           check_classification = false;
         }
