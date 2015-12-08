@@ -124,7 +124,7 @@ namespace snemo {
 
       const snemo::datamodel::topology_data & TD = ER.get<snemo::datamodel::topology_data>(_TD_label_);
 
-      // Check if event has the pattern id
+      // Check if event has pattern
       bool check_has_pattern = true;
       if (is_mode_has_pattern()) {
         DT_LOG_DEBUG(get_logging_priority(), "Running HAS_PATTERN mode...");

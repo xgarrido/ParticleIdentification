@@ -124,7 +124,7 @@ add_library(Falaise_ParticleIdentification SHARED
   ${FalaiseParticleIdentificationPlugin_HEADERS}
   ${FalaiseParticleIdentificationPlugin_SOURCES})
 
-target_link_libraries(Falaise_ParticleIdentification Falaise ${Boost_LIBRARIES})
+target_link_libraries(Falaise_ParticleIdentification Falaise)
 
 # Apple linker requires dynamic lookup of symbols, so we
 # add link flags on this platform
