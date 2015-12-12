@@ -99,7 +99,7 @@ namespace snemo {
       DT_THROW_IF(_mode_ == MODE_UNDEFINED, std::logic_error,
                   "Missing at least a 'mode.XXX' property !");
 
-      if (is_mode_has_classification()) {
+      if (is_mode_classification()) {
         DT_LOG_DEBUG(get_logging_priority(), "Using CLASSIFICATION mode...");
         DT_THROW_IF(! configuration_.has_key("classification.label"), std::logic_error,
                     "Missing 'classification.label' !");
@@ -137,7 +137,7 @@ namespace snemo {
         DT_LOG_DEBUG(get_logging_priority(), "Running HAS_CLASSIFICATION mode...");
         const datatools::properties & td_aux = TD.get_auxiliaries();
         if (! td_aux.has_key(snemo::datamodel::pid_utils::classification_label_key()))
-          check_has_pattern = false;
+          check_has_classification = false;
       }
 
       // Check if event has the correct classification label
