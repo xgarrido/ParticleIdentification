@@ -65,6 +65,28 @@ namespace snemo {
       /// Get a given measurement
       const snemo::datamodel::base_topology_measurement & get_measurement(const std::string &) const;
 
+      /// Check measurement data type
+      template<class T>
+      bool has_measurement_as(const std::string & label_) const
+      {
+        DT_THROW_IF(! has_measurement(label_),
+                    std::logic_error,
+                    "Topology pattern does not hold any '" << label_ << "' measurement !");
+        const std::type_info & ti = typeid(T);
+        const std::type_info & tf = typeid(get_measurement(label_));
+        return ti == tf;
+      }
+
+      /// Get a non-mutable measurement of a given type
+      template<class T>
+      const T & get_measurement_as(const std::string & label_) const
+      {
+        DT_THROW_IF(! has_measurement_as<T>(label_),
+                    std::logic_error,
+                    "Invalid request on measurement data type !");
+        return dynamic_cast<const T&>(get_measurement(label_));
+      }
+
       /// Get a mutable reference to measurement dictionary
       measurement_dict_type & grab_measurement_dictionary();
 
