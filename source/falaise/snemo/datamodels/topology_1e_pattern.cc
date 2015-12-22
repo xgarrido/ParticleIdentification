@@ -37,6 +37,16 @@ namespace snemo {
       return;
     }
 
+    bool topology_1e_pattern::has_electron_track() const
+    {
+      return has_particle_track("e1");
+    }
+
+    const snemo::datamodel::particle_track & topology_1e_pattern::get_electron_track() const
+    {
+      return get_particle_track("e1");
+    }
+
     bool topology_1e_pattern::has_electron_angle() const
     {
       return has_measurement("angle_e1");
@@ -45,7 +55,7 @@ namespace snemo {
     double topology_1e_pattern::get_electron_angle() const
     {
       DT_THROW_IF(! has_electron_angle(), std::logic_error, "No electron angle measurement stored !");
-      return dynamic_cast<const snemo::datamodel::angle_measurement&> (get_measurement("angle_e1")).get_angle();
+      return get_measurement_as<snemo::datamodel::angle_measurement>("angle_e1").get_angle();
     }
 
     bool topology_1e_pattern::has_electron_energy() const
@@ -56,7 +66,21 @@ namespace snemo {
     double topology_1e_pattern::get_electron_energy() const
     {
       DT_THROW_IF(! has_electron_energy(), std::logic_error, "No electron energy measurement stored !");
-      return dynamic_cast<const snemo::datamodel::energy_measurement&> (get_measurement("energy_e1")).get_energy();
+      return get_measurement_as<snemo::datamodel::energy_measurement>("energy_e1").get_energy();
+    }
+
+    double topology_1e_pattern::get_electron_track_length() const
+    {
+      double length = datatools::invalid_real();
+      if (has_electron_track()) {
+        const snemo::datamodel::particle_track & the_electron = get_electron_track();
+        if (the_electron.has_trajectory()) {
+          const snemo::datamodel::tracker_trajectory & a_trajectory = the_electron.get_trajectory();
+          const snemo::datamodel::base_trajectory_pattern & a_track_pattern = a_trajectory.get_pattern();
+          length = a_track_pattern.get_shape().get_length();
+        }
+      }
+      return length;
     }
 
   } // end of namespace datamodel

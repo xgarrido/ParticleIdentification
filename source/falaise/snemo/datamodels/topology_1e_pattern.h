@@ -33,6 +33,12 @@ namespace snemo {
       /// Destructor
       virtual ~topology_1e_pattern();
 
+      /// Check electron track availability
+      bool has_electron_track() const;
+
+      /// Return electron track
+      const snemo::datamodel::particle_track & get_electron_track() const;
+
       /// Check angle measurement availability
       bool has_electron_angle() const;
 
@@ -44,6 +50,9 @@ namespace snemo {
 
       /// Return electron energy
       double get_electron_energy() const;
+
+      /// Get electron track length
+      double get_electron_track_length() const;
 
     private:
 

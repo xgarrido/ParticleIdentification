@@ -37,6 +37,16 @@ namespace snemo {
       return;
     }
 
+    bool topology_1e1a_pattern::has_alpha_track() const
+    {
+      return has_particle_track("a1");
+    }
+
+    const snemo::datamodel::particle_track & topology_1e1a_pattern::get_alpha_track() const
+    {
+      return get_particle_track("a1");
+    }
+
     bool topology_1e1a_pattern::has_alpha_angle() const
     {
       return has_measurement("angle_a1");
@@ -70,49 +80,35 @@ namespace snemo {
       return get_measurement_as<snemo::datamodel::vertex_measurement>("vertices_probability_e1_a1").get_probability();
     }
 
-    // double topology_1e1a_pattern::get_alpha_delayed_time() const
-    // {
-    //   double time = datatools::invalid_real();
-    //   if (has_alpha_particle()) {
-    //     const snemo::datamodel::particle_track & the_alpha = get_alpha_particle();
-    //     if (the_alpha.has_trajectory()) {
-    //       const snemo::datamodel::tracker_trajectory & a_trajectory = the_alpha.get_trajectory();
-    //       const datatools::properties & aux = a_trajectory.get_auxiliaries();
-    //       if (aux.has_key("t0")) {
-    //         time = aux.fetch_real("t0");
-    //       }
-    //     }
-    //   }
-    //   return time;
-    // }
+    double topology_1e1a_pattern::get_alpha_delayed_time() const
+    {
+      double time = datatools::invalid_real();
+      if (has_alpha_track()) {
+        const snemo::datamodel::particle_track & the_alpha = get_alpha_track();
+        if (the_alpha.has_trajectory()) {
+          const snemo::datamodel::tracker_trajectory & a_trajectory = the_alpha.get_trajectory();
+          const datatools::properties & aux = a_trajectory.get_auxiliaries();
+          if (aux.has_key("t0")) {
+            time = aux.fetch_real("t0");
+          }
+        }
+      }
+      return time;
+    }
 
-    // double topology_1e1a_pattern::get_alpha_track_length() const
-    // {
-    //   double length = datatools::invalid_real();
-    //   if (has_alpha_particle()) {
-    //     const snemo::datamodel::particle_track & the_alpha = get_alpha_particle();
-    //     if (the_alpha.has_trajectory()) {
-    //       const snemo::datamodel::tracker_trajectory & a_trajectory = the_alpha.get_trajectory();
-    //       const snemo::datamodel::base_trajectory_pattern & a_track_pattern = a_trajectory.get_pattern();
-    //       length = a_track_pattern.get_shape().get_length();
-    //     }
-    //   }
-    //   return length;
-    // }
-
-    // double topology_1e1a_pattern::get_electron_track_length() const
-    // {
-    //   double length = datatools::invalid_real();
-    //   if (has_electron_particle()) {
-    //     const snemo::datamodel::particle_track & the_electron = get_electron_particle();
-    //     if (the_electron.has_trajectory()) {
-    //       const snemo::datamodel::tracker_trajectory & a_trajectory = the_electron.get_trajectory();
-    //       const snemo::datamodel::base_trajectory_pattern & a_track_pattern = a_trajectory.get_pattern();
-    //       length = a_track_pattern.get_shape().get_length();
-    //     }
-    //   }
-    //   return length;
-    // }
+    double topology_1e1a_pattern::get_alpha_track_length() const
+    {
+      double length = datatools::invalid_real();
+      if (has_alpha_track()) {
+        const snemo::datamodel::particle_track & the_alpha = get_alpha_track();
+        if (the_alpha.has_trajectory()) {
+          const snemo::datamodel::tracker_trajectory & a_trajectory = the_alpha.get_trajectory();
+          const snemo::datamodel::base_trajectory_pattern & a_track_pattern = a_trajectory.get_pattern();
+          length = a_track_pattern.get_shape().get_length();
+        }
+      }
+      return length;
+    }
 
   } // end of namespace datamodel
 
