@@ -1,6 +1,6 @@
 /// \file falaise/snemo/datamodels/topology_data.h
 /* Author (s) : Steven Calvez  <calvez@lal.in2p3.fr>
-                Xavier Garrido <garrido@lal.in2p3.fr>
+ *              Xavier Garrido <garrido@lal.in2p3.fr>
  * Creation date: 2015-03-31
  * Last modified: 2015-03-31
  *
@@ -64,6 +64,38 @@ namespace snemo {
 
       /// Return a non mutable reference on the pattern
       const base_topology_pattern & get_pattern() const;
+
+      /// Check pattern data type
+      template<class T>
+      bool has_pattern_as() const
+      {
+        DT_THROW_IF(! has_pattern(),
+                    std::logic_error,
+                    "Topology data does not hold any topology pattern !");
+        const std::type_info & ti = typeid(T);
+        const std::type_info & tf = typeid(get_pattern());
+        return ti == tf;
+      }
+
+      /// Get a non-mutable topology pattern of a given type
+      template<class T>
+      const T & get_pattern_as() const
+      {
+        DT_THROW_IF(! has_pattern_as<T>(),
+                    std::logic_error,
+                    "Invalid request on topology pattern type !");
+        return dynamic_cast<const T&>(get_pattern());
+      }
+
+      /// Get a mutable topology pattern of a given type
+      template<class T>
+      T & grab_pattern_as()
+      {
+        DT_THROW_IF(! has_pattern_as<T>(),
+                    std::logic_error,
+                    "Invalid request on topology pattern type !");
+        return dynamic_cast<T&>(grab_pattern());
+      }
 
       /// Return a mutable reference on the container of auxiliary properties
       const datatools::properties & get_auxiliaries() const;
