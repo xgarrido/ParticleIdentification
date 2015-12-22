@@ -54,7 +54,7 @@ namespace snemo {
 
     bool topology_1eNg_pattern::has_electron_gammas_tof_probabilities() const
     {
-      return has_measurement("tof_e1_g[[:digit:]]+");
+      return has_measurement("tof_e1_g[0-9]+");
     }
 
     void topology_1eNg_pattern::fetch_electron_gammas_internal_probabilities(topology_1eNg_pattern::tof_collection_type & eg_pint_) const
@@ -64,10 +64,10 @@ namespace snemo {
       for (size_t ig = 1; ig <= get_number_of_gammas(); ig++) {
         std::ostringstream oss;
         oss << "tof_e1_g" << ig;
-        DT_THROW_IF(! has_measurement(oss.str()), std::logic_error,
-                    "Missing '" << oss.str() << "' TOF measurement !");
+        DT_THROW_IF(! has_measurement_as<snemo::datamodel::tof_measurement>(oss.str()),
+                    std::logic_error, "Missing '" << oss.str() << "' TOF measurement !");
         const snemo::datamodel::tof_measurement & a_tof_meas
-          = dynamic_cast<const snemo::datamodel::tof_measurement&>(get_measurement(oss.str()));
+          = get_measurement_as<snemo::datamodel::tof_measurement>(oss.str());
         eg_pint_.push_back(a_tof_meas.get_internal_probabilities());
       }
       return;
@@ -79,10 +79,10 @@ namespace snemo {
       for(size_t ig = 1; ig <= get_number_of_gammas(); ++ig) {
         std::ostringstream oss;
         oss << "tof_e1_g" << ig;
-        DT_THROW_IF(! has_measurement(oss.str()), std::logic_error,
-                    "Missing '" << oss.str() << "' TOF measurement !");
+        DT_THROW_IF(! has_measurement_as<snemo::datamodel::tof_measurement>(oss.str()),
+                    std::logic_error, "Missing '" << oss.str() << "' TOF measurement !");
         const snemo::datamodel::tof_measurement & a_tof_meas
-          = dynamic_cast<const snemo::datamodel::tof_measurement&>(get_measurement(oss.str()));
+          = get_measurement_as<snemo::datamodel::tof_measurement>(oss.str());
         eg_pext_.push_back(a_tof_meas.get_external_probabilities());
       }
       return;

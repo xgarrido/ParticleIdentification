@@ -49,7 +49,7 @@ namespace snemo {
 
     bool topology_1e_pattern::has_electron_angle() const
     {
-      return has_measurement("angle_e1");
+      return has_measurement_as<snemo::datamodel::angle_measurement>("angle_e1");
     }
 
     double topology_1e_pattern::get_electron_angle() const
@@ -60,7 +60,7 @@ namespace snemo {
 
     bool topology_1e_pattern::has_electron_energy() const
     {
-      return has_measurement("energy_e1");
+      return has_measurement_as<snemo::datamodel::energy_measurement>("energy_e1");
     }
 
     double topology_1e_pattern::get_electron_energy() const

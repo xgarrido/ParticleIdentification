@@ -49,7 +49,7 @@ namespace snemo {
 
     bool topology_1e1a_pattern::has_alpha_angle() const
     {
-      return has_measurement("angle_a1");
+      return has_measurement_as<snemo::datamodel::angle_measurement>("angle_a1");
     }
 
     double topology_1e1a_pattern::get_alpha_angle() const
@@ -60,7 +60,7 @@ namespace snemo {
 
     bool topology_1e1a_pattern::has_electron_alpha_angle() const
     {
-      return has_measurement("angle_e1_a1");
+      return has_measurement_as<snemo::datamodel::angle_measurement>("angle_e1_a1");
     }
 
     double topology_1e1a_pattern::get_electron_alpha_angle() const
@@ -71,7 +71,7 @@ namespace snemo {
 
     bool topology_1e1a_pattern::has_electron_alpha_vertices_probability() const
     {
-      return has_measurement("vertices_probability_e1_a1");
+      return has_measurement_as<snemo::datamodel::vertex_measurement>("vertices_probability_e1_a1");
     }
 
     double topology_1e1a_pattern::get_electron_alpha_vertices_probability() const
