@@ -45,7 +45,7 @@ namespace snemo {
     double topology_1e1a_pattern::get_alpha_angle() const
     {
       DT_THROW_IF(! has_alpha_angle(), std::logic_error, "No alpha angle measurement stored !");
-      return dynamic_cast<const snemo::datamodel::angle_measurement&> (get_measurement("angle_a1")).get_angle();
+      return get_measurement_as<snemo::datamodel::angle_measurement>("angle_a1").get_angle();
     }
 
     bool topology_1e1a_pattern::has_electron_alpha_angle() const
@@ -56,7 +56,7 @@ namespace snemo {
     double topology_1e1a_pattern::get_electron_alpha_angle() const
     {
       DT_THROW_IF(! has_electron_alpha_angle(), std::logic_error, "No electron-alpha angle measurement stored !");
-      return dynamic_cast<const snemo::datamodel::angle_measurement&> (get_measurement("angle_e1_a1")).get_angle();
+      return get_measurement_as<snemo::datamodel::angle_measurement>("angle_e1_a1").get_angle();
     }
 
     bool topology_1e1a_pattern::has_electron_alpha_vertices_probability() const
@@ -67,10 +67,8 @@ namespace snemo {
     double topology_1e1a_pattern::get_electron_alpha_vertices_probability() const
     {
       DT_THROW_IF(! has_electron_alpha_vertices_probability(), std::logic_error, "No common electron-alpha vertices measurement stored !");
-      return dynamic_cast<const snemo::datamodel::vertex_measurement&> (get_measurement("vertices_probability_e1_a1")).get_probability();
+      return get_measurement_as<snemo::datamodel::vertex_measurement>("vertices_probability_e1_a1").get_probability();
     }
-
-    // vertex
 
     // double topology_1e1a_pattern::get_alpha_delayed_time() const
     // {

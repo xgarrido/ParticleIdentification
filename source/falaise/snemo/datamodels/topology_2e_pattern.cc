@@ -48,9 +48,8 @@ namespace snemo {
     double topology_2e_pattern::get_electron_minimal_energy() const
     {
       DT_THROW_IF(! has_electron_minimal_energy(), std::logic_error, "No electron minimal energy measurement stored !");
-      //bien dégueulasse
-      return std::min(dynamic_cast<const snemo::datamodel::energy_measurement&> (get_measurement("energy_e1")).get_energy(),
-                      dynamic_cast<const snemo::datamodel::energy_measurement&> (get_measurement("energy_e2")).get_energy());
+      return std::min(get_measurement_as<snemo::datamodel::energy_measurement>("energy_e1").get_energy(),
+                      get_measurement_as<snemo::datamodel::energy_measurement>("energy_e2").get_energy());
     }
 
     bool topology_2e_pattern::has_electron_maximal_energy() const
@@ -61,8 +60,8 @@ namespace snemo {
     double topology_2e_pattern::get_electron_maximal_energy() const
     {
       DT_THROW_IF(! has_electron_maximal_energy(), std::logic_error, "No electron maximal energy measurement stored !");
-      return std::max(dynamic_cast<const snemo::datamodel::energy_measurement&> (get_measurement("energy_e1")).get_energy(),
-                      dynamic_cast<const snemo::datamodel::energy_measurement&> (get_measurement("energy_e2")).get_energy());
+      return std::max(get_measurement_as<snemo::datamodel::energy_measurement>("energy_e1").get_energy(),
+                      get_measurement_as<snemo::datamodel::energy_measurement>("energy_e2").get_energy());
     }
 
     double topology_2e_pattern::get_electrons_energy_sum() const
@@ -87,7 +86,7 @@ namespace snemo {
     double topology_2e_pattern::get_electrons_internal_probability() const
     {
       DT_THROW_IF(! has_electrons_internal_probability(), std::logic_error, "No electrons TOF measurement stored !");
-      return dynamic_cast<const snemo::datamodel::tof_measurement&> (get_measurement("tof_e1_e2")).get_internal_probabilities().front();
+      return get_measurement_as<snemo::datamodel::tof_measurement>("tof_e1_e2").get_internal_probabilities().front();
     }
 
     bool topology_2e_pattern::has_electrons_external_probability() const
@@ -98,7 +97,7 @@ namespace snemo {
     double topology_2e_pattern::get_electrons_external_probability() const
     {
       DT_THROW_IF(! has_electrons_external_probability(), std::logic_error, "No electrons TOF measurement stored !");
-      return dynamic_cast<const snemo::datamodel::tof_measurement&> (get_measurement("tof_e1_e2")).get_external_probabilities().front();
+      return get_measurement_as<snemo::datamodel::tof_measurement>("tof_e1_e2").get_external_probabilities().front();
     }
 
     bool topology_2e_pattern::has_electrons_angle() const
@@ -109,7 +108,7 @@ namespace snemo {
     double topology_2e_pattern::get_electrons_angle() const
     {
       DT_THROW_IF(! has_electrons_external_probability(), std::logic_error, "No electrons angle measurement stored !");
-      return dynamic_cast<const snemo::datamodel::angle_measurement&> (get_measurement("angle_e1_e2")).get_angle();
+      return get_measurement_as<snemo::datamodel::angle_measurement>("angle_e1_e2").get_angle();
     }
 
     bool topology_2e_pattern::has_electrons_vertices_probability() const
@@ -120,7 +119,7 @@ namespace snemo {
     double topology_2e_pattern::get_electrons_vertices_probability() const
     {
       DT_THROW_IF(! has_electrons_vertices_probability(), std::logic_error, "No common electrons vertices measurement stored !");
-      return dynamic_cast<const snemo::datamodel::vertex_measurement&> (get_measurement("vertices_probability_e1_e2")).get_probability();
+      return get_measurement_as<snemo::datamodel::vertex_measurement>("vertices_probability_e1_e2").get_probability();
     }
 
     // std::string topology_2e_pattern::get_electrons_vertices_location() const
