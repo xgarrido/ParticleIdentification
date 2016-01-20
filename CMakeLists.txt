@@ -35,6 +35,7 @@ list(APPEND FalaiseParticleIdentificationPlugin_HEADERS
   source/falaise/snemo/reconstruction/topology_1e1a_builder.h
   source/falaise/snemo/reconstruction/topology_1e1p_builder.h
   source/falaise/snemo/reconstruction/topology_2e_builder.h
+  source/falaise/snemo/reconstruction/topology_2p_builder.h
   source/falaise/snemo/reconstruction/topology_1eNg_builder.h
   source/falaise/snemo/reconstruction/topology_2eNg_builder.h
   source/falaise/snemo/cuts/pid_cut.h
@@ -53,6 +54,8 @@ list(APPEND FalaiseParticleIdentificationPlugin_HEADERS
   source/falaise/snemo/datamodels/topology_1e_pattern.ipp
   source/falaise/snemo/datamodels/topology_2e_pattern.h
   source/falaise/snemo/datamodels/topology_2e_pattern.ipp
+  source/falaise/snemo/datamodels/topology_2p_pattern.h
+  source/falaise/snemo/datamodels/topology_2p_pattern.ipp
   source/falaise/snemo/datamodels/topology_1eNg_pattern.h
   source/falaise/snemo/datamodels/topology_1eNg_pattern.ipp
   source/falaise/snemo/datamodels/topology_2eNg_pattern.h
@@ -91,6 +94,7 @@ list(APPEND FalaiseParticleIdentificationPlugin_SOURCES
   source/falaise/snemo/reconstruction/topology_1e1p_builder.cc
   source/falaise/snemo/reconstruction/topology_1e_builder.cc
   source/falaise/snemo/reconstruction/topology_2e_builder.cc
+  source/falaise/snemo/reconstruction/topology_2p_builder.cc
   source/falaise/snemo/reconstruction/topology_1eNg_builder.cc
   source/falaise/snemo/reconstruction/topology_2eNg_builder.cc
   source/falaise/snemo/cuts/pid_cut.cc
@@ -105,6 +109,7 @@ list(APPEND FalaiseParticleIdentificationPlugin_SOURCES
   source/falaise/snemo/datamodels/base_topology_pattern.cc
   source/falaise/snemo/datamodels/topology_1e_pattern.cc
   source/falaise/snemo/datamodels/topology_2e_pattern.cc
+  source/falaise/snemo/datamodels/topology_2p_pattern.cc
   source/falaise/snemo/datamodels/topology_1eNg_pattern.cc
   source/falaise/snemo/datamodels/topology_2eNg_pattern.cc
   source/falaise/snemo/datamodels/topology_1e1a_pattern.cc

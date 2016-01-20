@@ -9,6 +9,7 @@
 #include <falaise/snemo/datamodels/topology_1e_pattern.ipp>
 #include <falaise/snemo/datamodels/topology_2e_pattern.ipp>
 #include <falaise/snemo/datamodels/topology_1e1p_pattern.ipp>
+#include <falaise/snemo/datamodels/topology_2p_pattern.ipp>
 #include <falaise/snemo/datamodels/topology_1eNg_pattern.ipp>
 #include <falaise/snemo/datamodels/topology_2eNg_pattern.ipp>
 #include <falaise/snemo/datamodels/topology_1e1a_pattern.ipp>

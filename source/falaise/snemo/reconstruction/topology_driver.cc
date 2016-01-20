@@ -232,6 +232,8 @@ namespace snemo {
         a_class_id = "snemo::reconstruction::topology_1e1a_builder";
       } else if (classification_ == "1e1p") {
         a_class_id = "snemo::reconstruction::topology_1e1p_builder";
+      } else if (classification_ == "2p") {
+        a_class_id = "snemo::reconstruction::topology_2p_builder";
       } else if (std::regex_match(classification_, std::regex("1e[0-9]+g"))) {
         a_class_id = "snemo::reconstruction::topology_1eNg_builder";
       } else if (classification_ == "2e") {
