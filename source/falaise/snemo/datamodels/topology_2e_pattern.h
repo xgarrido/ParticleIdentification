@@ -51,6 +51,12 @@ namespace snemo {
       /// Get electrons energy difference
       double get_electrons_energy_difference() const;
 
+      /// Get the name of the minimal energy electron
+      std::string get_minimal_energy_electron_name() const;
+
+      /// Get the name of the maximal energy electron
+      std::string get_maximal_energy_electron_name() const;
+
       /// Check electrons TOF internal probability validity
       bool has_electrons_internal_probability() const;
 

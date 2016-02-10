@@ -79,6 +79,26 @@ namespace snemo {
       return get_electron_maximal_energy() - get_electron_minimal_energy();
     }
 
+    std::string topology_2e_pattern::get_minimal_energy_electron_name() const
+    {
+      // sale
+      if(dynamic_cast<const snemo::datamodel::energy_measurement&> (get_measurement("energy_e1")).get_energy() <
+         dynamic_cast<const snemo::datamodel::energy_measurement&> (get_measurement("energy_e2")).get_energy())
+        return "e1";
+      else
+        return "e2";
+    }
+
+    std::string topology_2e_pattern::get_maximal_energy_electron_name() const
+    {
+      // sale
+      if(dynamic_cast<const snemo::datamodel::energy_measurement&> (get_measurement("energy_e1")).get_energy() <
+         dynamic_cast<const snemo::datamodel::energy_measurement&> (get_measurement("energy_e2")).get_energy())
+        return "e2";
+      else
+        return "e1";
+    }
+
     bool topology_2e_pattern::has_electrons_internal_probability() const
     {
       return has_measurement("tof_e1_e2");
