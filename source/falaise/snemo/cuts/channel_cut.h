@@ -44,6 +44,12 @@ namespace snemo {
     {
     public:
 
+      /// Alias type associating measurement with cut
+      typedef std::pair<std::string, cuts::cut_handle_type> pair_type;
+
+      /// Alias to collection of meas./cut association
+      typedef std::vector<pair_type> cut_collection_type;
+
       /// Constructor
       channel_cut(datatools::logger::priority a_logging_priority = datatools::logger::PRIO_FATAL);
 
@@ -69,7 +75,7 @@ namespace snemo {
     private:
 
       std::string _TD_label_; //!< Topology Data bank label
-      cuts::cut_handle_dict_type _cuts_; //!< Collection of cut/meas.
+      cut_collection_type _cuts_; //!< Collection of cut/meas.
 
       /// Macro to automate the registration of the cut
       CUT_REGISTRATION_INTERFACE(channel_cut);

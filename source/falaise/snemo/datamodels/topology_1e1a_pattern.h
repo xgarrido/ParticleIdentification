@@ -36,6 +36,12 @@ namespace snemo {
       /// Destructor
       virtual ~topology_1e1a_pattern();
 
+      /// Check alpha track availability
+      bool has_alpha_track() const;
+
+      /// Return alpha track
+      const snemo::datamodel::particle_track & get_alpha_track() const;
+
       /// Check angle measurement availability
       bool has_alpha_angle() const;
 
@@ -54,14 +60,11 @@ namespace snemo {
       /// Get common vertices probability between electrons
       double get_electron_alpha_vertices_probability() const;
 
-      // /// Get alpha delayed time
-      // double get_alpha_delayed_time() const;
+      /// Get alpha delayed time
+      double get_alpha_delayed_time() const;
 
-      // /// Get alpha track length
-      // double get_alpha_track_length() const;
-
-      // /// Get electron track length
-      // double get_electron_track_length() const;
+      /// Get alpha track length
+      double get_alpha_track_length() const;
 
     private:
 

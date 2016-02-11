@@ -45,6 +45,9 @@ namespace snemo {
       /// Get electron maximal energy
       double get_electron_maximal_energy() const;
 
+      /// Check electrons energy
+      bool has_electrons_energy() const;
+
       /// Get electrons energy sum
       double get_electrons_energy_sum() const;
 

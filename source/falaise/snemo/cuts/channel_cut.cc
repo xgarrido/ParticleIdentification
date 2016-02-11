@@ -73,10 +73,13 @@ namespace snemo {
         const std::string a_cut_label = configuration_.fetch_string(a_name + ".cut_label");
         DT_THROW_IF(cut_dict_.find(a_cut_label) == cut_dict_.end(), std::logic_error,
                     "No cut '" << a_cut_label << "' has been registered !");
+        cuts::cut_handle_type & a_cut_handle = cut_dict_[a_cut_label].grab_initialized_cut_handle();
         DT_THROW_IF(! configuration_.has_key(a_name + ".measurement_label"), std::logic_error,
                     "Missing associated measurement label to '" << a_name << "' cut!");
         const std::string a_meas_label = configuration_.fetch_string(a_name + ".measurement_label");
-        _cuts_.insert(std::make_pair(a_meas_label, cut_dict_[a_cut_label]));
+        _cuts_.push_back(std::make_pair(a_meas_label, a_cut_handle));
+        DT_LOG_DEBUG(get_logging_priority(),
+                     "Adding cut '" << a_name << " for measurement '" << a_meas_label << "'");
       }
 
       this->i_cut::_set_initialized(true);
@@ -100,7 +103,7 @@ namespace snemo {
       const snemo::datamodel::base_topology_pattern & a_pattern = TD.get_pattern();
 
       // Loop over cuts
-      for (cuts::cut_handle_dict_type::iterator icut = _cuts_.begin();
+      for (cut_collection_type::iterator icut = _cuts_.begin();
            icut != _cuts_.end(); ++icut) {
         const std::string & a_meas_label = icut->first;
         if (! a_pattern.has_measurement(a_meas_label)) {
@@ -108,7 +111,7 @@ namespace snemo {
           return cuts::SELECTION_INAPPLICABLE;
         }
         const snemo::datamodel::base_topology_measurement & a_meas = a_pattern.get_measurement(a_meas_label);
-        cuts::i_cut & a_cut = icut->second.grab_initialized_cut_handle().grab();
+        cuts::i_cut & a_cut = icut->second.grab();
         a_cut.set_user_data(a_meas);
         const int status = a_cut.process();
         if (status == cuts::SELECTION_REJECTED) {
@@ -119,6 +122,8 @@ namespace snemo {
           DT_LOG_DEBUG(get_logging_priority(), "Cut '" << a_cut.get_name() << "' can not be applied to '"
                        << a_meas_label << "' measurement !");
           return cuts::SELECTION_INAPPLICABLE;
+        } else {
+          DT_LOG_DEBUG(get_logging_priority(), "Event accepted by '" << a_cut.get_name() << "'");
         }
       }
 

@@ -7,10 +7,9 @@
 #include <stdexcept>
 #include <sstream>
 #include <algorithm>
+#include <regex>
 
 // Third party:
-// - Boost:
-#include <regex>
 // - Bayeux/datatools:
 #include <datatools/properties.h>
 #include <datatools/things.h>
