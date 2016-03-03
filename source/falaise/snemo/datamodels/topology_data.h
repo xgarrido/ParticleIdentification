@@ -29,7 +29,7 @@ namespace snemo {
   namespace datamodel {
 
     /// \brief SuperNEMO topology data model
-    class topology_data : DATATOOLS_SERIALIZABLE_CLASS,
+    class topology_data : public datatools::i_serializable,
                           public datatools::i_tree_dumpable,
                           public datatools::i_clear
     {

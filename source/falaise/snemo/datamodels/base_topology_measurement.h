@@ -23,7 +23,7 @@ namespace snemo {
   namespace datamodel {
 
     /// \brief The base class of reconstructed topology
-    class base_topology_measurement : DATATOOLS_SERIALIZABLE_CLASS,
+    class base_topology_measurement : public datatools::i_serializable,
                                       public datatools::i_tree_dumpable
     {
     public:

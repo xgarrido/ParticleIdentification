@@ -32,6 +32,7 @@
 #define FALAISE_PARTICLE_IDENTIFICATION_PLUGIN_SNEMO_RECONSTRUCTION_PARTICLE_IDENTIFICATION_DRIVER_H 1
 
 // Standard library:
+#include <map>
 
 // - Bayeux/datatools:
 #include <datatools/logger.h>
