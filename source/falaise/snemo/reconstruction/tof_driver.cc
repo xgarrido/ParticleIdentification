@@ -403,9 +403,11 @@ namespace snemo {
       datatools::handle_predicate<snemo::datamodel::calibrated_calorimeter_hit> pred_via_handle(pred_M2D);
       snemo::datamodel::calibrated_calorimeter_hit::collection_type::const_iterator
         found = std::find_if(the_gamma_calorimeters.begin(),the_gamma_calorimeters.end(), pred_via_handle);
-      DT_THROW_IF(found == the_gamma_calorimeters.end(), std::logic_error,
-                  "Calibrated calorimeter hit with id " << vertex_.get_geom_id()
-                  << " can not be found");
+      if (found == the_gamma_calorimeters.end()) {
+        DT_LOG_WARNING(get_logging_priority(), "Calibrated calorimeter hit with id " << vertex_.get_geom_id()
+                       << " can not be found ! Might be a gamma from annihilation.");
+        return;
+      }
       const snemo::datamodel::calibrated_calorimeter_hit & a_calo_hit = found->get();
 
       track_length_ = (electron_foil_vertex - vertex_.get_position()).mag();
