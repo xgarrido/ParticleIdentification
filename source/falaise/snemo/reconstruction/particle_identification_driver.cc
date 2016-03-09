@@ -228,7 +228,9 @@ namespace snemo {
           const std::string & key = ppt.first;
           std::string value = ppt.second;
           if (is_mode_pid_label()) {
-            // Store particle label within 'particle_track' auxiliairies
+            DT_LOG_DEBUG(get_logging_priority(),
+                         "Current particle fulfills '" << cut_name << "' criteria !");
+             // Store particle label within 'particle_track' auxiliairies
             if (aux.has_key(key)) {
               const std::string a_label = aux.fetch_string(key);
               if (a_label != value) {
