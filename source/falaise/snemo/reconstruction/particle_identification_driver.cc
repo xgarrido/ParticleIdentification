@@ -230,7 +230,10 @@ namespace snemo {
           if (is_mode_pid_label()) {
             // Store particle label within 'particle_track' auxiliairies
             if (aux.has_key(key)) {
-              value = aux.fetch_string(key + "|" + value);
+              const std::string a_label = aux.fetch_string(key);
+              if (a_label != value) {
+                value = a_label + "|" + value;
+              }
             }
           }
           aux.update(key, value);
