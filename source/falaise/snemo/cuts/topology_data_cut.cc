@@ -53,6 +53,11 @@ namespace snemo {
       return _mode_ & MODE_CLASSIFICATION;
     }
 
+    bool topology_data_cut::is_mode_no_pile_up() const
+    {
+      return _mode_ & MODE_NO_PILE_UP;
+    }
+
     topology_data_cut::topology_data_cut(datatools::logger::priority logger_priority_)
       : cuts::i_cut(logger_priority_)
     {
@@ -94,6 +99,9 @@ namespace snemo {
       }
       if (configuration_.has_flag("mode.classification")) {
         _mode_ |= MODE_CLASSIFICATION;
+      }
+      if (configuration_.has_flag("mode.no_pile_up")) {
+        _mode_ |= MODE_NO_PILE_UP;
       }
       DT_THROW_IF(_mode_ == MODE_UNDEFINED, std::logic_error,
                   "Missing at least a 'mode.XXX' property !");
@@ -156,10 +164,49 @@ namespace snemo {
         }
       }
 
+      // Check if event has no pile ups
+      bool check_no_pile_up = true;
+      if (is_mode_no_pile_up()) {
+        DT_LOG_DEBUG(get_logging_priority(), "Running NO_PILE_UP mode...");
+        std::set<geomtools::geom_id> gids;
+        const snemo::datamodel::base_topology_pattern::particle_track_dict_type a_particle_track_dict =
+          TD.get_pattern_handle().get().get_particle_track_dictionary();
+        for(snemo::datamodel::base_topology_pattern::particle_track_dict_type::const_iterator it = a_particle_track_dict.begin(); it != a_particle_track_dict.end(); ++it) {
+          if (! (std::regex_match(it->first, std::regex("e[0-9]")) ||
+                 std::regex_match(it->first, std::regex("p[0-9]"))))
+            continue;
+
+          const snemo::datamodel::particle_track & a_particle = it->second.get();
+          if (! a_particle.has_associated_calorimeter_hits()) {
+            DT_LOG_DEBUG(get_logging_priority(),
+                         "Particle track is not associated to any calorimeter block !");
+            continue;
+          }
+
+          const snemo::datamodel::calibrated_calorimeter_hit::collection_type &
+            the_calorimeters = a_particle.get_associated_calorimeter_hits ();
+
+          if (the_calorimeters.size() > 2) {
+            DT_LOG_WARNING(get_logging_priority(),
+                           "The particle is associated to more than 2 calorimeters !");
+            continue;
+          }
+
+          for (size_t i = 0; i < the_calorimeters.size(); ++i) {
+            const geomtools::geom_id & gid = the_calorimeters.at(i).get().get_geom_id();
+            if (gids.find(gid) != gids.end()) {
+              check_no_pile_up = false;
+            }
+            gids.insert(gid);
+          }
+        }
+      }
+
       cut_returned = cuts::SELECTION_REJECTED;
       if (check_has_pattern &&
           check_has_classification &&
-          check_classification) {
+          check_classification &&
+          check_no_pile_up) {
         DT_LOG_DEBUG(get_logging_priority(), "Event accepted by topology cut!");
         cut_returned = cuts::SELECTION_ACCEPTED;
       }

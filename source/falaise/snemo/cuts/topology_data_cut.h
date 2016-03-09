@@ -56,7 +56,8 @@ namespace snemo {
         MODE_UNDEFINED      = 0,
         MODE_HAS_PATTERN        = datatools::bit_mask::bit01,
         MODE_HAS_CLASSIFICATION = datatools::bit_mask::bit02,
-        MODE_CLASSIFICATION     = datatools::bit_mask::bit03
+        MODE_CLASSIFICATION     = datatools::bit_mask::bit03,
+        MODE_NO_PILE_UP         = datatools::bit_mask::bit04
       };
 
       /// Return the cut mode
@@ -70,6 +71,9 @@ namespace snemo {
 
       /// Check mode CLASSIFICATION
       bool is_mode_classification() const;
+
+      /// Check mode NO_PILE_UP
+      bool is_mode_no_pile_up() const;
 
       /// Constructor
       topology_data_cut(datatools::logger::priority logging_priority_ = datatools::logger::PRIO_FATAL);
