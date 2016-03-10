@@ -170,16 +170,16 @@ namespace snemo {
         if (datatools::is_valid(_energy_range_min_)) {
           if (energy < _energy_range_min_) {
             DT_LOG_DEBUG(get_logging_priority(),
-                         "Energy (" << energy/CLHEP::degree << "°) lower than "
-                         << _energy_range_min_/CLHEP::degree << "°");
+                         "Energy (" << energy/CLHEP::keV << "°) lower than "
+                         << _energy_range_min_/CLHEP::keV << "°");
             check = false;
           }
         }
         if (datatools::is_valid(_energy_range_max_)) {
           if (energy > _energy_range_max_) {
             DT_LOG_DEBUG(get_logging_priority(),
-                         "Energy (" << energy/CLHEP::degree << "°) greater than "
-                         << _energy_range_max_/CLHEP::degree << "°");
+                         "Energy (" << energy/CLHEP::keV << "°) greater than "
+                         << _energy_range_max_/CLHEP::keV << "°");
             check = false;
           }
         }
