@@ -100,9 +100,9 @@ namespace snemo {
           if (configuration_.has_key("range_energy.min")) {
             double amin = configuration_.fetch_real("range_energy.min");
             if (! configuration_.has_explicit_unit("range_energy.min")) {
-              amin *= CLHEP::degree;
+              amin *= CLHEP::keV;
             }
-            DT_THROW_IF(amin < 0.0*CLHEP::degree || amin > 360.0*CLHEP::degree,
+            DT_THROW_IF(amin < 0.0*CLHEP::keV || amin > 360.0*CLHEP::keV,
                         std::range_error,
                         "Invalid minimal energy value (" << amin << ") !");
             _energy_range_min_ = amin;
@@ -111,9 +111,9 @@ namespace snemo {
           if (configuration_.has_key("range_energy.max")) {
             double amax = configuration_.fetch_real("range_energy.max");
             if (! configuration_.has_explicit_unit("range_energy.max")) {
-              amax *= CLHEP::degree;
+              amax *= CLHEP::keV;
             }
-            DT_THROW_IF(amax < 0.0*CLHEP::degree || amax > 360.0*CLHEP::degree,
+            DT_THROW_IF(amax < 0.0*CLHEP::keV || amax > 360.0*CLHEP::keV,
                         std::range_error,
                         "Invalid maximal energy (" << amax << ") !");
             _energy_range_max_ = amax;
@@ -245,7 +245,7 @@ DOCD_CLASS_IMPLEMENT_LOAD_BEGIN(snemo::cut::energy_measurement_cut, ocd_)
       .set_traits(datatools::TYPE_REAL)
       .set_explicit_unit(true)
       .set_unit_label("energy")
-      .set_unit_symbol("degree")
+      .set_unit_symbol("keV")
       .add_example("Set a specific minimal value of the energy:: \n"
                    "                                             \n"
                    "  range_energy.min : real as energy = 50 keV \n"
@@ -263,7 +263,7 @@ DOCD_CLASS_IMPLEMENT_LOAD_BEGIN(snemo::cut::energy_measurement_cut, ocd_)
       .set_traits(datatools::TYPE_REAL)
       .set_explicit_unit(true)
       .set_unit_label("energy")
-      .set_unit_symbol("degree")
+      .set_unit_symbol("keV")
       .add_example("Set a specific maximal value of the energy::   \n"
                    "                                               \n"
                    "  range_energy.max : real as energy = 1000 keV \n"
