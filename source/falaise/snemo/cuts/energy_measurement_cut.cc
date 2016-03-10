@@ -93,30 +93,28 @@ namespace snemo {
           DT_LOG_DEBUG(get_logging_priority(), "Using HAS_ENERGY mode...");
         } // end if is_mode_has_energy
 
-        // mode PARTICLE_RANGE_ENERGY:
+        // mode RANGE_ENERGY:
         if (is_mode_range_energy()) {
           DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_ENERGY mode...");
           size_t count = 0;
           if (configuration_.has_key("range_energy.min")) {
-            double amin = configuration_.fetch_real("range_energy.min");
+            double emin = configuration_.fetch_real("range_energy.min");
             if (! configuration_.has_explicit_unit("range_energy.min")) {
-              amin *= CLHEP::keV;
+              emin *= CLHEP::keV;
             }
-            DT_THROW_IF(amin < 0.0*CLHEP::keV || amin > 360.0*CLHEP::keV,
-                        std::range_error,
-                        "Invalid minimal energy value (" << amin << ") !");
-            _energy_range_min_ = amin;
+            DT_THROW_IF(emin < 0.0*CLHEP::keV, std::range_error,
+                        "Invalid minimal energy value (" << emin << ") !");
+            _energy_range_min_ = emin;
             count++;
           }
           if (configuration_.has_key("range_energy.max")) {
-            double amax = configuration_.fetch_real("range_energy.max");
+            double emax = configuration_.fetch_real("range_energy.max");
             if (! configuration_.has_explicit_unit("range_energy.max")) {
-              amax *= CLHEP::keV;
+              emax *= CLHEP::keV;
             }
-            DT_THROW_IF(amax < 0.0*CLHEP::keV || amax > 360.0*CLHEP::keV,
-                        std::range_error,
-                        "Invalid maximal energy (" << amax << ") !");
-            _energy_range_max_ = amax;
+            DT_THROW_IF(emax < 0.0*CLHEP::keV, std::range_error,
+                        "Invalid maximal energy (" << emax << ") !");
+            _energy_range_max_ = emax;
             count++;
           }
           DT_THROW_IF(count == 0, std::logic_error,
@@ -170,16 +168,16 @@ namespace snemo {
         if (datatools::is_valid(_energy_range_min_)) {
           if (energy < _energy_range_min_) {
             DT_LOG_DEBUG(get_logging_priority(),
-                         "Energy (" << energy/CLHEP::keV << "°) lower than "
-                         << _energy_range_min_/CLHEP::keV << "°");
+                         "Energy (" << energy/CLHEP::keV << " keV) lower than "
+                         << _energy_range_min_/CLHEP::keV << " keV");
             check = false;
           }
         }
         if (datatools::is_valid(_energy_range_max_)) {
           if (energy > _energy_range_max_) {
             DT_LOG_DEBUG(get_logging_priority(),
-                         "Energy (" << energy/CLHEP::keV << "°) greater than "
-                         << _energy_range_max_/CLHEP::keV << "°");
+                         "Energy (" << energy/CLHEP::keV << " keV) greater than "
+                         << _energy_range_max_/CLHEP::keV << " keV");
             check = false;
           }
         }
