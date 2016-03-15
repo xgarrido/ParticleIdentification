@@ -94,7 +94,7 @@ namespace snemo {
       double _ext_prob_range_max_; //!< Maximal external probability
 
       // Macro to automate the registration of the cut :
-      CUT_REGISTRATION_INTERFACE(tof_measurement_cut);
+      CUT_REGISTRATION_INTERFACE(tof_measurement_cut)
     };
 
   }  // end of namespace cut

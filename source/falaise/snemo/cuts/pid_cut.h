@@ -97,7 +97,7 @@ namespace snemo {
       particle_range _undefined_range_;//!< Number of undefined particles
 
       // Macro to automate the registration of the cut :
-      CUT_REGISTRATION_INTERFACE(pid_cut);
+      CUT_REGISTRATION_INTERFACE(pid_cut)
     };
 
   }  // end of namespace cut

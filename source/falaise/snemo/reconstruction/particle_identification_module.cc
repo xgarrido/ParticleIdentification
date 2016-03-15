@@ -28,7 +28,7 @@ namespace snemo {
 
     // Registration instantiation macro :
     DPP_MODULE_REGISTRATION_IMPLEMENT(particle_identification_module,
-                                      "snemo::reconstruction::particle_identification_module");
+                                      "snemo::reconstruction::particle_identification_module")
 
     void particle_identification_module::_set_defaults()
     {

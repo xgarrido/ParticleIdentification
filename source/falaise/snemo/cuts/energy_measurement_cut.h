@@ -76,7 +76,7 @@ namespace snemo {
       double _energy_range_max_; //!< Maximal energy value
 
       // Macro to automate the registration of the cut :
-      CUT_REGISTRATION_INTERFACE(energy_measurement_cut);
+      CUT_REGISTRATION_INTERFACE(energy_measurement_cut)
     };
 
   }  // end of namespace cut

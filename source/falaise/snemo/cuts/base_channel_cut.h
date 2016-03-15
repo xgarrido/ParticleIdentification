@@ -131,7 +131,7 @@ namespace snemo {
       double _angle_max_;
 
       // // Macro to automate the registration of the cut :
-      // CUT_REGISTRATION_INTERFACE(base_channel_cut);
+      // CUT_REGISTRATION_INTERFACE(base_channel_cut)
     };
 
   }  // end of namespace cut

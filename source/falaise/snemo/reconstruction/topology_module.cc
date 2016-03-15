@@ -28,7 +28,7 @@ namespace snemo {
 
     // Registration instantiation macro :
     DPP_MODULE_REGISTRATION_IMPLEMENT(topology_module,
-                                      "snemo::reconstruction::topology_module");
+                                      "snemo::reconstruction::topology_module")
 
     void topology_module::_set_defaults()
     {

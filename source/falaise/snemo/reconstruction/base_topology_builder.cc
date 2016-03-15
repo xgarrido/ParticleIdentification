@@ -13,7 +13,7 @@ namespace snemo {
   namespace reconstruction {
 
     DATATOOLS_FACTORY_SYSTEM_REGISTER_IMPLEMENTATION(base_topology_builder,
-                                                     "snemo::reconstruction::base_topology_builder/__system__");
+                                                     "snemo::reconstruction::base_topology_builder/__system__")
 
     bool base_topology_builder::has_measurement_drivers() const
     {

@@ -59,7 +59,7 @@ namespace snemo {
 
       size_t _number_of_gammas_;//!< Number of gamma in the topology
 
-      DATATOOLS_SERIALIZATION_DECLARATION();
+      DATATOOLS_SERIALIZATION_DECLARATION()
 
     };
 

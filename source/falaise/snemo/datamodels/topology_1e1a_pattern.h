@@ -68,7 +68,7 @@ namespace snemo {
 
     private:
 
-      DATATOOLS_SERIALIZATION_DECLARATION();
+      DATATOOLS_SERIALIZATION_DECLARATION()
 
     };
 

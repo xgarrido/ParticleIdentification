@@ -98,7 +98,7 @@ namespace snemo {
       double _vertices_dist_z_range_max_; //!< Maximal vertices distance in z
 
       // Macro to automate the registration of the cut :
-      CUT_REGISTRATION_INTERFACE(vertices_measurement_cut);
+      CUT_REGISTRATION_INTERFACE(vertices_measurement_cut)
     };
 
   }  // end of namespace cut

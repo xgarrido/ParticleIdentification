@@ -176,17 +176,17 @@ namespace snemo {
 
       auto sigma = [] (const geomtools::blur_spot & vtx_) -> double
         {
-          double sigma = 0.0;
+          double a_sigma = 0.0;
           if (vtx_.get_blur_dimension() >= geomtools::blur_spot::DIMENSION_ONE) {
-            sigma += std::pow(vtx_.get_x_error(), 2);
+            a_sigma += std::pow(vtx_.get_x_error(), 2);
           }
           if (vtx_.get_blur_dimension() >= geomtools::blur_spot::DIMENSION_TWO) {
-            sigma += std::pow(vtx_.get_y_error(), 2);
+            a_sigma += std::pow(vtx_.get_y_error(), 2);
           }
           if (vtx_.get_blur_dimension() >= geomtools::blur_spot::DIMENSION_THREE) {
-            sigma += std::pow(vtx_.get_z_error(), 2);
+            a_sigma += std::pow(vtx_.get_z_error(), 2);
           }
-          return datatools::is_valid(sigma) ? sigma : 1.0;
+          return datatools::is_valid(a_sigma) ? a_sigma : 1.0;
         };
 
       const double sigma1 = sigma(vtx1_);
