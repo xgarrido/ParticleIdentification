@@ -71,13 +71,13 @@ namespace snemo {
 
     bool topology_1e1a_pattern::has_electron_alpha_vertices_probability() const
     {
-      return has_measurement_as<snemo::datamodel::vertex_measurement>("vertices_probability_e1_a1");
+      return has_measurement_as<snemo::datamodel::vertex_measurement>("vertex_e1_a1");
     }
 
     double topology_1e1a_pattern::get_electron_alpha_vertices_probability() const
     {
       DT_THROW_IF(! has_electron_alpha_vertices_probability(), std::logic_error, "No common electron-alpha vertices measurement stored !");
-      return get_measurement_as<snemo::datamodel::vertex_measurement>("vertices_probability_e1_a1").get_probability();
+      return get_measurement_as<snemo::datamodel::vertex_measurement>("vertex_e1_a1").get_probability();
     }
 
     double topology_1e1a_pattern::get_alpha_delayed_time() const
