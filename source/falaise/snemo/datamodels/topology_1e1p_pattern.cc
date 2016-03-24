@@ -42,68 +42,68 @@ namespace snemo {
 
     bool topology_1e1p_pattern::has_positron_energy() const
     {
-      return has_measurement("energy_p1");
+      return has_measurement_as<snemo::datamodel::energy_measurement>("energy_p1");
     }
 
     double topology_1e1p_pattern::get_positron_energy() const
     {
       DT_THROW_IF(! has_positron_energy(), std::logic_error, "No positron energy measurement stored !");
-      return dynamic_cast<const snemo::datamodel::energy_measurement&> (get_measurement("energy_p1")).get_energy();
+      return get_measurement_as<snemo::datamodel::energy_measurement>("energy_p1").get_energy();
     }
 
     bool topology_1e1p_pattern::has_positron_angle() const
     {
-      return has_measurement("angle_p1");
+      return has_measurement_as<snemo::datamodel::angle_measurement>("angle_p1");
     }
 
     double topology_1e1p_pattern::get_positron_angle() const
     {
       DT_THROW_IF(! has_positron_angle(), std::logic_error, "No positron angle measurement stored !");
-      return dynamic_cast<const snemo::datamodel::angle_measurement&> (get_measurement("angle_p1")).get_angle();
+      return get_measurement_as<snemo::datamodel::angle_measurement>("angle_p1").get_angle();
     }
 
     bool topology_1e1p_pattern::has_electron_positron_angle() const
     {
-      return has_measurement("angle_e1_p1");
+      return has_measurement_as<snemo::datamodel::angle_measurement>("angle_e1_p1");
     }
 
     double topology_1e1p_pattern::get_electron_positron_angle() const
     {
       DT_THROW_IF(! has_electron_positron_angle(), std::logic_error, "No electron-positron angle measurement stored !");
-      return dynamic_cast<const snemo::datamodel::angle_measurement&> (get_measurement("angle_e1_p1")).get_angle();
+      return get_measurement_as<snemo::datamodel::angle_measurement>("angle_e1_p1").get_angle();
     }
 
     bool topology_1e1p_pattern::has_electron_positron_internal_probability() const
     {
-      return has_measurement("tof_e1_p1");
+      return has_measurement_as<snemo::datamodel::tof_measurement>("tof_e1_p1");
     }
 
     double topology_1e1p_pattern::get_electron_positron_internal_probability() const
     {
       DT_THROW_IF(! has_electron_positron_internal_probability(), std::logic_error, "No electron-positron TOF measurement stored !");
-      return dynamic_cast<const snemo::datamodel::tof_measurement&> (get_measurement("tof_e1_p1")).get_internal_probabilities().front();
+      return get_measurement_as<snemo::datamodel::tof_measurement>("tof_e1_p1").get_internal_probabilities().front();
     }
 
     bool topology_1e1p_pattern::has_electron_positron_external_probability() const
     {
-      return has_measurement("tof_e1_p1");
+      return has_measurement_as<snemo::datamodel::tof_measurement>("tof_e1_p1");
     }
 
     double topology_1e1p_pattern::get_electron_positron_external_probability() const
     {
       DT_THROW_IF(! has_electron_positron_external_probability(), std::logic_error, "No electron-positron TOF measurement stored !");
-      return dynamic_cast<const snemo::datamodel::tof_measurement&> (get_measurement("tof_e1_p1")).get_external_probabilities().front();
+      return get_measurement_as<snemo::datamodel::tof_measurement>("tof_e1_p1").get_external_probabilities().front();
     }
 
     bool topology_1e1p_pattern::has_electron_positron_vertices_probability() const
     {
-      return has_measurement("vertices_probability_e1_p1");
+      return has_measurement_as<snemo::datamodel::vertex_measurement>("vertex_e1_p1");
     }
 
     double topology_1e1p_pattern::get_electron_positron_vertices_probability() const
     {
       DT_THROW_IF(! has_electron_positron_vertices_probability(), std::logic_error, "No common electrons vertices measurement stored !");
-      return dynamic_cast<const snemo::datamodel::vertex_measurement&> (get_measurement("vertices_probability_e1_e2")).get_probability();
+      return get_measurement_as<snemo::datamodel::vertex_measurement>("vertex_e1_p1").get_probability();
     }
 
     bool topology_1e1p_pattern::has_electron_positron_minimal_energy() const
@@ -121,14 +121,16 @@ namespace snemo {
 
     bool topology_1e1p_pattern::has_electron_positron_maximal_energy() const
     {
-      return has_measurement("energy_e1") && has_measurement("energy_p1");
+      return
+        has_measurement_as<snemo::datamodel::energy_measurement>("energy_e1") &&
+        has_measurement_as<snemo::datamodel::energy_measurement>("energy_p1");
     }
 
     double topology_1e1p_pattern::get_electron_positron_maximal_energy() const
     {
       DT_THROW_IF(! has_electron_positron_maximal_energy(), std::logic_error, "No electron/positron maximal energy measurement stored !");
-      return std::max(dynamic_cast<const snemo::datamodel::energy_measurement&> (get_measurement("energy_e1")).get_energy(),
-                      dynamic_cast<const snemo::datamodel::energy_measurement&> (get_measurement("energy_p1")).get_energy());
+      return std::max(get_measurement_as<snemo::datamodel::energy_measurement>("energy_e1").get_energy(),
+                      get_measurement_as<snemo::datamodel::energy_measurement>("energy_p1").get_energy());
     }
 
   } // end of namespace datamodel

@@ -45,6 +45,9 @@ namespace snemo {
       /// Get positron maximal energy
       double get_positron_maximal_energy() const;
 
+      /// Check positrons energy
+      bool has_positrons_energy() const;
+
       /// Get positrons energy sum
       double get_positrons_energy_sum() const;
 
