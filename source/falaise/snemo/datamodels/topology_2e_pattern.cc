@@ -148,7 +148,7 @@ namespace snemo {
     // std::string topology_2e_pattern::get_electrons_vertices_location() const
     // {
     //   DT_THROW_IF(! has_electrons_vertices_probability(), std::logic_error, "No common electrons vertices measurement stored !");
-    //   return dynamic_cast<const snemo::datamodel::vertex_measurement&> (get_measurement("vertices_probability_e1_e2")).get_vertices_location();
+    //   return dynamic_cast<const snemo::datamodel::vertex_measurement&> (get_measurement("vertex_e1_e2")).get_vertices_location();
     // }
 
   } // end of namespace datamodel
