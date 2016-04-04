@@ -36,6 +36,12 @@ namespace snemo {
       /// Destructor
       virtual ~topology_1e1p_pattern();
 
+      /// Check positron track availability
+      bool has_positron_track() const;
+
+      /// Return positron track
+      const snemo::datamodel::particle_track & get_positron_track() const;
+
       /// Check positron energy validity
       bool has_positron_energy() const;
 
@@ -83,6 +89,9 @@ namespace snemo {
 
       /// Get electron maximal energy
       double get_electron_positron_maximal_energy() const;
+
+      /// Get electron track length
+      double get_positron_track_length() const;
 
     private:
 

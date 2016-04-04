@@ -40,6 +40,16 @@ namespace snemo {
       return;
     }
 
+    bool topology_1e1p_pattern::has_positron_track() const
+    {
+      return has_particle_track("p1");
+    }
+
+    const snemo::datamodel::particle_track & topology_1e1p_pattern::get_positron_track() const
+    {
+      return get_particle_track("p1");
+    }
+
     bool topology_1e1p_pattern::has_positron_energy() const
     {
       return has_measurement_as<snemo::datamodel::energy_measurement>("energy_p1");
@@ -131,6 +141,20 @@ namespace snemo {
       DT_THROW_IF(! has_electron_positron_maximal_energy(), std::logic_error, "No electron/positron maximal energy measurement stored !");
       return std::max(get_measurement_as<snemo::datamodel::energy_measurement>("energy_e1").get_energy(),
                       get_measurement_as<snemo::datamodel::energy_measurement>("energy_p1").get_energy());
+    }
+
+    double topology_1e1p_pattern::get_positron_track_length() const
+    {
+      double length = datatools::invalid_real();
+      if (has_positron_track()) {
+        const snemo::datamodel::particle_track & the_positron = get_positron_track();
+        if (the_positron.has_trajectory()) {
+          const snemo::datamodel::tracker_trajectory & a_trajectory = the_positron.get_trajectory();
+          const snemo::datamodel::base_trajectory_pattern & a_track_pattern = a_trajectory.get_pattern();
+          length = a_track_pattern.get_shape().get_length();
+        }
+      }
+      return length;
     }
 
   } // end of namespace datamodel
