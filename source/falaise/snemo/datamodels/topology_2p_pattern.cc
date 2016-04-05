@@ -85,6 +85,24 @@ namespace snemo {
       return get_positron_maximal_energy() - get_positron_minimal_energy();
     }
 
+    std::string topology_2p_pattern::get_minimal_energy_positron_name() const
+    {
+      if (get_measurement_as<snemo::datamodel::energy_measurement>("energy_p1").get_energy() <
+          get_measurement_as<snemo::datamodel::energy_measurement>("energy_p2").get_energy())
+        return "p1";
+      else
+        return "p2";
+    }
+
+    std::string topology_2p_pattern::get_maximal_energy_positron_name() const
+    {
+      if (get_measurement_as<snemo::datamodel::energy_measurement>("energy_p1").get_energy() <
+          get_measurement_as<snemo::datamodel::energy_measurement>("energy_p2").get_energy())
+        return "p2";
+      else
+        return "p1";
+    }
+
     bool topology_2p_pattern::has_positrons_internal_probability() const
     {
       return has_measurement_as<snemo::datamodel::tof_measurement>("tof_p1_p2");

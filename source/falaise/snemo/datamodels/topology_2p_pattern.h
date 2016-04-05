@@ -54,6 +54,12 @@ namespace snemo {
       /// Get positrons energy difference
       double get_positrons_energy_difference() const;
 
+       /// Get the name of the minimal energy positron
+      std::string get_minimal_energy_positron_name() const;
+
+      /// Get the name of the maximal energy positron
+      std::string get_maximal_energy_positron_name() const;
+
       /// Check positrons TOF internal probability validity
       bool has_positrons_internal_probability() const;
 
