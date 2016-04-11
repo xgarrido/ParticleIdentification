@@ -299,7 +299,8 @@ namespace snemo {
       DT_LOG_DEBUG(get_logging_priority(), "t1 meas. : " << t1/CLHEP::ns << " ns");
       DT_LOG_DEBUG(get_logging_priority(), "t2 meas. : " << t2/CLHEP::ns << " ns");
 
-      const double sigma_l = 0.6 * CLHEP::ns;
+      const double sigma_l = 0.1 * CLHEP::ns; //kind of arbitrary value to keep the internal probability distribution flat,
+                                              // until the uncertainty on the track length is obtained from the reconstruction algorithm.
       const double sigma_exp
         = std::pow(sigma_t1, 2) + std::pow(sigma_t2, 2) + std::pow(sigma_l, 2);
 
