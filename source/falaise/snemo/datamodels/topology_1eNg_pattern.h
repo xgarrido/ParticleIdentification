@@ -12,6 +12,7 @@
 // This project:
 #include <falaise/snemo/datamodels/topology_1e_pattern.h>
 #include <falaise/snemo/datamodels/tof_measurement.h>
+#include <falaise/snemo/datamodels/energy_measurement.h>
 
 namespace snemo {
 
@@ -24,6 +25,9 @@ namespace snemo {
 
       /// Typedef for TOF dictionnary
       typedef std::vector<snemo::datamodel::tof_measurement::probability_type> tof_collection_type;
+
+      /// Typedef for energy dictionnary
+      typedef std::vector<double> energy_collection_type;
 
       /// Static function to return pattern identifier of the pattern
       static const std::string & pattern_id();
@@ -43,8 +47,14 @@ namespace snemo {
       /// Set number of gammas
       void set_number_of_gammas(const size_t ngammas_);
 
-      /// Return internal probability
+      /// Return the number of gammas
       size_t get_number_of_gammas() const;
+
+      /// Check gammas energies existence
+      bool has_gammas_energies() const;
+
+      /// Fetch the gammas energies
+      void fetch_gammas_energies(energy_collection_type & g_energies_) const;
 
       /// Check electron-gammas TOF probabilities existence
       bool has_electron_gammas_tof_probabilities() const;

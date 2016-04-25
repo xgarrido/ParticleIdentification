@@ -52,6 +52,27 @@ namespace snemo {
       return _number_of_gammas_;
     }
 
+    bool topology_1eNg_pattern::has_gammas_energies() const
+    {
+      return has_measurement("energy_g[0-9]+");
+    }
+
+    void topology_1eNg_pattern::fetch_gammas_energies(topology_1eNg_pattern::energy_collection_type & g_energies_) const
+    {
+      DT_THROW_IF(! has_gammas_energies(), std::logic_error,
+                  "No gamma energy measurement stored !");
+      for (size_t ig = 1; ig <= get_number_of_gammas(); ig++) {
+        std::ostringstream oss;
+        oss << "energy_g" << ig;
+        DT_THROW_IF(! has_measurement_as<snemo::datamodel::energy_measurement>(oss.str()),
+                    std::logic_error, "Missing '" << oss.str() << "' energy measurement !");
+        const snemo::datamodel::energy_measurement & a_energy_meas
+          = get_measurement_as<snemo::datamodel::energy_measurement>(oss.str());
+        g_energies_.push_back(a_energy_meas.get_energy());
+      }
+      return;
+    }
+
     bool topology_1eNg_pattern::has_electron_gammas_tof_probabilities() const
     {
       return has_measurement("tof_e1_g[0-9]+");
