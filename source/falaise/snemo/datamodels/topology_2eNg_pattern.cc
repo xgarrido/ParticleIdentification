@@ -52,6 +52,27 @@ namespace snemo {
       return _number_of_gammas_;
     }
 
+    bool topology_2eNg_pattern::has_gammas_energies() const
+    {
+      return has_measurement("energy_g[0-9]+");
+    }
+
+    void topology_2eNg_pattern::fetch_gammas_energies(topology_2eNg_pattern::energy_collection_type & g_energies_) const
+    {
+      DT_THROW_IF(! has_gammas_energies(), std::logic_error,
+                  "No gamma energy measurement stored !");
+      for (size_t ig = 1; ig <= get_number_of_gammas(); ig++) {
+        std::ostringstream oss;
+        oss << "energy_g" << ig;
+        DT_THROW_IF(! has_measurement_as<snemo::datamodel::energy_measurement>(oss.str()),
+                    std::logic_error, "Missing '" << oss.str() << "' energy measurement !");
+        const snemo::datamodel::energy_measurement & a_energy_meas
+          = get_measurement_as<snemo::datamodel::energy_measurement>(oss.str());
+        g_energies_.push_back(a_energy_meas.get_energy());
+      }
+      return;
+    }
+
     bool topology_2eNg_pattern::has_electrons_gammas_tof_probabilities() const
     {
       return has_measurement("tof_e[0-9]+_g[0-9]+");
@@ -89,6 +110,90 @@ namespace snemo {
             = get_measurement_as<snemo::datamodel::tof_measurement>(oss.str());
           eg_pext_.push_back(a_tof_meas.get_external_probabilities());
         }
+      }
+      return;
+    }
+
+    bool topology_2eNg_pattern::has_electron_min_gammas_tof_probabilities() const
+    {
+      if(get_minimal_energy_electron_name() == "e1")
+        return has_measurement("tof_e1_g[0-9]+");
+      else
+        return has_measurement("tof_e2_g[0-9]+");
+    }
+
+    void topology_2eNg_pattern::fetch_electron_min_gammas_internal_probabilities(topology_2eNg_pattern::tof_collection_type & eg_pint_) const
+    {
+      DT_THROW_IF(! has_electron_min_gammas_tof_probabilities(), std::logic_error,
+                  "No electron_min-gammas TOF measurement stored !");
+      std::string e_min = get_minimal_energy_electron_name();
+      for (size_t ig = 1; ig <= get_number_of_gammas(); ig++) {
+          std::ostringstream oss;
+          oss << "tof_" << e_min << "_g" << ig;
+          DT_THROW_IF(! has_measurement_as<snemo::datamodel::tof_measurement>(oss.str()),
+                      std::logic_error, "Missing '" << oss.str() << "' TOF measurement !");
+          const snemo::datamodel::tof_measurement & a_tof_meas
+            = get_measurement_as<snemo::datamodel::tof_measurement>(oss.str());
+          eg_pint_.push_back(a_tof_meas.get_internal_probabilities());
+      }
+      return;
+    }
+
+    void topology_2eNg_pattern::fetch_electron_min_gammas_external_probabilities(topology_2eNg_pattern::tof_collection_type & eg_pext_) const
+    {
+      DT_THROW_IF(! has_electron_min_gammas_tof_probabilities(), std::logic_error,
+                  "No electron_min-gammas TOF measurement stored !");
+      std::string e_min = get_minimal_energy_electron_name();
+      for (size_t ig = 1; ig <= get_number_of_gammas(); ig++) {
+          std::ostringstream oss;
+          oss << "tof_" << e_min << "_g" << ig;
+          DT_THROW_IF(! has_measurement_as<snemo::datamodel::tof_measurement>(oss.str()),
+                      std::logic_error, "Missing '" << oss.str() << "' TOF measurement !");
+          const snemo::datamodel::tof_measurement & a_tof_meas
+            = get_measurement_as<snemo::datamodel::tof_measurement>(oss.str());
+          eg_pext_.push_back(a_tof_meas.get_external_probabilities());
+      }
+      return;
+    }
+
+    bool topology_2eNg_pattern::has_electron_max_gammas_tof_probabilities() const
+    {
+      if(get_maximal_energy_electron_name() == "e1")
+        return has_measurement("tof_e1_g[0-9]+");
+      else
+        return has_measurement("tof_e2_g[0-9]+");
+    }
+
+    void topology_2eNg_pattern::fetch_electron_max_gammas_internal_probabilities(topology_2eNg_pattern::tof_collection_type & eg_pint_) const
+    {
+      DT_THROW_IF(! has_electron_max_gammas_tof_probabilities(), std::logic_error,
+                  "No electron_max-gammas TOF measurement stored !");
+      std::string e_max = get_maximal_energy_electron_name();
+      for (size_t ig = 1; ig <= get_number_of_gammas(); ig++) {
+          std::ostringstream oss;
+          oss << "tof_" << e_max << "_g" << ig;
+          DT_THROW_IF(! has_measurement_as<snemo::datamodel::tof_measurement>(oss.str()),
+                      std::logic_error, "Missing '" << oss.str() << "' TOF measurement !");
+          const snemo::datamodel::tof_measurement & a_tof_meas
+            = get_measurement_as<snemo::datamodel::tof_measurement>(oss.str());
+          eg_pint_.push_back(a_tof_meas.get_internal_probabilities());
+      }
+      return;
+    }
+
+    void topology_2eNg_pattern::fetch_electron_max_gammas_external_probabilities(topology_2eNg_pattern::tof_collection_type & eg_pext_) const
+    {
+      DT_THROW_IF(! has_electron_max_gammas_tof_probabilities(), std::logic_error,
+                  "No electron_max-gammas TOF measurement stored !");
+      std::string e_max = get_maximal_energy_electron_name();
+      for (size_t ig = 1; ig <= get_number_of_gammas(); ig++) {
+          std::ostringstream oss;
+          oss << "tof_" << e_max << "_g" << ig;
+          DT_THROW_IF(! has_measurement_as<snemo::datamodel::tof_measurement>(oss.str()),
+                      std::logic_error, "Missing '" << oss.str() << "' TOF measurement !");
+          const snemo::datamodel::tof_measurement & a_tof_meas
+            = get_measurement_as<snemo::datamodel::tof_measurement>(oss.str());
+          eg_pext_.push_back(a_tof_meas.get_external_probabilities());
       }
       return;
     }
