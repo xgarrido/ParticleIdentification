@@ -74,7 +74,7 @@ namespace snemo {
              idriver = driver_names.begin();
            idriver != driver_names.end(); ++idriver) {
         const std::string & a_driver_name = *idriver;
-        if (a_driver_name == particle_identification_driver::particle_identification_id()) {
+        if (a_driver_name == particle_identification_driver::get_id()) {
           _driver_.reset(new snemo::reconstruction::particle_identification_driver);
         } else {
           DT_THROW_IF(true, std::logic_error,
