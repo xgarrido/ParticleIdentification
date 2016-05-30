@@ -82,6 +82,9 @@ namespace snemo {
       /// Give default values to specific class members.
       void _set_defaults();
 
+      /// Prepare data for processing
+      void _prepare_process(snemo::datamodel::particle_track_data & ptd_);
+
       /// Special method to process and generate particle track data
       void _process(const snemo::datamodel::particle_track_data & ptd_,
                     snemo::datamodel::topology_data & td_);

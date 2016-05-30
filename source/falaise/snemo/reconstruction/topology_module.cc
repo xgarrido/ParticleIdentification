@@ -67,8 +67,7 @@ namespace snemo {
 
     void topology_module::reset()
     {
-      DT_THROW_IF (! is_initialized(),
-                   std::logic_error,
+      DT_THROW_IF (! is_initialized(), std::logic_error,
                    "Module '" << get_name() << "' is not initialized !");
       _set_initialized(false);
       _set_defaults();
@@ -104,8 +103,11 @@ namespace snemo {
         return dpp::base_module::PROCESS_ERROR;
       }
       // Grab the 'particle_track_data' entry from the data model :
-      const snemo::datamodel::particle_track_data & the_particle_track_data
-        = data_record_.get<snemo::datamodel::particle_track_data>(_PTD_label_);
+      snemo::datamodel::particle_track_data & the_particle_track_data
+        = data_record_.grab<snemo::datamodel::particle_track_data>(_PTD_label_);
+
+      // Prepare process
+      _prepare_process(the_particle_track_data);
 
       // Check topology data
       const bool preserve_former_output = false;
@@ -126,6 +128,11 @@ namespace snemo {
       _process(the_particle_track_data, the_topology_data);
 
       return dpp::base_module::PROCESS_SUCCESS;
+    }
+
+    void topology_module::_prepare_process(snemo::datamodel::particle_track_data & /*ptd_*/)
+    {
+      return;
     }
 
     void topology_module::_process(const snemo::datamodel::particle_track_data & ptd_,
