@@ -50,7 +50,7 @@ namespace snemo {
 
       datatools::properties _auxiliaries_; //!< Auxiliary properties
 
-      DATATOOLS_SERIALIZATION_DECLARATION();
+      DATATOOLS_SERIALIZATION_DECLARATION()
 
     };
 

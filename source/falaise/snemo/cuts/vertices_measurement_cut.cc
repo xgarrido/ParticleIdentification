@@ -21,7 +21,7 @@ namespace snemo {
   namespace cut {
 
     // Registration instantiation macro :
-    CUT_REGISTRATION_IMPLEMENT(vertices_measurement_cut, "snemo::cut::vertices_measurement_cut");
+    CUT_REGISTRATION_IMPLEMENT(vertices_measurement_cut, "snemo::cut::vertices_measurement_cut")
 
     void vertices_measurement_cut::_set_defaults()
     {

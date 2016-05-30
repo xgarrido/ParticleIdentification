@@ -48,7 +48,7 @@ namespace snemo {
 
       double _energy_; //!< The energy value
 
-      DATATOOLS_SERIALIZATION_DECLARATION();
+      DATATOOLS_SERIALIZATION_DECLARATION()
     };
 
   } // end of namespace datamodel

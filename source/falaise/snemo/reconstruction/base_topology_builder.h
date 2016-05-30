@@ -69,7 +69,7 @@ namespace snemo {
       const measurement_drivers * _drivers;//!< Measurement drivers
 
       // Factory stuff :
-      DATATOOLS_FACTORY_SYSTEM_REGISTER_INTERFACE(base_topology_builder);
+      DATATOOLS_FACTORY_SYSTEM_REGISTER_INTERFACE(base_topology_builder)
 
     };
   }
@@ -80,12 +80,12 @@ namespace snemo {
   public:                                                                            \
   virtual std::string get_type_id() const;                                           \
   private:                                                                           \
-  DATATOOLS_FACTORY_SYSTEM_AUTO_REGISTRATION_INTERFACE(::snemo::reconstruction::base_topology_builder, BuilderType);
+  DATATOOLS_FACTORY_SYSTEM_AUTO_REGISTRATION_INTERFACE(::snemo::reconstruction::base_topology_builder, BuilderType)
 
 // Implementation macro for automated registration of a topology builder in the global register
 #define FL_SNEMO_RECONSTRUCTION_TOPOLOGY_BUILDER_REGISTRATION_IMPLEMENT(BuilderType,BuilderID) \
   std::string BuilderType::get_type_id() const { return BuilderID; }                           \
-  DATATOOLS_FACTORY_SYSTEM_AUTO_REGISTRATION_IMPLEMENTATION(::snemo::reconstruction::base_topology_builder, BuilderType, BuilderID);
+  DATATOOLS_FACTORY_SYSTEM_AUTO_REGISTRATION_IMPLEMENTATION(::snemo::reconstruction::base_topology_builder, BuilderType, BuilderID)
 
 #endif // FALAISE_SNEMO_DATAMODEL_BASE_TOPOLOGY_BUILDER_H
 

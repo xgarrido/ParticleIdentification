@@ -82,6 +82,9 @@ namespace snemo {
       /// Give default values to specific class members.
       void _set_defaults();
 
+      /// Prepare data for processing
+      void _prepare_process(snemo::datamodel::particle_track_data & ptd_);
+
       /// Special method to process and generate particle track data
       void _process(const snemo::datamodel::particle_track_data & ptd_,
                     snemo::datamodel::topology_data & td_);
@@ -94,7 +97,7 @@ namespace snemo {
       boost::scoped_ptr< ::snemo::reconstruction::topology_driver> _driver_; //!< Handle to the embedded fitter algorithm with dynamic memory auto-deletion
 
       // Macro to automate the registration of the module :
-      DPP_MODULE_REGISTRATION_INTERFACE(topology_module);
+      DPP_MODULE_REGISTRATION_INTERFACE(topology_module)
     };
 
   } // end of namespace reconstruction

@@ -24,7 +24,7 @@ namespace snemo {
   namespace cut {
 
     // Registration instantiation macro :
-    CUT_REGISTRATION_IMPLEMENT(topology_data_cut, "snemo::cut::topology_data_cut");
+    CUT_REGISTRATION_IMPLEMENT(topology_data_cut, "snemo::cut::topology_data_cut")
 
     void topology_data_cut::_set_defaults()
     {

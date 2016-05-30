@@ -21,7 +21,7 @@ namespace snemo {
   namespace cut {
 
     // Registration instantiation macro :
-    CUT_REGISTRATION_IMPLEMENT(channel_cut, "snemo::cut::channel_cut");
+    CUT_REGISTRATION_IMPLEMENT(channel_cut, "snemo::cut::channel_cut")
 
     void channel_cut::_set_defaults()
     {

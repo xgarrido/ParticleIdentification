@@ -76,7 +76,7 @@ namespace snemo {
       double _angle_range_max_; //!< Maximal angle value
 
       // Macro to automate the registration of the cut :
-      CUT_REGISTRATION_INTERFACE(angle_measurement_cut);
+      CUT_REGISTRATION_INTERFACE(angle_measurement_cut)
     };
 
   }  // end of namespace cut

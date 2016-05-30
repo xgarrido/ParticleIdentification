@@ -59,7 +59,7 @@ namespace snemo {
       probability_type _internal_probabilities_;//!< TOF internal probabilities
       probability_type _external_probabilities_;//!< TOF external probabilities
 
-      DATATOOLS_SERIALIZATION_DECLARATION();
+      DATATOOLS_SERIALIZATION_DECLARATION()
     };
 
   } // end of namespace datamodel

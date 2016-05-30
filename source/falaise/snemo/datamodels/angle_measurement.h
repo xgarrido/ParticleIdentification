@@ -49,7 +49,7 @@ namespace snemo {
 
       double _angle_; //!< The angle value
 
-      DATATOOLS_SERIALIZATION_DECLARATION();
+      DATATOOLS_SERIALIZATION_DECLARATION()
     };
 
   } // end of namespace datamodel
