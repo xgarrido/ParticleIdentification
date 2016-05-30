@@ -75,7 +75,7 @@ namespace snemo {
     // Initialize the gamma tracker through configuration properties
     void topology_driver::initialize(const datatools::properties & setup_)
     {
-      DT_THROW_IF(is_initialized(), std::logic_error, "Driver '" << topology_id() << "' is already initialized !");
+      DT_THROW_IF(is_initialized(), std::logic_error, "Driver '" << get_id() << "' is already initialized !");
 
       // Logging priority
       datatools::logger::priority lp = datatools::logger::extract_logging_configuration(setup_);
@@ -137,12 +137,12 @@ namespace snemo {
                                  snemo::datamodel::topology_data & td_)
     {
       int status = 0;
-      DT_THROW_IF(! is_initialized(), std::logic_error, "Driver '" << topology_id() << "' is already initialized !");
+      DT_THROW_IF(! is_initialized(), std::logic_error, "Driver '" << get_id() << "' is already initialized !");
 
       status = _process_algo(ptd_, td_);
       if (status != 0) {
         DT_LOG_ERROR(get_logging_priority(),
-                     "Computing topology quantities with '" << topology_id() << "' algorithm has failed !");
+                     "Computing topology quantities with '" << get_id() << "' algorithm has failed !");
         return status;
       }
 
