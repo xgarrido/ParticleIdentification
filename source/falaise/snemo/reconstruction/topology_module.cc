@@ -107,12 +107,8 @@ namespace snemo {
       const snemo::datamodel::particle_track_data & the_particle_track_data
         = data_record_.get<snemo::datamodel::particle_track_data>(_PTD_label_);
 
-      /*********************************
-       * Check particle track data     *
-       *********************************/
+      // Check topology data
       const bool preserve_former_output = false;
-
-      // check if some 'topology_data' are available in the data model:
       snemo::datamodel::topology_data * ptr_topology_data = 0;
       if (! data_record_.has(_TD_label_)) {
         ptr_topology_data
