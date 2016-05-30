@@ -120,7 +120,7 @@ namespace snemo {
       handle_pattern _pattern_;            //!< Handle to a topology pattern
       datatools::properties _auxiliaries_; //!< Auxiliary properties
 
-      DATATOOLS_SERIALIZATION_DECLARATION();
+      DATATOOLS_SERIALIZATION_DECLARATION()
 
     };
 

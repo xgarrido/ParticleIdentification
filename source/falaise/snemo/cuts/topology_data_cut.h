@@ -105,7 +105,7 @@ namespace snemo {
       std::string _classification_label_; //!< Classification label
 
       // Macro to automate the registration of the cut :
-      CUT_REGISTRATION_INTERFACE(topology_data_cut);
+      CUT_REGISTRATION_INTERFACE(topology_data_cut)
     };
 
   }  // end of namespace cut

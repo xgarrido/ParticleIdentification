@@ -72,7 +72,7 @@ namespace snemo {
       double _probability_;          //!< Chi2 probability of the vertex
       geomtools::blur_spot _vertex_; //!< 3D position and associated errors
 
-      DATATOOLS_SERIALIZATION_DECLARATION();
+      DATATOOLS_SERIALIZATION_DECLARATION()
     };
 
   } // end of namespace datamodel

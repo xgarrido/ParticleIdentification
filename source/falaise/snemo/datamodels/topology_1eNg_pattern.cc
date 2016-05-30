@@ -4,6 +4,7 @@
 // Ourselves:
 #include <falaise/snemo/datamodels/topology_1eNg_pattern.h>
 
+#include <falaise/snemo/datamodels/energy_measurement.h>
 namespace snemo {
 
   namespace datamodel {
@@ -57,10 +58,10 @@ namespace snemo {
       return has_measurement("energy_g[0-9]+");
     }
 
-    void topology_1eNg_pattern::fetch_gammas_energies(topology_1eNg_pattern::energy_collection_type & g_energies_) const
+    void topology_1eNg_pattern::fetch_gammas_energies(topology_1eNg_pattern::energy_collection_type & energies_) const
     {
       DT_THROW_IF(! has_gammas_energies(), std::logic_error,
-                  "No gamma energy measurement stored !");
+                  "No gammas energy measurement stored !");
       for (size_t ig = 1; ig <= get_number_of_gammas(); ig++) {
         std::ostringstream oss;
         oss << "energy_g" << ig;
@@ -68,7 +69,7 @@ namespace snemo {
                     std::logic_error, "Missing '" << oss.str() << "' energy measurement !");
         const snemo::datamodel::energy_measurement & a_energy_meas
           = get_measurement_as<snemo::datamodel::energy_measurement>(oss.str());
-        g_energies_.push_back(a_energy_meas.get_energy());
+        energies_.push_back(a_energy_meas.get_energy());
       }
       return;
     }

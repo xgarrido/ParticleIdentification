@@ -21,7 +21,7 @@ namespace snemo {
   namespace cut {
 
     // Registration instantiation macro :
-    CUT_REGISTRATION_IMPLEMENT(tof_measurement_cut, "snemo::cut::tof_measurement_cut");
+    CUT_REGISTRATION_IMPLEMENT(tof_measurement_cut, "snemo::cut::tof_measurement_cut")
 
     void tof_measurement_cut::_set_defaults()
     {

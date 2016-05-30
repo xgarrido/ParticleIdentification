@@ -28,7 +28,7 @@ namespace snemo {
 
     // Registration instantiation macro :
     DPP_MODULE_REGISTRATION_IMPLEMENT(topology_module,
-                                      "snemo::reconstruction::topology_module");
+                                      "snemo::reconstruction::topology_module")
 
     void topology_module::_set_defaults()
     {
@@ -67,8 +67,7 @@ namespace snemo {
 
     void topology_module::reset()
     {
-      DT_THROW_IF (! is_initialized(),
-                   std::logic_error,
+      DT_THROW_IF (! is_initialized(), std::logic_error,
                    "Module '" << get_name() << "' is not initialized !");
       _set_initialized(false);
       _set_defaults();
@@ -104,15 +103,14 @@ namespace snemo {
         return dpp::base_module::PROCESS_ERROR;
       }
       // Grab the 'particle_track_data' entry from the data model :
-      const snemo::datamodel::particle_track_data & the_particle_track_data
-        = data_record_.get<snemo::datamodel::particle_track_data>(_PTD_label_);
+      snemo::datamodel::particle_track_data & the_particle_track_data
+        = data_record_.grab<snemo::datamodel::particle_track_data>(_PTD_label_);
 
-      /*********************************
-       * Check particle track data     *
-       *********************************/
+      // Prepare process
+      _prepare_process(the_particle_track_data);
+
+      // Check topology data
       const bool preserve_former_output = false;
-
-      // check if some 'topology_data' are available in the data model:
       snemo::datamodel::topology_data * ptr_topology_data = 0;
       if (! data_record_.has(_TD_label_)) {
         ptr_topology_data
@@ -130,6 +128,11 @@ namespace snemo {
       _process(the_particle_track_data, the_topology_data);
 
       return dpp::base_module::PROCESS_SUCCESS;
+    }
+
+    void topology_module::_prepare_process(snemo::datamodel::particle_track_data & /*ptd_*/)
+    {
+      return;
     }
 
     void topology_module::_process(const snemo::datamodel::particle_track_data & ptd_,
@@ -155,9 +158,9 @@ DOCD_CLASS_IMPLEMENT_LOAD_BEGIN(snemo::reconstruction::topology_module, ocd_)
   ocd_.set_class_name("snemo::reconstruction::topology_module");
   ocd_.set_class_description("A module that considers the event topology");
   ocd_.set_class_library("Falaise_ParticleIdentification");
-  ocd_.set_class_documentation("This module uses the ``snemo::datamodel::particle_track_data`` bank \n"
+  ocd_.set_class_documentation("This module uses the ``snemo::datamodel::particle_track_data`` bank               \n"
                                "and, given the particles identified, computes relevant topology quantities before \n"
-                               "storing them in ``snemo::datamodel::topology_data.`` \n");
+                               "storing them in ``snemo::datamodel::topology_data.``                              \n");
 
   dpp::base_module::common_ocd(ocd_);
 
@@ -169,14 +172,13 @@ DOCD_CLASS_IMPLEMENT_LOAD_BEGIN(snemo::reconstruction::topology_module, ocd_)
       .set_terse_description("The label/name of the 'particle track data' bank")
       .set_traits(datatools::TYPE_STRING)
       .set_mandatory(false)
-      .set_long_description("This is the name of the bank to be used as    \n"
-                            "the source of calorimeter hits and reconstructed vertices. \n"
-                            )
+      .set_long_description("This is the name of the input bank to be used as           \n"
+                            "the source of calorimeter hits and reconstructed vertices. \n")
       .set_default_value_string(snemo::datamodel::data_info::default_particle_track_data_label())
       .add_example("Use an alternative name for the 'particle track data' bank:: \n"
-                   "                                  \n"
-                   "  PTD_label : string = \"PTD2\"   \n"
-                   "                                  \n"
+                   "                                                             \n"
+                   "  PTD_label : string = \"PTD2\"                              \n"
+                   "                                                             \n"
                    )
       ;
   }
@@ -189,14 +191,13 @@ DOCD_CLASS_IMPLEMENT_LOAD_BEGIN(snemo::reconstruction::topology_module, ocd_)
       .set_terse_description("The label/name of the 'topology data' bank")
       .set_traits(datatools::TYPE_STRING)
       .set_mandatory(false)
-      .set_long_description("This is the name of the bank to be used   \n"
-                            "to select events based on their topology. \n"
-                            )
+      .set_long_description("This is the name of the output bank to be used \n"
+                            "to select events based on their topology.      \n")
       .set_default_value_string("TD")//snemo::datamodel::data_info::default_topology_data_label())
-      .add_example("Use an alternative name for the 'particle track data' bank:: \n"
-                   "                                                             \n"
-                   "  TD_label : string = \"TD2\"                                \n"
-                   "                                                             \n"
+      .add_example("Use an alternative name for the 'topology data' bank:: \n"
+                   "                                                       \n"
+                   "  TD_label : string = \"TD2\"                          \n"
+                   "                                                       \n"
                    )
       ;
   }
@@ -204,7 +205,7 @@ DOCD_CLASS_IMPLEMENT_LOAD_BEGIN(snemo::reconstruction::topology_module, ocd_)
   {
     datatools::configuration_property_description & cpd = ocd_.add_configuration_property_info();
     cpd.set_name_pattern("drivers")
-      .set_terse_description("The driver ids tobe used")
+      .set_terse_description("The driver ids to be used")
       .set_traits(datatools::TYPE_STRING,
                   datatools::configuration_property_description::ARRAY)
       .set_mandatory(false)
@@ -220,16 +221,16 @@ DOCD_CLASS_IMPLEMENT_LOAD_BEGIN(snemo::reconstruction::topology_module, ocd_)
   ::snemo::reconstruction::topology_driver::init_ocd(ocd_);
 
   // Additionnal configuration hints :
-  ocd_.set_configuration_hints("Here is a full configuration example in the        \n"
-                               "``datatools::properties`` ASCII format::           \n"
-                               "                                                   \n"
-                               "  PTD_label : string = \"PTD\"                     \n"
-                               "  TD_label  : string = \"TD\"                      \n"
+  ocd_.set_configuration_hints("Here is a full configuration example in the      \n"
+                               "``datatools::properties`` ASCII format::         \n"
+                               "                                                 \n"
+                               "  PTD_label : string = \"PTD\"                   \n"
+                               "  TD_label  : string = \"TD\"                    \n"
                                "  drivers   : string[3] = \"TOFD\" \"VD\" \"AD\" \n"
-                               "  TOFD.logging.priority : string = \"error\"       \n"
-                               "  VD.logging.priority  : string = \"error\"       \n"
-                               "  AMD.logging.priority  : string = \"error\"       \n"
-                               "                                                   \n"
+                               "  TOFD.logging.priority : string = \"error\"     \n"
+                               "  VD.logging.priority  : string = \"error\"      \n"
+                               "  AMD.logging.priority  : string = \"error\"     \n"
+                               "                                                 \n"
                                );
 
   ocd_.set_validation_support(true);

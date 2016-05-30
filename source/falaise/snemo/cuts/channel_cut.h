@@ -78,7 +78,7 @@ namespace snemo {
       cut_collection_type _cuts_; //!< Collection of cut/meas.
 
       /// Macro to automate the registration of the cut
-      CUT_REGISTRATION_INTERFACE(channel_cut);
+      CUT_REGISTRATION_INTERFACE(channel_cut)
 
     };
 

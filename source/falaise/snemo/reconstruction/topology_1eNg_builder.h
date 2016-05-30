@@ -29,7 +29,7 @@ namespace snemo {
     private:
 
       /// Macro to automate the registration of the cut
-      FL_SNEMO_RECONSTRUCTION_TOPOLOGY_BUILDER_REGISTRATION_INTERFACE(topology_1eNg_builder);
+      FL_SNEMO_RECONSTRUCTION_TOPOLOGY_BUILDER_REGISTRATION_INTERFACE(topology_1eNg_builder)
     };
   }
 }

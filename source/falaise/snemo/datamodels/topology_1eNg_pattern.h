@@ -23,10 +23,10 @@ namespace snemo {
     {
     public:
 
-      /// Typedef for TOF dictionnary
+      /// Typedef for TOF collection
       typedef std::vector<snemo::datamodel::tof_measurement::probability_type> tof_collection_type;
 
-      /// Typedef for energy dictionnary
+      /// Typedef for energy measurement collection
       typedef std::vector<double> energy_collection_type;
 
       /// Static function to return pattern identifier of the pattern
@@ -50,11 +50,11 @@ namespace snemo {
       /// Return the number of gammas
       size_t get_number_of_gammas() const;
 
-      /// Check gammas energies existence
+      /// Check gammas energy existence
       bool has_gammas_energies() const;
 
-      /// Fetch the gammas energies
-      void fetch_gammas_energies(energy_collection_type & g_energies_) const;
+      /// Fetch gammas energies
+      void fetch_gammas_energies(energy_collection_type & energies_) const;
 
       /// Check electron-gammas TOF probabilities existence
       bool has_electron_gammas_tof_probabilities() const;
@@ -69,7 +69,7 @@ namespace snemo {
 
       size_t _number_of_gammas_; //!< Number of gamma in the topology
 
-      DATATOOLS_SERIALIZATION_DECLARATION();
+      DATATOOLS_SERIALIZATION_DECLARATION()
 
     };
 

@@ -18,7 +18,7 @@ namespace snemo {
 
     // Registration instantiation macro :
     FL_SNEMO_RECONSTRUCTION_TOPOLOGY_BUILDER_REGISTRATION_IMPLEMENT(topology_1eNg_builder,
-                                                                    "snemo::reconstruction::topology_1eNg_builder");
+                                                                    "snemo::reconstruction::topology_1eNg_builder")
 
     snemo::datamodel::base_topology_pattern::handle_type topology_1eNg_builder::_create_pattern()
     {

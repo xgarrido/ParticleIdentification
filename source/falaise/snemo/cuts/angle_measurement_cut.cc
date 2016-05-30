@@ -21,7 +21,7 @@ namespace snemo {
   namespace cut {
 
     // Registration instantiation macro :
-    CUT_REGISTRATION_IMPLEMENT(angle_measurement_cut, "snemo::cut::angle_measurement_cut");
+    CUT_REGISTRATION_IMPLEMENT(angle_measurement_cut, "snemo::cut::angle_measurement_cut")
 
     void angle_measurement_cut::_set_defaults()
     {
