@@ -5,9 +5,6 @@
 cmake_minimum_required(VERSION 3.3)
 project(FalaiseParticleIdentificationPlugin)
 
-# Use C++11
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-
 # Ensure our code can see the Falaise headers
 #include_directories(${Falaise_INCLUDE_DIRS})
 include_directories(${FALAISE_BUILDPRODUCT_DIR}/include)
