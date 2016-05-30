@@ -66,7 +66,7 @@ namespace snemo {
     public:
 
       /// Algorithm id
-      static const std::string & topology_id();
+      static const std::string & get_id();
 
       /// Initialization flag
       void set_initialized(const bool initialized_);

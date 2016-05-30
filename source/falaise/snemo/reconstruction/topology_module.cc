@@ -10,6 +10,9 @@
 // Third party:
 // - Bayeux/datatools:
 #include <datatools/service_manager.h>
+// - Bayeux/cuts:
+#include <cuts/cut_service.h>
+#include <cuts/cut_manager.h>
 // - Bayeux/geomtools:
 #include <geomtools/geometry_service.h>
 #include <geomtools/manager.h>
@@ -35,13 +38,14 @@ namespace snemo {
     {
       _PTD_label_ = snemo::datamodel::data_info::default_particle_track_data_label();
       _TD_label_ = "TD";//snemo::datamodel::data_info::default_topology_data_label();
+      _pid_driver_.reset(0);
       _topology_driver_.reset(0);
       return;
     }
 
     // Initialization :
     void topology_module::initialize(const datatools::properties  & setup_,
-                                     datatools::service_manager   & /* service_manager_ */,
+                                     datatools::service_manager   & service_manager_,
                                      dpp::module_handle_dict_type & /* module_dict_ */)
     {
       DT_THROW_IF (is_initialized(),
@@ -58,11 +62,28 @@ namespace snemo {
         _TD_label_ = setup_.fetch_string("TD_label");
       }
 
-      // Drivers :
-      datatools::properties pid_config;
-      setup_.export_and_rename_starting_with(pid_config, particle_identification_driver::get_id() + ".", "");
+      // Cut manager :
+      std::string cut_label = snemo::processing::service_info::default_cut_service_label();
+      if (setup_.has_key("Cut_label")) {
+        cut_label = setup_.fetch_string("Cut_label");
+      }
+      DT_THROW_IF(cut_label.empty(), std::logic_error,
+                  "Module '" << get_name() << "' has no valid '" << "Cut_label" << "' property !");
+      DT_THROW_IF(! service_manager_.has(cut_label) ||
+                  ! service_manager_.is_a<cuts::cut_service>(cut_label),
+                  std::logic_error,
+                  "Module '" << get_name() << "' has no '" << cut_label << "' service !");
+      cuts::cut_service & Cut
+        = service_manager_.grab<cuts::cut_service>(cut_label);
+
       _pid_driver_.reset(new snemo::reconstruction::particle_identification_driver);
-      _pid_driver_->initialize(pid_config);
+      _pid_driver_->set_cut_manager(Cut.grab_cut_manager());
+
+      // Drivers :
+      datatools::properties PID_config;
+      setup_.export_and_rename_starting_with(PID_config, particle_identification_driver::get_id() + ".", "");
+      _pid_driver_->initialize(PID_config);
+
       _topology_driver_.reset(new snemo::reconstruction::topology_driver);
       _topology_driver_->initialize(setup_);
 
@@ -135,8 +156,14 @@ namespace snemo {
       return dpp::base_module::PROCESS_SUCCESS;
     }
 
-    void topology_module::_prepare_process(snemo::datamodel::particle_track_data & /*ptd_*/)
+    void topology_module::_prepare_process(snemo::datamodel::particle_track_data & ptd_)
     {
+      DT_LOG_TRACE(get_logging_priority(), "Entering...");
+
+      // Process the particle identification driver :
+      _pid_driver_.get()->process(ptd_);
+
+      DT_LOG_TRACE(get_logging_priority(), "Exiting.");
       return;
     }
 
@@ -145,7 +172,7 @@ namespace snemo {
     {
       DT_LOG_TRACE(get_logging_priority(), "Entering...");
 
-      // Process the fitter driver :
+      // Process the topology driver i.e. TOF, angle meas... :
       _topology_driver_.get()->process(ptd_,td_);
 
       DT_LOG_TRACE(get_logging_priority(), "Exiting.");

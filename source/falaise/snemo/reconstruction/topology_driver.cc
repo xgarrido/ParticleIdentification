@@ -27,7 +27,7 @@ namespace snemo {
 
   namespace reconstruction {
 
-    const std::string & topology_driver::topology_id()
+    const std::string & topology_driver::get_id()
     {
       static const std::string _id("TD");
       return _id;
