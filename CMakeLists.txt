@@ -134,5 +134,4 @@ option(FalaiseParticleIdentificationPlugin_ENABLE_TESTING "Build unit testing sy
 if(FalaiseParticleIdentificationPlugin_ENABLE_TESTING)
   enable_testing()
   add_subdirectory(testing)
-
 endif()
