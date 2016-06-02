@@ -34,7 +34,7 @@ def main():
     parser.add_argument("-o", type=str, metavar="<outfile>", help="output ROOT file")
     parser.add_argument("-n", type=int, metavar="<number>",
                         required=True, help="set number of simulated events")
-    parser.add_argument("--module", type=str, metavar="<name>", default="pipeline",
+    parser.add_argument("-m", "--module", type=str, metavar="<name>", default="pipeline",
                         help="set the module name")
     args = parser.parse_args()
 

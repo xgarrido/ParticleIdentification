@@ -84,9 +84,16 @@ namespace snemo {
       set_logging_priority(lp);
 
       // Drivers :
-      DT_THROW_IF(! setup_.has_key("drivers"), std::logic_error, "Missing 'drivers' key !");
       std::vector<std::string> driver_names;
-      setup_.fetch("drivers", driver_names);
+      if (setup_.has_key("drivers")) {
+        setup_.fetch("drivers", driver_names);
+      } else {
+        // Provide default set of drivers
+        driver_names.push_back(snemo::reconstruction::tof_driver::get_id());
+        driver_names.push_back(snemo::reconstruction::vertex_driver::get_id());
+        driver_names.push_back(snemo::reconstruction::angle_driver::get_id());
+        driver_names.push_back(snemo::reconstruction::energy_driver::get_id());
+      }
       for (std::vector<std::string>::const_iterator
              idriver = driver_names.begin();
            idriver != driver_names.end(); ++idriver) {
