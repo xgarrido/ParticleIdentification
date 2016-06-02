@@ -8,8 +8,7 @@ def get_configuration_dir():
     """ Derive path to resource dir from this
     """
     this_dir = os.path.realpath(__file__)
-    return "/home/garrido/Workdir/NEMO/supernemo/snware/falaise/repo/modules/ParticleIdentification/resources/examples/ex02/config/"
-#os.path.join(os.path.dirname(this_dir), "config/")
+    return os.path.join(os.path.dirname(this_dir), "config/")
 
 def get_bayeux_library_dir():
     """ Return Bayeux library directory from bxquery binary
