@@ -250,7 +250,6 @@ namespace snemo {
       } else {
         DT_LOG_DEBUG(get_logging_priority(), "Non supported classification '" << classification_ << "' !");
       }
-      std::cout << "ID " << a_class_id << std::endl;
       DT_LOG_TRACE(get_logging_priority(), "Builder class id : " << a_class_id);
       return a_class_id;
     }
