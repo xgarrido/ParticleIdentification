@@ -27,7 +27,7 @@ namespace snemo {
 
   namespace reconstruction {
 
-    const std::string & topology_driver::topology_id()
+    const std::string & topology_driver::get_id()
     {
       static const std::string _id("TD");
       return _id;
@@ -75,7 +75,7 @@ namespace snemo {
     // Initialize the gamma tracker through configuration properties
     void topology_driver::initialize(const datatools::properties & setup_)
     {
-      DT_THROW_IF(is_initialized(), std::logic_error, "Driver '" << topology_id() << "' is already initialized !");
+      DT_THROW_IF(is_initialized(), std::logic_error, "Driver '" << get_id() << "' is already initialized !");
 
       // Logging priority
       datatools::logger::priority lp = datatools::logger::extract_logging_configuration(setup_);
@@ -84,9 +84,16 @@ namespace snemo {
       set_logging_priority(lp);
 
       // Drivers :
-      DT_THROW_IF(! setup_.has_key("drivers"), std::logic_error, "Missing 'drivers' key !");
       std::vector<std::string> driver_names;
-      setup_.fetch("drivers", driver_names);
+      if (setup_.has_key("drivers")) {
+        setup_.fetch("drivers", driver_names);
+      } else {
+        // Provide default set of drivers
+        driver_names.push_back(snemo::reconstruction::tof_driver::get_id());
+        driver_names.push_back(snemo::reconstruction::vertex_driver::get_id());
+        driver_names.push_back(snemo::reconstruction::angle_driver::get_id());
+        driver_names.push_back(snemo::reconstruction::energy_driver::get_id());
+      }
       for (std::vector<std::string>::const_iterator
              idriver = driver_names.begin();
            idriver != driver_names.end(); ++idriver) {
@@ -137,12 +144,12 @@ namespace snemo {
                                  snemo::datamodel::topology_data & td_)
     {
       int status = 0;
-      DT_THROW_IF(! is_initialized(), std::logic_error, "Driver '" << topology_id() << "' is already initialized !");
+      DT_THROW_IF(! is_initialized(), std::logic_error, "Driver '" << get_id() << "' is already initialized !");
 
       status = _process_algo(ptd_, td_);
       if (status != 0) {
         DT_LOG_ERROR(get_logging_priority(),
-                     "Computing topology quantities with '" << topology_id() << "' algorithm has failed !");
+                     "Computing topology quantities with '" << get_id() << "' algorithm has failed !");
         return status;
       }
 

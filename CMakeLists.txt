@@ -2,11 +2,8 @@
 # - Basic CMake setup
 # Check version meets ou requirements
 # Declare project, which will configure compiler for us
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.3)
 project(FalaiseParticleIdentificationPlugin)
-
-# Use C++11
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 # Ensure our code can see the Falaise headers
 #include_directories(${FALAISE_INCLUDE_DIRS})
@@ -22,9 +19,8 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/source/falaise)
 
 # - Headers:
 list(APPEND FalaiseParticleIdentificationPlugin_HEADERS
-  source/falaise/snemo/reconstruction/particle_identification_driver.h
-  source/falaise/snemo/reconstruction/particle_identification_module.h
   source/falaise/snemo/reconstruction/topology_module.h
+  source/falaise/snemo/reconstruction/particle_identification_driver.h
   source/falaise/snemo/reconstruction/topology_driver.h
   source/falaise/snemo/reconstruction/tof_driver.h
   source/falaise/snemo/reconstruction/vertex_driver.h
@@ -49,40 +45,25 @@ list(APPEND FalaiseParticleIdentificationPlugin_HEADERS
   source/falaise/snemo/datamodels/topology_data.ipp
   source/falaise/snemo/datamodels/the_serializable_bis.h
   source/falaise/snemo/datamodels/base_topology_pattern.h
-  source/falaise/snemo/datamodels/base_topology_pattern.ipp
   source/falaise/snemo/datamodels/topology_1e_pattern.h
-  source/falaise/snemo/datamodels/topology_1e_pattern.ipp
   source/falaise/snemo/datamodels/topology_2e_pattern.h
-  source/falaise/snemo/datamodels/topology_2e_pattern.ipp
   source/falaise/snemo/datamodels/topology_2p_pattern.h
-  source/falaise/snemo/datamodels/topology_2p_pattern.ipp
   source/falaise/snemo/datamodels/topology_1eNg_pattern.h
-  source/falaise/snemo/datamodels/topology_1eNg_pattern.ipp
   source/falaise/snemo/datamodels/topology_2eNg_pattern.h
-  source/falaise/snemo/datamodels/topology_2eNg_pattern.ipp
   source/falaise/snemo/datamodels/topology_1e1a_pattern.h
-  source/falaise/snemo/datamodels/topology_1e1a_pattern.ipp
   source/falaise/snemo/datamodels/topology_1e1p_pattern.h
-  source/falaise/snemo/datamodels/topology_1e1p_pattern.ipp
-  source/falaise/snemo/datamodels/base_topology_measurement.ipp
   source/falaise/snemo/datamodels/base_topology_measurement.h
-  source/falaise/snemo/datamodels/base_topology_measurement.ipp
   source/falaise/snemo/datamodels/tof_measurement.h
-  source/falaise/snemo/datamodels/tof_measurement.ipp
   source/falaise/snemo/datamodels/vertex_measurement.h
-  source/falaise/snemo/datamodels/vertex_measurement.ipp
   source/falaise/snemo/datamodels/angle_measurement.h
-  source/falaise/snemo/datamodels/angle_measurement.ipp
   source/falaise/snemo/datamodels/energy_measurement.h
-  source/falaise/snemo/datamodels/energy_measurement.ipp
   source/falaise/snemo/datamodels/pid_utils.h
   )
 
 # - Sources:
 list(APPEND FalaiseParticleIdentificationPlugin_SOURCES
-  source/falaise/snemo/reconstruction/particle_identification_driver.cc
-  source/falaise/snemo/reconstruction/particle_identification_module.cc
   source/falaise/snemo/reconstruction/topology_module.cc
+  source/falaise/snemo/reconstruction/particle_identification_driver.cc
   source/falaise/snemo/reconstruction/topology_driver.cc
   source/falaise/snemo/reconstruction/tof_driver.cc
   source/falaise/snemo/reconstruction/vertex_driver.cc
@@ -153,5 +134,4 @@ option(FalaiseParticleIdentificationPlugin_ENABLE_TESTING "Build unit testing sy
 if(FalaiseParticleIdentificationPlugin_ENABLE_TESTING)
   enable_testing()
   add_subdirectory(testing)
-
 endif()

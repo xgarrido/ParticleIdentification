@@ -16,7 +16,7 @@ namespace snemo {
 
   namespace reconstruction {
 
-    const std::string & particle_identification_driver::particle_identification_id()
+    const std::string & particle_identification_driver::get_id()
     {
       static const std::string _id("PID");
       return _id;
@@ -106,7 +106,7 @@ namespace snemo {
     // Initialize the gamma tracker through configuration properties
     void particle_identification_driver::initialize(const datatools::properties & setup_)
     {
-      DT_THROW_IF(is_initialized(), std::logic_error, "Driver '" << particle_identification_id() << "' is already initialized !");
+      DT_THROW_IF(is_initialized(), std::logic_error, "Driver '" << get_id() << "' is already initialized !");
 
       DT_THROW_IF(! has_cut_manager(), std::logic_error, "Missing cut manager !");
       DT_THROW_IF(! get_cut_manager().is_initialized(), std::logic_error,
@@ -170,12 +170,12 @@ namespace snemo {
     int particle_identification_driver::process(snemo::datamodel::particle_track_data & ptd_)
     {
       int status = 0;
-      DT_THROW_IF(! is_initialized(), std::logic_error, "Driver '" << particle_identification_id() << "' is already initialized !");
+      DT_THROW_IF(! is_initialized(), std::logic_error, "Driver '" << get_id() << "' is already initialized !");
 
       status = _process_algo(ptd_);
       if (status != 0) {
         DT_LOG_ERROR(get_logging_priority(),
-                     "Processing of particle tracks by '" << particle_identification_id() << "' algorithm has failed !");
+                     "Processing of particle tracks by '" << get_id() << "' algorithm has failed !");
         return status;
       }
 

@@ -52,6 +52,7 @@ namespace snemo {
 
   namespace reconstruction {
 
+    class particle_identification_driver;
     class topology_driver;
 
     /// \brief The data processing module for the gamma tracking
@@ -91,10 +92,11 @@ namespace snemo {
 
     private:
 
-      std::string _PTD_label_; //!< The label of the input  data bank
-      std::string _TD_label_; //!< The label of the output  data bank
+      std::string _PTD_label_; //!< The label of the input data bank
+      std::string _TD_label_;  //!< The label of the output data bank
 
-      boost::scoped_ptr< ::snemo::reconstruction::topology_driver> _driver_; //!< Handle to the embedded fitter algorithm with dynamic memory auto-deletion
+      boost::scoped_ptr<snemo::reconstruction::particle_identification_driver> _pid_driver_; //!< Handle to the pid driver with dynamic memory auto-deletion
+      boost::scoped_ptr<snemo::reconstruction::topology_driver> _topology_driver_;           //!< Handle to the topology driver with dynamic memory auto-deletion
 
       // Macro to automate the registration of the module :
       DPP_MODULE_REGISTRATION_INTERFACE(topology_module)

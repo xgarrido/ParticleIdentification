@@ -69,7 +69,7 @@ namespace snemo {
       typedef std::map<std::string, pair_property_type> property_dict_type;
 
       /// Algorithm id
-      static const std::string & particle_identification_id();
+      static const std::string & get_id();
 
       /// Initialization flag
       void set_initialized(const bool initialized_);
