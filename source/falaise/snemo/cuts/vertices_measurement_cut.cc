@@ -26,6 +26,7 @@ namespace snemo {
     void vertices_measurement_cut::_set_defaults()
     {
       _mode_ = MODE_UNDEFINED;
+      _location_ = "";
       datatools::invalidate(_vertices_prob_range_min_);
       datatools::invalidate(_vertices_prob_range_max_);
       datatools::invalidate(_vertices_dist_x_range_min_);
@@ -40,6 +41,16 @@ namespace snemo {
     uint32_t vertices_measurement_cut::get_mode() const
     {
       return _mode_;
+    }
+
+    bool vertices_measurement_cut::is_mode_has_location() const
+    {
+      return _mode_ & MODE_HAS_LOCATION;
+    }
+
+    bool vertices_measurement_cut::is_mode_location() const
+    {
+      return _mode_ & MODE_LOCATION;
     }
 
     bool vertices_measurement_cut::is_mode_has_vertices_probability() const
@@ -105,6 +116,12 @@ namespace snemo {
       this->i_cut::_common_initialize(configuration_);
 
       if (_mode_ == MODE_UNDEFINED) {
+        if (configuration_.has_flag("mode.has_location")) {
+          _mode_ |= MODE_HAS_LOCATION;
+        }
+        if (configuration_.has_flag("mode.location")) {
+          _mode_ |= MODE_LOCATION;
+        }
         if (configuration_.has_flag("mode.has_vertices_probability")) {
           _mode_ |= MODE_HAS_VERTICES_PROBABILITY;
         }
@@ -125,6 +142,27 @@ namespace snemo {
         }
         DT_THROW_IF(_mode_ == MODE_UNDEFINED, std::logic_error,
                     "Missing at least a 'mode.XXX' property !");
+
+        // mode HAS_LOCATION:
+        if (is_mode_has_location()) {
+          DT_LOG_DEBUG(get_logging_priority(), "Using HAS_LOCATION mode...");
+        } // end if is_mode_has_location
+
+        // mode LOCATION:
+        if (is_mode_location()) {
+          DT_LOG_DEBUG(get_logging_priority(), "Using LOCATION mode...");
+
+          size_t count = 0;
+          if (configuration_.has_key("location")) {
+            std::string location = configuration_.fetch_string("location");
+            //check if the location is one of the 4 or leave it be
+            // DT_THROW_IF(,
+            //             std::range_error,
+            //             "Invalid minimal vertices probability (" << pmin << ") !");
+            _location_ = location;
+            count++;
+          }
+        } // end if is_mode_location
 
         // mode HAS_VERTICES_PROBABILITY:
         if (is_mode_has_vertices_probability()) {
@@ -300,6 +338,32 @@ namespace snemo {
       }
       const snemo::datamodel::vertex_measurement & a_vertices_meas = *ptr_meas;
 
+      // Check if measurement has location
+      bool check_has_location = true;
+      if (is_mode_has_location()) {
+        if (! a_vertices_meas.has_vertex()) {
+          check_has_location = false;
+        }
+      }
+
+      // Check if measurement has correct location
+      bool check_location = true;
+      if (is_mode_location()) {
+        if (! a_vertices_meas.has_vertex()) {
+          DT_LOG_DEBUG(get_logging_priority(), "Missing vertex probability !");
+          return cuts::SELECTION_INAPPLICABLE;
+        }
+        std::string location;
+        a_vertices_meas.get_auxiliaries().fetch("vertex.type",location);
+        if (location != "") {
+          if (location != _location_) {
+            DT_LOG_DEBUG(get_logging_priority(),
+                         "Vertices location (" << location << ") doesn't match the requirement.");
+            check_location = false;
+          }
+        }
+      } // end of is_mode_location
+
       // Check if measurement has vertices probability
       bool check_has_vertices_probability = true;
       if (is_mode_has_vertices_probability()) {
@@ -425,18 +489,21 @@ namespace snemo {
         }
       } // end of is_mode_range_vertices_distance_y
 
-      cut_returned = cuts::SELECTION_REJECTED;
-      if (check_has_vertices_probability   &&
-          check_range_vertices_probability &&
-          check_has_vertices_distance      &&
-          check_range_vertices_distance_x  &&
-          check_range_vertices_distance_y  &&
-          check_range_vertices_distance_z
-          ) {
+    cut_returned = cuts::SELECTION_REJECTED;
+    if (check_has_location               &&
+        check_location                   &&
+        check_has_vertices_probability   &&
+        check_range_vertices_probability &&
+        check_has_vertices_distance      &&
+        check_range_vertices_distance_x  &&
+
+        check_range_vertices_distance_z
+        ) {
         DT_LOG_DEBUG(get_logging_priority(), "Event accepted by VERTICES measurement cut!");
         cut_returned = cuts::SELECTION_ACCEPTED;
       }
-      return cut_returned;
+
+    return cut_returned;
     }
 
   }  // end of namespace cut

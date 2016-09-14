@@ -232,6 +232,22 @@ namespace snemo {
           a_spot.set_z_error(0);
 
       }
+
+      std::string location;
+      if(snemo::datamodel::particle_track::vertex_is_on_source_foil(vtx1_))
+        location = snemo::datamodel::particle_track::vertex_on_source_foil_label();
+      else if (snemo::datamodel::particle_track::vertex_is_on_main_calorimeter(vtx1_))
+        location = snemo::datamodel::particle_track::vertex_on_main_calorimeter_label();
+      else if (snemo::datamodel::particle_track::vertex_is_on_x_calorimeter(vtx1_))
+        location = snemo::datamodel::particle_track::vertex_on_x_calorimeter_label();
+      else if (snemo::datamodel::particle_track::vertex_is_on_gamma_veto(vtx1_))
+        location = snemo::datamodel::particle_track::vertex_on_gamma_veto_label();
+      else
+        location = snemo::datamodel::particle_track::vertex_none_label();
+
+      a_spot.grab_auxiliaries().update(snemo::datamodel::particle_track::vertex_type_key(),
+                                       location);
+
       return ;
     }
 

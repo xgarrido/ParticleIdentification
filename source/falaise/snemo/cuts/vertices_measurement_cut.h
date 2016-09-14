@@ -31,12 +31,14 @@ namespace snemo {
       /// Mode of the cut
       enum mode_type {
         MODE_UNDEFINED                  = 0,
-        MODE_HAS_VERTICES_PROBABILITY   = datatools::bit_mask::bit01,
-        MODE_RANGE_VERTICES_PROBABILITY = datatools::bit_mask::bit02,
-        MODE_HAS_VERTICES_DISTANCE      = datatools::bit_mask::bit03,
-        MODE_RANGE_VERTICES_DISTANCE_X  = datatools::bit_mask::bit04,
-        MODE_RANGE_VERTICES_DISTANCE_Y  = datatools::bit_mask::bit05,
-        MODE_RANGE_VERTICES_DISTANCE_Z  = datatools::bit_mask::bit06,
+        MODE_HAS_LOCATION               = datatools::bit_mask::bit01,
+        MODE_LOCATION                   = datatools::bit_mask::bit02,
+        MODE_HAS_VERTICES_PROBABILITY   = datatools::bit_mask::bit03,
+        MODE_RANGE_VERTICES_PROBABILITY = datatools::bit_mask::bit04,
+        MODE_HAS_VERTICES_DISTANCE      = datatools::bit_mask::bit05,
+        MODE_RANGE_VERTICES_DISTANCE_X  = datatools::bit_mask::bit06,
+        MODE_RANGE_VERTICES_DISTANCE_Y  = datatools::bit_mask::bit07,
+        MODE_RANGE_VERTICES_DISTANCE_Z  = datatools::bit_mask::bit08,
       };
 
       /// Return the cut mode
@@ -44,6 +46,12 @@ namespace snemo {
 
       /// Check mode FLAG
       bool is_mode_flag() const;
+
+      /// Check mode HAS_LOCATION
+      bool is_mode_has_location() const;
+
+      /// Check mode LOCATION
+      bool is_mode_location() const;
 
       /// Check mode HAS_VERTICES_PROBABILITY
       bool is_mode_has_vertices_probability() const;
@@ -88,6 +96,7 @@ namespace snemo {
     private:
 
       uint32_t _mode_;             //!< Mode of the cut
+      std::string _location_; //!< Vertex/ices location
       double _vertices_prob_range_min_; //!< Minimal vertices probability
       double _vertices_prob_range_max_; //!< Maximal vertices probability
       double _vertices_dist_x_range_min_; //!< Minimal vertices distance in x
