@@ -99,6 +99,16 @@ namespace snemo {
         out_ << _probability_/CLHEP::perCent << "%" << std::endl;
       }
 
+      out_ << indent << datatools::i_tree_dumpable::tag
+           << "Distance: "<< std::endl;
+      if (! has_vertices_distance()) {
+        out_ << "<no value>" << std::endl;
+      } else {
+        out_ << indent << datatools::i_tree_dumpable::tag << "X " << get_vertices_distance_x()/CLHEP::mm << " mm" << std::endl;
+        out_ << indent << datatools::i_tree_dumpable::tag << "Y " << get_vertices_distance_y()/CLHEP::mm << " mm" << std::endl;
+        out_ << indent << datatools::i_tree_dumpable::tag << "Z " << get_vertices_distance_z()/CLHEP::mm << " mm" << std::endl;
+      }
+
       out_ << indent << datatools::i_tree_dumpable::inherit_tag(inherit_)
            << "Vertex: ";
       if (! has_vertex()) {
