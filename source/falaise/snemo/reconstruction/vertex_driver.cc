@@ -189,8 +189,16 @@ namespace snemo {
           return datatools::is_valid(a_sigma) ? a_sigma : 1.0;
         };
 
+      const geomtools::vector_3d & pos1 = vtx1_.get_position();
+      const geomtools::vector_3d & pos2 = vtx2_.get_position();
+      if (! geomtools::is_valid(pos1) || ! geomtools::is_valid(pos2)) {
+        DT_LOG_DEBUG(get_logging_priority(), "Vertex position is invalid !");
+        return;
+      }
+
       const double sigma1 = sigma(vtx1_);
       const double sigma2 = sigma(vtx2_);
+      const geomtools::vector_3d bary = (pos1/sigma1 + pos2/sigma2)/(1/sigma1 + 1/sigma2);
 
       const double sigma1_x = vtx1_.get_x_error();
       const double sigma1_y = vtx1_.get_y_error();
@@ -198,10 +206,6 @@ namespace snemo {
       const double sigma2_x = vtx2_.get_x_error();
       const double sigma2_y = vtx2_.get_y_error();
       const double sigma2_z = vtx2_.get_z_error();
-
-      const geomtools::vector_3d & pos1 = vtx1_.get_position();
-      const geomtools::vector_3d & pos2 = vtx2_.get_position();
-      const geomtools::vector_3d bary = (pos1/sigma1 + pos2/sigma2)/(1/sigma1 + 1/sigma2);
 
       const double chi2_x = (std::pow(bary.x()-pos1.x(),2) + std::pow(bary.x()-pos2.x(),2))/(sigma1_x*sigma1_x + sigma2_x*sigma2_x);
       const double chi2_y = (std::pow(bary.y()-pos1.y(),2) + std::pow(bary.y()-pos2.y(),2))/(sigma1_y*sigma1_y + sigma2_y*sigma2_y);
@@ -216,21 +220,13 @@ namespace snemo {
         a_spot.set_blur_dimension(vtx1_.get_blur_dimension());
         a_spot.set_position(bary);
         // temporary store the vertices distance in the barycenter errors
-        if(datatools::is_valid(std::abs(pos1.x()-pos2.x())))
-          a_spot.set_x_error(std::abs(pos1.x()-pos2.x()));
-        else
-          a_spot.set_x_error(0);
-
-        if(datatools::is_valid(std::abs(pos1.y()-pos2.y())))
-          a_spot.set_y_error(std::abs(pos1.y()-pos2.y()));
-        else
-          a_spot.set_y_error(0);
-
-        if(datatools::is_valid(std::abs(pos1.z()-pos2.z())))
-          a_spot.set_z_error(std::abs(pos1.z()-pos2.z()));
-        else
-          a_spot.set_z_error(0);
-
+        const double epsilon = 1e-13;
+        const double dx = std::abs(pos1.x()-pos2.x());
+        a_spot.set_x_error(dx < epsilon ? epsilon : dx);
+        const double dy = std::abs(pos1.y()-pos2.y());
+        a_spot.set_y_error(dy < epsilon ? epsilon : dy);
+        const double dz = std::abs(pos1.z()-pos2.z());
+        a_spot.set_z_error(dz < epsilon ? epsilon : dz);
       }
 
       std::string location;
