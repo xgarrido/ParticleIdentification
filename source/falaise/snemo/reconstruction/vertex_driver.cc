@@ -195,10 +195,10 @@ namespace snemo {
         DT_LOG_DEBUG(get_logging_priority(), "Vertex position is invalid !");
         return;
       }
-      const geomtools::vector_3d bary = (pos1/sigma1 + pos2/sigma2)/(1/sigma1 + 1/sigma2);
 
       const double sigma1 = sigma(vtx1_);
       const double sigma2 = sigma(vtx2_);
+      const geomtools::vector_3d bary = (pos1/sigma1 + pos2/sigma2)/(1/sigma1 + 1/sigma2);
 
       const double sigma1_x = vtx1_.get_x_error();
       const double sigma1_y = vtx1_.get_y_error();
