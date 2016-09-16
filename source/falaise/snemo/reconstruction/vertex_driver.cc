@@ -227,22 +227,22 @@ namespace snemo {
         a_spot.set_y_error(dy < epsilon ? epsilon : dy);
         const double dz = std::abs(pos1.z()-pos2.z());
         a_spot.set_z_error(dz < epsilon ? epsilon : dz);
-      }
 
-      std::string location;
-      if(snemo::datamodel::particle_track::vertex_is_on_source_foil(vtx1_))
-        location = snemo::datamodel::particle_track::vertex_on_source_foil_label();
-      else if (snemo::datamodel::particle_track::vertex_is_on_main_calorimeter(vtx1_))
-        location = snemo::datamodel::particle_track::vertex_on_main_calorimeter_label();
-      else if (snemo::datamodel::particle_track::vertex_is_on_x_calorimeter(vtx1_))
-        location = snemo::datamodel::particle_track::vertex_on_x_calorimeter_label();
-      else if (snemo::datamodel::particle_track::vertex_is_on_gamma_veto(vtx1_))
-        location = snemo::datamodel::particle_track::vertex_on_gamma_veto_label();
-      else
-        location = snemo::datamodel::particle_track::vertex_none_label();
+        std::string location;
+        if(snemo::datamodel::particle_track::vertex_is_on_source_foil(vtx1_))
+          location = snemo::datamodel::particle_track::vertex_on_source_foil_label();
+        else if (snemo::datamodel::particle_track::vertex_is_on_main_calorimeter(vtx1_))
+          location = snemo::datamodel::particle_track::vertex_on_main_calorimeter_label();
+        else if (snemo::datamodel::particle_track::vertex_is_on_x_calorimeter(vtx1_))
+          location = snemo::datamodel::particle_track::vertex_on_x_calorimeter_label();
+        else if (snemo::datamodel::particle_track::vertex_is_on_gamma_veto(vtx1_))
+          location = snemo::datamodel::particle_track::vertex_on_gamma_veto_label();
+        else
+          location = snemo::datamodel::particle_track::vertex_none_label();
 
-      a_spot.grab_auxiliaries().update(snemo::datamodel::particle_track::vertex_type_key(),
+        a_spot.grab_auxiliaries().update(snemo::datamodel::particle_track::vertex_type_key(),
                                        location);
+      }
 
       return ;
     }
