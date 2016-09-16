@@ -84,6 +84,18 @@ namespace snemo {
       /// Get common vertices probability between electrons
       double get_electrons_vertices_probability() const;
 
+      /// Check common vertices distance between electrons validity
+      bool has_electrons_vertices_distance() const;
+
+      /// Get common vertices distance in X between electrons
+      double get_electrons_vertices_distance_x() const;
+
+      /// Get common vertices distance in Y between electrons
+      double get_electrons_vertices_distance_y() const;
+
+      /// Get common vertices distance in Z between electrons
+      double get_electrons_vertices_distance_z() const;
+
       // /// Get common vertices location between electrons
       // std::string get_electrons_vertices_location() const;
 

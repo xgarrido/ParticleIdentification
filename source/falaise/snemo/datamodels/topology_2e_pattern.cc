@@ -145,6 +145,29 @@ namespace snemo {
       return get_measurement_as<snemo::datamodel::vertex_measurement>("vertex_e1_e2").get_probability();
     }
 
+    bool topology_2e_pattern::has_electrons_vertices_distance() const
+    {
+      return has_measurement_as<snemo::datamodel::vertex_measurement>("vertex_e1_e2");
+    }
+
+    double topology_2e_pattern::get_electrons_vertices_distance_x() const
+    {
+      DT_THROW_IF(! has_electrons_vertices_distance(), std::logic_error, "No common electrons vertices measurement stored !");
+      return get_measurement_as<snemo::datamodel::vertex_measurement>("vertex_e1_e2").get_vertices_distance_x();
+    }
+
+    double topology_2e_pattern::get_electrons_vertices_distance_y() const
+    {
+      DT_THROW_IF(! has_electrons_vertices_distance(), std::logic_error, "No common electrons vertices measurement stored !");
+      return get_measurement_as<snemo::datamodel::vertex_measurement>("vertex_e1_e2").get_vertices_distance_y();
+    }
+
+    double topology_2e_pattern::get_electrons_vertices_distance_z() const
+    {
+      DT_THROW_IF(! has_electrons_vertices_distance(), std::logic_error, "No common electrons vertices measurement stored !");
+      return get_measurement_as<snemo::datamodel::vertex_measurement>("vertex_e1_e2").get_vertices_distance_z();
+    }
+
     // std::string topology_2e_pattern::get_electrons_vertices_location() const
     // {
     //   DT_THROW_IF(! has_electrons_vertices_probability(), std::logic_error, "No common electrons vertices measurement stored !");
