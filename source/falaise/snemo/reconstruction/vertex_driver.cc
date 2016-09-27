@@ -237,6 +237,8 @@ namespace snemo {
           location = snemo::datamodel::particle_track::vertex_on_x_calorimeter_label();
         else if (snemo::datamodel::particle_track::vertex_is_on_gamma_veto(vtx1_))
           location = snemo::datamodel::particle_track::vertex_on_gamma_veto_label();
+        else if (snemo::datamodel::particle_track::vertex_is_on_wire(vtx1_))
+          location = snemo::datamodel::particle_track::vertex_on_wire_label();
         else
           location = snemo::datamodel::particle_track::vertex_none_label();
 
