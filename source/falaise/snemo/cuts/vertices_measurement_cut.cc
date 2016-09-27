@@ -153,13 +153,14 @@ namespace snemo {
           DT_LOG_DEBUG(get_logging_priority(), "Using LOCATION mode...");
 
           size_t count = 0;
-          if (configuration_.has_key("location")) {
-            std::string location = configuration_.fetch_string("location");
+          if (configuration_.has_key("location.value")) {
+            std::string location = configuration_.fetch_string("location.value");
             //check if the location is one of the 4 or leave it be
             // DT_THROW_IF(,
             //             std::range_error,
             //             "Invalid minimal vertices probability (" << pmin << ") !");
             _location_ = location;
+
             count++;
           }
         } // end if is_mode_location
@@ -354,7 +355,8 @@ namespace snemo {
           return cuts::SELECTION_INAPPLICABLE;
         }
         std::string location;
-        a_vertices_meas.get_auxiliaries().fetch("vertex.type",location);
+        a_vertices_meas.get_vertex().get_auxiliaries().fetch("vertex.type",location);
+
         if (location != "") {
           if (location != _location_) {
             DT_LOG_DEBUG(get_logging_priority(),
@@ -496,7 +498,7 @@ namespace snemo {
         check_range_vertices_probability &&
         check_has_vertices_distance      &&
         check_range_vertices_distance_x  &&
-
+        check_range_vertices_distance_y  &&
         check_range_vertices_distance_z
         ) {
         DT_LOG_DEBUG(get_logging_priority(), "Event accepted by VERTICES measurement cut!");
