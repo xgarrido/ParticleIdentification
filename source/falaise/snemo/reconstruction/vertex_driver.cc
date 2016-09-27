@@ -150,6 +150,10 @@ namespace snemo {
                   snemo::datamodel::particle_track::vertex_is_on_gamma_veto(vtx2_)) {
                 return true;
               }
+              if (snemo::datamodel::particle_track::vertex_is_on_wire(vtx1_) &&
+                  snemo::datamodel::particle_track::vertex_is_on_wire(vtx2_)) {
+                return true;
+              }
               return false;
             };
 
