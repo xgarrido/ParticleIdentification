@@ -96,12 +96,81 @@ namespace snemo {
       return;
     }
 
+    void vertex_driver::process(const snemo::datamodel::particle_track & pt_,
+                                snemo::datamodel::vertex_measurement & vertex_)
+    {
+      DT_THROW_IF(! is_initialized(), std::logic_error, "Driver '" << get_id() << "' is already initialized !");
+      this->_process_algo(pt_, vertex_);
+      return;
+    }
+
     void vertex_driver::process(const snemo::datamodel::particle_track & pt1_,
                                 const snemo::datamodel::particle_track & pt2_,
                                 snemo::datamodel::vertex_measurement & vertex_)
     {
       DT_THROW_IF(! is_initialized(), std::logic_error, "Driver '" << get_id() << "' is already initialized !");
       this->_process_algo(pt1_, pt2_, vertex_);
+      return;
+    }
+
+    void vertex_driver::_process_algo(const snemo::datamodel::particle_track & pt_,
+                                      snemo::datamodel::vertex_measurement & vertex_)
+    {
+      DT_LOG_TRACE(get_logging_priority(), "Entering...");
+
+      if (snemo::datamodel::pid_utils::particle_is_gamma(pt_)) {
+        DT_LOG_WARNING(get_logging_priority(),
+                       "Vertex measurement cannot be computed if the particle is a gamma!");
+        return;
+      }
+
+      geomtools::blur_spot & a_spot = vertex_.grab_vertex();
+
+      const snemo::datamodel::particle_track::vertex_collection_type & the_vertices
+        = pt_.get_vertices();
+
+      std::string location = "";
+      for (snemo::datamodel::particle_track::vertex_collection_type::const_iterator
+             ivtx = the_vertices.begin();
+           ivtx != the_vertices.end(); ++ivtx) {
+        const geomtools::blur_spot & vtx = ivtx->get();
+
+        if(vtx.get_geom_id() == pt_.get_associated_calorimeter_hits().front().get().get_geom_id())
+          continue;
+        else {
+          if(snemo::datamodel::particle_track::vertex_is_on_source_foil(vtx))
+            location = snemo::datamodel::particle_track::vertex_on_source_foil_label();
+          else if(snemo::datamodel::particle_track::vertex_is_on_wire(vtx))
+            location = snemo::datamodel::particle_track::vertex_on_wire_label();
+          else if(snemo::datamodel::particle_track::vertex_is_on_main_calorimeter(vtx))
+            location = snemo::datamodel::particle_track::vertex_on_main_calorimeter_label();
+          else if(snemo::datamodel::particle_track::vertex_is_on_x_calorimeter(vtx))
+            location = snemo::datamodel::particle_track::vertex_on_x_calorimeter_label();
+          else if(snemo::datamodel::particle_track::vertex_is_on_gamma_veto(vtx))
+            location = snemo::datamodel::particle_track::vertex_on_gamma_veto_label();
+          else
+            DT_LOG_WARNING(get_logging_priority(),
+                           "Single particle vertex location is different from the locations available !");
+
+          a_spot.set_blur_dimension(vtx.get_blur_dimension());
+
+          break; // Stop at the first (and supposedly only vertex different from the calorimeter hit)
+        }
+      }
+
+      if (location == "") {
+        DT_LOG_WARNING(get_logging_priority(), "No valid vertex was found for the particle !");
+      }
+      else
+        a_spot.grab_auxiliaries().update(snemo::datamodel::particle_track::vertex_type_key(), location);
+
+      vertex_.set_probability(1);
+      const double epsilon = 1e-13;
+      a_spot.set_x_error(epsilon);
+      a_spot.set_y_error(epsilon);
+      a_spot.set_z_error(epsilon);
+
+      DT_LOG_TRACE(get_logging_priority(), "Exiting...");
       return;
     }
 

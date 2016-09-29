@@ -5,9 +5,11 @@
 #include <falaise/snemo/reconstruction/topology_1e_builder.h>
 #include <falaise/snemo/reconstruction/angle_driver.h>
 #include <falaise/snemo/reconstruction/energy_driver.h>
+#include <falaise/snemo/reconstruction/vertex_driver.h>
 #include <falaise/snemo/datamodels/topology_1e_pattern.h>
 #include <falaise/snemo/datamodels/angle_measurement.h>
 #include <falaise/snemo/datamodels/energy_measurement.h>
+#include <falaise/snemo/datamodels/vertex_measurement.h>
 
 namespace snemo {
 
@@ -34,6 +36,13 @@ namespace snemo {
         = pattern_.grab_measurement_dictionary();
       const snemo::reconstruction::measurement_drivers & drivers
         = base_topology_builder::get_measurement_drivers();
+
+      {
+        snemo::datamodel::vertex_measurement * ptr_vertex_measurement = new snemo::datamodel::vertex_measurement;
+        meas["vertex_e1"].reset(ptr_vertex_measurement);
+        if (drivers.VD) drivers.VD->process(e1, *ptr_vertex_measurement);
+      }
+
       {
         snemo::datamodel::angle_measurement * ptr_angle = new snemo::datamodel::angle_measurement;
         meas["angle_" + e1_label].reset(ptr_angle);

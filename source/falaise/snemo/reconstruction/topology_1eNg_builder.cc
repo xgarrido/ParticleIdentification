@@ -61,6 +61,12 @@ namespace snemo {
         }
 
         {
+          snemo::datamodel::vertex_measurement * ptr_vertex_measurement = new snemo::datamodel::vertex_measurement;
+          meas["vertex_e1"].reset(ptr_vertex_measurement);
+          if (drivers.VD) drivers.VD->process(e1, *ptr_vertex_measurement);
+        }
+
+        {
           snemo::datamodel::angle_measurement * ptr_angle = new snemo::datamodel::angle_measurement;
           meas["angle_e1_" + g_label].reset(ptr_angle);
           if (drivers.AMD) drivers.AMD->process(e1, gamma, *ptr_angle);

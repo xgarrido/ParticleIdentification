@@ -69,7 +69,11 @@ namespace snemo {
       /// Destructor
       ~vertex_driver();
 
-      /// Main process
+      /// Main process for single particle
+      void process(const snemo::datamodel::particle_track & pt_,
+                   snemo::datamodel::vertex_measurement & vertex_);
+
+      /// Main process for two particles
       void process(const snemo::datamodel::particle_track & pt1_,
                    const snemo::datamodel::particle_track & pt2_,
                    snemo::datamodel::vertex_measurement & vertex_);
@@ -93,6 +97,10 @@ namespace snemo {
 
       /// Give default values to specific class members.
       void _set_defaults();
+
+      /// Special method to process and determine single particle vertex
+      void _process_algo(const snemo::datamodel::particle_track & pt_,
+                         snemo::datamodel::vertex_measurement & vertex_);
 
       /// Special method to process and determine common vertex between particle tracks
       void _process_algo(const snemo::datamodel::particle_track & pt1_,
