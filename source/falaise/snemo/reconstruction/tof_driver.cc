@@ -380,18 +380,19 @@ namespace snemo {
         return;
       }
       const snemo::datamodel::particle_track::vertex_collection_type & the_vertices = ptc_.get_vertices();
-      geomtools::vector_3d electron_foil_vertex;
-      geomtools::invalidate(electron_foil_vertex);
+      geomtools::vector_3d electron_origin_vertex;
+      geomtools::invalidate(electron_origin_vertex);
       for (snemo::datamodel::particle_track::vertex_collection_type::const_iterator
              ivtx = the_vertices.begin(); ivtx < the_vertices.end(); ++ivtx) {
         const geomtools::blur_spot & a_vertex = ivtx->get();
-        if (! snemo::datamodel::particle_track::vertex_is_on_source_foil(a_vertex))
+
+        if(a_vertex.get_geom_id() == ptc_.get_associated_calorimeter_hits().front().get().get_geom_id())
           continue;
 
-        electron_foil_vertex = a_vertex.get_position();
+        electron_origin_vertex = a_vertex.get_position();
         break;
       }
-      if (! geomtools::is_valid(electron_foil_vertex)) {
+      if (! geomtools::is_valid(electron_origin_vertex)) {
         DT_LOG_WARNING(get_logging_priority(), "Electron has no vertices on the calorimeter !");
         return;
       }
@@ -411,7 +412,7 @@ namespace snemo {
       }
       const snemo::datamodel::calibrated_calorimeter_hit & a_calo_hit = found->get();
 
-      track_length_ = (electron_foil_vertex - vertex_.get_position()).mag();
+      track_length_ = (electron_origin_vertex - vertex_.get_position()).mag();
       time_ = a_calo_hit.get_time();
       sigma_time_ = a_calo_hit.get_sigma_time();
       return;
