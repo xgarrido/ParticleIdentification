@@ -6,10 +6,12 @@
 #include <falaise/snemo/reconstruction/tof_driver.h>
 #include <falaise/snemo/reconstruction/angle_driver.h>
 #include <falaise/snemo/reconstruction/energy_driver.h>
+#include <falaise/snemo/reconstruction/vertex_driver.h>
 #include <falaise/snemo/datamodels/topology_1eNg_pattern.h>
 #include <falaise/snemo/datamodels/tof_measurement.h>
 #include <falaise/snemo/datamodels/angle_measurement.h>
 #include <falaise/snemo/datamodels/energy_measurement.h>
+#include <falaise/snemo/datamodels/vertex_measurement.h>
 #include <falaise/snemo/datamodels/pid_utils.h>
 
 namespace snemo {
