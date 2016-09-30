@@ -185,7 +185,7 @@ namespace snemo {
       // Would/Should work for charged particles
       // Could be done for charged particle/gamma angle  but it would require to add an orgin vertex to every gamma (by default source ?)
       if (! geomtools::is_valid(foil_vertex)) {
-        DT_LOG_WARNING(get_logging_priority(), "Particle has no vertices on the source foil !");
+        // DT_LOG_WARNING(get_logging_priority(), "Particle has no vertices on the source foil !");
         return;
       }
 
