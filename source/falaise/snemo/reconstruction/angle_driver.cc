@@ -181,6 +181,9 @@ namespace snemo {
         foil_vertex = i_vtx->get().get_position();
         break;
       }
+      // For now only consider the angle computation for particles with a vertex on the foil.
+      // Would/Should work for charged particles
+      // Could be done for charged particle/gamma angle  but it would require to add an orgin vertex to every gamma (by default source ?)
       if (! geomtools::is_valid(foil_vertex)) {
         DT_LOG_WARNING(get_logging_priority(), "Particle has no vertices on the source foil !");
         return;
