@@ -24,7 +24,7 @@
 namespace snemo {
 
   namespace reconstruction {
-    test;
+
     datatools::logger::priority tof_driver::tof_tool::logging = datatools::logger::PRIO_WARNING;
 
     double tof_driver::tof_tool::get_energy(const snemo::datamodel::particle_track & particle_)
