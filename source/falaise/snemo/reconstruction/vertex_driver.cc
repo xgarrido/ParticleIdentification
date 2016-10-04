@@ -129,7 +129,7 @@ namespace snemo {
       const snemo::datamodel::particle_track::vertex_collection_type & the_vertices
         = pt_.get_vertices();
 
-      std::string location = "";
+      std::string location;
       for (snemo::datamodel::particle_track::vertex_collection_type::const_iterator
              ivtx = the_vertices.begin();
            ivtx != the_vertices.end(); ++ivtx) {
@@ -148,9 +148,11 @@ namespace snemo {
             location = snemo::datamodel::particle_track::vertex_on_x_calorimeter_label();
           else if(snemo::datamodel::particle_track::vertex_is_on_gamma_veto(vtx))
             location = snemo::datamodel::particle_track::vertex_on_gamma_veto_label();
-          else
+          else {
+            location = snemo::datamodel::particle_track::vertex_none_label();
             DT_LOG_WARNING(get_logging_priority(),
-                           "Single particle vertex location is different from the locations available !");
+                           "Single particle vertex location is different from any of the available locations !");
+          }
 
           a_spot.set_blur_dimension(vtx.get_blur_dimension());
 
@@ -158,11 +160,7 @@ namespace snemo {
         }
       }
 
-      if (location == "") {
-        DT_LOG_WARNING(get_logging_priority(), "No valid vertex was found for the particle !");
-      }
-      else
-        a_spot.grab_auxiliaries().update(snemo::datamodel::particle_track::vertex_type_key(), location);
+      a_spot.grab_auxiliaries().update(snemo::datamodel::particle_track::vertex_type_key(), location);
 
       vertex_.set_probability(1);
       const double epsilon = 1e-13;
@@ -187,10 +185,37 @@ namespace snemo {
         return;
       }
 
+      auto have_same_origin = [] (const geomtools::blur_spot & vtx1_,
+                                  const geomtools::blur_spot & vtx2_) -> bool
+        {
+          if (snemo::datamodel::particle_track::vertex_is_on_source_foil(vtx1_) &&
+              snemo::datamodel::particle_track::vertex_is_on_source_foil(vtx2_)) {
+            return true;
+          }
+          if (snemo::datamodel::particle_track::vertex_is_on_main_calorimeter(vtx1_) &&
+              snemo::datamodel::particle_track::vertex_is_on_main_calorimeter(vtx2_)) {
+            return true;
+          }
+          if (snemo::datamodel::particle_track::vertex_is_on_x_calorimeter(vtx1_) &&
+              snemo::datamodel::particle_track::vertex_is_on_x_calorimeter(vtx2_)) {
+            return true;
+          }
+          if (snemo::datamodel::particle_track::vertex_is_on_gamma_veto(vtx1_) &&
+              snemo::datamodel::particle_track::vertex_is_on_gamma_veto(vtx2_)) {
+            return true;
+          }
+          if (snemo::datamodel::particle_track::vertex_is_on_wire(vtx1_) &&
+              snemo::datamodel::particle_track::vertex_is_on_wire(vtx2_)) {
+            return true;
+          }
+          return false;
+        };
+
       const snemo::datamodel::particle_track::vertex_collection_type & the_vertices_1
         = pt1_.get_vertices();
       const snemo::datamodel::particle_track::vertex_collection_type & the_vertices_2
         = pt2_.get_vertices();
+
       for (snemo::datamodel::particle_track::vertex_collection_type::const_iterator
              ivtx1 = the_vertices_1.begin();
            ivtx1 != the_vertices_1.end(); ++ivtx1) {
@@ -199,32 +224,6 @@ namespace snemo {
              ivtx2 != the_vertices_2.end(); ++ivtx2) {
           const geomtools::blur_spot & vtx1 = ivtx1->get();
           const geomtools::blur_spot & vtx2 = ivtx2->get();
-
-          auto have_same_origin = [] (const geomtools::blur_spot & vtx1_,
-                                      const geomtools::blur_spot & vtx2_) -> bool
-            {
-              if (snemo::datamodel::particle_track::vertex_is_on_source_foil(vtx1_) &&
-                  snemo::datamodel::particle_track::vertex_is_on_source_foil(vtx2_)) {
-                return true;
-              }
-              if (snemo::datamodel::particle_track::vertex_is_on_main_calorimeter(vtx1_) &&
-                  snemo::datamodel::particle_track::vertex_is_on_main_calorimeter(vtx2_)) {
-                return true;
-              }
-              if (snemo::datamodel::particle_track::vertex_is_on_x_calorimeter(vtx1_) &&
-                  snemo::datamodel::particle_track::vertex_is_on_x_calorimeter(vtx2_)) {
-                return true;
-              }
-              if (snemo::datamodel::particle_track::vertex_is_on_gamma_veto(vtx1_) &&
-                  snemo::datamodel::particle_track::vertex_is_on_gamma_veto(vtx2_)) {
-                return true;
-              }
-              if (snemo::datamodel::particle_track::vertex_is_on_wire(vtx1_) &&
-                  snemo::datamodel::particle_track::vertex_is_on_wire(vtx2_)) {
-                return true;
-              }
-              return false;
-            };
 
           if (! have_same_origin(vtx1, vtx2)) {
             DT_LOG_TRACE(get_logging_priority(), "Vertices do not come from the same origin !");
@@ -312,11 +311,13 @@ namespace snemo {
           location = snemo::datamodel::particle_track::vertex_on_gamma_veto_label();
         else if (snemo::datamodel::particle_track::vertex_is_on_wire(vtx1_))
           location = snemo::datamodel::particle_track::vertex_on_wire_label();
-        else
+        else {
           location = snemo::datamodel::particle_track::vertex_none_label();
+          DT_LOG_WARNING(get_logging_priority(), "No valid vertex was found for the particle !");
+        }
 
-        a_spot.grab_auxiliaries().update(snemo::datamodel::particle_track::vertex_type_key(),
-                                       location);
+        a_spot.grab_auxiliaries().update(snemo::datamodel::particle_track::vertex_type_key(), location);
+
       }
 
       return ;
