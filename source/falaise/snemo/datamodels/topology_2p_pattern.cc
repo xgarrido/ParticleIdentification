@@ -147,11 +147,16 @@ namespace snemo {
       return get_measurement_as<snemo::datamodel::vertex_measurement>("vertex_p1_p2").get_probability();
     }
 
-    // std::string topology_2p_pattern::get_positrons_vertices_location() const
-    // {
-    //   DT_THROW_IF(! has_positrons_vertices_probability(), std::logic_error, "No common positrons vertices measurement stored !");
-    //   return dynamic_cast<const snemo::datamodel::vertex_measurement&> (get_measurement("vertex_p1_p2")).get_vertices_location();
-    // }
+    bool topology_2p_pattern::has_positrons_vertices_location() const
+    {
+      return has_measurement_as<snemo::datamodel::vertex_measurement>("vertex_p1_p2");
+    }
+
+    std::string topology_2p_pattern::get_positrons_vertices_location() const
+    {
+      DT_THROW_IF(! has_positrons_vertices_location(), std::logic_error, "No common positrons vertices measurement stored !");
+      return dynamic_cast<const snemo::datamodel::vertex_measurement&> (get_measurement("vertex_p1_p2")).get_location();
+    }
 
   } // end of namespace datamodel
 

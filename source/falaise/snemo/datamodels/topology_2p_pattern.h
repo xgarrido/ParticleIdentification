@@ -84,8 +84,11 @@ namespace snemo {
       /// Get common vertices probability between positrons
       double get_positrons_vertices_probability() const;
 
-      // /// Get common vertices location between positrons
-      // std::string get_positrons_vertices_location() const;
+      /// Check common vertices location between positrons
+      bool has_positrons_vertices_location() const;
+
+      /// Get common vertices location between positrons
+      std::string get_positrons_vertices_location() const;
 
     private:
 
