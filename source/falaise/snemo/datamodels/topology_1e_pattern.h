@@ -54,6 +54,12 @@ namespace snemo {
       /// Get electron track length
       double get_electron_track_length() const;
 
+      /// Check electron vertex location validity
+      bool has_electron_vertex_location() const;
+
+      /// Return electron vertex location
+      std::string get_electron_vertex_location() const;
+
     private:
 
       DATATOOLS_SERIALIZATION_DECLARATION()

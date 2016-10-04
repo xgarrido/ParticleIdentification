@@ -5,6 +5,7 @@
 #include <falaise/snemo/datamodels/topology_1e_pattern.h>
 #include <falaise/snemo/datamodels/energy_measurement.h>
 #include <falaise/snemo/datamodels/angle_measurement.h>
+#include <falaise/snemo/datamodels/vertex_measurement.h>
 
 namespace snemo {
 
@@ -81,6 +82,17 @@ namespace snemo {
         }
       }
       return length;
+    }
+
+    bool topology_1e_pattern::has_electron_vertex_location() const
+    {
+      return has_measurement_as<snemo::datamodel::vertex_measurement>("vertex_e1");
+    }
+
+    std::string topology_1e_pattern::get_electron_vertex_location() const
+    {
+      DT_THROW_IF(! has_electron_vertex_location(), std::logic_error, "No electron vertex measurement stored !");
+      return get_measurement_as<snemo::datamodel::vertex_measurement>("vertex_e1").get_location();
     }
 
   } // end of namespace datamodel
