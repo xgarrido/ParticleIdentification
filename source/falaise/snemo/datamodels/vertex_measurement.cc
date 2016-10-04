@@ -3,6 +3,7 @@
 
 // Ourselves:
 #include <falaise/snemo/datamodels/vertex_measurement.h>
+#include <falaise/snemo/datamodels/particle_track.h>
 
 namespace snemo {
 
@@ -80,6 +81,22 @@ namespace snemo {
     double vertex_measurement::get_vertices_distance_z() const
     {
       return _vertex_.get_z_error();
+    }
+
+
+    bool vertex_measurement::has_location() const
+    {
+      std::string location;
+      _vertex_.get_auxiliaries().fetch("vertex.type",location);
+
+      return location != snemo::datamodel::particle_track::vertex_none_label();
+    }
+
+    std::string vertex_measurement::get_location() const
+    {
+      std::string location;
+      _vertex_.get_auxiliaries().fetch("vertex.type",location);
+      return location;
     }
 
     void vertex_measurement::tree_dump(std::ostream      & out_,

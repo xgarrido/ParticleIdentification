@@ -61,6 +61,12 @@ namespace snemo {
       /// Return vertices distance in Z
       double get_vertices_distance_z() const;
 
+      /// Check location validity
+      bool has_location() const;
+
+      /// Return vertex location
+      std::string get_location() const;
+
       /// Smart print
       virtual void tree_dump(std::ostream      & out_    = std::clog,
                              const std::string & title_  = "",
