@@ -97,10 +97,10 @@ namespace snemo {
       double get_electrons_vertices_distance_z() const;
 
       /// Check common vertices location between electrons
-      bool has_electrons_vertices_location() const;
+      bool has_electrons_vertex_location() const;
 
       /// Get common vertices location between electrons
-      std::string get_electrons_vertices_location() const;
+      std::string get_electrons_vertex_location() const;
 
     private:
 

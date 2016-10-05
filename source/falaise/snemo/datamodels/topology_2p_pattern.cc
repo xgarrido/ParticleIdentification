@@ -147,14 +147,37 @@ namespace snemo {
       return get_measurement_as<snemo::datamodel::vertex_measurement>("vertex_p1_p2").get_probability();
     }
 
-    bool topology_2p_pattern::has_positrons_vertices_location() const
+    bool topology_2p_pattern::has_positrons_vertices_distance() const
     {
       return has_measurement_as<snemo::datamodel::vertex_measurement>("vertex_p1_p2");
     }
 
-    std::string topology_2p_pattern::get_positrons_vertices_location() const
+    double topology_2p_pattern::get_positrons_vertices_distance_x() const
     {
-      DT_THROW_IF(! has_positrons_vertices_location(), std::logic_error, "No common positrons vertices measurement stored !");
+      DT_THROW_IF(! has_positrons_vertices_distance(), std::logic_error, "No common positrons vertices measurement stored !");
+      return get_measurement_as<snemo::datamodel::vertex_measurement>("vertex_p1_p2").get_vertices_distance_x();
+    }
+
+    double topology_2p_pattern::get_positrons_vertices_distance_y() const
+    {
+      DT_THROW_IF(! has_positrons_vertices_distance(), std::logic_error, "No common positrons vertices measurement stored !");
+      return get_measurement_as<snemo::datamodel::vertex_measurement>("vertex_p1_p2").get_vertices_distance_y();
+    }
+
+    double topology_2p_pattern::get_positrons_vertices_distance_z() const
+    {
+      DT_THROW_IF(! has_positrons_vertices_distance(), std::logic_error, "No common positrons vertices measurement stored !");
+      return get_measurement_as<snemo::datamodel::vertex_measurement>("vertex_p1_p2").get_vertices_distance_z();
+    }
+
+    bool topology_2p_pattern::has_positrons_vertex_location() const
+    {
+      return has_measurement_as<snemo::datamodel::vertex_measurement>("vertex_p1_p2");
+    }
+
+    std::string topology_2p_pattern::get_positrons_vertex_location() const
+    {
+      DT_THROW_IF(! has_positrons_vertex_location(), std::logic_error, "No common positrons vertices measurement stored !");
       return dynamic_cast<const snemo::datamodel::vertex_measurement&> (get_measurement("vertex_p1_p2")).get_location();
     }
 

@@ -80,6 +80,40 @@ namespace snemo {
       return get_measurement_as<snemo::datamodel::vertex_measurement>("vertex_e1_a1").get_probability();
     }
 
+    bool topology_1e1a_pattern::has_electron_alpha_vertices_distance() const
+    {
+      return has_measurement_as<snemo::datamodel::vertex_measurement>("vertex_e1_a1");
+    }
+
+    double topology_1e1a_pattern::get_electron_alpha_vertices_distance_x() const
+    {
+      DT_THROW_IF(! has_electron_alpha_vertices_distance(), std::logic_error, "No common electron-alpha vertices measurement stored !");
+      return get_measurement_as<snemo::datamodel::vertex_measurement>("vertex_e1_a1").get_vertices_distance_x();
+    }
+
+    double topology_1e1a_pattern::get_electron_alpha_vertices_distance_y() const
+    {
+      DT_THROW_IF(! has_electron_alpha_vertices_distance(), std::logic_error, "No common electron-alpha vertices measurement stored !");
+      return get_measurement_as<snemo::datamodel::vertex_measurement>("vertex_e1_a1").get_vertices_distance_y();
+    }
+
+    double topology_1e1a_pattern::get_electron_alpha_vertices_distance_z() const
+    {
+      DT_THROW_IF(! has_electron_alpha_vertices_distance(), std::logic_error, "No common electron-alpha vertices measurement stored !");
+      return get_measurement_as<snemo::datamodel::vertex_measurement>("vertex_e1_a1").get_vertices_distance_z();
+    }
+
+    bool topology_1e1a_pattern::has_electron_alpha_vertex_location() const
+    {
+      return has_measurement_as<snemo::datamodel::vertex_measurement>("vertex_e1_a1");
+    }
+
+    std::string topology_1e1a_pattern::get_electron_alpha_vertex_location() const
+    {
+      DT_THROW_IF(! has_electron_alpha_vertex_location(), std::logic_error, "No common electron-alpha vertices measurement stored !");
+      return dynamic_cast<const snemo::datamodel::vertex_measurement&> (get_measurement("vertex_e1_a1")).get_location();
+    }
+
     double topology_1e1a_pattern::get_alpha_delayed_time() const
     {
       double time = datatools::invalid_real();

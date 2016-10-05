@@ -78,6 +78,24 @@ namespace snemo {
       /// Get common vertices probability between electron and positron
       double get_electron_positron_vertices_probability() const;
 
+      /// Check common vertices distance between electron and positron validity
+      bool has_electron_positron_vertices_distance() const;
+
+      /// Get common vertices distance in X between electron and positron
+      double get_electron_positron_vertices_distance_x() const;
+
+      /// Get common vertices distance in Y between electron and positron
+      double get_electron_positron_vertices_distance_y() const;
+
+      /// Get common vertices distance in Z between electron and positron
+      double get_electron_positron_vertices_distance_z() const;
+
+      /// Check common vertices location between electron and positron
+      bool has_electron_positron_vertex_location() const;
+
+      /// Get common vertices location between electron and positron
+      std::string get_electron_positron_vertex_location() const;
+
       /// Check electron minimal energy validity
       bool has_electron_positron_minimal_energy() const;
 

@@ -60,6 +60,24 @@ namespace snemo {
       /// Get common vertices probability between electrons
       double get_electron_alpha_vertices_probability() const;
 
+      /// Check common vertices distance between electron and alpha validity
+      bool has_electron_alpha_vertices_distance() const;
+
+      /// Get common vertices distance in X between electron and alpha
+      double get_electron_alpha_vertices_distance_x() const;
+
+      /// Get common vertices distance in Y between electron and alpha
+      double get_electron_alpha_vertices_distance_y() const;
+
+      /// Get common vertices distance in Z between electron and alpha
+      double get_electron_alpha_vertices_distance_z() const;
+
+      /// Check common vertices location between electron and alpha
+      bool has_electron_alpha_vertex_location() const;
+
+      /// Get common vertices location between electrons
+      std::string get_electron_alpha_vertex_location() const;
+
       /// Get alpha delayed time
       double get_alpha_delayed_time() const;
 

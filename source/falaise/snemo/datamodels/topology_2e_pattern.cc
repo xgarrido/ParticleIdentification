@@ -168,14 +168,14 @@ namespace snemo {
       return get_measurement_as<snemo::datamodel::vertex_measurement>("vertex_e1_e2").get_vertices_distance_z();
     }
 
-    bool topology_2e_pattern::has_electrons_vertices_location() const
+    bool topology_2e_pattern::has_electrons_vertex_location() const
     {
       return has_measurement_as<snemo::datamodel::vertex_measurement>("vertex_e1_e2");
     }
 
-    std::string topology_2e_pattern::get_electrons_vertices_location() const
+    std::string topology_2e_pattern::get_electrons_vertex_location() const
     {
-      DT_THROW_IF(! has_electrons_vertices_location(), std::logic_error, "No common electrons vertices measurement stored !");
+      DT_THROW_IF(! has_electrons_vertex_location(), std::logic_error, "No common electrons vertices measurement stored !");
       return dynamic_cast<const snemo::datamodel::vertex_measurement&> (get_measurement("vertex_e1_e2")).get_location();
     }
 
