@@ -135,26 +135,25 @@ namespace snemo {
            ivtx != the_vertices.end(); ++ivtx) {
         const geomtools::blur_spot & vtx = ivtx->get();
 
-        if(vtx.get_geom_id() == pt_.get_associated_calorimeter_hits().front().get().get_geom_id())
-          continue;
+        if(snemo::datamodel::particle_track::vertex_is_on_source_foil(vtx))
+          location = snemo::datamodel::particle_track::vertex_on_source_foil_label();
+        else if(snemo::datamodel::particle_track::vertex_is_on_wire(vtx))
+          location = snemo::datamodel::particle_track::vertex_on_wire_label();
+        else if(snemo::datamodel::particle_track::vertex_is_on_main_calorimeter(vtx))
+          location = snemo::datamodel::particle_track::vertex_on_main_calorimeter_label();
+        else if(snemo::datamodel::particle_track::vertex_is_on_x_calorimeter(vtx))
+          location = snemo::datamodel::particle_track::vertex_on_x_calorimeter_label();
+        else if(snemo::datamodel::particle_track::vertex_is_on_gamma_veto(vtx))
+          location = snemo::datamodel::particle_track::vertex_on_gamma_veto_label();
         else {
-          if(snemo::datamodel::particle_track::vertex_is_on_source_foil(vtx))
-            location = snemo::datamodel::particle_track::vertex_on_source_foil_label();
-          else if(snemo::datamodel::particle_track::vertex_is_on_wire(vtx))
-            location = snemo::datamodel::particle_track::vertex_on_wire_label();
-          else if(snemo::datamodel::particle_track::vertex_is_on_main_calorimeter(vtx))
-            location = snemo::datamodel::particle_track::vertex_on_main_calorimeter_label();
-          else if(snemo::datamodel::particle_track::vertex_is_on_x_calorimeter(vtx))
-            location = snemo::datamodel::particle_track::vertex_on_x_calorimeter_label();
-          else if(snemo::datamodel::particle_track::vertex_is_on_gamma_veto(vtx))
-            location = snemo::datamodel::particle_track::vertex_on_gamma_veto_label();
-          else {
-            location = snemo::datamodel::particle_track::vertex_none_label();
-            DT_LOG_WARNING(get_logging_priority(),
-                           "Single particle vertex location is different from any of the available locations !");
-          }
+          location = snemo::datamodel::particle_track::vertex_none_label();
+          DT_LOG_WARNING(get_logging_priority(),
+                         "Single particle vertex location is different from any of the available locations !");
 
-          a_spot.set_blur_dimension(vtx.get_blur_dimension());
+          //This way, the case where two vertices are on the same calorimeter hit is supported
+          if(vtx.get_geom_id() == pt_.get_associated_calorimeter_hits().front().get().get_geom_id()) {
+            continue;
+          }
 
           break; // Stop at the first (and supposedly only vertex different from the calorimeter hit)
         }
@@ -162,6 +161,8 @@ namespace snemo {
 
       a_spot.grab_auxiliaries().update(snemo::datamodel::particle_track::vertex_type_key(), location);
 
+      //Always three dimensions vertices at the moment
+      a_spot.set_blur_dimension(3);
       vertex_.set_probability(1);
       const double epsilon = 1e-13;
       a_spot.set_x_error(epsilon);
