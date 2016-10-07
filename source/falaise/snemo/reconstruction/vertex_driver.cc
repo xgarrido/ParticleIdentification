@@ -215,7 +215,7 @@ namespace snemo {
         = pt1_.get_vertices();
       const snemo::datamodel::particle_track::vertex_collection_type & the_vertices_2
         = pt2_.get_vertices();
-
+      bool no_common_vertex = true;
       for (snemo::datamodel::particle_track::vertex_collection_type::const_iterator
              ivtx1 = the_vertices_1.begin();
            ivtx1 != the_vertices_1.end(); ++ivtx1) {
@@ -229,9 +229,19 @@ namespace snemo {
             DT_LOG_TRACE(get_logging_priority(), "Vertices do not come from the same origin !");
             continue;
           }
-
+          no_common_vertex = false;
           _find_common_vertex(vtx1, vtx2, vertex_);
         }
+      }
+
+      if(no_common_vertex) {
+        vertex_.set_probability(0);
+        geomtools::blur_spot & a_spot = vertex_.grab_vertex();
+        a_spot.set_blur_dimension(3);
+        const double epsilon = 1e-13;
+        a_spot.set_errors(epsilon,epsilon,epsilon);
+        a_spot.grab_auxiliaries().update(snemo::datamodel::particle_track::vertex_type_key(),
+                                         snemo::datamodel::particle_track::vertex_none_label());
       }
 
       DT_LOG_TRACE(get_logging_priority(), "Exiting...");
