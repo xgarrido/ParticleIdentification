@@ -6,16 +6,11 @@ cmake_minimum_required(VERSION 3.3)
 project(FalaiseParticleIdentificationPlugin)
 
 # Ensure our code can see the Falaise headers
-#include_directories(${FALAISE_INCLUDE_DIRS})
-include_directories(${FALAISE_BUILDPRODUCT_DIR}/include)
-include_directories(${FALAISE_BUILDPRODUCT_DIR}/include/falaise)
-include_directories(${Bayeux_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/source)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/source/falaise)
 
 ###########################################################################################
-# - GammaTracking modules:
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/source/falaise)
 
 # - Headers:
 list(APPEND FalaiseParticleIdentificationPlugin_HEADERS
@@ -116,7 +111,9 @@ target_link_libraries(Falaise_ParticleIdentification Falaise)
 # add link flags on this platform
 if(APPLE)
   set_target_properties(Falaise_ParticleIdentification
-    PROPERTIES LINK_FLAGS "-undefined dynamic_lookup"
+    PROPERTIES
+    LINK_FLAGS "-undefined dynamic_lookup"
+    INSTALL_RPATH "@loader_path"
     )
 endif()
 
@@ -126,7 +123,7 @@ install(TARGETS Falaise_ParticleIdentification DESTINATION ${CMAKE_INSTALL_LIBDI
 # - Publish headers
 foreach(_hdrin ${FalaiseParticleIdentificationPlugin_HEADERS})
   string(REGEX REPLACE "source/falaise/" "" _hdrout "${_hdrin}")
-  configure_file(${_hdrin} ${FALAISE_BUILDPRODUCT_DIR}/include/falaise/${_hdrout} @ONLY)
+  configure_file(${_hdrin} ${PROJECT_BUILD_INCLUDEDIR}/falaise/${_hdrout} @ONLY)
 endforeach()
 
 # Test support:
