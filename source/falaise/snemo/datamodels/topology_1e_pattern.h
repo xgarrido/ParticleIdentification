@@ -60,6 +60,18 @@ namespace snemo {
       /// Return electron vertex location
       std::string get_electron_vertex_location() const;
 
+      /// Check electron vertex position validity
+      bool has_electron_vertex_position() const;
+
+      /// Return electron vertex position in X
+      double get_electron_vertex_position_x() const;
+
+      /// Return electron vertex position in Y
+      double get_electron_vertex_position_y() const;
+
+      /// Return electron vertex position in Z
+      double get_electron_vertex_position_z() const;
+
     private:
 
       DATATOOLS_SERIALIZATION_DECLARATION()

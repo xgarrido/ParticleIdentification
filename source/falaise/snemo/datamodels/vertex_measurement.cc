@@ -83,6 +83,27 @@ namespace snemo {
       return _vertex_.get_z_error();
     }
 
+    bool vertex_measurement::has_vertex_position() const
+    {
+      return (datatools::is_valid(_vertex_.get_position().x()) &&
+              datatools::is_valid(_vertex_.get_position().y()) &&
+              datatools::is_valid(_vertex_.get_position().z()));
+    }
+
+    double vertex_measurement::get_vertex_position_x() const
+    {
+      return _vertex_.get_position().x();
+    }
+
+    double vertex_measurement::get_vertex_position_y() const
+    {
+      return _vertex_.get_position().y();
+    }
+
+    double vertex_measurement::get_vertex_position_z() const
+    {
+      return _vertex_.get_position().z();
+    }
 
     bool vertex_measurement::has_location() const
     {
@@ -124,6 +145,16 @@ namespace snemo {
         out_ << indent << datatools::i_tree_dumpable::tag << "X " << get_vertices_distance_x()/CLHEP::mm << " mm" << std::endl;
         out_ << indent << datatools::i_tree_dumpable::tag << "Y " << get_vertices_distance_y()/CLHEP::mm << " mm" << std::endl;
         out_ << indent << datatools::i_tree_dumpable::tag << "Z " << get_vertices_distance_z()/CLHEP::mm << " mm" << std::endl;
+      }
+
+      out_ << indent << datatools::i_tree_dumpable::tag
+           << "Position: "<< std::endl;
+      if (! has_vertex_position()) {
+        out_ << "<no value>" << std::endl;
+      } else {
+        out_ << indent << datatools::i_tree_dumpable::tag << "X " << get_vertex_position_x()/CLHEP::mm << " mm" << std::endl;
+        out_ << indent << datatools::i_tree_dumpable::tag << "Y " << get_vertex_position_y()/CLHEP::mm << " mm" << std::endl;
+        out_ << indent << datatools::i_tree_dumpable::tag << "Z " << get_vertex_position_z()/CLHEP::mm << " mm" << std::endl;
       }
 
       out_ << indent << datatools::i_tree_dumpable::inherit_tag(inherit_)

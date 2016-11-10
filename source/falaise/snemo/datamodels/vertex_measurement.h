@@ -61,6 +61,18 @@ namespace snemo {
       /// Return vertices distance in Z
       double get_vertices_distance_z() const;
 
+      /// Check vertex position validity
+      bool has_vertex_position() const;
+
+      /// Return vertex position in X
+      double get_vertex_position_x() const;
+
+      /// Return vertex position in Y
+      double get_vertex_position_y() const;
+
+      /// Return vertex position in Z
+      double get_vertex_position_z() const;
+
       /// Check location validity
       bool has_location() const;
 

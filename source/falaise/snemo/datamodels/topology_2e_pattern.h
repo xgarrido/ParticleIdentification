@@ -102,6 +102,18 @@ namespace snemo {
       /// Get common vertices location between electrons
       std::string get_electrons_vertex_location() const;
 
+      /// Check electrons vertex position validity
+      bool has_electrons_vertex_position() const;
+
+      /// Return electrons vertex position in X
+      double get_electrons_vertex_position_x() const;
+
+      /// Return electrons vertex position in Y
+      double get_electrons_vertex_position_y() const;
+
+      /// Return electrons vertex position in Z
+      double get_electrons_vertex_position_z() const;
+
     private:
 
       DATATOOLS_SERIALIZATION_DECLARATION()

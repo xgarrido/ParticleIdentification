@@ -78,6 +78,18 @@ namespace snemo {
       /// Get common vertices location between electrons
       std::string get_electron_alpha_vertex_location() const;
 
+      /// Check common vertices position
+      bool has_electron_alpha_vertex_position() const;
+
+      /// Get common vertices position between electrons
+      double get_electron_alpha_vertex_position_x() const;
+
+      /// Get common vertices position between electrons
+      double get_electron_alpha_vertex_position_y() const;
+
+      /// Get common vertices position between electrons
+      double get_electron_alpha_vertex_position_z() const;
+
       /// Get alpha delayed time
       double get_alpha_delayed_time() const;
 

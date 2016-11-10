@@ -95,6 +95,29 @@ namespace snemo {
       return get_measurement_as<snemo::datamodel::vertex_measurement>("vertex_e1").get_location();
     }
 
+    bool topology_1e_pattern::has_electron_vertex_position() const
+    {
+      return has_measurement_as<snemo::datamodel::vertex_measurement>("vertex_e1");
+    }
+
+    double topology_1e_pattern::get_electron_vertex_position_x() const
+    {
+      DT_THROW_IF(! has_electron_vertex_position(), std::logic_error, "No electron vertex measurement stored !");
+      return get_measurement_as<snemo::datamodel::vertex_measurement>("vertex_e1").get_vertex_position_x();
+    }
+
+    double topology_1e_pattern::get_electron_vertex_position_y() const
+    {
+      DT_THROW_IF(! has_electron_vertex_position(), std::logic_error, "No electron vertex measurement stored !");
+      return get_measurement_as<snemo::datamodel::vertex_measurement>("vertex_e1").get_vertex_position_y();
+    }
+
+    double topology_1e_pattern::get_electron_vertex_position_z() const
+    {
+      DT_THROW_IF(! has_electron_vertex_position(), std::logic_error, "No electron vertex measurement stored !");
+      return get_measurement_as<snemo::datamodel::vertex_measurement>("vertex_e1").get_vertex_position_z();
+    }
+
   } // end of namespace datamodel
 
 } // end of namespace snemo

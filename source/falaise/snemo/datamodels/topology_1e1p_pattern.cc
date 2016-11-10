@@ -150,6 +150,29 @@ namespace snemo {
       return dynamic_cast<const snemo::datamodel::vertex_measurement&> (get_measurement("vertex_e1_p1")).get_location();
     }
 
+    bool topology_1e1p_pattern::has_electron_positron_vertex_position() const
+    {
+      return has_measurement_as<snemo::datamodel::vertex_measurement>("vertex_e1_p1");
+    }
+
+    double topology_1e1p_pattern::get_electron_positron_vertex_position_x() const
+    {
+      DT_THROW_IF(! has_electron_positron_vertex_position(), std::logic_error, "No common electron_positron vertices measurement stored !");
+      return dynamic_cast<const snemo::datamodel::vertex_measurement&> (get_measurement("vertex_e1_p1")).get_vertex_position_x();
+    }
+
+    double topology_1e1p_pattern::get_electron_positron_vertex_position_y() const
+    {
+      DT_THROW_IF(! has_electron_positron_vertex_position(), std::logic_error, "No common electron_positron vertices measurement stored !");
+      return dynamic_cast<const snemo::datamodel::vertex_measurement&> (get_measurement("vertex_e1_p1")).get_vertex_position_y();
+    }
+
+    double topology_1e1p_pattern::get_electron_positron_vertex_position_z() const
+    {
+      DT_THROW_IF(! has_electron_positron_vertex_position(), std::logic_error, "No common electron_positron vertices measurement stored !");
+      return dynamic_cast<const snemo::datamodel::vertex_measurement&> (get_measurement("vertex_e1_p1")).get_vertex_position_z();
+    }
+
     bool topology_1e1p_pattern::has_electron_positron_minimal_energy() const
     {
       return has_measurement("energy_e1") && has_measurement("energy_p1");

@@ -102,6 +102,18 @@ namespace snemo {
       /// Get common vertices location between positrons
       std::string get_positrons_vertex_location() const;
 
+      /// Check common vertices position between positrons
+      bool has_positrons_vertex_position() const;
+
+      /// Get common vertices position between positrons
+      double get_positrons_vertex_position_x() const;
+
+      /// Get common vertices position between positrons
+      double get_positrons_vertex_position_y() const;
+
+      /// Get common vertices position between positrons
+      double get_positrons_vertex_position_z() const;
+
     private:
 
       DATATOOLS_SERIALIZATION_DECLARATION()
