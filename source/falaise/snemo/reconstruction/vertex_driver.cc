@@ -135,6 +135,11 @@ namespace snemo {
            ivtx != the_vertices.end(); ++ivtx) {
         const geomtools::blur_spot & vtx = ivtx->get();
 
+        //This way, the case where two vertices are on the same calorimeter hit is supported
+        if(vtx.get_geom_id() == pt_.get_associated_calorimeter_hits().front().get().get_geom_id()) {
+          continue;
+        }
+
         if(snemo::datamodel::particle_track::vertex_is_on_source_foil(vtx))
           location = snemo::datamodel::particle_track::vertex_on_source_foil_label();
         else if(snemo::datamodel::particle_track::vertex_is_on_wire(vtx))
@@ -150,10 +155,6 @@ namespace snemo {
           DT_LOG_WARNING(get_logging_priority(),
                          "Single particle vertex location is different from any of the available locations !");
 
-          //This way, the case where two vertices are on the same calorimeter hit is supported
-          if(vtx.get_geom_id() == pt_.get_associated_calorimeter_hits().front().get().get_geom_id()) {
-            continue;
-          }
 
           break; // Stop at the first (and supposedly only vertex different from the calorimeter hit)
         }
