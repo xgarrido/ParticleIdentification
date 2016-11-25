@@ -140,6 +140,8 @@ namespace snemo {
           continue;
         }
 
+        a_spot.set_position(vtx.get_position());
+
         if(snemo::datamodel::particle_track::vertex_is_on_source_foil(vtx))
           location = snemo::datamodel::particle_track::vertex_on_source_foil_label();
         else if(snemo::datamodel::particle_track::vertex_is_on_wire(vtx))
