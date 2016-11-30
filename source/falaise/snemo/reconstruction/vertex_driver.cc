@@ -129,14 +129,18 @@ namespace snemo {
       const snemo::datamodel::particle_track::vertex_collection_type & the_vertices
         = pt_.get_vertices();
 
+      snemo::datamodel::particle_track::vertex_collection_type::const_iterator last_vtx = the_vertices.end();
+      --last_vtx;
+
       std::string location;
       for (snemo::datamodel::particle_track::vertex_collection_type::const_iterator
              ivtx = the_vertices.begin();
            ivtx != the_vertices.end(); ++ivtx) {
+
         const geomtools::blur_spot & vtx = ivtx->get();
 
         //This way, the case where two vertices are on the same calorimeter hit is supported
-        if(vtx.get_geom_id() == pt_.get_associated_calorimeter_hits().front().get().get_geom_id()) {
+        if(vtx.get_geom_id() == pt_.get_associated_calorimeter_hits().front().get().get_geom_id() && ivtx != last_vtx) {
           continue;
         }
 
@@ -156,10 +160,9 @@ namespace snemo {
           location = snemo::datamodel::particle_track::vertex_none_label();
           DT_LOG_WARNING(get_logging_priority(),
                          "Single particle vertex location is different from any of the available locations !");
-
-
-          break; // Stop at the first (and supposedly only vertex different from the calorimeter hit)
         }
+
+        break; // Stop at the first (and supposedly only vertex different from the calorimeter hit)
       }
 
       a_spot.grab_auxiliaries().update(snemo::datamodel::particle_track::vertex_type_key(), location);
@@ -234,6 +237,7 @@ namespace snemo {
             continue;
           }
           no_common_vertex = false;
+          // vertex_ is updated only if the probability is better
           _find_common_vertex(vtx1, vtx2, vertex_);
         }
       }
@@ -305,7 +309,7 @@ namespace snemo {
         geomtools::blur_spot & a_spot = vertex_.grab_vertex();
         a_spot.set_blur_dimension(vtx1_.get_blur_dimension());
         a_spot.set_position(bary);
-        // temporary store the vertices distance in the barycenter errors
+        // temporarily store the vertices distance in the barycenter errors
         const double epsilon = 1e-13;
         const double dx = std::abs(pos1.x()-pos2.x());
         a_spot.set_x_error(dx < epsilon ? epsilon : dx);
