@@ -30,7 +30,7 @@ def main():
     """
     parser = argparse.ArgumentParser(description="Run Falaise pipeline with PID support")
     parser.add_argument("-i", type=str, metavar="<infile>", help="input BRIO file")
-    parser.add_argument("-o", type=str, metavar="<outfile>", help="output ROOT file")
+    parser.add_argument("-o", type=str, metavar="<outfile>", help="output BRIO file")
     parser.add_argument("-n", type=int, metavar="<number>",
                         required=True, help="set number of simulated events")
     parser.add_argument("-m", "--module", type=str, metavar="<name>", default="pipeline",
