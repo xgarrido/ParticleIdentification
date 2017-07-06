@@ -1,0 +1,170 @@
+
+#@description Sample SuperNEMO Demonstrator Reconstruction modules
+#@key_label  "name"
+#@meta_label "type"
+
+
+#####################################################################
+# Must define "pipeline" as this is the module flreconstruct will use
+# Define the main chain of modules in the pipeline:
+# 1. Mock digitize and mock calibrate
+# 2. CAT clusterization of tracker hits
+# 3. TrackFit-ting tracker cluster hits
+# 4. Reconstruct charged particle tracks
+[name="pipeline" type="dpp::chain_module"]
+#@config The main pipeline
+
+#@description The list of processing modules chained along the pipeline
+modules : string[6] = "MockCalibration"        \
+                      "CATTrackerClusterizer"  \
+                      "TrackFit"               \
+                      "ChargedParticleTracker" \
+                      "ParticleIdentifier"     \
+                      "Select2eChannel"
+
+
+##########################################################
+# Here is the first in the pipeline, itself a chain module
+[name="MockCalibration" type="dpp::chain_module"]
+#@config A chain of processing modules that performs the mock calibration
+
+#@description The list of processing modules chained along the pipeline
+modules : string[2] = "CalibrateTracker" "CalibrateCalorimeters"
+
+
+###########################################################
+# Here is the first part of the mock calibration processing
+[name="CalibrateTracker" type="snemo::processing::mock_tracker_s2c_module"]
+#@config A mock tracker calibration module
+
+############################################################
+# Here is the second part of the mock calibration processing
+[name="CalibrateCalorimeters" type="snemo::processing::mock_calorimeter_s2c_module"]
+#@config A mock calorimeter calibration module
+
+###############################################################################
+# Here is the second module in the pipeline: the CAT tracker clustering module
+# Only main properties have been set : see the
+# Falaise/modules/CAT documentation for more details
+[name="CATTrackerClusterizer" type="snemo::reconstruction::cat_tracker_clustering_module"]
+#@config Parameters for the Cellular Automaton Tracking algorithm (CAT)
+
+##################
+# The CAT driver #
+##################
+
+#@description CAT debug level
+CAT.level : string  = "mute"
+
+####################################################################
+# Here is the third in the pipeline: the TrackFit module
+# Only main properties have been set : see the
+# Falaise/modules/TrackFit documentation for more details
+[name="TrackFit" type="snemo::reconstruction::trackfit_tracker_fitting_module"]
+#@config Parameters for the TrackFit algorithm
+
+#################################################################################
+# Here is the fourth module in the pipeline: the charged particle tracking module
+[name="ChargedParticleTracker" type="snemo::reconstruction::charged_particle_tracking_module"]
+#@config Parameters for the Charged Particle Tracking module
+
+# #@description Set the logging priority threshold for the module
+# logging.priority : string = "warning"
+
+#@description The label of the Geometry service
+Geo_label : string  = "geometry"
+
+# #@description The name of the 'calibrated data' bank used as input
+# CD_label  : string  = "CD"
+
+# #@description The name of the 'tracker trajectory data' bank used as input
+# TTD_label  : string  = "TTD"
+
+# #@description The name of the 'particle track data' bank used as output
+# PTD_label  : string  = "PTD"
+
+#@description List of drivers to be used (see description below)
+drivers : string[3] = "VED" "CCD" "CAD"
+
+#################################################################################
+# Here is the fifth module in the pipeline: the particle identifier module
+[name="ParticleIdentifier" type="snemo::reconstruction::topology_module"]
+#@config Parameters for the Particle Identification module
+
+#@description Set the logging priority threshold for the module
+logging.priority : string = "warning"
+
+#@description The label of the Cuts service
+Cut_label : string = "cuts"
+
+#@description Logging priority for PID driver
+PID.logging.priority : string = "warning"
+
+#@description The PID mode
+PID.mode.label : boolean = true
+
+#@description The list of particle identification definition
+PID.definitions : string[3] = "electron_definition" \
+                              "gamma_definition"    \
+                              "alpha_definition"
+
+#@description The label associated to 'electron' definition
+PID.electron_definition.label : string = "electron"
+
+#@description The label associated to 'gamma' definition
+PID.gamma_definition.label : string = "gamma"
+
+#@description The label associated to 'alpha' definition
+PID.alpha_definition.label : string = "alpha"
+
+#################################################################################
+# Here is the sixth module in the pipeline: select internal 2β event-like
+
+#################################################################################
+# First create output file for the selected and the non-selected events
+
+[name="IO2eChannelSelected" type="dpp::output_module"]
+
+#@description Logging priority
+logging.priority : string = "error"
+
+#@description Output file mode
+files.mode : string = "single"
+
+# #@description Path to output data file
+# files.single.path : string as path = "/tmp/${USER}/snemo.d/"
+
+#@description Filename to output data file
+files.single.filename : string = "io_output_2e_channel_selected.brio"
+
+[name="IO2eChannelNonSelected" type="dpp::output_module"]
+
+#@description Logging priority
+logging.priority : string = "error"
+
+#@description Output file mode
+files.mode : string = "single"
+
+#@description Filename to output data file
+files.single.filename : string = "io_output_2e_channel_non_selected.brio"
+
+#################################################################################
+# Finally create a module that given the 'condition_cut' will throw data in the
+# corresponding sink
+
+[name="Select2eChannel" type="dpp::if_module"]
+
+#@description Logging priority
+logging.priority : string = @variant(core:logging_priority|"warning")
+
+#@description The label/name of the cut service
+cut_service.label : string = "cuts"
+
+#@description The name of the condition cut
+condition_cut : string = "2e::channel_cut"
+
+#@description The name of the module to be processed when condition is checked
+then_module : string = "IO2eChannelSelected"
+
+#@description The name of the module to be processed when condition is NOT checked
+else_module : string = "IO2eChannelNonSelected"
