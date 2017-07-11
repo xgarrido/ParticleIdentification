@@ -1,11 +1,15 @@
 /// \file falaise/snemo/datamodels/angle_measurement_cut.h
 /* Author(s) :    Xavier Garrido <garrido@lal.in2p3.fr>
  * Creation date: 2015-11-02
- * Last modified: 2015-11-02
+ * Last modified: 2017-07-07
  *
  * Description:
  *
- *   The cut on the Time-Of-Flight measurement
+ *   The cut on the angle measurement
+ *
+ * History:
+ *
+ *   2017-07-07: use datatools::real_range
  */
 
 #ifndef FALAISE_SNEMO_CUT_ANGLE_MEASUREMENT_CUT_H
@@ -15,9 +19,10 @@
 // - Boost:
 #include <boost/cstdint.hpp>
 // - Bayeux/datatools:
-#include <datatools/bit_mask.h>
+#include <bayeux/datatools/bit_mask.h>
+#include <bayeux/datatools/real_range.h>
 // - Bayeux/cuts:
-#include <cuts/i_cut.h>
+#include <bayeux/cuts/i_cut.h>
 
 namespace snemo {
 
@@ -71,9 +76,8 @@ namespace snemo {
 
     private:
 
-      uint32_t _mode_;          //!< Mode of the cut
-      double _angle_range_min_; //!< Minimal angle value
-      double _angle_range_max_; //!< Maximal angle value
+      uint32_t _mode_;                     //!< Mode of the cut
+      datatools::real_range _angle_range_; //!< Allowed angle value
 
       // Macro to automate the registration of the cut :
       CUT_REGISTRATION_INTERFACE(angle_measurement_cut)

@@ -3,15 +3,10 @@
 // Ourselves:
 #include <falaise/snemo/cuts/angle_measurement_cut.h>
 
-// Standard library:
-#include <stdexcept>
-#include <sstream>
-
 // Third party:
 // - Bayeux/datatools:
-#include <datatools/properties.h>
-#include <datatools/things.h>
-#include <datatools/clhep_units.h>
+#include <bayeux/datatools/properties.h>
+#include <bayeux/datatools/clhep_units.h>
 
 // SuperNEMO data models :
 #include <falaise/snemo/datamodels/angle_measurement.h>
@@ -26,8 +21,7 @@ namespace snemo {
     void angle_measurement_cut::_set_defaults()
     {
       _mode_ = MODE_UNDEFINED;
-      datatools::invalidate(_angle_range_min_);
-      datatools::invalidate(_angle_range_max_);
+      _angle_range_.invalidate();
       return;
     }
 
@@ -49,7 +43,7 @@ namespace snemo {
     angle_measurement_cut::angle_measurement_cut(datatools::logger::priority logger_priority_)
       : cuts::i_cut(logger_priority_)
     {
-      _set_defaults();
+      this->_set_defaults();
       this->register_supported_user_data_type<snemo::datamodel::base_topology_measurement>();
       this->register_supported_user_data_type<snemo::datamodel::angle_measurement>();
       return;
@@ -63,7 +57,7 @@ namespace snemo {
 
     void angle_measurement_cut::reset()
     {
-      _set_defaults();
+      this->_set_defaults();
       this->i_cut::_reset();
       this->i_cut::_set_initialized(false);
       return;
@@ -78,55 +72,47 @@ namespace snemo {
 
       this->i_cut::_common_initialize(configuration_);
 
-      if (_mode_ == MODE_UNDEFINED) {
-        if (configuration_.has_flag("mode.has_angle")) {
-          _mode_ |= MODE_HAS_ANGLE;
-        }
-        if (configuration_.has_flag("mode.range_angle")) {
-          _mode_ |= MODE_RANGE_ANGLE;
-        }
-        DT_THROW_IF(_mode_ == MODE_UNDEFINED, std::logic_error,
-                    "Missing at least a 'mode.XXX' property !");
-
-        // mode HAS_ANGLE:
-        if (is_mode_has_angle()) {
-          DT_LOG_DEBUG(get_logging_priority(), "Using HAS_ANGLE mode...");
-        } // end if is_mode_has_angle
-
-        // mode PARTICLE_RANGE_ANGLE:
-        if (is_mode_range_angle()) {
-          DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_ANGLE mode...");
-          size_t count = 0;
-          if (configuration_.has_key("range_angle.min")) {
-            double amin = configuration_.fetch_real("range_angle.min");
-            if (! configuration_.has_explicit_unit("range_angle.min")) {
-              amin *= CLHEP::degree;
-            }
-            DT_THROW_IF(amin < 0.0*CLHEP::degree || amin > 360.0*CLHEP::degree,
-                        std::range_error,
-                        "Invalid minimal angle value (" << amin << ") !");
-            _angle_range_min_ = amin;
-            count++;
-          }
-          if (configuration_.has_key("range_angle.max")) {
-            double amax = configuration_.fetch_real("range_angle.max");
-            if (! configuration_.has_explicit_unit("range_angle.max")) {
-              amax *= CLHEP::degree;
-            }
-            DT_THROW_IF(amax < 0.0*CLHEP::degree || amax > 360.0*CLHEP::degree,
-                        std::range_error,
-                        "Invalid maximal angle (" << amax << ") !");
-            _angle_range_max_ = amax;
-            count++;
-          }
-          DT_THROW_IF(count == 0, std::logic_error,
-                      "Missing 'range_angle.min' or 'range_angle.max' property !");
-          if (count == 2 && _angle_range_min_ >= 0 && _angle_range_max_ >= 0) {
-            DT_THROW_IF(_angle_range_min_ > _angle_range_max_, std::logic_error,
-                        "Invalid 'range_angle.min' > 'range_angle.max' values !");
-          }
-        } // end if is_mode_range_angle
+      if (configuration_.has_flag("mode.has_angle")) {
+        _mode_ |= MODE_HAS_ANGLE;
       }
+      if (configuration_.has_flag("mode.range_angle")) {
+        _mode_ |= MODE_RANGE_ANGLE;
+      }
+      DT_THROW_IF(_mode_ == MODE_UNDEFINED, std::logic_error,
+                  "Missing at least a 'mode.XXX' property !");
+
+      if (is_mode_range_angle()) {
+        datatools::real_range angle_limits(0.0*CLHEP::degree, 360*CLHEP::degree);
+        // Extract the angle bound, with a default
+        auto get_range_angle = [&configuration_, &angle_limits](const std::string& key) {
+          double value {datatools::invalid_real()};
+          if (configuration_.has_key(key)) {
+            value = configuration_.fetch_real(key);
+            if (!configuration_.has_explicit_unit(key)) {
+              value *= CLHEP::degree;
+            }
+            DT_THROW_IF(! angle_limits.has(value),
+                        std::range_error,
+                        "Invalid angle value (" << value << ") !");
+          }
+          DT_LOG_WARNING(datatools::logger::PRIO_WARNING, "value = " << value);
+          return value;
+        };
+
+        const double amin {get_range_angle("range_angle.min")};
+        const double amax {get_range_angle("range_angle.max")};
+        DT_THROW_IF(!datatools::is_valid(amin) && !datatools::is_valid(amax),
+                    std::logic_error,
+                    "Missing 'range_angle.min' or 'range_angle.max' property !");
+        if (datatools::is_valid(amin) && datatools::is_valid(amax)) {
+          _angle_range_.make_bounded(amin, amax);
+        } else if (datatools::is_valid(amin)) {
+          _angle_range_.make_bounded(amin, angle_limits.get_upper());
+        } else if (datatools::is_valid(amax)) {
+          _angle_range_.make_bounded(angle_limits.get_lower(), amax);
+        }
+
+       } // end if is_mode_range_angle
       this->i_cut::_set_initialized(true);
       return;
     }
@@ -166,24 +152,7 @@ namespace snemo {
           return cuts::SELECTION_INAPPLICABLE;
         }
         const double angle = a_angle_meas.get_angle();
-        bool check = true;
-        if (datatools::is_valid(_angle_range_min_)) {
-          if (angle < _angle_range_min_) {
-            DT_LOG_DEBUG(get_logging_priority(),
-                         "Angle (" << angle/CLHEP::degree << "°) lower than "
-                         << _angle_range_min_/CLHEP::degree << "°");
-            check = false;
-          }
-        }
-        if (datatools::is_valid(_angle_range_max_)) {
-          if (angle > _angle_range_max_) {
-            DT_LOG_DEBUG(get_logging_priority(),
-                         "Angle (" << angle/CLHEP::degree << "°) greater than "
-                         << _angle_range_max_/CLHEP::degree << "°");
-            check = false;
-          }
-        }
-        if (! check) check_range_angle = false;
+        check_range_angle = _angle_range_.has(angle);
       } // end of is_mode_range_angle
 
       cut_returned = cuts::SELECTION_REJECTED;
