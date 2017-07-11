@@ -95,7 +95,6 @@ namespace snemo {
                         std::range_error,
                         "Invalid angle value (" << value << ") !");
           }
-          DT_LOG_WARNING(datatools::logger::PRIO_WARNING, "value = " << value);
           return value;
         };
 
