@@ -3,14 +3,10 @@
 // Ourselves:
 #include <falaise/snemo/cuts/pid_cut.h>
 
-// Standard library:
-#include <stdexcept>
-#include <sstream>
-
 // Third party:
 // - Bayeux/datatools:
-#include <datatools/properties.h>
-#include <datatools/things.h>
+#include <bayeux/datatools/properties.h>
+#include <bayeux/datatools/things.h>
 
 // SuperNEMO data models :
 #include <falaise/snemo/datamodels/pid_utils.h>
@@ -24,39 +20,14 @@ namespace snemo {
     // Registration instantiation macro :
     CUT_REGISTRATION_IMPLEMENT(pid_cut, "snemo::cut::pid_cut")
 
-    pid_cut::particle_range::particle_range()
-    {
-      min = 0;
-      max = 0;
-      return;
-    }
-
-    void pid_cut::particle_range::parse(const datatools::properties & setup_,
-                                        const std::string & prefix_)
-    {
-      if (setup_.has_key(prefix_ + "_range.min")) {
-        min = setup_.fetch_integer(prefix_ + "_range.min");
-      }
-      if (setup_.has_key(prefix_ + "_range.max")) {
-        max = setup_.fetch_integer(prefix_ + "_range.max");
-      }
-      return;
-    }
-
-    bool pid_cut::particle_range::check(const size_t n_)
-    {
-      if (n_ < min) {
-        return false;
-      }
-      if (n_ > max) {
-        return false;
-      }
-      return true;
-    }
-
     void pid_cut::_set_defaults()
     {
       _PTD_label_ = snemo::datamodel::data_info::default_particle_track_data_label();
+      _electron_range_.invalidate();
+      _positron_range_.invalidate();
+      _gamma_range_.invalidate();
+      _alpha_range_.invalidate();
+      _undefined_range_.invalidate();
       return;
     }
 
@@ -75,7 +46,7 @@ namespace snemo {
 
     void pid_cut::reset()
     {
-      _set_defaults();
+      this->_set_defaults();
       this->i_cut::_reset();
       this->i_cut::_set_initialized(false);
       return;
@@ -94,11 +65,22 @@ namespace snemo {
         _PTD_label_ = configuration_.fetch_string("PTD_label");
       }
 
-      _electron_range_.parse(configuration_, "electron");
-      _positron_range_.parse(configuration_, "positron");
-      _gamma_range_.parse(configuration_, "gamma");
-      _alpha_range_.parse(configuration_, "alpha");
-      _undefined_range_.parse(configuration_, "undefined");
+      auto parse_range = [&configuration_](const std::string & prefix,
+                                           datatools::integer_range & range) {
+        range.make_full_positive();
+        if (configuration_.has_key(prefix + "_range.min")) {
+          range.set_lower(configuration_.fetch_integer(prefix + "_range.min"));
+        }
+        if (configuration_.has_key(prefix + "_range.max")) {
+          range.set_upper(configuration_.fetch_integer(prefix + "_range.max"));
+        }
+      };
+
+      parse_range("electron", _electron_range_);
+      parse_range("positron", _positron_range_);
+      parse_range("gamma", _gamma_range_);
+      parse_range("alpha", _alpha_range_);
+      parse_range("undefined", _undefined_range_);
 
       this->i_cut::_set_initialized(true);
       return;
@@ -121,49 +103,39 @@ namespace snemo {
 
       const datatools::properties & aux = PTD.get_auxiliaries();
 
-      size_t nelectrons = 0;
-      size_t npositrons = 0;
-      size_t nalphas    = 0;
-      size_t ngammas    = 0;
-      size_t nundefined = 0;
-
       std::string key;
       if (aux.has_key(key = snemo::datamodel::pid_utils::electron_label())) {
-        nelectrons = aux.fetch_integer(key);
+        if (_electron_range_.has(aux.fetch_integer(key))) {
+          DT_LOG_DEBUG(get_logging_priority(), "Bad number of electrons !");
+          return cuts::SELECTION_REJECTED;
+        }
       }
       if (aux.has_key(key = snemo::datamodel::pid_utils::positron_label())) {
-        npositrons = aux.fetch_integer(key);
+        if (_positron_range_.has(aux.fetch_integer(key))) {
+          DT_LOG_DEBUG(get_logging_priority(), "Bad number of positrons !");
+          return cuts::SELECTION_REJECTED;
+        }
       }
       if (aux.has_key(key = snemo::datamodel::pid_utils::gamma_label())) {
-        ngammas = aux.fetch_integer(key);
+        if (_gamma_range_.has(aux.fetch_integer(key))) {
+          DT_LOG_DEBUG(get_logging_priority(), "Bad number of gammas !");
+          return cuts::SELECTION_REJECTED;
+        }
       }
       if (aux.has_key(key = snemo::datamodel::pid_utils::alpha_label())) {
-        nalphas = aux.fetch_integer(key);
+        if (_alpha_range_.has(aux.fetch_integer(key))) {
+          DT_LOG_DEBUG(get_logging_priority(), "Bad number of alphas !");
+          return cuts::SELECTION_REJECTED;
+        }
       }
       if (aux.has_key(key = snemo::datamodel::pid_utils::undefined_label())) {
-        nundefined = aux.fetch_integer(key);
+        if (_undefined_range_.has(aux.fetch_integer(key))) {
+          DT_LOG_DEBUG(get_logging_priority(), "Bad number of undefined particles !");
+          return cuts::SELECTION_REJECTED;
+        }
       }
 
-      DT_LOG_TRACE(get_logging_priority(), "nelectron  = " << nelectrons);
-      DT_LOG_TRACE(get_logging_priority(), "npositron  = " << npositrons);
-      DT_LOG_TRACE(get_logging_priority(), "nalphas    = " << nalphas);
-      DT_LOG_TRACE(get_logging_priority(), "ngammas    = " << ngammas);
-      DT_LOG_TRACE(get_logging_priority(), "nundefined = " << nundefined);
-
-      bool check = true;
-      if (! _electron_range_.check(nelectrons)) check = false;
-      if (! _positron_range_.check(npositrons)) check = false;
-      if (! _gamma_range_.check(ngammas)) check = false;
-      if (! _alpha_range_.check(nalphas)) check = false;
-      if (! _undefined_range_.check(nundefined)) check = false;
-
-      cut_returned = cuts::SELECTION_ACCEPTED;
-      if (! check) {
-        DT_LOG_DEBUG(get_logging_priority(), "Event rejected by pid cut!");
-        cut_returned = cuts::SELECTION_REJECTED;
-      }
-
-      return cut_returned;
+      return cuts::SELECTION_ACCEPTED;
     }
 
   }  // end of namespace cut

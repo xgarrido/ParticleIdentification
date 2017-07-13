@@ -35,10 +35,9 @@
 #include <string>
 
 // Third party:
-// - Boost:
-#include <boost/cstdint.hpp>
+#include <bayeux/datatools/integer_range.h>
 // - Bayeux/cuts:
-#include <cuts/i_cut.h>
+#include <bayeux/cuts/i_cut.h>
 
 namespace snemo {
 
@@ -48,21 +47,6 @@ namespace snemo {
     class pid_cut : public cuts::i_cut
     {
     public:
-
-      /// Structure holding particle range
-      struct particle_range {
-        size_t min;
-        size_t max;
-
-        /// Constructor
-        particle_range();
-
-        /// Parse min/max value from configuration
-        void parse(const datatools::properties & setup_, const std::string & prefix_);
-
-        /// Check number of particle
-        bool check(const size_t n_);
-      };
 
       /// Constructor
       pid_cut(datatools::logger::priority logging_priority_ = datatools::logger::PRIO_FATAL);
@@ -90,11 +74,11 @@ namespace snemo {
 
       std::string _PTD_label_; //!< Name of the "Particle track data" bank
 
-      particle_range _electron_range_; //!< Number of electrons
-      particle_range _positron_range_; //!< Number of positrons
-      particle_range _gamma_range_;    //!< Number of gammas
-      particle_range _alpha_range_;    //!< Number of alphas
-      particle_range _undefined_range_;//!< Number of undefined particles
+      datatools::integer_range _electron_range_; //!< Number of electrons
+      datatools::integer_range _positron_range_; //!< Number of positrons
+      datatools::integer_range _gamma_range_;    //!< Number of gammas
+      datatools::integer_range _alpha_range_;    //!< Number of alphas
+      datatools::integer_range _undefined_range_;//!< Number of undefined particles
 
       // Macro to automate the registration of the cut :
       CUT_REGISTRATION_INTERFACE(pid_cut)
