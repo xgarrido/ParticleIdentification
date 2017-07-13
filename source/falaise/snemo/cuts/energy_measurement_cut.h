@@ -12,8 +12,6 @@
 #define FALAISE_SNEMO_CUT_ENERGY_MEASUREMENT_CUT_H 1
 
 // Third party:
-// - Boost:
-#include <boost/cstdint.hpp>
 // - Bayeux/datatools:
 #include <bayeux/datatools/bit_mask.h>
 #include <bayeux/datatools/real_range.h>

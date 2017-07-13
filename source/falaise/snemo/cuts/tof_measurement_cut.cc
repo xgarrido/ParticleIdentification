@@ -85,107 +85,105 @@ namespace snemo {
 
       this->i_cut::_common_initialize(configuration_);
 
-      if (_mode_ == MODE_UNDEFINED) {
-        if (configuration_.has_flag("mode.has_internal_probability")) {
-          _mode_ |= MODE_HAS_INTERNAL_PROBABILITY;
-        }
-        if (configuration_.has_flag("mode.range_internal_probability")) {
-          _mode_ |= MODE_RANGE_INTERNAL_PROBABILITY;
-        }
-        if (configuration_.has_flag("mode.has_external_probability")) {
-          _mode_ |= MODE_HAS_EXTERNAL_PROBABILITY;
-        }
-        if (configuration_.has_flag("mode.range_external_probability")) {
-          _mode_ |= MODE_RANGE_EXTERNAL_PROBABILITY;
-        }
-        DT_THROW_IF(_mode_ == MODE_UNDEFINED, std::logic_error,
-                    "Missing at least a 'mode.XXX' property !");
+      if (configuration_.has_flag("mode.has_internal_probability")) {
+        _mode_ |= MODE_HAS_INTERNAL_PROBABILITY;
+      }
+      if (configuration_.has_flag("mode.range_internal_probability")) {
+        _mode_ |= MODE_RANGE_INTERNAL_PROBABILITY;
+      }
+      if (configuration_.has_flag("mode.has_external_probability")) {
+        _mode_ |= MODE_HAS_EXTERNAL_PROBABILITY;
+      }
+      if (configuration_.has_flag("mode.range_external_probability")) {
+        _mode_ |= MODE_RANGE_EXTERNAL_PROBABILITY;
+      }
+      DT_THROW_IF(_mode_ == MODE_UNDEFINED, std::logic_error,
+                  "Missing at least a 'mode.XXX' property !");
 
-        // mode HAS_INTERNAL_PROBABILITY:
-        if (is_mode_has_internal_probability()) {
-          DT_LOG_DEBUG(get_logging_priority(), "Using HAS_INTERNAL_PROBABILITY mode...");
-        } // end if is_mode_has_internal_probability
+      // mode HAS_INTERNAL_PROBABILITY:
+      if (is_mode_has_internal_probability()) {
+        DT_LOG_DEBUG(get_logging_priority(), "Using HAS_INTERNAL_PROBABILITY mode...");
+      } // end if is_mode_has_internal_probability
 
-        datatools::real_range tof_limits(0.0*CLHEP::perCent, 100.0*CLHEP::perCent);
-        // Extract the tof bound
-        auto get_range_tof = [&configuration_, &tof_limits](const std::string& key) {
-          double value {datatools::invalid_real()};
-          if (configuration_.has_key(key)) {
-            value = configuration_.fetch_real(key);
-            if (!configuration_.has_explicit_unit(key)) {
-              value *= CLHEP::perCent;
-            }
-            DT_THROW_IF(! tof_limits.has(value),
-                        std::range_error,
-                        "Invalid TOF value (" << value << ") !");
+      datatools::real_range tof_limits(0.0*CLHEP::perCent, 100.0*CLHEP::perCent);
+      // Extract the tof bound
+      auto get_range_tof = [&configuration_, &tof_limits](const std::string& key) {
+        double value {datatools::invalid_real()};
+        if (configuration_.has_key(key)) {
+          value = configuration_.fetch_real(key);
+          if (!configuration_.has_explicit_unit(key)) {
+            value *= CLHEP::perCent;
           }
-          return value;
-        };
+          DT_THROW_IF(! tof_limits.has(value),
+                      std::range_error,
+                      "Invalid TOF value (" << value << ") !");
+        }
+        return value;
+      };
 
-        // mode PARTICLE_RANGE_INTERNAL_PROBABILITY:
-        if (is_mode_range_internal_probability()) {
-          DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_INTERNAL_PROBABILITY mode...");
-          if (configuration_.has_key("range_internal_probability.mode")) {
-            const std::string mode = configuration_.fetch_string("range_internal_probability.mode");
-            if (mode == "strict") {
-              _int_prob_range_mode_ = MODE_RANGE_STRICT;
-            } else if (mode == "all") {
-              _int_prob_range_mode_ = MODE_RANGE_ALL;
-            } else {
-              DT_THROW_IF(true, std::logic_error, "Unkown '" << mode << "' mode for internal probability range !");
-            }
+      // mode PARTICLE_RANGE_INTERNAL_PROBABILITY:
+      if (is_mode_range_internal_probability()) {
+        DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_INTERNAL_PROBABILITY mode...");
+        if (configuration_.has_key("range_internal_probability.mode")) {
+          const std::string mode = configuration_.fetch_string("range_internal_probability.mode");
+          if (mode == "strict") {
+            _int_prob_range_mode_ = MODE_RANGE_STRICT;
+          } else if (mode == "all") {
+            _int_prob_range_mode_ = MODE_RANGE_ALL;
+          } else {
+            DT_THROW_IF(true, std::logic_error, "Unkown '" << mode << "' mode for internal probability range !");
           }
-          DT_THROW_IF(_int_prob_range_mode_ == MODE_RANGE_UNDEFINED, std::logic_error,
-                      "Mode for internal probability range has not been set !");
+        }
+        DT_THROW_IF(_int_prob_range_mode_ == MODE_RANGE_UNDEFINED, std::logic_error,
+                    "Mode for internal probability range has not been set !");
 
-          const double pmin {get_range_tof("range_internal_probability.min")};
-          const double pmax {get_range_tof("range_internal_probability.max")};
-          DT_THROW_IF(!datatools::is_valid(pmin) && !datatools::is_valid(pmax),
-                      std::logic_error,
-                      "Missing 'range_internal_probability.min' or 'range_internal_probability.max' property !");
-          if (datatools::is_valid(pmin) && datatools::is_valid(pmax)) {
-            _int_prob_range_.make_bounded(pmin, pmax);
-          } else if (datatools::is_valid(pmin)) {
-            _int_prob_range_.make_bounded(pmin, tof_limits.get_upper());
-          } else if (datatools::is_valid(pmax)) {
-            _int_prob_range_.make_bounded(tof_limits.get_lower(), pmax);
-          }
-        } // end if is_mode_range_internal_probability
+        const double pmin {get_range_tof("range_internal_probability.min")};
+        const double pmax {get_range_tof("range_internal_probability.max")};
+        DT_THROW_IF(!datatools::is_valid(pmin) && !datatools::is_valid(pmax),
+                    std::logic_error,
+                    "Missing 'range_internal_probability.min' or 'range_internal_probability.max' property !");
+        if (datatools::is_valid(pmin) && datatools::is_valid(pmax)) {
+          _int_prob_range_.make_bounded(pmin, pmax);
+        } else if (datatools::is_valid(pmin)) {
+          _int_prob_range_.make_bounded(pmin, tof_limits.get_upper());
+        } else if (datatools::is_valid(pmax)) {
+          _int_prob_range_.make_bounded(tof_limits.get_lower(), pmax);
+        }
+      } // end if is_mode_range_internal_probability
 
         // mode HAS_EXTERNAL_PROBABILITY:
-        if (is_mode_has_external_probability()) {
-          DT_LOG_DEBUG(get_logging_priority(), "Using HAS_EXTERNAL_PROBABILITY mode...");
-        } // end if is_mode_has_external_probability
+      if (is_mode_has_external_probability()) {
+        DT_LOG_DEBUG(get_logging_priority(), "Using HAS_EXTERNAL_PROBABILITY mode...");
+      } // end if is_mode_has_external_probability
 
         // mode PARTICLE_RANGE_EXTERNAL_PROBABILITY:
-        if (is_mode_range_external_probability()) {
-          DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_EXTERNAL_PROBABILITY mode...");
-          if (configuration_.has_key("range_external_probability.mode")) {
-            const std::string mode = configuration_.fetch_string("range_external_probability.mode");
-            if (mode == "strict") {
-              _ext_prob_range_mode_ = MODE_RANGE_STRICT;
-            } else if (mode == "all") {
-              _ext_prob_range_mode_ = MODE_RANGE_ALL;
-            } else {
-              DT_THROW_IF(true, std::logic_error, "Unkown '" << mode << "' mode for external probability range !");
-            }
+      if (is_mode_range_external_probability()) {
+        DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_EXTERNAL_PROBABILITY mode...");
+        if (configuration_.has_key("range_external_probability.mode")) {
+          const std::string mode = configuration_.fetch_string("range_external_probability.mode");
+          if (mode == "strict") {
+            _ext_prob_range_mode_ = MODE_RANGE_STRICT;
+          } else if (mode == "all") {
+            _ext_prob_range_mode_ = MODE_RANGE_ALL;
+          } else {
+            DT_THROW_IF(true, std::logic_error, "Unkown '" << mode << "' mode for external probability range !");
           }
-          DT_THROW_IF(_ext_prob_range_mode_ == MODE_RANGE_UNDEFINED, std::logic_error,
-                      "Mode for external probability range has not been set !");
-          const double pmin {get_range_tof("range_external_probability.min")};
-          const double pmax {get_range_tof("range_external_probability.max")};
-          DT_THROW_IF(!datatools::is_valid(pmin) && !datatools::is_valid(pmax),
-                      std::logic_error,
-                      "Missing 'range_external_probability.min' or 'range_external_probability.max' property !");
-          if (datatools::is_valid(pmin) && datatools::is_valid(pmax)) {
-            _ext_prob_range_.make_bounded(pmin, pmax);
-          } else if (datatools::is_valid(pmin)) {
-            _ext_prob_range_.make_bounded(pmin, tof_limits.get_upper());
-          } else if (datatools::is_valid(pmax)) {
-            _ext_prob_range_.make_bounded(tof_limits.get_lower(), pmax);
-          }
-        } // end if is_mode_range_external_probability
-     }
+        }
+        DT_THROW_IF(_ext_prob_range_mode_ == MODE_RANGE_UNDEFINED, std::logic_error,
+                    "Mode for external probability range has not been set !");
+        const double pmin {get_range_tof("range_external_probability.min")};
+        const double pmax {get_range_tof("range_external_probability.max")};
+        DT_THROW_IF(!datatools::is_valid(pmin) && !datatools::is_valid(pmax),
+                    std::logic_error,
+                    "Missing 'range_external_probability.min' or 'range_external_probability.max' property !");
+        if (datatools::is_valid(pmin) && datatools::is_valid(pmax)) {
+          _ext_prob_range_.make_bounded(pmin, pmax);
+        } else if (datatools::is_valid(pmin)) {
+          _ext_prob_range_.make_bounded(pmin, tof_limits.get_upper());
+        } else if (datatools::is_valid(pmax)) {
+          _ext_prob_range_.make_bounded(tof_limits.get_lower(), pmax);
+        }
+      } // end if is_mode_range_external_probability
 
       this->i_cut::_set_initialized(true);
       return;

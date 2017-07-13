@@ -12,12 +12,11 @@
 #define FALAISE_SNEMO_CUT_VERTICES_MEASUREMENT_CUT_H 1
 
 // Third party:
-// - Boost:
-#include <boost/cstdint.hpp>
 // - Bayeux/datatools:
-#include <datatools/bit_mask.h>
+#include <bayeux/datatools/bit_mask.h>
+#include <bayeux/datatools/real_range.h>
 // - Bayeux/cuts:
-#include <cuts/i_cut.h>
+#include <bayeux/cuts/i_cut.h>
 
 namespace snemo {
 
@@ -43,9 +42,6 @@ namespace snemo {
 
       /// Return the cut mode
       uint32_t get_mode() const;
-
-      /// Check mode FLAG
-      bool is_mode_flag() const;
 
       /// Check mode HAS_LOCATION
       bool is_mode_has_location() const;
@@ -97,14 +93,10 @@ namespace snemo {
 
       uint32_t _mode_;             //!< Mode of the cut
       std::string _location_; //!< Vertex/ices location
-      double _vertices_prob_range_min_; //!< Minimal vertices probability
-      double _vertices_prob_range_max_; //!< Maximal vertices probability
-      double _vertices_dist_x_range_min_; //!< Minimal vertices distance in x
-      double _vertices_dist_x_range_max_; //!< Maximal vertices distance in x
-      double _vertices_dist_y_range_min_; //!< Minimal vertices distance in y
-      double _vertices_dist_y_range_max_; //!< Maximal vertices distance in y
-      double _vertices_dist_z_range_min_; //!< Minimal vertices distance in z
-      double _vertices_dist_z_range_max_; //!< Maximal vertices distance in z
+      datatools::real_range _vertices_prob_range_; //!< Vertices probability allowed
+      datatools::real_range _vertices_dist_x_range_; //!< Vertices distance in x allowed
+      datatools::real_range _vertices_dist_y_range_; //!< Vertices distance in y allowed
+      datatools::real_range _vertices_dist_z_range_; //!< Vertices distance in z allowed
 
       // Macro to automate the registration of the cut :
       CUT_REGISTRATION_INTERFACE(vertices_measurement_cut)
@@ -115,7 +107,7 @@ namespace snemo {
 }  // end of namespace snemo
 
 // OCD support::
-#include <datatools/ocd_macros.h>
+#include <bayeux/datatools/ocd_macros.h>
 
 // @arg snemo::cut::vertices_measurement_cut the name the registered class in the OCD system
 DOCD_CLASS_DECLARATION(snemo::cut::vertices_measurement_cut)

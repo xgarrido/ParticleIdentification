@@ -3,15 +3,10 @@
 // Ourselves:
 #include <falaise/snemo/cuts/vertices_measurement_cut.h>
 
-// Standard library:
-#include <stdexcept>
-#include <sstream>
-
 // Third party:
 // - Bayeux/datatools:
-#include <datatools/properties.h>
-#include <datatools/things.h>
-#include <datatools/clhep_units.h>
+#include <bayeux/datatools/properties.h>
+#include <bayeux/datatools/clhep_units.h>
 
 // SuperNEMO data models :
 #include <falaise/snemo/datamodels/vertex_measurement.h>
@@ -26,15 +21,11 @@ namespace snemo {
     void vertices_measurement_cut::_set_defaults()
     {
       _mode_ = MODE_UNDEFINED;
-      _location_ = "";
-      datatools::invalidate(_vertices_prob_range_min_);
-      datatools::invalidate(_vertices_prob_range_max_);
-      datatools::invalidate(_vertices_dist_x_range_min_);
-      datatools::invalidate(_vertices_dist_x_range_max_);
-      datatools::invalidate(_vertices_dist_y_range_min_);
-      datatools::invalidate(_vertices_dist_y_range_max_);
-      datatools::invalidate(_vertices_dist_z_range_min_);
-      datatools::invalidate(_vertices_dist_z_range_max_);
+      _location_.clear();
+      _vertices_prob_range_.invalidate();
+      _vertices_dist_x_range_.invalidate();
+      _vertices_dist_y_range_.invalidate();
+      _vertices_dist_z_range_.invalidate();
       return;
     }
 
@@ -115,207 +106,165 @@ namespace snemo {
 
       this->i_cut::_common_initialize(configuration_);
 
-      if (_mode_ == MODE_UNDEFINED) {
-        if (configuration_.has_flag("mode.has_location")) {
-          _mode_ |= MODE_HAS_LOCATION;
-        }
-        if (configuration_.has_flag("mode.location")) {
-          _mode_ |= MODE_LOCATION;
-        }
-        if (configuration_.has_flag("mode.has_vertices_probability")) {
-          _mode_ |= MODE_HAS_VERTICES_PROBABILITY;
-        }
-        if (configuration_.has_flag("mode.range_vertices_probability")) {
-          _mode_ |= MODE_RANGE_VERTICES_PROBABILITY;
-        }
-        if (configuration_.has_flag("mode.has_vertices_distance")) {
-          _mode_ |= MODE_HAS_VERTICES_DISTANCE;
-        }
-        if (configuration_.has_flag("mode.range_vertices_distance_x")) {
-          _mode_ |= MODE_RANGE_VERTICES_DISTANCE_X;
-        }
-        if (configuration_.has_flag("mode.range_vertices_distance_y")) {
-          _mode_ |= MODE_RANGE_VERTICES_DISTANCE_Y;
-        }
-        if (configuration_.has_flag("mode.range_vertices_distance_z")) {
-          _mode_ |= MODE_RANGE_VERTICES_DISTANCE_Z;
-        }
-        DT_THROW_IF(_mode_ == MODE_UNDEFINED, std::logic_error,
-                    "Missing at least a 'mode.XXX' property !");
+      if (configuration_.has_flag("mode.has_location")) {
+        _mode_ |= MODE_HAS_LOCATION;
+      }
+      if (configuration_.has_flag("mode.location")) {
+        _mode_ |= MODE_LOCATION;
+      }
+      if (configuration_.has_flag("mode.has_vertices_probability")) {
+        _mode_ |= MODE_HAS_VERTICES_PROBABILITY;
+      }
+      if (configuration_.has_flag("mode.range_vertices_probability")) {
+        _mode_ |= MODE_RANGE_VERTICES_PROBABILITY;
+      }
+      if (configuration_.has_flag("mode.has_vertices_distance")) {
+        _mode_ |= MODE_HAS_VERTICES_DISTANCE;
+      }
+      if (configuration_.has_flag("mode.range_vertices_distance_x")) {
+        _mode_ |= MODE_RANGE_VERTICES_DISTANCE_X;
+      }
+      if (configuration_.has_flag("mode.range_vertices_distance_y")) {
+        _mode_ |= MODE_RANGE_VERTICES_DISTANCE_Y;
+      }
+      if (configuration_.has_flag("mode.range_vertices_distance_z")) {
+        _mode_ |= MODE_RANGE_VERTICES_DISTANCE_Z;
+      }
+      DT_THROW_IF(_mode_ == MODE_UNDEFINED, std::logic_error,
+                  "Missing at least a 'mode.XXX' property !");
 
-        // mode HAS_LOCATION:
-        if (is_mode_has_location()) {
-          DT_LOG_DEBUG(get_logging_priority(), "Using HAS_LOCATION mode...");
-        } // end if is_mode_has_location
+      // mode HAS_LOCATION:
+      if (is_mode_has_location()) {
+        DT_LOG_DEBUG(get_logging_priority(), "Using HAS_LOCATION mode...");
+      } // end if is_mode_has_location
 
         // mode LOCATION:
-        if (is_mode_location()) {
-          DT_LOG_DEBUG(get_logging_priority(), "Using LOCATION mode...");
+      if (is_mode_location()) {
+        DT_LOG_DEBUG(get_logging_priority(), "Using LOCATION mode...");
 
-          size_t count = 0;
-          if (configuration_.has_key("location.value")) {
-            std::string location = configuration_.fetch_string("location.value");
-            //check if the location is one of the 4 or leave it be
-            // DT_THROW_IF(,
-            //             std::range_error,
-            //             "Invalid minimal vertices probability (" << pmin << ") !");
-            _location_ = location;
+        size_t count = 0;
+        if (configuration_.has_key("location.value")) {
+          std::string location = configuration_.fetch_string("location.value");
+          //check if the location is one of the 4 or leave it be
+          // DT_THROW_IF(,
+          //             std::range_error,
+          //             "Invalid minimal vertices probability (" << pmin << ") !");
+          _location_ = location;
 
-            count++;
-          }
-        } // end if is_mode_location
+          count++;
+        }
+      } // end if is_mode_location
 
         // mode HAS_VERTICES_PROBABILITY:
-        if (is_mode_has_vertices_probability()) {
-          DT_LOG_DEBUG(get_logging_priority(), "Using HAS_VERTICES_PROBABILITY mode...");
-        } // end if is_mode_has_vertices_probability
+      if (is_mode_has_vertices_probability()) {
+        DT_LOG_DEBUG(get_logging_priority(), "Using HAS_VERTICES_PROBABILITY mode...");
+      } // end if is_mode_has_vertices_probability
 
         // mode PARTICLE_RANGE_VERTICES_PROBABILITY:
-        if (is_mode_range_vertices_probability()) {
-          DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_VERTICES_PROBABILITY mode...");
-
-          size_t count = 0;
-          if (configuration_.has_key("range_vertices_probability.min")) {
-            double pmin = configuration_.fetch_real("range_vertices_probability.min");
-            if (! configuration_.has_explicit_unit("range_vertices_probability.min")) {
-              pmin *= CLHEP::perCent;
+      if (is_mode_range_vertices_probability()) {
+        DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_VERTICES_PROBABILITY mode...");
+        datatools::real_range vtx_limits(0.0*CLHEP::perCent, 100.0*CLHEP::perCent);
+        // Extract the vertices probability bound
+        auto get_range_vtx = [&configuration_, &vtx_limits](const std::string& key) {
+          double value {datatools::invalid_real()};
+          if (configuration_.has_key(key)) {
+            value = configuration_.fetch_real(key);
+            if (!configuration_.has_explicit_unit(key)) {
+              value *= CLHEP::perCent;
             }
-            DT_THROW_IF(pmin < 0.0*CLHEP::perCent || pmin > 100.0*CLHEP::perCent,
+            DT_THROW_IF(! vtx_limits.has(value),
                         std::range_error,
-                        "Invalid minimal vertices probability (" << pmin << ") !");
-            _vertices_prob_range_min_ = pmin;
-            count++;
+                        "Invalid vertex probability value (" << value << ") !");
           }
-          if (configuration_.has_key("range_vertices_probability.max")) {
-            double pmax = configuration_.fetch_real("range_vertices_probability.max");
-            if (! configuration_.has_explicit_unit("range_vertices_probability.max")) {
-              pmax *= CLHEP::perCent;
-            }
-            DT_THROW_IF(pmax < 0.0*CLHEP::perCent || pmax > 100.0*CLHEP::perCent,
-                        std::range_error,
-                        "Invalid maximal vertices probability (" << pmax << ") !");
-            _vertices_prob_range_max_ = pmax;
-            count++;
-          }
-          DT_THROW_IF(count == 0, std::logic_error,
-                      "Missing 'range_vertices_probability.min' or 'range_vertices_probability.max' property !");
-          if (count == 2 && _vertices_prob_range_min_ >= 0 && _vertices_prob_range_max_ >= 0) {
-            DT_THROW_IF(_vertices_prob_range_min_ > _vertices_prob_range_max_, std::logic_error,
-                        "Invalid 'range_vertices_probability.min' > 'range_vertices_probability.max' values !");
-          }
-        } // end if is_mode_range_vertices_probability
+          return value;
+        };
+        const double vmin {get_range_vtx("range_vertices_probability.min")};
+        const double vmax {get_range_vtx("range_vertices_probability.max")};
+        DT_THROW_IF(!datatools::is_valid(vmin) && !datatools::is_valid(vmax),
+                    std::logic_error,
+                    "Missing 'range_vertices_probability.min' or 'range_vertices_probability.max' property !");
+        if (datatools::is_valid(vmin) && datatools::is_valid(vmax)) {
+          _vertices_prob_range_.make_bounded(vmin, vmax);
+        } else if (datatools::is_valid(vmin)) {
+          _vertices_prob_range_.make_bounded(vmin, vtx_limits.get_upper());
+        } else if (datatools::is_valid(vmax)) {
+          _vertices_prob_range_.make_bounded(vtx_limits.get_lower(), vmax);
+        }
+      } // end if is_mode_range_vertices_probability
 
         // mode HAS_VERTICES_PROBABILITY:
-        if (is_mode_has_vertices_probability()) {
-          DT_LOG_DEBUG(get_logging_priority(), "Using HAS_VERTICES_PROBABILITY mode...");
-        } // end if is_mode_has_vertices_probability
+      if (is_mode_has_vertices_probability()) {
+        DT_LOG_DEBUG(get_logging_priority(), "Using HAS_VERTICES_PROBABILITY mode...");
+      } // end if is_mode_has_vertices_probability
 
-        // mode PARTICLE_RANGE_VERTICES_DISTANCE_X:
-        if (is_mode_range_vertices_distance_x()) {
-          DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_VERTICES_DISTANCE_X mode...");
 
-          size_t count = 0;
-          if (configuration_.has_key("range_vertices_distance_x.min")) {
-            double vtx_dist_x_min = configuration_.fetch_real("range_vertices_distance_x.min");
-            if (! configuration_.has_explicit_unit("range_vertices_distance_x.min")) {
-              vtx_dist_x_min *= CLHEP::mm;
-            }
-            DT_THROW_IF(vtx_dist_x_min < 0.0*CLHEP::mm,
-                        std::range_error,
-                        "Invalid minimal vertices distance in X (" << vtx_dist_x_min << "mm) !");
-            _vertices_dist_x_range_min_ = vtx_dist_x_min;
-            count++;
+      datatools::real_range distance_limits;
+      distance_limits.make_positive_unbounded();
+      // Extract the vertex distance bound
+      auto get_range_distance = [&configuration_, &distance_limits](const std::string& key) {
+        double value {datatools::invalid_real()};
+        if (configuration_.has_key(key)) {
+          value = configuration_.fetch_real(key);
+          if (!configuration_.has_explicit_unit(key)) {
+            value *= CLHEP::mm;
           }
-          if (configuration_.has_key("range_vertices_distance_x.max")) {
-            double vtx_dist_x_max = configuration_.fetch_real("range_vertices_distance_x.max");
-            if (! configuration_.has_explicit_unit("range_vertices_distance_x.max")) {
-              vtx_dist_x_max *= CLHEP::mm;
-            }
-            DT_THROW_IF(vtx_dist_x_max < 0.0*CLHEP::mm,
-                        std::range_error,
-                        "Invalid maximal vertices distance in X (" << vtx_dist_x_max << ") !");
-            _vertices_dist_x_range_max_ = vtx_dist_x_max;
-            count++;
-          }
-          DT_THROW_IF(count == 0, std::logic_error,
-                      "Missing 'range_vertices_distance_x.min' or 'range_vertices_distance_x.max' property !");
-          if (count == 2 && _vertices_dist_x_range_min_ >= 0 && _vertices_dist_x_range_max_ >= 0) {
-            DT_THROW_IF(_vertices_dist_x_range_min_ > _vertices_dist_x_range_max_, std::logic_error,
-                        "Invalid 'range_vertices_distance_x.min' > 'range_vertices_distance_x.max' values !");
-          }
-        } // end if is_mode_range_vertices_distance_x
+          DT_THROW_IF(! distance_limits.has(value),
+                      std::range_error,
+                      "Invalid distance value (" << value << ") !");
+        }
+        return value;
+      };
+
+      // mode PARTICLE_RANGE_VERTICES_DISTANCE_X:
+      if (is_mode_range_vertices_distance_x()) {
+        DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_VERTICES_DISTANCE_X mode...");
+        const double dmin {get_range_distance("range_vertices_distance_x.min")};
+        const double dmax {get_range_distance("range_vertices_distance_x.max")};
+        DT_THROW_IF(!datatools::is_valid(dmin) && !datatools::is_valid(dmax),
+                    std::logic_error,
+                    "Missing 'range_vertices_distance_x.min' or 'range_vertices_distance_x.max' property !");
+        if (datatools::is_valid(dmin) && datatools::is_valid(dmax)) {
+          _vertices_dist_x_range_.make_bounded(dmin, dmax);
+        } else if (datatools::is_valid(dmin)) {
+          _vertices_dist_x_range_.make_bounded(dmin, distance_limits.get_upper());
+        } else if (datatools::is_valid(dmax)) {
+          _vertices_dist_x_range_.make_bounded(distance_limits.get_lower(), dmax);
+        }
+      } // end if is_mode_range_vertices_distance_x
 
         // mode PARTICLE_RANGE_VERTICES_DISTANCE_Y:
-        if (is_mode_range_vertices_distance_y()) {
-          DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_VERTICES_DISTANCE_Y mode...");
-
-          size_t count = 0;
-          if (configuration_.has_key("range_vertices_distance_y.min")) {
-            double vtx_dist_y_min = configuration_.fetch_real("range_vertices_distance_y.min");
-            if (! configuration_.has_explicit_unit("range_vertices_distance_y.min")) {
-              vtx_dist_y_min *= CLHEP::mm;
-            }
-            DT_THROW_IF(vtx_dist_y_min < 0.0*CLHEP::mm,
-                        std::range_error,
-                        "Invalid minimal vertices distance in Y (" << vtx_dist_y_min << ") !");
-            _vertices_dist_y_range_min_ = vtx_dist_y_min;
-            count++;
-          }
-          if (configuration_.has_key("range_vertices_distance_y.max")) {
-            double vtx_dist_y_max = configuration_.fetch_real("range_vertices_distance_y.max");
-            if (! configuration_.has_explicit_unit("range_vertices_distance_y.max")) {
-              vtx_dist_y_max *= CLHEP::mm;
-            }
-            DT_THROW_IF(vtx_dist_y_max < 0.0*CLHEP::mm,
-                        std::range_error,
-                        "Invalid maximal vertices distance in Y (" << vtx_dist_y_max << ") !");
-            _vertices_dist_y_range_max_ = vtx_dist_y_max;
-            count++;
-          }
-          DT_THROW_IF(count == 0, std::logic_error,
-                      "Missing 'range_vertices_distance_y.min' or 'range_vertices_distance_y.max' property !");
-          if (count == 2 && _vertices_dist_y_range_min_ >= 0 && _vertices_dist_y_range_max_ >= 0) {
-            DT_THROW_IF(_vertices_dist_y_range_min_ > _vertices_dist_y_range_max_, std::logic_error,
-                        "Invalid 'range_vertices_distance_y.min' > 'range_vertices_distance_y.max' values !");
-          }
-        } // end if is_mode_range_vertices_distance_y
+      if (is_mode_range_vertices_distance_y()) {
+        DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_VERTICES_DISTANCE_Y mode...");
+        const double dmin {get_range_distance("range_vertices_distance_y.min")};
+        const double dmax {get_range_distance("range_vertices_distance_y.max")};
+        DT_THROW_IF(!datatools::is_valid(dmin) && !datatools::is_valid(dmax),
+                    std::logic_error,
+                    "Missing 'range_vertices_distance_y.min' or 'range_vertices_distance_y.max' property !");
+        if (datatools::is_valid(dmin) && datatools::is_valid(dmax)) {
+          _vertices_dist_y_range_.make_bounded(dmin, dmax);
+        } else if (datatools::is_valid(dmin)) {
+          _vertices_dist_y_range_.make_bounded(dmin, distance_limits.get_upper());
+        } else if (datatools::is_valid(dmax)) {
+          _vertices_dist_y_range_.make_bounded(distance_limits.get_lower(), dmax);
+        }
+      } // end if is_mode_range_vertices_distance_y
 
         // mode PARTICLE_RANGE_VERTICES_DISTANCE_Z:
-        if (is_mode_range_vertices_distance_z()) {
-          DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_VERTICES_DISTANCE_Z mode...");
-
-          size_t count = 0;
-          if (configuration_.has_key("range_vertices_distance_z.min")) {
-            double vtx_dist_z_min = configuration_.fetch_real("range_vertices_distance_z.min");
-            if (! configuration_.has_explicit_unit("range_vertices_distance_z.min")) {
-              vtx_dist_z_min *= CLHEP::mm;
-            }
-            DT_THROW_IF(vtx_dist_z_min < 0.0*CLHEP::mm,
-                        std::range_error,
-                        "Invalid minimal vertices distance in Z (" << vtx_dist_z_min << ") !");
-            _vertices_dist_z_range_min_ = vtx_dist_z_min;
-            count++;
-          }
-          if (configuration_.has_key("range_vertices_distance_z.max")) {
-            double vtx_dist_z_max = configuration_.fetch_real("range_vertices_distance_z.max");
-            if (! configuration_.has_explicit_unit("range_vertices_distance_z.max")) {
-              vtx_dist_z_max *= CLHEP::mm;
-            }
-            DT_THROW_IF(vtx_dist_z_max < 0.0*CLHEP::mm,
-                        std::range_error,
-                        "Invalid maximal vertices distance in Z (" << vtx_dist_z_max << ") !");
-            _vertices_dist_z_range_max_ = vtx_dist_z_max;
-            count++;
-          }
-          DT_THROW_IF(count == 0, std::logic_error,
-                      "Missing 'range_vertices_distance_z.min' or 'range_vertices_distance_z.max' property !");
-          if (count == 2 && _vertices_dist_z_range_min_ >= 0 && _vertices_dist_z_range_max_ >= 0) {
-            DT_THROW_IF(_vertices_dist_z_range_min_ > _vertices_dist_z_range_max_, std::logic_error,
-                        "Invalid 'range_vertices_distance_z.min' > 'range_vertices_distance_z.max' values !");
-          }
-        } // end if is_mode_range_vertices_distance_z
-
-      }
+      if (is_mode_range_vertices_distance_z()) {
+        DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_VERTICES_DISTANCE_Z mode...");
+        const double dmin {get_range_distance("range_vertices_distance_z.min")};
+        const double dmax {get_range_distance("range_vertices_distance_z.max")};
+        DT_THROW_IF(!datatools::is_valid(dmin) && !datatools::is_valid(dmax),
+                    std::logic_error,
+                    "Missing 'range_vertices_distance_z.min' or 'range_vertices_distance_z.max' property !");
+        if (datatools::is_valid(dmin) && datatools::is_valid(dmax)) {
+          _vertices_dist_z_range_.make_bounded(dmin, dmax);
+        } else if (datatools::is_valid(dmin)) {
+          _vertices_dist_z_range_.make_bounded(dmin, distance_limits.get_upper());
+        } else if (datatools::is_valid(dmax)) {
+          _vertices_dist_z_range_.make_bounded(distance_limits.get_lower(), dmax);
+        }
+      } // end if is_mode_range_vertices_distance_z
 
       this->i_cut::_set_initialized(true);
       return;
@@ -381,23 +330,9 @@ namespace snemo {
           DT_LOG_DEBUG(get_logging_priority(), "Missing vertices probability !");
           return cuts::SELECTION_INAPPLICABLE;
         }
-        const double & proba = a_vertices_meas.get_probability();
-        if (datatools::is_valid(_vertices_prob_range_min_)) {
-          if (proba < _vertices_prob_range_min_) {
-            DT_LOG_DEBUG(get_logging_priority(),
-                         "Vertices probability (" << proba/CLHEP::perCent << "%) lower than "
-                         << _vertices_prob_range_min_/CLHEP::perCent << "%");
-            check_range_vertices_probability = false;
-          }
-        }
-
-        if (datatools::is_valid(_vertices_prob_range_max_)) {
-          if (proba > _vertices_prob_range_max_) {
-            DT_LOG_DEBUG(get_logging_priority(),
-                         "Vertices probability (" << proba/CLHEP::perCent << "%) greater than "
-                         << _vertices_prob_range_max_/CLHEP::perCent << "%");
-            check_range_vertices_probability = false;
-          }
+        const double proba = a_vertices_meas.get_probability();
+        if (! _vertices_prob_range_.has(proba)) {
+          check_range_vertices_probability = false;
         }
       } // end of is_mode_range_vertices_probability
 
@@ -416,23 +351,9 @@ namespace snemo {
           DT_LOG_DEBUG(get_logging_priority(), "Missing vertices distance !");
           return cuts::SELECTION_INAPPLICABLE;
         }
-        const double & vtx_dist_x = a_vertices_meas.get_vertices_distance_x();
-        if (datatools::is_valid(_vertices_dist_x_range_min_)) {
-          if (vtx_dist_x < _vertices_dist_x_range_min_) {
-            DT_LOG_DEBUG(get_logging_priority(),
-                         "Vertices distance in X (" << vtx_dist_x/CLHEP::mm << "mm) lower than "
-                         << _vertices_dist_x_range_min_/CLHEP::mm << "mm");
-            check_range_vertices_distance_x = false;
-          }
-        }
-
-        if (datatools::is_valid(_vertices_dist_x_range_max_)) {
-          if (vtx_dist_x > _vertices_dist_x_range_max_) {
-            DT_LOG_DEBUG(get_logging_priority(),
-                         "Vertices distance in X (" << vtx_dist_x/CLHEP::mm << "mm) greater than "
-                         << _vertices_dist_x_range_max_/CLHEP::mm << "mm");
-            check_range_vertices_distance_x = false;
-          }
+        const double vtx_dist_x = a_vertices_meas.get_vertices_distance_x();
+        if (! _vertices_dist_x_range_.has(vtx_dist_x)) {
+          check_range_vertices_distance_x = false;
         }
       } // end of is_mode_range_vertices_distance_x
 
@@ -443,24 +364,9 @@ namespace snemo {
           DT_LOG_DEBUG(get_logging_priority(), "Missing vertices distance !");
           return cuts::SELECTION_INAPPLICABLE;
         }
-        const double & vtx_dist_y = a_vertices_meas.get_vertices_distance_y();
-
-        if (datatools::is_valid(_vertices_dist_y_range_min_)) {
-          if (vtx_dist_y < _vertices_dist_y_range_min_) {
-            DT_LOG_DEBUG(get_logging_priority(),
-                         "Vertices distance in Y (" << vtx_dist_y/CLHEP::mm << "mm) lower than "
-                         << _vertices_dist_y_range_min_/CLHEP::mm << "mm");
-            check_range_vertices_distance_y = false;
-          }
-        }
-
-        if (datatools::is_valid(_vertices_dist_y_range_max_)) {
-          if (vtx_dist_y > _vertices_dist_y_range_max_) {
-            DT_LOG_DEBUG(get_logging_priority(),
-                         "Vertices distance in Y (" << vtx_dist_y/CLHEP::mm << "mm) greater than "
-                         << _vertices_dist_y_range_max_/CLHEP::mm << "mm");
-            check_range_vertices_distance_y = false;
-          }
+        const double vtx_dist_y = a_vertices_meas.get_vertices_distance_y();
+        if (! _vertices_dist_y_range_.has(vtx_dist_y)) {
+          check_range_vertices_distance_y = false;
         }
       } // end of is_mode_range_vertices_distance_y
 
@@ -472,40 +378,26 @@ namespace snemo {
           return cuts::SELECTION_INAPPLICABLE;
         }
         const double & vtx_dist_z = a_vertices_meas.get_vertices_distance_z();
-        if (datatools::is_valid(_vertices_dist_z_range_min_)) {
-          if (vtx_dist_z < _vertices_dist_z_range_min_) {
-            DT_LOG_DEBUG(get_logging_priority(),
-                         "Vertices distance in Z (" << vtx_dist_z/CLHEP::mm << "mm) lower than "
-                         << _vertices_dist_z_range_min_/CLHEP::mm << "mm");
-            check_range_vertices_distance_z = false;
-          }
-        }
-
-        if (datatools::is_valid(_vertices_dist_z_range_max_)) {
-          if (vtx_dist_z > _vertices_dist_z_range_max_) {
-            DT_LOG_DEBUG(get_logging_priority(),
-                         "Vertices distance in Z (" << vtx_dist_z/CLHEP::mm << "mm) greater than "
-                         << _vertices_dist_z_range_max_/CLHEP::mm << "mm");
-            check_range_vertices_distance_z = false;
-          }
+        if (! _vertices_dist_z_range_.has(vtx_dist_z)) {
+          check_range_vertices_distance_z = false;
         }
       } // end of is_mode_range_vertices_distance_y
 
-    cut_returned = cuts::SELECTION_REJECTED;
-    if (check_has_location               &&
-        check_location                   &&
-        check_has_vertices_probability   &&
-        check_range_vertices_probability &&
-        check_has_vertices_distance      &&
-        check_range_vertices_distance_x  &&
-        check_range_vertices_distance_y  &&
-        check_range_vertices_distance_z
-        ) {
+      cut_returned = cuts::SELECTION_REJECTED;
+      if (check_has_location               &&
+          check_location                   &&
+          check_has_vertices_probability   &&
+          check_range_vertices_probability &&
+          check_has_vertices_distance      &&
+          check_range_vertices_distance_x  &&
+          check_range_vertices_distance_y  &&
+          check_range_vertices_distance_z
+          ) {
         DT_LOG_DEBUG(get_logging_priority(), "Event accepted by VERTICES measurement cut!");
         cut_returned = cuts::SELECTION_ACCEPTED;
       }
 
-    return cut_returned;
+      return cut_returned;
     }
 
   }  // end of namespace cut
