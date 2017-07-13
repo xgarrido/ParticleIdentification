@@ -83,7 +83,7 @@ namespace snemo {
 
       if (is_mode_range_angle()) {
         datatools::real_range angle_limits(0.0*CLHEP::degree, 360*CLHEP::degree);
-        // Extract the angle bound, with a default
+        // Extract the angle bound
         auto get_range_angle = [&configuration_, &angle_limits](const std::string& key) {
           double value {datatools::invalid_real()};
           if (configuration_.has_key(key)) {

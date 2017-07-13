@@ -26,8 +26,7 @@ namespace snemo {
     void energy_measurement_cut::_set_defaults()
     {
       _mode_ = MODE_UNDEFINED;
-      datatools::invalidate(_energy_range_min_);
-      datatools::invalidate(_energy_range_max_);
+      _energy_range_.invalidate();
       return;
     }
 
@@ -78,53 +77,47 @@ namespace snemo {
 
       this->i_cut::_common_initialize(configuration_);
 
-      if (_mode_ == MODE_UNDEFINED) {
-        if (configuration_.has_flag("mode.has_energy")) {
-          _mode_ |= MODE_HAS_ENERGY;
-        }
-        if (configuration_.has_flag("mode.range_energy")) {
-          _mode_ |= MODE_RANGE_ENERGY;
-        }
-        DT_THROW_IF(_mode_ == MODE_UNDEFINED, std::logic_error,
-                    "Missing at least a 'mode.XXX' property !");
-
-        // mode HAS_ENERGY:
-        if (is_mode_has_energy()) {
-          DT_LOG_DEBUG(get_logging_priority(), "Using HAS_ENERGY mode...");
-        } // end if is_mode_has_energy
-
-        // mode RANGE_ENERGY:
-        if (is_mode_range_energy()) {
-          DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_ENERGY mode...");
-          size_t count = 0;
-          if (configuration_.has_key("range_energy.min")) {
-            double emin = configuration_.fetch_real("range_energy.min");
-            if (! configuration_.has_explicit_unit("range_energy.min")) {
-              emin *= CLHEP::keV;
-            }
-            DT_THROW_IF(emin < 0.0*CLHEP::keV, std::range_error,
-                        "Invalid minimal energy value (" << emin << ") !");
-            _energy_range_min_ = emin;
-            count++;
-          }
-          if (configuration_.has_key("range_energy.max")) {
-            double emax = configuration_.fetch_real("range_energy.max");
-            if (! configuration_.has_explicit_unit("range_energy.max")) {
-              emax *= CLHEP::keV;
-            }
-            DT_THROW_IF(emax < 0.0*CLHEP::keV, std::range_error,
-                        "Invalid maximal energy (" << emax << ") !");
-            _energy_range_max_ = emax;
-            count++;
-          }
-          DT_THROW_IF(count == 0, std::logic_error,
-                      "Missing 'range_energy.min' or 'range_energy.max' property !");
-          if (count == 2 && _energy_range_min_ >= 0 && _energy_range_max_ >= 0) {
-            DT_THROW_IF(_energy_range_min_ > _energy_range_max_, std::logic_error,
-                        "Invalid 'range_energy.min' > 'range_energy.max' values !");
-          }
-        } // end if is_mode_range_energy
+      if (configuration_.has_flag("mode.has_energy")) {
+        _mode_ |= MODE_HAS_ENERGY;
       }
+      if (configuration_.has_flag("mode.range_energy")) {
+        _mode_ |= MODE_RANGE_ENERGY;
+      }
+      DT_THROW_IF(_mode_ == MODE_UNDEFINED, std::logic_error,
+                  "Missing at least a 'mode.XXX' property !");
+
+      // mode RANGE_ENERGY:
+      if (is_mode_range_energy()) {
+        datatools::real_range energy_limits;
+        energy_limits.make_positive_unbounded();
+        // Extract the energy bound
+        auto get_range_energy = [&configuration_, &energy_limits](const std::string& key) {
+          double value {datatools::invalid_real()};
+          if (configuration_.has_key(key)) {
+            value = configuration_.fetch_real(key);
+            if (!configuration_.has_explicit_unit(key)) {
+              value *= CLHEP::keV;
+            }
+            DT_THROW_IF(! energy_limits.has(value),
+                        std::range_error,
+                        "Invalid energy value (" << value << ") !");
+          }
+          return value;
+        };
+
+        const double emin {get_range_energy("range_energy.min")};
+        const double emax {get_range_energy("range_energy.max")};
+        DT_THROW_IF(!datatools::is_valid(emin) && !datatools::is_valid(emax),
+                    std::logic_error,
+                    "Missing 'range_energy.min' or 'range_energy.max' property !");
+        if (datatools::is_valid(emin) && datatools::is_valid(emax)) {
+          _energy_range_.make_bounded(emin, emax);
+        } else if (datatools::is_valid(emin)) {
+          _energy_range_.make_bounded(emin, energy_limits.get_upper());
+        } else if (datatools::is_valid(emax)) {
+          _energy_range_.make_bounded(energy_limits.get_lower(), emax);
+        }
+      } // end if is_mode_range_energy
       this->i_cut::_set_initialized(true);
       return;
     }
@@ -164,24 +157,7 @@ namespace snemo {
           return cuts::SELECTION_INAPPLICABLE;
         }
         const double energy = a_energy_meas.get_energy();
-        bool check = true;
-        if (datatools::is_valid(_energy_range_min_)) {
-          if (energy < _energy_range_min_) {
-            DT_LOG_DEBUG(get_logging_priority(),
-                         "Energy (" << energy/CLHEP::keV << " keV) lower than "
-                         << _energy_range_min_/CLHEP::keV << " keV");
-            check = false;
-          }
-        }
-        if (datatools::is_valid(_energy_range_max_)) {
-          if (energy > _energy_range_max_) {
-            DT_LOG_DEBUG(get_logging_priority(),
-                         "Energy (" << energy/CLHEP::keV << " keV) greater than "
-                         << _energy_range_max_/CLHEP::keV << " keV");
-            check = false;
-          }
-        }
-        if (! check) check_range_energy = false;
+        check_range_energy = _energy_range_.has(energy);
       } // end of is_mode_range_energy
 
       cut_returned = cuts::SELECTION_REJECTED;

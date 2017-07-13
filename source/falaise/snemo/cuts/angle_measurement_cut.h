@@ -43,9 +43,6 @@ namespace snemo {
       /// Return the cut mode
       uint32_t get_mode() const;
 
-      /// Check mode FLAG
-      bool is_mode_flag() const;
-
       /// Check mode HAS_ANGLE
       bool is_mode_has_angle() const;
 
@@ -88,7 +85,7 @@ namespace snemo {
 }  // end of namespace snemo
 
 // OCD support::
-#include <datatools/ocd_macros.h>
+#include <bayeux/datatools/ocd_macros.h>
 
 // @arg snemo::cut::angle_measurement_cut the name the registered class in the OCD system
 DOCD_CLASS_DECLARATION(snemo::cut::angle_measurement_cut)
