@@ -3,15 +3,10 @@
 // Ourselves:
 #include <falaise/snemo/cuts/energy_measurement_cut.h>
 
-// Standard library:
-#include <stdexcept>
-#include <sstream>
-
 // Third party:
 // - Bayeux/datatools:
-#include <datatools/properties.h>
-#include <datatools/things.h>
-#include <datatools/clhep_units.h>
+#include <bayeux/datatools/properties.h>
+#include <bayeux/datatools/clhep_units.h>
 
 // SuperNEMO data models :
 #include <falaise/snemo/datamodels/energy_measurement.h>

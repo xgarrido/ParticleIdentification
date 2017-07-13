@@ -15,9 +15,10 @@
 // - Boost:
 #include <boost/cstdint.hpp>
 // - Bayeux/datatools:
-#include <datatools/bit_mask.h>
+#include <bayeux/datatools/bit_mask.h>
+#include <bayeux/datatools/real_range.h>
 // - Bayeux/cuts:
-#include <cuts/i_cut.h>
+#include <bayeux/cuts/i_cut.h>
 
 namespace snemo {
 
@@ -45,9 +46,6 @@ namespace snemo {
 
       /// Return the cut mode
       uint32_t get_mode() const;
-
-      /// Check mode FLAG
-      bool is_mode_flag() const;
 
       /// Check mode HAS_INTERNAL_PROBABILITY
       bool is_mode_has_internal_probability() const;
@@ -88,10 +86,8 @@ namespace snemo {
       uint32_t _mode_;             //!< Mode of the cut
       uint32_t _int_prob_range_mode_; //!< Mode when ranging internal probability
       uint32_t _ext_prob_range_mode_; //!< Mode when ranging internal probability
-      double _int_prob_range_min_; //!< Minimal internal probability
-      double _int_prob_range_max_; //!< Maximal internal probability
-      double _ext_prob_range_min_; //!< Minimal external probability
-      double _ext_prob_range_max_; //!< Maximal external probability
+      datatools::real_range _int_prob_range_; //!< Internal probability range
+      datatools::real_range _ext_prob_range_; //!< External probability range
 
       // Macro to automate the registration of the cut :
       CUT_REGISTRATION_INTERFACE(tof_measurement_cut)
@@ -102,7 +98,7 @@ namespace snemo {
 }  // end of namespace snemo
 
 // OCD support::
-#include <datatools/ocd_macros.h>
+#include <bayeux/datatools/ocd_macros.h>
 
 // @arg snemo::cut::tof_measurement_cut the name the registered class in the OCD system
 DOCD_CLASS_DECLARATION(snemo::cut::tof_measurement_cut)

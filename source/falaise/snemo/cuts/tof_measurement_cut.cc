@@ -3,15 +3,10 @@
 // Ourselves:
 #include <falaise/snemo/cuts/tof_measurement_cut.h>
 
-// Standard library:
-#include <stdexcept>
-#include <sstream>
-
 // Third party:
 // - Bayeux/datatools:
-#include <datatools/properties.h>
-#include <datatools/things.h>
-#include <datatools/clhep_units.h>
+#include <bayeux/datatools/properties.h>
+#include <bayeux/datatools/clhep_units.h>
 
 // SuperNEMO data models :
 #include <falaise/snemo/datamodels/tof_measurement.h>
@@ -28,10 +23,8 @@ namespace snemo {
       _mode_ = MODE_UNDEFINED;
       _int_prob_range_mode_ = MODE_RANGE_UNDEFINED;
       _ext_prob_range_mode_ = MODE_RANGE_UNDEFINED;
-      datatools::invalidate(_int_prob_range_min_);
-      datatools::invalidate(_int_prob_range_max_);
-      datatools::invalidate(_ext_prob_range_min_);
-      datatools::invalidate(_ext_prob_range_max_);
+      _int_prob_range_.invalidate();
+      _ext_prob_range_.invalidate();
       return;
     }
 
@@ -113,6 +106,22 @@ namespace snemo {
           DT_LOG_DEBUG(get_logging_priority(), "Using HAS_INTERNAL_PROBABILITY mode...");
         } // end if is_mode_has_internal_probability
 
+        datatools::real_range tof_limits(0.0*CLHEP::perCent, 100.0*CLHEP::perCent);
+        // Extract the tof bound
+        auto get_range_tof = [&configuration_, &tof_limits](const std::string& key) {
+          double value {datatools::invalid_real()};
+          if (configuration_.has_key(key)) {
+            value = configuration_.fetch_real(key);
+            if (!configuration_.has_explicit_unit(key)) {
+              value *= CLHEP::perCent;
+            }
+            DT_THROW_IF(! tof_limits.has(value),
+                        std::range_error,
+                        "Invalid TOF value (" << value << ") !");
+          }
+          return value;
+        };
+
         // mode PARTICLE_RANGE_INTERNAL_PROBABILITY:
         if (is_mode_range_internal_probability()) {
           DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_INTERNAL_PROBABILITY mode...");
@@ -129,34 +138,17 @@ namespace snemo {
           DT_THROW_IF(_int_prob_range_mode_ == MODE_RANGE_UNDEFINED, std::logic_error,
                       "Mode for internal probability range has not been set !");
 
-          size_t count = 0;
-          if (configuration_.has_key("range_internal_probability.min")) {
-            double pmin = configuration_.fetch_real("range_internal_probability.min");
-            if (! configuration_.has_explicit_unit("range_internal_probability.min")) {
-              pmin *= CLHEP::perCent;
-            }
-            DT_THROW_IF(pmin < 0.0*CLHEP::perCent || pmin > 100.0*CLHEP::perCent,
-                        std::range_error,
-                        "Invalid minimal internal probability (" << pmin << ") !");
-            _int_prob_range_min_ = pmin;
-            count++;
-          }
-          if (configuration_.has_key("range_internal_probability.max")) {
-            double pmax = configuration_.fetch_real("range_internal_probability.max");
-            if (! configuration_.has_explicit_unit("range_internal_probability.max")) {
-              pmax *= CLHEP::perCent;
-            }
-            DT_THROW_IF(pmax < 0.0*CLHEP::perCent || pmax > 100.0*CLHEP::perCent,
-                        std::range_error,
-                        "Invalid maximal internal probability (" << pmax << ") !");
-            _int_prob_range_max_ = pmax;
-            count++;
-          }
-          DT_THROW_IF(count == 0, std::logic_error,
+          const double pmin {get_range_tof("range_internal_probability.min")};
+          const double pmax {get_range_tof("range_internal_probability.max")};
+          DT_THROW_IF(!datatools::is_valid(pmin) && !datatools::is_valid(pmax),
+                      std::logic_error,
                       "Missing 'range_internal_probability.min' or 'range_internal_probability.max' property !");
-          if (count == 2 && _int_prob_range_min_ >= 0 && _int_prob_range_max_ >= 0) {
-            DT_THROW_IF(_int_prob_range_min_ > _int_prob_range_max_, std::logic_error,
-                        "Invalid 'range_internal_probability.min' > 'range_internal_probability.max' values !");
+          if (datatools::is_valid(pmin) && datatools::is_valid(pmax)) {
+            _int_prob_range_.make_bounded(pmin, pmax);
+          } else if (datatools::is_valid(pmin)) {
+            _int_prob_range_.make_bounded(pmin, tof_limits.get_upper());
+          } else if (datatools::is_valid(pmax)) {
+            _int_prob_range_.make_bounded(tof_limits.get_lower(), pmax);
           }
         } // end if is_mode_range_internal_probability
 
@@ -180,34 +172,17 @@ namespace snemo {
           }
           DT_THROW_IF(_ext_prob_range_mode_ == MODE_RANGE_UNDEFINED, std::logic_error,
                       "Mode for external probability range has not been set !");
-         size_t count = 0;
-          if (configuration_.has_key("range_external_probability.min")) {
-            double pmin = configuration_.fetch_real("range_external_probability.min");
-            if (! configuration_.has_explicit_unit("range_external_probability.min")) {
-              pmin *= CLHEP::perCent;
-            }
-            DT_THROW_IF(pmin < 0.0*CLHEP::perCent || pmin > 100.0*CLHEP::perCent,
-                        std::range_error,
-                        "Invalid minimal external probability (" << pmin << ") !");
-            _ext_prob_range_min_ = pmin;
-            count++;
-          }
-          if (configuration_.has_key("range_external_probability.max")) {
-            double pmax = configuration_.fetch_real("range_external_probability.max");
-            if (! configuration_.has_explicit_unit("range_external_probability.max")) {
-              pmax *= CLHEP::perCent;
-            }
-            DT_THROW_IF(pmax < 0.0*CLHEP::perCent || pmax > 100.0*CLHEP::perCent,
-                        std::range_error,
-                        "Invalid maximal external probability (" << pmax << ") !");
-            _ext_prob_range_max_ = pmax;
-            count++;
-          }
-          DT_THROW_IF(count == 0, std::logic_error,
+          const double pmin {get_range_tof("range_external_probability.min")};
+          const double pmax {get_range_tof("range_external_probability.max")};
+          DT_THROW_IF(!datatools::is_valid(pmin) && !datatools::is_valid(pmax),
+                      std::logic_error,
                       "Missing 'range_external_probability.min' or 'range_external_probability.max' property !");
-          if (count == 2 && _ext_prob_range_min_ >= 0 && _ext_prob_range_max_ >= 0) {
-            DT_THROW_IF(_ext_prob_range_min_ > _ext_prob_range_max_, std::logic_error,
-                        "Invalid 'range_external_probability.min' > 'range_external_probability.max' values !");
+          if (datatools::is_valid(pmin) && datatools::is_valid(pmax)) {
+            _ext_prob_range_.make_bounded(pmin, pmax);
+          } else if (datatools::is_valid(pmin)) {
+            _ext_prob_range_.make_bounded(pmin, tof_limits.get_upper());
+          } else if (datatools::is_valid(pmax)) {
+            _ext_prob_range_.make_bounded(tof_limits.get_lower(), pmax);
           }
         } // end if is_mode_range_external_probability
      }
@@ -255,30 +230,12 @@ namespace snemo {
         for (snemo::datamodel::tof_measurement::probability_type::const_iterator
                ip = pints.begin(); ip != pints.end(); ++ip) {
           const double pint = *ip;
-          if (datatools::is_valid(_int_prob_range_min_)) {
-            if (pint < _int_prob_range_min_) {
-              DT_LOG_DEBUG(get_logging_priority(),
-                           "Internal probability (" << pint/CLHEP::perCent << "%) lower than "
-                           << _int_prob_range_min_/CLHEP::perCent << "%");
-              check_range_internal_probability = false;
-              if (_int_prob_range_mode_ == MODE_RANGE_STRICT) {
-                break;
-              }
-            }
-          }
-        }
-        for (snemo::datamodel::tof_measurement::probability_type::const_iterator
-               ip = pints.begin(); ip != pints.end(); ++ip) {
-          const double pint = *ip;
-          if (datatools::is_valid(_int_prob_range_max_)) {
-            if (pint > _int_prob_range_max_) {
-              DT_LOG_DEBUG(get_logging_priority(),
-                           "Internal probability (" << pint/CLHEP::perCent << "%) greater than "
-                           << _int_prob_range_max_/CLHEP::perCent << "%");
-              check_range_internal_probability = false;
-              if (_int_prob_range_mode_ == MODE_RANGE_STRICT) {
-                break;
-              }
+          if (! _int_prob_range_.has(pint)) {
+            DT_LOG_DEBUG(get_logging_priority(),
+                         "Internal probability (" << pint/CLHEP::perCent << "%) not within internal probability bounds");
+            check_range_internal_probability = false;
+            if (_int_prob_range_mode_ == MODE_RANGE_STRICT) {
+              break;
             }
           }
         }
@@ -304,30 +261,12 @@ namespace snemo {
         for (snemo::datamodel::tof_measurement::probability_type::const_iterator
                ip = pexts.begin(); ip != pexts.end(); ++ip) {
           const double pext = *ip;
-          if (datatools::is_valid(_ext_prob_range_min_)) {
-            if (pext < _ext_prob_range_min_) {
-              DT_LOG_DEBUG(get_logging_priority(),
-                           "External probability (" << pext/CLHEP::perCent << "%) lower than "
-                           << _ext_prob_range_min_/CLHEP::perCent << "%");
-              check_range_external_probability = false;
-              if (_ext_prob_range_mode_ == MODE_RANGE_STRICT) {
-                break;
-              }
-            }
-          }
-        }
-        for (snemo::datamodel::tof_measurement::probability_type::const_iterator
-               ip = pexts.begin(); ip != pexts.end(); ++ip) {
-          const double pext = *ip;
-          if (datatools::is_valid(_ext_prob_range_max_)) {
-            if (pext > _ext_prob_range_max_) {
-              DT_LOG_DEBUG(get_logging_priority(),
-                           "External probability (" << pext/CLHEP::perCent << "%) greater than "
-                           << _ext_prob_range_max_/CLHEP::perCent << "%");
-              check_range_external_probability = false;
-              if (_ext_prob_range_mode_ == MODE_RANGE_STRICT) {
-                break;
-              }
+          if (! _ext_prob_range_.has(pext)) {
+            DT_LOG_DEBUG(get_logging_priority(),
+                         "External probability (" << pext/CLHEP::perCent << "%) not within external probability bounds");
+            check_range_external_probability = false;
+            if (_ext_prob_range_mode_ == MODE_RANGE_STRICT) {
+              break;
             }
           }
         }
