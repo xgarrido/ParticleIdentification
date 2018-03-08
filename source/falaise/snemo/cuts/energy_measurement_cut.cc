@@ -98,20 +98,16 @@ namespace snemo {
           DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_ENERGY mode...");
           size_t count = 0;
           if (configuration_.has_key("range_energy.min")) {
-            double emin = configuration_.fetch_real("range_energy.min");
-            if (! configuration_.has_explicit_unit("range_energy.min")) {
-              emin *= CLHEP::keV;
-            }
+            const double emin
+              = configuration_.fetch_real_with_explicit_dimension("range_energy.min", "energy");
             DT_THROW_IF(emin < 0.0*CLHEP::keV, std::range_error,
                         "Invalid minimal energy value (" << emin << ") !");
             _energy_range_min_ = emin;
             count++;
           }
           if (configuration_.has_key("range_energy.max")) {
-            double emax = configuration_.fetch_real("range_energy.max");
-            if (! configuration_.has_explicit_unit("range_energy.max")) {
-              emax *= CLHEP::keV;
-            }
+            const double emax
+              = configuration_.fetch_real_with_explicit_dimension("range_energy.max", "energy");
             DT_THROW_IF(emax < 0.0*CLHEP::keV, std::range_error,
                         "Invalid maximal energy (" << emax << ") !");
             _energy_range_max_ = emax;

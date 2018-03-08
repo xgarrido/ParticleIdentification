@@ -131,10 +131,8 @@ namespace snemo {
 
           size_t count = 0;
           if (configuration_.has_key("range_internal_probability.min")) {
-            double pmin = configuration_.fetch_real("range_internal_probability.min");
-            if (! configuration_.has_explicit_unit("range_internal_probability.min")) {
-              pmin *= CLHEP::perCent;
-            }
+            const double pmin
+              = configuration_.fetch_real_with_explicit_dimension("range_internal_probability.min", "fraction");
             DT_THROW_IF(pmin < 0.0*CLHEP::perCent || pmin > 100.0*CLHEP::perCent,
                         std::range_error,
                         "Invalid minimal internal probability (" << pmin << ") !");
@@ -142,10 +140,8 @@ namespace snemo {
             count++;
           }
           if (configuration_.has_key("range_internal_probability.max")) {
-            double pmax = configuration_.fetch_real("range_internal_probability.max");
-            if (! configuration_.has_explicit_unit("range_internal_probability.max")) {
-              pmax *= CLHEP::perCent;
-            }
+            const double pmax
+              = configuration_.fetch_real_with_explicit_dimension("range_internal_probability.max", "fraction");
             DT_THROW_IF(pmax < 0.0*CLHEP::perCent || pmax > 100.0*CLHEP::perCent,
                         std::range_error,
                         "Invalid maximal internal probability (" << pmax << ") !");
@@ -182,10 +178,8 @@ namespace snemo {
                       "Mode for external probability range has not been set !");
          size_t count = 0;
           if (configuration_.has_key("range_external_probability.min")) {
-            double pmin = configuration_.fetch_real("range_external_probability.min");
-            if (! configuration_.has_explicit_unit("range_external_probability.min")) {
-              pmin *= CLHEP::perCent;
-            }
+            const double pmin
+              = configuration_.fetch_real_with_explicit_dimension("range_external_probability.min", "fraction");
             DT_THROW_IF(pmin < 0.0*CLHEP::perCent || pmin > 100.0*CLHEP::perCent,
                         std::range_error,
                         "Invalid minimal external probability (" << pmin << ") !");
@@ -193,10 +187,8 @@ namespace snemo {
             count++;
           }
           if (configuration_.has_key("range_external_probability.max")) {
-            double pmax = configuration_.fetch_real("range_external_probability.max");
-            if (! configuration_.has_explicit_unit("range_external_probability.max")) {
-              pmax *= CLHEP::perCent;
-            }
+            const double pmax
+              = configuration_.fetch_real_with_explicit_dimension("range_external_probability.max", "fraction");
             DT_THROW_IF(pmax < 0.0*CLHEP::perCent || pmax > 100.0*CLHEP::perCent,
                         std::range_error,
                         "Invalid maximal external probability (" << pmax << ") !");

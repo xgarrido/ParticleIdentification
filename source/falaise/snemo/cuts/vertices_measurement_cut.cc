@@ -176,10 +176,8 @@ namespace snemo {
 
           size_t count = 0;
           if (configuration_.has_key("range_vertices_probability.min")) {
-            double pmin = configuration_.fetch_real("range_vertices_probability.min");
-            if (! configuration_.has_explicit_unit("range_vertices_probability.min")) {
-              pmin *= CLHEP::perCent;
-            }
+            const double pmin
+              = configuration_.fetch_real_with_explicit_dimension("range_vertices_probability.min", "fraction");
             DT_THROW_IF(pmin < 0.0*CLHEP::perCent || pmin > 100.0*CLHEP::perCent,
                         std::range_error,
                         "Invalid minimal vertices probability (" << pmin << ") !");
@@ -187,10 +185,8 @@ namespace snemo {
             count++;
           }
           if (configuration_.has_key("range_vertices_probability.max")) {
-            double pmax = configuration_.fetch_real("range_vertices_probability.max");
-            if (! configuration_.has_explicit_unit("range_vertices_probability.max")) {
-              pmax *= CLHEP::perCent;
-            }
+            const double pmax
+              = configuration_.fetch_real_with_explicit_dimension("range_vertices_probability.max", "fraction");
             DT_THROW_IF(pmax < 0.0*CLHEP::perCent || pmax > 100.0*CLHEP::perCent,
                         std::range_error,
                         "Invalid maximal vertices probability (" << pmax << ") !");
@@ -216,10 +212,8 @@ namespace snemo {
 
           size_t count = 0;
           if (configuration_.has_key("range_vertices_distance_x.min")) {
-            double vtx_dist_x_min = configuration_.fetch_real("range_vertices_distance_x.min");
-            if (! configuration_.has_explicit_unit("range_vertices_distance_x.min")) {
-              vtx_dist_x_min *= CLHEP::mm;
-            }
+            const double vtx_dist_x_min
+              = configuration_.fetch_real_with_explicit_dimension("range_vertices_distance_x.min", "length");
             DT_THROW_IF(vtx_dist_x_min < 0.0*CLHEP::mm,
                         std::range_error,
                         "Invalid minimal vertices distance in X (" << vtx_dist_x_min << "mm) !");
@@ -227,10 +221,8 @@ namespace snemo {
             count++;
           }
           if (configuration_.has_key("range_vertices_distance_x.max")) {
-            double vtx_dist_x_max = configuration_.fetch_real("range_vertices_distance_x.max");
-            if (! configuration_.has_explicit_unit("range_vertices_distance_x.max")) {
-              vtx_dist_x_max *= CLHEP::mm;
-            }
+            const double vtx_dist_x_max
+              = configuration_.fetch_real_with_explicit_dimension("range_vertices_distance_x.max", "length");
             DT_THROW_IF(vtx_dist_x_max < 0.0*CLHEP::mm,
                         std::range_error,
                         "Invalid maximal vertices distance in X (" << vtx_dist_x_max << ") !");
@@ -251,10 +243,8 @@ namespace snemo {
 
           size_t count = 0;
           if (configuration_.has_key("range_vertices_distance_y.min")) {
-            double vtx_dist_y_min = configuration_.fetch_real("range_vertices_distance_y.min");
-            if (! configuration_.has_explicit_unit("range_vertices_distance_y.min")) {
-              vtx_dist_y_min *= CLHEP::mm;
-            }
+            const double vtx_dist_y_min
+              = configuration_.fetch_real_with_explicit_dimension("range_vertices_distance_y.min", "length");
             DT_THROW_IF(vtx_dist_y_min < 0.0*CLHEP::mm,
                         std::range_error,
                         "Invalid minimal vertices distance in Y (" << vtx_dist_y_min << ") !");
@@ -262,10 +252,8 @@ namespace snemo {
             count++;
           }
           if (configuration_.has_key("range_vertices_distance_y.max")) {
-            double vtx_dist_y_max = configuration_.fetch_real("range_vertices_distance_y.max");
-            if (! configuration_.has_explicit_unit("range_vertices_distance_y.max")) {
-              vtx_dist_y_max *= CLHEP::mm;
-            }
+            const double vtx_dist_y_max
+              = configuration_.fetch_real_with_explicit_dimension("range_vertices_distance_y.max", "length");
             DT_THROW_IF(vtx_dist_y_max < 0.0*CLHEP::mm,
                         std::range_error,
                         "Invalid maximal vertices distance in Y (" << vtx_dist_y_max << ") !");
@@ -286,10 +274,8 @@ namespace snemo {
 
           size_t count = 0;
           if (configuration_.has_key("range_vertices_distance_z.min")) {
-            double vtx_dist_z_min = configuration_.fetch_real("range_vertices_distance_z.min");
-            if (! configuration_.has_explicit_unit("range_vertices_distance_z.min")) {
-              vtx_dist_z_min *= CLHEP::mm;
-            }
+            const double vtx_dist_z_min
+              = configuration_.fetch_real_with_explicit_dimension("range_vertices_distance_z.min", "length");
             DT_THROW_IF(vtx_dist_z_min < 0.0*CLHEP::mm,
                         std::range_error,
                         "Invalid minimal vertices distance in Z (" << vtx_dist_z_min << ") !");
@@ -297,10 +283,8 @@ namespace snemo {
             count++;
           }
           if (configuration_.has_key("range_vertices_distance_z.max")) {
-            double vtx_dist_z_max = configuration_.fetch_real("range_vertices_distance_z.max");
-            if (! configuration_.has_explicit_unit("range_vertices_distance_z.max")) {
-              vtx_dist_z_max *= CLHEP::mm;
-            }
+            const double vtx_dist_z_max
+              = configuration_.fetch_real_with_explicit_dimension("range_vertices_distance_z.max", "length");
             DT_THROW_IF(vtx_dist_z_max < 0.0*CLHEP::mm,
                         std::range_error,
                         "Invalid maximal vertices distance in Z (" << vtx_dist_z_max << ") !");

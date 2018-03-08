@@ -98,10 +98,7 @@ namespace snemo {
           DT_LOG_DEBUG(get_logging_priority(), "Using RANGE_ANGLE mode...");
           size_t count = 0;
           if (configuration_.has_key("range_angle.min")) {
-            double amin = configuration_.fetch_real("range_angle.min");
-            if (! configuration_.has_explicit_unit("range_angle.min")) {
-              amin *= CLHEP::degree;
-            }
+            const double amin = configuration_.fetch_real_with_explicit_dimension("range_angle.min", "angle");
             DT_THROW_IF(amin < 0.0*CLHEP::degree || amin > 360.0*CLHEP::degree,
                         std::range_error,
                         "Invalid minimal angle value (" << amin << ") !");
@@ -109,10 +106,7 @@ namespace snemo {
             count++;
           }
           if (configuration_.has_key("range_angle.max")) {
-            double amax = configuration_.fetch_real("range_angle.max");
-            if (! configuration_.has_explicit_unit("range_angle.max")) {
-              amax *= CLHEP::degree;
-            }
+            const double amax = configuration_.fetch_real_with_explicit_dimension("range_angle.max", "angle");
             DT_THROW_IF(amax < 0.0*CLHEP::degree || amax > 360.0*CLHEP::degree,
                         std::range_error,
                         "Invalid maximal angle (" << amax << ") !");
