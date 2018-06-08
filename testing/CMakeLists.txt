@@ -8,7 +8,7 @@ set(FalaiseParticleIdentificationPlugin_TESTS
   test_angle_driver.cxx
   test_vertex_driver.cxx
   test_tof_driver.cxx
-  test_tof_measurement_cut.cxx
+  # test_tof_measurement_cut.cxx
   )
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
